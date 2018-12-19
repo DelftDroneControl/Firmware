@@ -56,6 +56,10 @@
 #include <uORB/topics/vehicle_attitude.h>
 #include <uORB/topics/vehicle_attitude_setpoint.h>
 #include <uORB/topics/vehicle_control_mode.h>
+
+#include <uORB/topics/vehicle_local_position.h>
+#include <uORB/topics/vehicle_local_position_setpoint.h>
+
 #include <uORB/topics/vehicle_rates_setpoint.h>
 #include <uORB/topics/vehicle_status.h>
 #include <uORB/topics/vehicle_land_detected.h>
@@ -153,7 +157,7 @@ private:
 	int		_vehicle_land_detected_sub{-1};	/**< vehicle land detected subscription */
 	int		_sensor_combined_sub{-1};	/**< vehicle land detected subscription */
 	int		_vehicle_local_position_sub{-1};	/**< vehicle land detected subscription */
-	int     _local_pos_sp_sub{-1}	/**< vehicle position setpoint subscription */
+	int     _local_pos_sp_sub{-1};	/**< vehicle position setpoint subscription */
 
 	unsigned _gyro_count{1};
 	int _selected_gyro{0};
@@ -181,7 +185,7 @@ private:
 	struct vehicle_land_detected_s		_vehicle_land_detected {};
 	struct sensor_combined_s		_sensor_combined {};
 	struct vehicle_local_position_s		_vehicle_local_position {};
-	struct vehicle_local_pos_sp_s	_local_pos_sp {};
+	struct vehicle_local_position_setpoint_s	_local_pos_sp {};
 
 	MultirotorMixer::saturation_status _saturation_status{};
 

@@ -50,7 +50,7 @@
 
 #include "sl_pos_direct_control.hpp"
 
-// #include "PosDirectControl/PosDirectControl.h"
+#include "PosDirectControl/PosDirectControl.h"
 #include <px4_log.h>
 
 #define TPA_RATE_LOWER_LIMIT 0.05f
@@ -62,7 +62,7 @@
 
 using namespace matrix;
 
- PosDirectControlModelClass  PosDirectControl;
+PosDirectControlModelClass PosDirectControl;
 
 int 
 SlPosDirectControl::print_usage(const char *reason)
@@ -415,102 +415,11 @@ SlPosDirectControl::vehicle_local_pos_sp_poll()
 
 }
 
-/**
- * Attitude controller.
- * Input: 'vehicle_attitude_setpoint' topics (depending on mode)
- * Output: '_rates_sp' vector, '_thrust_sp'
- */
-void
-SlPosDirectControl::control_attitude(float dt)
-{
-	vehicle_attitude_setpoint_poll();
-	_thrust_sp = _v_att_sp.thrust;
-
-	/* prepare yaw weight from the ratio between roll/pitch and yaw gains */
-	Vector3f attitude_gain = _attitude_p;
-	const float roll_pitch_gain = (attitude_gain(0) + attitude_gain(1)) / 2.f;
-	const float yaw_w = math::constrain(attitude_gain(2) / roll_pitch_gain, 0.f, 1.f);
-	attitude_gain(2) = roll_pitch_gain;
-
-	/* get estimated and desired vehicle attitude */
-	Quatf q(_v_att.q);
-	Quatf qd(_v_att_sp.q_d);
-
-	/* ensure input quaternions are exactly normalized because acosf(1.00001) == NaN */
-	q.normalize();
-	qd.normalize();
-
-	/* calculate reduced desired attitude neglecting vehicle's yaw to prioritize roll and pitch */
-	Vector3f e_z = q.dcm_z();
-	Vector3f e_z_d = qd.dcm_z();
-	Quatf qd_red(e_z, e_z_d);
-
-	if (abs(qd_red(1)) > (1.f - 1e-5f) || abs(qd_red(2)) > (1.f - 1e-5f)) {
-		/* In the infinitesimal corner case where the vehicle and thrust have the completely opposite direction,
-		 * full attitude control anyways generates no yaw input and directly takes the combination of
-		 * roll and pitch leading to the correct desired yaw. Ignoring this case would still be totally safe and stable. */
-		qd_red = qd;
-
-	} else {
-		/* transform rotation from current to desired thrust vector into a world frame reduced desired attitude */
-		qd_red *= q;
-	}
-
-	/* mix full and reduced desired attitude */
-	Quatf q_mix = qd_red.inversed() * qd;
-	q_mix *= math::signNoZero(q_mix(0));
-	/* catch numerical problems with the domain of acosf and asinf */
-	q_mix(0) = math::constrain(q_mix(0), -1.f, 1.f);
-	q_mix(3) = math::constrain(q_mix(3), -1.f, 1.f);
-	qd = qd_red * Quatf(cosf(yaw_w * acosf(q_mix(0))), 0, 0, sinf(yaw_w * asinf(q_mix(3))));
-
-	/* quaternion attitude control law, qe is rotation from q to qd */
-	Quatf qe = q.inversed() * qd;
-
-	/* using sin(alpha/2) scaled rotation axis as attitude error (see quaternion definition by axis angle)
-	 * also taking care of the antipodal unit quaternion ambiguity */
-	Vector3f eq = 2.f * math::signNoZero(qe(0)) * qe.imag();
-
-	/* calculate angular rates setpoint */
-	_rates_sp = eq.emult(attitude_gain);
-
-	/* limit rates */
-	for (int i = 0; i < 3; i++) {
-		if ((_v_control_mode.flag_control_velocity_enabled || _v_control_mode.flag_control_auto_enabled) &&
-		    !_v_control_mode.flag_control_manual_enabled) {
-			_rates_sp(i) = math::constrain(_rates_sp(i), -_auto_rate_max(i), _auto_rate_max(i));
-
-		} else {
-			_rates_sp(i) = math::constrain(_rates_sp(i), -_mc_rate_max(i), _mc_rate_max(i));
-		}
-	}
-}
-
-// /*
-//  * Throttle PID attenuation
-//  * Function visualization available here https://www.desmos.com/calculator/gn4mfoddje
-//  * Input: 'tpa_breakpoint', 'tpa_rate', '_thrust_sp'
-//  * Output: 'pidAttenuationPerAxis' vector
-//  */
-// Vector3f
-// SlPosDirectControl::pid_attenuations(float tpa_breakpoint, float tpa_rate)
-// {
-// 	/* throttle pid attenuation factor */
-// 	float tpa = 1.0f - tpa_rate * (fabsf(_v_rates_sp.thrust) - tpa_breakpoint) / (1.0f - tpa_breakpoint);
-// 	tpa = fmaxf(TPA_RATE_LOWER_LIMIT, fminf(1.0f, tpa));
-
-// 	Vector3f pidAttenuationPerAxis;
-// 	pidAttenuationPerAxis(AXIS_INDEX_ROLL) = tpa;
-// 	pidAttenuationPerAxis(AXIS_INDEX_PITCH) = tpa;
-// 	pidAttenuationPerAxis(AXIS_INDEX_YAW) = 1.0;
-
-// 	return pidAttenuationPerAxis;
-// }
 
 /*
- * Attitude rates controller.
- * Input: '_rates_sp' vector, '_thrust_sp'
- * Output: '_att_control' vector
+ * Position controller.
+ * Input: 
+ * Output: 'actuator_controls'
  */
 void
 SlPosDirectControl::control_pos_direct(float dt)
@@ -562,56 +471,67 @@ SlPosDirectControl::control_pos_direct(float dt)
 	q.normalize();
 	qd.normalize();
 
-	// ExtU_// PosDirectControl_T // PosDirectControl_input;
+	ExtU_PosDirectControl_T PosDirectControl_input;
 
-	// PosDirectControl_input.rates[0] = rates(0);
-	// PosDirectControl_input.rates[1] = rates(1);
-	// PosDirectControl_input.rates[2] = rates(2);
+	PosDirectControl_input.vel[0] = _vehicle_local_position.vx;
+	PosDirectControl_input.vel[1] = _vehicle_local_position.vy;
+	PosDirectControl_input.vel[2] = _vehicle_local_position.vz;
 
-	// PosDirectControl_input.rates_sp[0] = _rates_sp(0);
-	// PosDirectControl_input.rates_sp[1] = _rates_sp(1);
-	// PosDirectControl_input.rates_sp[2] = _rates_sp(2);
+	PosDirectControl_input.pos[0] = _vehicle_local_position.x;
+	PosDirectControl_input.pos[1] = _vehicle_local_position.y;
+	PosDirectControl_input.pos[2] = _vehicle_local_position.z;
 
-	// PosDirectControl_input.accel_z =_sensor_combined.accelerometer_m_s2[2];
+	PosDirectControl_input.rates[0] = rates(0);
+	PosDirectControl_input.rates[1] = rates(1);
+	PosDirectControl_input.rates[2] = rates(2);
 
-	// PosDirectControl_input.thrust_sp =_thrust_sp;
+	PosDirectControl_input.q[0] = q(3); // w
+	PosDirectControl_input.q[1] = q(0); // x
+	PosDirectControl_input.q[2] = q(1); // y
+	PosDirectControl_input.q[3] = q(2); // z
+
+	PosDirectControl_input.pos_sp[0] = _local_pos_sp.x;
+	PosDirectControl_input.pos_sp[1] = _local_pos_sp.y;
+	PosDirectControl_input.pos_sp[2] = _local_pos_sp.z;
+
+	PosDirectControl_input.yaw_sp = 0.f;
 
 	PosDirectControl.PosDirectControl_U = PosDirectControl_input;
 
-	float t_step_start = hrt_absolute_time();
+	// float t_step_start = hrt_absolute_time();
 	
-	 PosDirectControl.step();
+	PosDirectControl.step();
 
 	// `rate_control_input` logger
 
-	_rate_control_input.timestamp = hrt_absolute_time();
-	_rate_control_input.rates[0] = // PosDirectControl_input.rates[0];
-	_rate_control_input.rates[1] = // PosDirectControl_input.rates[1];
-	_rate_control_input.rates[2] = // PosDirectControl_input.rates[2];
+	// _rate_control_input.timestamp = hrt_absolute_time();
+	// _rate_control_input.rates[0] = // PosDirectControl_input.rates[0];
+	// _rate_control_input.rates[1] = // PosDirectControl_input.rates[1];
+	// _rate_control_input.rates[2] = // PosDirectControl_input.rates[2];
 
-	_rate_control_input.rates_sp[0] = // PosDirectControl_input.rates_sp[0];
-	_rate_control_input.rates_sp[1] = // PosDirectControl_input.rates_sp[1];
-	_rate_control_input.rates_sp[2] = // PosDirectControl_input.rates_sp[2];
+	// _rate_control_input.rates_sp[0] = // PosDirectControl_input.rates_sp[0];
+	// _rate_control_input.rates_sp[1] = // PosDirectControl_input.rates_sp[1];
+	// _rate_control_input.rates_sp[2] = // PosDirectControl_input.rates_sp[2];
 
-	_rate_control_input.thrust_sp = // PosDirectControl_input.thrust_sp;
+	// _rate_control_input.thrust_sp = // PosDirectControl_input.thrust_sp;
 
-	_rate_control_input.accel_z = // PosDirectControl_input.accel_z;
+	// _rate_control_input.accel_z = // PosDirectControl_input.accel_z;
 
-	_rate_control_input.dt_step = hrt_absolute_time() - t_step_start;
+	// _rate_control_input.dt_step = hrt_absolute_time() - t_step_start;
 
 	// See mixer file `pass.main.mix` for exact control allocation.
-	// _actuators.control[0] = // PosDirectControl.// PosDirectControl_Y.actuators_control[0];
-	// _actuators.control[1] = // PosDirectControl.// PosDirectControl_Y.actuators_control[1];
-	// _actuators.control[2] = // PosDirectControl.// PosDirectControl_Y.actuators_control[2];
-	// _actuators.control[3] = // PosDirectControl.// PosDirectControl_Y.actuators_control[3];
+	_actuators.control[0] = PosDirectControl.PosDirectControl_Y.actuators_control[0];
+	_actuators.control[1] = PosDirectControl.PosDirectControl_Y.actuators_control[1];
+	_actuators.control[2] = PosDirectControl.PosDirectControl_Y.actuators_control[2];
+	_actuators.control[3] = PosDirectControl.PosDirectControl_Y.actuators_control[3];
 
 
 	// PX4_INFO("HI");
 	// See mixer file `pass.main.mix` for exact control allocation.
-	_actuators.control[0] = 0.f;
-	_actuators.control[1] = -1.f;
-	_actuators.control[2] = -1.f;
-	_actuators.control[3] = 1.f;
+	// _actuators.control[0] = 0.f;
+	// _actuators.control[1] = -1.f;
+	// _actuators.control[2] = -1.f;
+	// _actuators.control[3] = 1.f;
 
 }
 
@@ -727,17 +647,6 @@ SlPosDirectControl::run()
 			vehicle_local_position_poll();
 			vehicle_local_pos_sp_poll();
 
-			// /* Check if we are in rattitude mode and the pilot is above the threshold on pitch
-			//  * or roll (yaw can rotate 360 in normal att control).  If both are true don't
-			//  * even bother running the attitude controllers */
-			// if (_v_control_mode.flag_control_rattitude_enabled) {
-			// 	if (fabsf(_manual_control_sp.y) > _rattitude_thres.get() ||
-			// 	    fabsf(_manual_control_sp.x) > _rattitude_thres.get()) {
-			// 		_v_control_mode.flag_control_attitude_enabled = false;
-			// 	}
-			// }
-
-			// control_attitude_rates(dt);
 			control_pos_direct(dt);
 
 			_actuators.control[7] = _v_att_sp.landing_gear;
@@ -754,137 +663,6 @@ SlPosDirectControl::run()
 				}
 
 			}
-
-			// /* publish controller status */
-			// rate_ctrl_status_s rate_ctrl_status;
-			// rate_ctrl_status.timestamp = hrt_absolute_time();
-			// rate_ctrl_status.rollspeed = _rates_prev(0);
-			// rate_ctrl_status.pitchspeed = _rates_prev(1);
-			// rate_ctrl_status.yawspeed = _rates_prev(2);
-			// // rate_ctrl_status.rollspeed_integ = _rates_int(0);
-			// // rate_ctrl_status.pitchspeed_integ = _rates_int(1);
-			// // rate_ctrl_status.yawspeed_integ = _rates_int(2);
-
-			int instance;
-			orb_publish_auto(ORB_ID(rate_ctrl_status), &_controller_status_pub, &rate_ctrl_status, &instance, ORB_PRIO_DEFAULT);
-
-			orb_publish(ORB_ID(rate_control_input), pub_rate_control_input, &_rate_control_input);
-
-			// if (_v_control_mode.flag_control_attitude_enabled) {
-
-			// 	control_attitude(dt);
-
-			// 	/* publish attitude rates setpoint */
-			// 	_v_rates_sp.roll = _rates_sp(0);
-			// 	_v_rates_sp.pitch = _rates_sp(1);
-			// 	_v_rates_sp.yaw = _rates_sp(2);
-			// 	_v_rates_sp.thrust = _thrust_sp;
-			// 	_v_rates_sp.timestamp = hrt_absolute_time();
-
-			// 	if (_v_rates_sp_pub != nullptr) {
-			// 		orb_publish(_rates_sp_id, _v_rates_sp_pub, &_v_rates_sp);
-
-			// 	} else if (_rates_sp_id) {
-			// 		_v_rates_sp_pub = orb_advertise(_rates_sp_id, &_v_rates_sp);
-			// 	}
-
-			// } else {
-			// 	/* attitude controller disabled, poll rates setpoint topic */
-			// 	if (_v_control_mode.flag_control_manual_enabled) {
-			// 		/* manual rates control - ACRO mode */
-			// 		Vector3f man_rate_sp(
-			// 				math::superexpo(_manual_control_sp.y, _acro_expo_rp.get(), _acro_superexpo_rp.get()),
-			// 				math::superexpo(-_manual_control_sp.x, _acro_expo_rp.get(), _acro_superexpo_rp.get()),
-			// 				math::superexpo(_manual_control_sp.r, _acro_expo_y.get(), _acro_superexpo_y.get()));
-			// 		_rates_sp = man_rate_sp.emult(_acro_rate_max);
-			// 		_thrust_sp = _manual_control_sp.z;
-
-			// 		/* publish attitude rates setpoint */
-			// 		_v_rates_sp.roll = _rates_sp(0);
-			// 		_v_rates_sp.pitch = _rates_sp(1);
-			// 		_v_rates_sp.yaw = _rates_sp(2);
-			// 		_v_rates_sp.thrust = _thrust_sp;
-			// 		_v_rates_sp.timestamp = hrt_absolute_time();
-
-			// 		if (_v_rates_sp_pub != nullptr) {
-			// 			orb_publish(_rates_sp_id, _v_rates_sp_pub, &_v_rates_sp);
-
-			// 		} else if (_rates_sp_id) {
-			// 			_v_rates_sp_pub = orb_advertise(_rates_sp_id, &_v_rates_sp);
-			// 		}
-
-			// 	} else {
-			// 		/* attitude controller disabled, poll rates setpoint topic */
-			// 		vehicle_rates_setpoint_poll();
-			// 		_rates_sp(0) = _v_rates_sp.roll;
-			// 		_rates_sp(1) = _v_rates_sp.pitch;
-			// 		_rates_sp(2) = _v_rates_sp.yaw;
-			// 		_thrust_sp = _v_rates_sp.thrust;
-			// 	}
-			// }
-
-			// if (_v_control_mode.flag_control_rates_enabled) {
-			// 	control_attitude_rates(dt);
-
-			// 	_actuators.control[7] = _v_att_sp.landing_gear;
-			// 	_actuators.timestamp = hrt_absolute_time();
-			// 	_actuators.timestamp_sample = _sensor_gyro.timestamp;
-
-			// 	if (!_actuators_0_circuit_breaker_enabled) {
-			// 		if (_actuators_0_pub != nullptr) {
-
-			// 			orb_publish(_actuators_id, _actuators_0_pub, &_actuators);
-
-			// 		} else if (_actuators_id) {
-			// 			_actuators_0_pub = orb_advertise(_actuators_id, &_actuators);
-			// 		}
-
-			// 	}
-
-			// 	/* publish controller status */
-			// 	rate_ctrl_status_s rate_ctrl_status;
-			// 	rate_ctrl_status.timestamp = hrt_absolute_time();
-			// 	rate_ctrl_status.rollspeed = _rates_prev(0);
-			// 	rate_ctrl_status.pitchspeed = _rates_prev(1);
-			// 	rate_ctrl_status.yawspeed = _rates_prev(2);
-			// 	// rate_ctrl_status.rollspeed_integ = _rates_int(0);
-			// 	// rate_ctrl_status.pitchspeed_integ = _rates_int(1);
-			// 	// rate_ctrl_status.yawspeed_integ = _rates_int(2);
-
-			// 	int instance;
-			// 	orb_publish_auto(ORB_ID(rate_ctrl_status), &_controller_status_pub, &rate_ctrl_status, &instance, ORB_PRIO_DEFAULT);
-
-			// 	orb_publish(ORB_ID(rate_control_input), pub_rate_control_input, &_rate_control_input);
-			// }
-
-			// if (_v_control_mode.flag_control_termination_enabled) {
-			// 	if (!_vehicle_status.is_vtol) {
-
-			// 		_rates_sp.zero();
-			// 		_rates_int.zero();
-			// 		_thrust_sp = 0.0f;
-			// 		_att_control.zero();
-
-			// 		/* publish actuator controls */
-			// 		_actuators.control[0] = 0.0f;
-			// 		_actuators.control[1] = 0.0f;
-			// 		_actuators.control[2] = 0.0f;
-			// 		_actuators.control[3] = 0.0f;
-			// 		_actuators.timestamp = hrt_absolute_time();
-			// 		_actuators.timestamp_sample = _sensor_gyro.timestamp;
-
-			// 		if (!_actuators_0_circuit_breaker_enabled) {
-			// 			if (_actuators_0_pub != nullptr) {
-
-			// 				orb_publish(_actuators_id, _actuators_0_pub, &_actuators);
-
-			// 			} else if (_actuators_id) {
-			// 				_actuators_0_pub = orb_advertise(_actuators_id, &_actuators);
-			// 			}
-			// 		}
-			// 	}
-			// }
-
 		}
 
 		perf_end(_loop_perf);
@@ -910,7 +688,8 @@ SlPosDirectControl::run()
 	orb_unsubscribe(_sensor_combined_sub);
 	orb_unsubscribe(_vehicle_local_position_sub);
 	orb_unsubscribe(_local_pos_sp_sub);
-	// PosDirectControl.terminate();
+
+	PosDirectControl.terminate();
 }
 
 int 

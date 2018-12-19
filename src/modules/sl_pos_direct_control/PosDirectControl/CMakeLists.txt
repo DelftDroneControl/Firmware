@@ -29,7 +29,7 @@
     # From: https://stackoverflow.com/questions/2110795/how-to-use-all-c-files-in-a-directory-with-the-cmake-build-system
     # Automatically add all source files.
     file(GLOB SRCS ./*.cpp ./*/*.cpp ./*/*/*.cpp ./*/*/*/*.cpp ./*.c ./*/*.c ./*/*/*.c ./*/*/*/*.c)
-    px4_add_library(simulink_RateControl
+    px4_add_library(sl_PosDirectControl
         ${SRCS}
     )
     

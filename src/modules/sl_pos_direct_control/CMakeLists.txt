@@ -32,7 +32,7 @@
 ############################################################################
 
 # First add subdirectory
-# add_subdirectory(PosDirectControl)
+add_subdirectory(PosDirectControl)
 
 px4_add_module(
 	MODULE sl_pos_direct_control
@@ -42,6 +42,6 @@ px4_add_module(
 	SRCS
 		sl_pos_direct_control.cpp
 	DEPENDS
-		simulink_RateControl
+		sl_PosDirectControl
 	)
 
