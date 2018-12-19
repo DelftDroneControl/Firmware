@@ -50,6 +50,8 @@ set(config_module_list
 	modules/fw_pos_control_l1
 	modules/vtol_att_control
 	modules/simulink_wrapper # codegen
+	modules/sl_pos_direct_control # codegen
+
 
 
 	#

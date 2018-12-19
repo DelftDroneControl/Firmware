@@ -72,6 +72,7 @@ set(config_module_list
 	modules/simulator
 	
 	modules/simulink_wrapper
+	modules/sl_pos_direct_control # codegen
 	#modules/uavcan
 
 	#

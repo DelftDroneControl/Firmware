@@ -54,7 +54,8 @@ fi
 #
 
 # mc_att_control start
-simulink_wrapper start
+# simulink_wrapper start
+sl_pos_direct_control start
 
 #
 # Start Multicopter Position Controller.
