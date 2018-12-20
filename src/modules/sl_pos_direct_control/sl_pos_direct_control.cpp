@@ -125,7 +125,7 @@ SlPosDirectControl::SlPosDirectControl() :
 	
 	PX4_INFO("DEBUG LOG INIT");
 
-	pub_rate_control_input = orb_advertise(ORB_ID(rate_control_input), &_rate_control_input);
+	pub_pos_direct_control_input = orb_advertise(ORB_ID(pos_direct_control_input), &_pos_direct_control_input);
 }
 
 void
@@ -485,10 +485,10 @@ SlPosDirectControl::control_pos_direct(float dt)
 	PosDirectControl_input.rates[1] = rates(1);
 	PosDirectControl_input.rates[2] = rates(2);
 
-	PosDirectControl_input.q[0] = q(3); // w
-	PosDirectControl_input.q[1] = q(0); // x
-	PosDirectControl_input.q[2] = q(1); // y
-	PosDirectControl_input.q[3] = q(2); // z
+	PosDirectControl_input.q[0] = q(0); // w
+	PosDirectControl_input.q[1] = q(1); // x
+	PosDirectControl_input.q[2] = q(2); // y
+	PosDirectControl_input.q[3] = q(3); // z
 
 	PosDirectControl_input.pos_sp[0] = _local_pos_sp.x;
 	PosDirectControl_input.pos_sp[1] = _local_pos_sp.y;
@@ -502,22 +502,30 @@ SlPosDirectControl::control_pos_direct(float dt)
 	
 	PosDirectControl.step();
 
-	// `rate_control_input` logger
+	// `pos_direct_control_input` logger
 
-	// _rate_control_input.timestamp = hrt_absolute_time();
-	// _rate_control_input.rates[0] = // PosDirectControl_input.rates[0];
-	// _rate_control_input.rates[1] = // PosDirectControl_input.rates[1];
-	// _rate_control_input.rates[2] = // PosDirectControl_input.rates[2];
-
-	// _rate_control_input.rates_sp[0] = // PosDirectControl_input.rates_sp[0];
-	// _rate_control_input.rates_sp[1] = // PosDirectControl_input.rates_sp[1];
-	// _rate_control_input.rates_sp[2] = // PosDirectControl_input.rates_sp[2];
-
-	// _rate_control_input.thrust_sp = // PosDirectControl_input.thrust_sp;
-
-	// _rate_control_input.accel_z = // PosDirectControl_input.accel_z;
-
-	// _rate_control_input.dt_step = hrt_absolute_time() - t_step_start;
+	_pos_direct_control_input.timestamp = hrt_absolute_time();
+	_pos_direct_control_input.vel[0] = _vehicle_local_position.vx;
+	_pos_direct_control_input.vel[1] = _vehicle_local_position.vy;
+	_pos_direct_control_input.vel[2] = _vehicle_local_position.vz;
+	_pos_direct_control_input.pos[0] = _vehicle_local_position.x;
+	_pos_direct_control_input.pos[1] = _vehicle_local_position.y;
+	_pos_direct_control_input.pos[2] = _vehicle_local_position.z;
+	_pos_direct_control_input.rates[0] = rates(0);
+	_pos_direct_control_input.rates[1] = rates(1);
+	_pos_direct_control_input.rates[2] = rates(2);
+	_pos_direct_control_input.q[0] = q(0);
+	_pos_direct_control_input.q[1] = q(1);
+	_pos_direct_control_input.q[2] = q(2);
+	_pos_direct_control_input.q[3] = q(3);
+	_pos_direct_control_input.w_rotor_meas[0] = 0;
+	_pos_direct_control_input.w_rotor_meas[1] = 0;
+	_pos_direct_control_input.w_rotor_meas[2] = 0;
+	_pos_direct_control_input.w_rotor_meas[3] = 0;
+	_pos_direct_control_input.pos_sp[0] = _local_pos_sp.x;
+	_pos_direct_control_input.pos_sp[1] = _local_pos_sp.y;
+	_pos_direct_control_input.pos_sp[2] = _local_pos_sp.z;
+	_pos_direct_control_input.yaw_sp = 0.f;
 
 	// See mixer file `pass.main.mix` for exact control allocation.
 	_actuators.control[0] = PosDirectControl.PosDirectControl_Y.actuators_control[0];
@@ -663,6 +671,9 @@ SlPosDirectControl::run()
 				}
 
 			}
+			/* publish controller input */
+
+			orb_publish(ORB_ID(pos_direct_control_input), pub_pos_direct_control_input, &_pos_direct_control_input);
 		}
 
 		perf_end(_loop_perf);
