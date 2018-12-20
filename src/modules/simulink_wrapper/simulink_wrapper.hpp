@@ -252,6 +252,7 @@ private:
 		(ParamFloat<px4::params::SENS_BOARD_Z_OFF>) _board_offset_z,
 
 		(ParamFloat<px4::params::MC_ATT_RATE_MAX>) _att_rate_sample_rate_max,
+
 		(ParamFloat<px4::params::MC_ATT_ROLL_GAIN>) _att_roll_gain,
 		(ParamFloat<px4::params::MC_ATT_PITCH_GN>) _att_pitch_gain,
 		(ParamFloat<px4::params::MC_ATT_YAW_GAIN>) _att_yaw_gain,
