@@ -5,124 +5,109 @@
  * @author
  */
 
-
 /**
- * Rate control maximum sample rate.
  *
- * @unit Hz
- * @min 10
- * @max 1000
+ * @unit
+ * @min 0
+ * @max 100
  * @decimal 0
- * @increment 1
+ * @increment .1
  * @group Multicopter Attitude Control
  */
-PARAM_DEFINE_FLOAT(MC_ATT_RATE_MAX, 500.0f);
+PARAM_DEFINE_FLOAT(SL_THRUST_COEFF, 1.9035e-6);
 
 /**
  * INDI control actuator roll control gain.
  *
  * @unit
- * @min 1
- * @max 100
- * @decimal 0
- * @increment .1
- * @group Multicopter Attitude Control
- */
-PARAM_DEFINE_FLOAT(MC_ATT_ROLL_GAIN, 16.0f);
-
-/**
- * INDI control actuator pitch control gain.
- *
- * @unit
- * @min 1
- * @max 100
- * @decimal 0
- * @increment .1
- * @group Multicopter Attitude Control
- */
-PARAM_DEFINE_FLOAT(MC_ATT_PITCH_GN, 16.0f);
-
-/**
- * INDI control actuator yaw control effectiveness.
- *
- * @unit
- * @min .1
- * @max 2
- * @decimal 0
- * @increment .01
- * @group Multicopter Attitude Control
- */
-PARAM_DEFINE_FLOAT(MC_ATT_YAW_GAIN, 1f);
-
-/**
- * INDI control actuator roll control effectiveness.
- *
- * @unit 10^3
- * @min 1
- * @max 1000
- * @decimal 0
- * @increment 1
- * @group Multicopter Attitude Control
- */
-PARAM_DEFINE_FLOAT(MC_ATT_ROLL_EFF, 300.0f);
-
-/**
- * INDI control actuator pitch control effectiveness.
- *
- * @unit 10^3
- * @min 1
- * @max 1000
- * @decimal 0
- * @increment 1
- * @group Multicopter Attitude Control
- */
-PARAM_DEFINE_FLOAT(MC_ATT_PITCH_EFF, 170.0f);
-
-
-/**
- * INDI control actuator yaw control effectiveness.
- *
- * @unit 10^3
- * @min .1
- * @max 100
- * @decimal 0
- * @increment .01
- * @group Multicopter Attitude Control
- */
-PARAM_DEFINE_FLOAT(MC_ATT_YAW_EFF, 30f);
-
-/**
- * INDI control actuator yaw control effectiveness.
- *
- * @unit 10^3
- * @min .01
- * @max 10
- * @decimal 0
- * @increment .01
- * @group Multicopter Attitude Control
- */
-PARAM_DEFINE_FLOAT(MC_ATT_YAW_D_EFF, 1.5f);
-
-/**
- * INDI control actuator z-acceleration control effectiveness.
- *
- * @unit 10^3
- * @min 1
- * @max 100
- * @decimal 0
- * @increment .1
- * @group Multicopter Attitude Control
- */
-PARAM_DEFINE_FLOAT(MC_ATT_AZ_EFF, 16.0f);
-
-/**
- * Actuator time constant.
- *
- * @unit s
  * @min 0
- * @max 1
+ * @max 100
  * @decimal 0
- * @increment .01
+ * @increment .1
  * @group Multicopter Attitude Control
  */
-PARAM_DEFINE_FLOAT(MC_ATT_T_ACT, 0.025f);
+PARAM_DEFINE_FLOAT(SL_GEOM_L, 0.0875);
+
+/**
+ * INDI control actuator roll control gain.
+ *
+ * @unit
+ * @min 0
+ * @max 100
+ * @decimal 0
+ * @increment .1
+ * @group Multicopter Attitude Control
+ */
+PARAM_DEFINE_FLOAT(SL_GEOM_B, 0.1150);
+
+/**
+ * INDI control actuator roll control gain.
+ *
+ * @unit
+ * @min 0
+ * @max 100
+ * @decimal 0
+ * @increment .1
+ * @group Multicopter Attitude Control
+ */
+PARAM_DEFINE_FLOAT(SL_MASS, 0.3740);
+
+/**
+ * INDI control actuator roll control gain.
+ *
+ * @unit
+ * @min 0
+ * @max 100
+ * @decimal 0
+ * @increment .1
+ * @group Multicopter Attitude Control
+ */
+PARAM_DEFINE_FLOAT(SL_INERTIA_X, 0.0014);
+
+/**
+ * INDI control actuator roll control gain.
+ *
+ * @unit
+ * @min 0
+ * @max 100
+ * @decimal 0
+ * @increment .1
+ * @group Multicopter Attitude Control
+ */
+PARAM_DEFINE_FLOAT(SL_INERTIA_Y, 0.0013);
+
+/**
+ * INDI control actuator roll control gain.
+ *
+ * @unit
+ * @min 0
+ * @max 100
+ * @decimal 0
+ * @increment .1
+ * @group Multicopter Attitude Control
+ */
+PARAM_DEFINE_FLOAT(SL_INERTIA_Z, 0.0025);
+
+/**
+ * INDI control actuator roll control gain.
+ *
+ * @unit
+ * @min 0
+ * @max 100
+ * @decimal 0
+ * @increment .1
+ * @group Multicopter Attitude Control
+ */
+PARAM_DEFINE_FLOAT(SL_INERTIA_PROP, 8.00e-6);
+
+/**
+ * INDI control actuator roll control gain.
+ *
+ * @unit
+ * @min 0
+ * @max 100
+ * @decimal 0
+ * @increment .1
+ * @group Multicopter Attitude Control
+ */
+PARAM_DEFINE_FLOAT(SL_TORQUE_COEFF, 1.9203e-8);

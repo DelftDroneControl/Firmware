@@ -203,53 +203,6 @@ private:
 	matrix::Dcmf _board_rotation;			/**< rotation matrix for the orientation that the board is mounted */
 
 	DEFINE_PARAMETERS(
-		(ParamFloat<px4::params::MC_ROLL_P>) _roll_p,
-		(ParamFloat<px4::params::MC_ROLLRATE_P>) _roll_rate_p,
-		(ParamFloat<px4::params::MC_ROLLRATE_I>) _roll_rate_i,
-		(ParamFloat<px4::params::MC_RR_INT_LIM>) _roll_rate_integ_lim,
-		(ParamFloat<px4::params::MC_ROLLRATE_D>) _roll_rate_d,
-		(ParamFloat<px4::params::MC_ROLLRATE_FF>) _roll_rate_ff,
-
-		(ParamFloat<px4::params::MC_PITCH_P>) _pitch_p,
-		(ParamFloat<px4::params::MC_PITCHRATE_P>) _pitch_rate_p,
-		(ParamFloat<px4::params::MC_PITCHRATE_I>) _pitch_rate_i,
-		(ParamFloat<px4::params::MC_PR_INT_LIM>) _pitch_rate_integ_lim,
-		(ParamFloat<px4::params::MC_PITCHRATE_D>) _pitch_rate_d,
-		(ParamFloat<px4::params::MC_PITCHRATE_FF>) _pitch_rate_ff,
-
-		(ParamFloat<px4::params::MC_YAW_P>) _yaw_p,
-		(ParamFloat<px4::params::MC_YAWRATE_P>) _yaw_rate_p,
-		(ParamFloat<px4::params::MC_YAWRATE_I>) _yaw_rate_i,
-		(ParamFloat<px4::params::MC_YR_INT_LIM>) _yaw_rate_integ_lim,
-		(ParamFloat<px4::params::MC_YAWRATE_D>) _yaw_rate_d,
-		(ParamFloat<px4::params::MC_YAWRATE_FF>) _yaw_rate_ff,
-
-		(ParamFloat<px4::params::MC_DTERM_CUTOFF>) _d_term_cutoff_freq,		/**< Cutoff frequency for the D-term filter */
-
-		(ParamFloat<px4::params::MC_TPA_BREAK_P>) _tpa_breakpoint_p,		/**< Throttle PID Attenuation breakpoint */
-		(ParamFloat<px4::params::MC_TPA_BREAK_I>) _tpa_breakpoint_i,		/**< Throttle PID Attenuation breakpoint */
-		(ParamFloat<px4::params::MC_TPA_BREAK_D>) _tpa_breakpoint_d,		/**< Throttle PID Attenuation breakpoint */
-		(ParamFloat<px4::params::MC_TPA_RATE_P>) _tpa_rate_p,				/**< Throttle PID Attenuation slope */
-		(ParamFloat<px4::params::MC_TPA_RATE_I>) _tpa_rate_i,				/**< Throttle PID Attenuation slope */
-		(ParamFloat<px4::params::MC_TPA_RATE_D>) _tpa_rate_d,				/**< Throttle PID Attenuation slope */
-
-		(ParamFloat<px4::params::MC_ROLLRATE_MAX>) _roll_rate_max,
-		(ParamFloat<px4::params::MC_PITCHRATE_MAX>) _pitch_rate_max,
-		(ParamFloat<px4::params::MC_YAWRATE_MAX>) _yaw_rate_max,
-		(ParamFloat<px4::params::MC_YAWRAUTO_MAX>) _yaw_auto_max,
-
-		(ParamFloat<px4::params::MC_ACRO_R_MAX>) _acro_roll_max,
-		(ParamFloat<px4::params::MC_ACRO_P_MAX>) _acro_pitch_max,
-		(ParamFloat<px4::params::MC_ACRO_Y_MAX>) _acro_yaw_max,
-		(ParamFloat<px4::params::MC_ACRO_EXPO>) _acro_expo_rp,				/**< expo stick curve shape (roll & pitch) */
-		(ParamFloat<px4::params::MC_ACRO_EXPO_Y>) _acro_expo_y,				/**< expo stick curve shape (yaw) */
-		(ParamFloat<px4::params::MC_ACRO_SUPEXPO>) _acro_superexpo_rp,		/**< superexpo stick curve shape (roll & pitch) */
-		(ParamFloat<px4::params::MC_ACRO_SUPEXPOY>) _acro_superexpo_y,		/**< superexpo stick curve shape (yaw) */
-
-		(ParamFloat<px4::params::MC_RATT_TH>) _rattitude_thres,
-
-		(ParamBool<px4::params::MC_BAT_SCALE_EN>) _bat_scale_en,
-
 		(ParamInt<px4::params::SENS_BOARD_ROT>) _board_rotation_param,
 
 		(ParamFloat<px4::params::SENS_BOARD_X_OFF>) _board_offset_x,
@@ -257,18 +210,18 @@ private:
 		(ParamFloat<px4::params::SENS_BOARD_Z_OFF>) _board_offset_z,
 
 		(ParamFloat<px4::params::MC_ATT_RATE_MAX>) _att_rate_sample_rate_max,
-		(ParamFloat<px4::params::MC_ATT_ROLL_GAIN>) _att_roll_gain,
-		(ParamFloat<px4::params::MC_ATT_PITCH_GN>) _att_pitch_gain,
-		(ParamFloat<px4::params::MC_ATT_YAW_GAIN>) _att_yaw_gain,
 
-		(ParamFloat<px4::params::MC_ATT_ROLL_EFF>) _att_roll_eff,
-		(ParamFloat<px4::params::MC_ATT_PITCH_EFF>) _att_pitch_eff,
-		(ParamFloat<px4::params::MC_ATT_YAW_EFF>) _att_yaw_eff,
-		(ParamFloat<px4::params::MC_ATT_YAW_D_EFF>) _att_yaw_d_eff,
-		(ParamFloat<px4::params::MC_ATT_AZ_EFF>) _att_az_eff,
+		(ParamFloat<px4::params::SL_THRUST_COEFF>) _sl_thrust_coeff,
+		(ParamFloat<px4::params::SL_GEOM_L>) _sl_geom_l,
+		(ParamFloat<px4::params::SL_GEOM_B>) _sl_geom_b,
+		(ParamFloat<px4::params::SL_MASS>) _sl_mass,
+		(ParamFloat<px4::params::SL_INERTIA_X>) _sl_inertia_x,
+		(ParamFloat<px4::params::SL_INERTIA_Y>) _sl_inertia_y,
+		(ParamFloat<px4::params::SL_INERTIA_Z>) _sl_inertia_z,
+		(ParamFloat<px4::params::SL_INERTIA_PROP>) _sl_inertia_prop,
+		(ParamFloat<px4::params::SL_TORQUE_COEFF>) _sl_torque_coeff,
 
 		(ParamFloat<px4::params::MC_ATT_T_ACT>) _att_t_act
-
 	)
 
 	matrix::Vector3f _attitude_p;		/**< P gain for attitude control */

@@ -134,44 +134,6 @@ SlPosDirectControl::parameters_updated()
 	
 	/* Store some of the parameters in a more convenient way & precompute often-used values */
 
-	/* roll gains */
-	_attitude_p(0) = _roll_p.get();
-	_rate_p(0) = _roll_rate_p.get();
-	_rate_i(0) = _roll_rate_i.get();
-	_rate_int_lim(0) = _roll_rate_integ_lim.get();
-	_rate_d(0) = _roll_rate_d.get();
-	_rate_ff(0) = _roll_rate_ff.get();
-
-	/* pitch gains */
-	_attitude_p(1) = _pitch_p.get();
-	_rate_p(1) = _pitch_rate_p.get();
-	_rate_i(1) = _pitch_rate_i.get();
-	_rate_int_lim(1) = _pitch_rate_integ_lim.get();
-	_rate_d(1) = _pitch_rate_d.get();
-	_rate_ff(1) = _pitch_rate_ff.get();
-
-	/* yaw gains */
-	_attitude_p(2) = _yaw_p.get();
-	_rate_p(2) = _yaw_rate_p.get();
-	_rate_i(2) = _yaw_rate_i.get();
-	_rate_int_lim(2) = _yaw_rate_integ_lim.get();
-	_rate_d(2) = _yaw_rate_d.get();
-	_rate_ff(2) = _yaw_rate_ff.get();
-
-	/* angular rate limits */
-	_mc_rate_max(0) = math::radians(_roll_rate_max.get());
-	_mc_rate_max(1) = math::radians(_pitch_rate_max.get());
-	_mc_rate_max(2) = math::radians(_yaw_rate_max.get());
-
-	/* auto angular rate limits */
-	_auto_rate_max(0) = math::radians(_roll_rate_max.get());
-	_auto_rate_max(1) = math::radians(_pitch_rate_max.get());
-	_auto_rate_max(2) = math::radians(_yaw_auto_max.get());
-
-	/* manual rate control acro mode rate limits and expo */
-	_acro_rate_max(0) = math::radians(_acro_roll_max.get());
-	_acro_rate_max(1) = math::radians(_acro_pitch_max.get());
-	_acro_rate_max(2) = math::radians(_acro_yaw_max.get());
 
 	_actuators_0_circuit_breaker_enabled = circuit_breaker_enabled("CBRK_RATE_CTRL", CBRK_RATE_CTRL_KEY);
 
@@ -187,19 +149,15 @@ SlPosDirectControl::parameters_updated()
 
 	_sample_rate_max = _att_rate_sample_rate_max.get();
 
-	// TODO : update the parameters for PosDirectControl
-
-	// PosDirectControlParams.roll_gain = _att_roll_gain.get();
-	// PosDirectControlParams.pitch_gain = _att_pitch_gain.get();
-	// PosDirectControlParams.yaw_gain = _att_yaw_gain.get();
-
-	// PosDirectControlParams.roll_eff = _att_roll_eff.get();
-	// PosDirectControlParams.pitch_eff = _att_pitch_eff.get();
-	// PosDirectControlParams.yaw_eff = _att_yaw_eff.get();
-	// PosDirectControlParams.yaw_d_eff = _att_yaw_d_eff.get();
-	// PosDirectControlParams.az_eff = _att_az_eff.get();
-
-	// PosDirectControlParams.t_act = _att_t_act.get();
+	PosDirectControlParams.k = _sl_thrust_coeff.get();
+	PosDirectControlParams.l = _sl_geom_l.get();
+	PosDirectControlParams.b = _sl_geom_b.get();
+	PosDirectControlParams.m = _sl_mass.get();
+	PosDirectControlParams.Ix = _sl_inertia_x.get();
+	PosDirectControlParams.Iy = _sl_inertia_y.get();
+	PosDirectControlParams.Iz = _sl_inertia_z.get();
+	PosDirectControlParams.Ip = _sl_inertia_prop.get();
+	PosDirectControlParams.t = _sl_torque_coeff.get();
 
 }
 
@@ -505,26 +463,33 @@ SlPosDirectControl::control_pos_direct(float dt)
 	// `pos_direct_control_input` logger
 
 	_pos_direct_control_input.timestamp = hrt_absolute_time();
+
 	_pos_direct_control_input.vel[0] = _vehicle_local_position.vx;
 	_pos_direct_control_input.vel[1] = _vehicle_local_position.vy;
 	_pos_direct_control_input.vel[2] = _vehicle_local_position.vz;
+
 	_pos_direct_control_input.pos[0] = _vehicle_local_position.x;
 	_pos_direct_control_input.pos[1] = _vehicle_local_position.y;
 	_pos_direct_control_input.pos[2] = _vehicle_local_position.z;
+
 	_pos_direct_control_input.rates[0] = rates(0);
 	_pos_direct_control_input.rates[1] = rates(1);
 	_pos_direct_control_input.rates[2] = rates(2);
+
 	_pos_direct_control_input.q[0] = q(0);
 	_pos_direct_control_input.q[1] = q(1);
 	_pos_direct_control_input.q[2] = q(2);
 	_pos_direct_control_input.q[3] = q(3);
+
 	_pos_direct_control_input.w_rotor_meas[0] = 0;
 	_pos_direct_control_input.w_rotor_meas[1] = 0;
 	_pos_direct_control_input.w_rotor_meas[2] = 0;
 	_pos_direct_control_input.w_rotor_meas[3] = 0;
+
 	_pos_direct_control_input.pos_sp[0] = _local_pos_sp.x;
 	_pos_direct_control_input.pos_sp[1] = _local_pos_sp.y;
 	_pos_direct_control_input.pos_sp[2] = _local_pos_sp.z;
+
 	_pos_direct_control_input.yaw_sp = 0.f;
 
 	// See mixer file `pass.main.mix` for exact control allocation.
