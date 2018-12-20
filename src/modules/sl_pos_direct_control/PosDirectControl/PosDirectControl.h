@@ -7,9 +7,9 @@
  *
  * Code generation for model "PosDirectControl".
  *
- * Model version              : 1.213
+ * Model version              : 1.220
  * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C++ source code generated on : Wed Dec 19 18:50:02 2018
+ * C++ source code generated on : Thu Dec 20 14:54:02 2018
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -70,14 +70,6 @@ typedef struct {
   boolean_T psi_last_not_empty;        /* '<Root>/unwrap2pi' */
 } DW_PosDirectControl_T;
 
-/* Constant parameters (default storage) */
-typedef struct {
-  /* Expression: sim
-   * Referenced by: '<Root>/indi'
-   */
-  struct_xD8HnTHkLfNnaLYThJFTQF indi_sim;
-} ConstP_PosDirectControl_T;
-
 /* External inputs (root inport signals with default storage) */
 typedef struct {
   real32_T vel[3];                     /* '<Root>/vel' */
@@ -100,8 +92,17 @@ struct tag_RTM_PosDirectControl_T {
   const char_T *errorStatus;
 };
 
-/* Constant parameters (default storage) */
-extern const ConstP_PosDirectControl_T PosDirectControl_ConstP;
+/*
+ * Exported Global Parameters
+ *
+ * Note: Exported global parameters are tunable parameters with an exported
+ * global storage class designation.  Code generation will declare the memory for
+ * these parameters and exports their symbols.
+ *
+ */
+extern PosDirectControlParamsType PosDirectControlParams;/* Variable: PosDirectControlParams
+                                                          * Referenced by: '<Root>/indi'
+                                                          */
 
 /* Class declaration for model PosDirectControl */
 class PosDirectControlModelClass {
@@ -140,8 +141,6 @@ class PosDirectControlModelClass {
   RT_MODEL_PosDirectControl_T PosDirectControl_M;
 
   /* private member function(s) for subsystem '<Root>'*/
-  void PosDirectControl_mldivide(const real_T A[9], const real_T B[3], real_T Y
-    [3]);
   real_T PosDirectControl_xnrm2(int32_T n, const real_T x[16], int32_T ix0);
   real_T PosDirectControl_xnrm2_g(int32_T n, const real_T x[4], int32_T ix0);
   void PosDirectControl_xaxpy_lx(int32_T n, real_T a, const real_T x[4], int32_T

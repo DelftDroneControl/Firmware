@@ -7,9 +7,9 @@
  *
  * Code generation for model "PosDirectControl".
  *
- * Model version              : 1.213
+ * Model version              : 1.220
  * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C++ source code generated on : Wed Dec 19 18:50:02 2018
+ * C++ source code generated on : Thu Dec 20 14:54:02 2018
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -20,6 +20,23 @@
 
 #include "PosDirectControl.h"
 #include "PosDirectControl_private.h"
+
+/* Exported block parameters */
+PosDirectControlParamsType PosDirectControlParams = {
+  1.9035e-6,
+  0.0875,
+  0.115,
+  0.374,
+  0.0014,
+  0.0013,
+  0.0025,
+  8.0e-6,
+  1.9203e-8,
+  0.025,
+  500.0
+} ;                                    /* Variable: PosDirectControlParams
+                                        * Referenced by: '<Root>/indi'
+                                        */
 
 real_T rt_atan2d_snf(real_T u0, real_T u1)
 {
@@ -55,59 +72,6 @@ real_T rt_atan2d_snf(real_T u0, real_T u1)
   }
 
   return y;
-}
-
-/* Function for MATLAB Function: '<Root>/indi' */
-void PosDirectControlModelClass::PosDirectControl_mldivide(const real_T A[9],
-  const real_T B[3], real_T Y[3])
-{
-  real_T b_A[9];
-  int32_T r1;
-  int32_T r2;
-  int32_T r3;
-  real_T maxval;
-  real_T a21;
-  int32_T rtemp;
-  memcpy(&b_A[0], &A[0], 9U * sizeof(real_T));
-  r1 = 0;
-  r2 = 1;
-  r3 = 2;
-  maxval = std::abs(A[0]);
-  a21 = std::abs(A[1]);
-  if (a21 > maxval) {
-    maxval = a21;
-    r1 = 1;
-    r2 = 0;
-  }
-
-  if (std::abs(A[2]) > maxval) {
-    r1 = 2;
-    r2 = 1;
-    r3 = 0;
-  }
-
-  b_A[r2] = A[r2] / A[r1];
-  b_A[r3] /= b_A[r1];
-  b_A[3 + r2] -= b_A[3 + r1] * b_A[r2];
-  b_A[3 + r3] -= b_A[3 + r1] * b_A[r3];
-  b_A[6 + r2] -= b_A[6 + r1] * b_A[r2];
-  b_A[6 + r3] -= b_A[6 + r1] * b_A[r3];
-  if (std::abs(b_A[3 + r3]) > std::abs(b_A[3 + r2])) {
-    rtemp = r2;
-    r2 = r3;
-    r3 = rtemp;
-  }
-
-  b_A[3 + r3] /= b_A[3 + r2];
-  b_A[6 + r3] -= b_A[3 + r3] * b_A[6 + r2];
-  Y[1] = B[r2] - B[r1] * b_A[r2];
-  Y[2] = (B[r3] - B[r1] * b_A[r3]) - b_A[3 + r3] * Y[1];
-  Y[2] /= b_A[6 + r3];
-  Y[0] = B[r1] - b_A[6 + r1] * Y[2];
-  Y[1] -= b_A[6 + r2] * Y[2];
-  Y[1] /= b_A[3 + r2];
-  Y[0] -= b_A[3 + r1] * Y[1];
-  Y[0] /= b_A[r1];
 }
 
 /* Function for MATLAB Function: '<Root>/indi' */
@@ -959,48 +923,49 @@ void PosDirectControlModelClass::step()
   real_T rtb_w_b[4];
   real_T rtb_U_a[4];
   real_T rtb_Saturation_k;
-  real_T nu[4];
+  real_T R_IB[9];
   real_T G2[16];
   real_T G[16];
   real_T hdd_c[3];
-  real_T b_ddy0[4];
-  boolean_T b_y;
+  int32_T r1;
+  int32_T r2;
+  int32_T rtemp;
   real_T X[16];
   real_T V[16];
-  int32_T b_r;
-  int32_T vcol;
-  real_T b_U[16];
-  int32_T br;
-  int32_T ia;
+  int32_T r;
+  real_T U[16];
+  boolean_T b_p;
   int32_T b_ic;
   real_T rtb_CastToDouble2[4];
   real_T rtb_Product3;
   real_T rtb_Product2;
   real_T rtb_Product1;
   real_T rtb_Saturation2_b;
-  real_T rtb_VectorConcatenate[3];
   real_T rtb_TSamp[6];
   real_T rtb_Saturation[3];
   real_T rtb_TSamp_o2[3];
   real_T rtb_Diff[6];
-  real_T hdd_c_tmp[9];
   int32_T i;
   real_T tmp[9];
   real_T tmp_0[9];
   real_T tmp_1[3];
   real_T tmp_2[3];
-  real_T nu_0[4];
-  real_T rtb_CastToDouble4_idx_1;
-  real_T rtb_CastToDouble1_idx_0;
+  real_T rtb_Saturation2_l[4];
+  real_T tmp_3[4];
+  real_T rtb_VectorConcatenate_idx_0;
+  real_T rtb_VectorConcatenate_idx_1;
+  real_T rtb_VectorConcatenate_idx_2;
+  real_T rtb_U_idx_1;
   real_T rtb_TSamp_n_idx_0;
   real_T rtb_CastToDouble1_idx_1;
   real_T rtb_TSamp_n_idx_1;
-  real_T y;
   real_T rtb_Saturation_k_tmp;
-  real_T tmp_3;
-  real_T tmp_4;
-  real_T tmp_5;
-  real_T hdd_c_tmp_tmp;
+  real_T R_IB_tmp;
+  real_T R_IB_tmp_0;
+  real_T R_IB_tmp_1;
+  real_T R_IB_tmp_2;
+  real_T R_IB_tmp_3;
+  real_T R_IB_tmp_tmp;
 
   /* Sqrt: '<S114>/sqrt' incorporates:
    *  DataTypeConversion: '<Root>/Cast To Double2'
@@ -1044,17 +1009,17 @@ void PosDirectControlModelClass::step()
   /* Fcn: '<S12>/fcn2' incorporates:
    *  Fcn: '<S12>/fcn5'
    */
-  rtb_TSamp_n_idx_0 = rtb_Saturation2_b * rtb_Saturation2_b;
-  rtb_TSamp_n_idx_1 = rtb_Product1 * rtb_Product1;
-  rtb_Saturation_k_tmp = rtb_Product2 * rtb_Product2;
-  rtb_CastToDouble1_idx_0 = rtb_Product3 * rtb_Product3;
-  rtb_Saturation_k = ((rtb_TSamp_n_idx_0 + rtb_TSamp_n_idx_1) -
-                      rtb_Saturation_k_tmp) - rtb_CastToDouble1_idx_0;
+  rtb_Saturation_k_tmp = rtb_Saturation2_b * rtb_Saturation2_b;
+  rtb_TSamp_n_idx_0 = rtb_Product1 * rtb_Product1;
+  rtb_TSamp_n_idx_1 = rtb_Product2 * rtb_Product2;
+  rtb_VectorConcatenate_idx_2 = rtb_Product3 * rtb_Product3;
+  rtb_Saturation_k = ((rtb_Saturation_k_tmp + rtb_TSamp_n_idx_0) -
+                      rtb_TSamp_n_idx_1) - rtb_VectorConcatenate_idx_2;
 
   /* Trigonometry: '<S112>/Trigonometric Function1' incorporates:
    *  Fcn: '<S12>/fcn1'
    */
-  rtb_VectorConcatenate[0] = rt_atan2d_snf((rtb_Product1 * rtb_Product2 +
+  rtb_VectorConcatenate_idx_0 = rt_atan2d_snf((rtb_Product1 * rtb_Product2 +
     rtb_Saturation2_b * rtb_Product3) * 2.0, rtb_Saturation_k);
 
   /* Fcn: '<S12>/fcn3' */
@@ -1063,11 +1028,11 @@ void PosDirectControlModelClass::step()
 
   /* Trigonometry: '<S112>/trigFcn' */
   if (rtb_Saturation_k > 1.0) {
-    y = 1.0;
+    rtb_U_idx_1 = 1.0;
   } else if (rtb_Saturation_k < -1.0) {
-    y = -1.0;
+    rtb_U_idx_1 = -1.0;
   } else {
-    y = rtb_Saturation_k;
+    rtb_U_idx_1 = rtb_Saturation_k;
   }
 
   /* Fcn: '<S12>/fcn4' */
@@ -1077,27 +1042,27 @@ void PosDirectControlModelClass::step()
   /* Trigonometry: '<S112>/Trigonometric Function3' incorporates:
    *  Fcn: '<S12>/fcn5'
    */
-  rtb_VectorConcatenate[2] = rt_atan2d_snf(rtb_Saturation_k, ((rtb_TSamp_n_idx_0
-    - rtb_TSamp_n_idx_1) - rtb_Saturation_k_tmp) + rtb_CastToDouble1_idx_0);
+  rtb_VectorConcatenate_idx_2 = rt_atan2d_snf(rtb_Saturation_k,
+    ((rtb_Saturation_k_tmp - rtb_TSamp_n_idx_0) - rtb_TSamp_n_idx_1) +
+    rtb_VectorConcatenate_idx_2);
 
   /* MATLAB Function: '<Root>/unwrap2pi' */
   /* :  psi0 = att(3); */
   /* :  if isempty(psi_last) */
   if (!PosDirectControl_DW.psi_last_not_empty) {
     /* :  psi_last = psi0; */
-    PosDirectControl_DW.psi_last = rtb_VectorConcatenate[2];
+    PosDirectControl_DW.psi_last = rtb_VectorConcatenate_idx_2;
     PosDirectControl_DW.psi_last_not_empty = true;
   }
 
   /* :  if isempty(N) */
   /* :  if (psi0-psi_last)>1.9*pi */
-  rtb_CastToDouble1_idx_1 = rtb_VectorConcatenate[2] -
-    PosDirectControl_DW.psi_last;
-  if (rtb_CastToDouble1_idx_1 > 5.9690260418206069) {
+  R_IB_tmp_3 = rtb_VectorConcatenate_idx_2 - PosDirectControl_DW.psi_last;
+  if (R_IB_tmp_3 > 5.9690260418206069) {
     /* :  N = N-1; */
     PosDirectControl_DW.N--;
   } else {
-    if (rtb_CastToDouble1_idx_1 < -5.9690260418206069) {
+    if (R_IB_tmp_3 < -5.9690260418206069) {
       /* :  elseif (psi0-psi_last)< -1.9*pi */
       /* :  N = N+1; */
       PosDirectControl_DW.N++;
@@ -1105,16 +1070,17 @@ void PosDirectControlModelClass::step()
   }
 
   /* :  psi_last = psi0; */
-  PosDirectControl_DW.psi_last = rtb_VectorConcatenate[2];
+  PosDirectControl_DW.psi_last = rtb_VectorConcatenate_idx_2;
 
   /* :  att_out = att; */
   /* :  att_out(3) = psi0 + 2*N*pi; */
-  rtb_VectorConcatenate[2] += 2.0 * PosDirectControl_DW.N * 3.1415926535897931;
+  rtb_VectorConcatenate_idx_2 += 2.0 * PosDirectControl_DW.N *
+    3.1415926535897931;
 
   /* End of MATLAB Function: '<Root>/unwrap2pi' */
 
   /* SignalConversion: '<Root>/ConcatBufferAtVector ConcatenateIn1' */
-  rtb_VectorConcatenate_d[0] = rtb_VectorConcatenate[0];
+  rtb_VectorConcatenate_d[0] = rtb_VectorConcatenate_idx_0;
 
   /* DataTypeConversion: '<Root>/Cast To Double3' incorporates:
    *  Inport: '<Root>/rates'
@@ -1124,7 +1090,7 @@ void PosDirectControlModelClass::step()
   /* SignalConversion: '<Root>/ConcatBufferAtVector ConcatenateIn1' incorporates:
    *  Trigonometry: '<S112>/trigFcn'
    */
-  rtb_VectorConcatenate_d[1] = std::asin(y);
+  rtb_VectorConcatenate_d[1] = std::asin(rtb_U_idx_1);
 
   /* DataTypeConversion: '<Root>/Cast To Double3' incorporates:
    *  Inport: '<Root>/rates'
@@ -1132,7 +1098,7 @@ void PosDirectControlModelClass::step()
   rtb_VectorConcatenate_d[4] = PosDirectControl_U.rates[1];
 
   /* SignalConversion: '<Root>/ConcatBufferAtVector ConcatenateIn1' */
-  rtb_VectorConcatenate_d[2] = rtb_VectorConcatenate[2];
+  rtb_VectorConcatenate_d[2] = rtb_VectorConcatenate_idx_2;
 
   /* DataTypeConversion: '<Root>/Cast To Double3' incorporates:
    *  Inport: '<Root>/rates'
@@ -1191,23 +1157,24 @@ void PosDirectControlModelClass::step()
    * About '<S4>/TSamp':
    *  y = u * K where K = 1 / ( w * Ts )
    */
-  rtb_Product2 = rtb_n_des_filtered[0] * 500.0;
+  rtb_Saturation_k_tmp = rtb_n_des_filtered[0] * 500.0;
 
   /* Sum: '<S4>/Diff' incorporates:
    *  UnitDelay: '<S4>/UD'
    */
-  rtb_Saturation_k_tmp = rtb_Product2 - PosDirectControl_DW.UD_DSTATE_b[0];
+  rtb_VectorConcatenate_idx_0 = rtb_Saturation_k_tmp -
+    PosDirectControl_DW.UD_DSTATE_b[0];
 
   /* Saturate: '<Root>/Saturation' */
-  if (rtb_Saturation_k_tmp > 0.5) {
-    y = 0.5;
+  if (rtb_VectorConcatenate_idx_0 > 0.5) {
+    rtb_U_idx_1 = 0.5;
     rtb_Saturation[0] = 0.5;
-  } else if (rtb_Saturation_k_tmp < -0.5) {
-    y = -0.5;
+  } else if (rtb_VectorConcatenate_idx_0 < -0.5) {
+    rtb_U_idx_1 = -0.5;
     rtb_Saturation[0] = -0.5;
   } else {
-    y = rtb_Saturation_k_tmp;
-    rtb_Saturation[0] = rtb_Saturation_k_tmp;
+    rtb_U_idx_1 = rtb_VectorConcatenate_idx_0;
+    rtb_Saturation[0] = rtb_VectorConcatenate_idx_0;
   }
 
   /* SampleTimeMath: '<S3>/TSamp'
@@ -1215,7 +1182,7 @@ void PosDirectControlModelClass::step()
    * About '<S3>/TSamp':
    *  y = u * K where K = 1 / ( w * Ts )
    */
-  rtb_TSamp_o2[0] = rtb_Saturation_k_tmp * 500.0;
+  rtb_TSamp_o2[0] = rtb_VectorConcatenate_idx_0 * 500.0;
 
   /* DataTypeConversion: '<Root>/Cast To Double' incorporates:
    *  Inport: '<Root>/vel'
@@ -1227,24 +1194,25 @@ void PosDirectControlModelClass::step()
    * About '<S4>/TSamp':
    *  y = u * K where K = 1 / ( w * Ts )
    */
-  rtb_TSamp_n_idx_0 = rtb_Product2;
-  rtb_Product2 = rtb_n_des_filtered[1] * 500.0;
+  rtb_TSamp_n_idx_0 = rtb_Saturation_k_tmp;
+  rtb_Saturation_k_tmp = rtb_n_des_filtered[1] * 500.0;
 
   /* Sum: '<S4>/Diff' incorporates:
    *  UnitDelay: '<S4>/UD'
    */
-  rtb_Saturation_k_tmp = rtb_Product2 - PosDirectControl_DW.UD_DSTATE_b[1];
+  rtb_VectorConcatenate_idx_0 = rtb_Saturation_k_tmp -
+    PosDirectControl_DW.UD_DSTATE_b[1];
 
   /* Saturate: '<Root>/Saturation' */
-  if (rtb_Saturation_k_tmp > 0.5) {
-    rtb_CastToDouble4_idx_1 = 0.5;
+  if (rtb_VectorConcatenate_idx_0 > 0.5) {
+    rtb_CastToDouble1_idx_1 = 0.5;
     rtb_Saturation[1] = 0.5;
-  } else if (rtb_Saturation_k_tmp < -0.5) {
-    rtb_CastToDouble4_idx_1 = -0.5;
+  } else if (rtb_VectorConcatenate_idx_0 < -0.5) {
+    rtb_CastToDouble1_idx_1 = -0.5;
     rtb_Saturation[1] = -0.5;
   } else {
-    rtb_CastToDouble4_idx_1 = rtb_Saturation_k_tmp;
-    rtb_Saturation[1] = rtb_Saturation_k_tmp;
+    rtb_CastToDouble1_idx_1 = rtb_VectorConcatenate_idx_0;
+    rtb_Saturation[1] = rtb_VectorConcatenate_idx_0;
   }
 
   /* SampleTimeMath: '<S3>/TSamp'
@@ -1252,7 +1220,7 @@ void PosDirectControlModelClass::step()
    * About '<S3>/TSamp':
    *  y = u * K where K = 1 / ( w * Ts )
    */
-  rtb_TSamp_o2[1] = rtb_Saturation_k_tmp * 500.0;
+  rtb_TSamp_o2[1] = rtb_VectorConcatenate_idx_0 * 500.0;
 
   /* DataTypeConversion: '<Root>/Cast To Double' incorporates:
    *  Inport: '<Root>/vel'
@@ -1264,21 +1232,22 @@ void PosDirectControlModelClass::step()
    * About '<S4>/TSamp':
    *  y = u * K where K = 1 / ( w * Ts )
    */
-  rtb_TSamp_n_idx_1 = rtb_Product2;
-  rtb_Product2 = rtb_n_des_filtered[2] * 500.0;
+  rtb_TSamp_n_idx_1 = rtb_Saturation_k_tmp;
+  rtb_Saturation_k_tmp = rtb_n_des_filtered[2] * 500.0;
 
   /* Sum: '<S4>/Diff' incorporates:
    *  UnitDelay: '<S4>/UD'
    */
-  rtb_Saturation_k_tmp = rtb_Product2 - PosDirectControl_DW.UD_DSTATE_b[2];
+  rtb_VectorConcatenate_idx_0 = rtb_Saturation_k_tmp -
+    PosDirectControl_DW.UD_DSTATE_b[2];
 
   /* Saturate: '<Root>/Saturation' */
-  if (rtb_Saturation_k_tmp > 0.5) {
+  if (rtb_VectorConcatenate_idx_0 > 0.5) {
     rtb_Saturation[2] = 0.5;
-  } else if (rtb_Saturation_k_tmp < -0.5) {
+  } else if (rtb_VectorConcatenate_idx_0 < -0.5) {
     rtb_Saturation[2] = -0.5;
   } else {
-    rtb_Saturation[2] = rtb_Saturation_k_tmp;
+    rtb_Saturation[2] = rtb_VectorConcatenate_idx_0;
   }
 
   /* SampleTimeMath: '<S3>/TSamp'
@@ -1286,7 +1255,7 @@ void PosDirectControlModelClass::step()
    * About '<S3>/TSamp':
    *  y = u * K where K = 1 / ( w * Ts )
    */
-  rtb_TSamp_o2[2] = rtb_Saturation_k_tmp * 500.0;
+  rtb_TSamp_o2[2] = rtb_VectorConcatenate_idx_0 * 500.0;
 
   /* DataTypeConversion: '<Root>/Cast To Double' incorporates:
    *  Inport: '<Root>/vel'
@@ -1358,11 +1327,12 @@ void PosDirectControlModelClass::step()
   rtb_Saturation_k = PosDirectControl_U.yaw_sp;
 
   /* Sum: '<Root>/Sum' */
-  rtb_Saturation_k -= rtb_VectorConcatenate[2];
+  rtb_Saturation_k -= rtb_VectorConcatenate_idx_2;
 
   /* MATLAB Function: '<Root>/indi' incorporates:
    *  DataTypeConversion: '<Root>/Cast To Double1'
    *  DataTypeConversion: '<Root>/Cast To Double4'
+   *  Gain: '<Root>/Gain2'
    *  Inport: '<Root>/pos'
    *  Inport: '<Root>/pos_sp'
    *  Memory: '<Root>/Memory'
@@ -1370,16 +1340,16 @@ void PosDirectControlModelClass::step()
    *  Sum: '<S1>/Diff'
    *  UnitDelay: '<S1>/UD'
    */
-  /* :  [U,y, eta1, nu1, ddy0, h, dU0] = control_DRF_indi(X,sim,par,X0,X0_dot,n_des,nd,ndd,Z_ref,Vz_ref,Z,Vz,ddz0, U0,h0,r_ref,dU0); */
-  /* 'control_DRF_indi:3' k = sim.aero.k0; */
-  /* 'control_DRF_indi:4' l = sim.drone.l; */
-  /* 'control_DRF_indi:5' b = sim.drone.b; */
-  /* 'control_DRF_indi:6' m = sim.drone.mass; */
-  /* 'control_DRF_indi:7' Ix = sim.drone.Iv(1,1); */
-  /* 'control_DRF_indi:8' Iy = sim.drone.Iv(2,2); */
-  /* 'control_DRF_indi:9' Iz = sim.drone.Iv(3,3); */
-  /* 'control_DRF_indi:10' Ip = sim.drone.Ip(3,3); */
-  /* 'control_DRF_indi:11' t = sim.aero.t0; */
+  /* :  [U,y, eta1, nu1, ddy0, h, dU0] = control_DRF_indi(X,X0,X0_dot,n_des,nd,ndd,Z_ref,Vz_ref,Z,Vz,ddz0, U0,h0,r_ref,dU0,PosDirectControlParams); */
+  /* 'control_DRF_indi:3' k = params.k; */
+  /* 'control_DRF_indi:4' l = params.l; */
+  /* 'control_DRF_indi:5' b = params.b; */
+  /* 'control_DRF_indi:6' m = params.m; */
+  /* 'control_DRF_indi:7' Ix = params.Ix; */
+  /* 'control_DRF_indi:8' Iy = params.Iy; */
+  /* 'control_DRF_indi:9' Iz = params.Iz; */
+  /* 'control_DRF_indi:10' Ip = params.Ip; */
+  /* 'control_DRF_indi:11' t = params.t; */
   /* 'control_DRF_indi:13' phi = X(1); */
   /* 'control_DRF_indi:14' theta = X(2); */
   /* 'control_DRF_indi:15' psi = X(3); */
@@ -1398,31 +1368,71 @@ void PosDirectControlModelClass::step()
   /* 'control_DRF_indi:27' R_IB = [cos(psi)*cos(theta) , cos(psi)*sin(theta)*sin(phi)-sin(psi)*cos(phi), cos(psi)*sin(theta)*cos(phi)+sin(psi)*sin(phi); */
   /* 'control_DRF_indi:28'         sin(psi)*cos(theta) , sin(psi)*sin(theta)*sin(phi)+cos(psi)*cos(phi), sin(psi)*sin(theta)*cos(phi)-cos(psi)*sin(phi); */
   /* 'control_DRF_indi:29'         -sin(theta)          , cos(theta)*sin(phi)                          , cos(theta)*cos(phi)                          ]; */
+  rtb_Product2 = std::cos(rtb_VectorConcatenate_d[2]);
+  R_IB_tmp_3 = std::cos(rtb_VectorConcatenate_d[1]);
+  R_IB[0] = rtb_Product2 * R_IB_tmp_3;
+  R_IB_tmp_tmp = std::sin(rtb_VectorConcatenate_d[1]);
+  R_IB_tmp = rtb_Product2 * R_IB_tmp_tmp;
+  R_IB_tmp_0 = std::cos(rtb_VectorConcatenate_d[0]);
+  R_IB_tmp_1 = std::sin(rtb_VectorConcatenate_d[2]);
+  R_IB_tmp_2 = std::sin(rtb_VectorConcatenate_d[0]);
+  R_IB[3] = R_IB_tmp * R_IB_tmp_2 - R_IB_tmp_1 * R_IB_tmp_0;
+  R_IB[6] = R_IB_tmp * R_IB_tmp_0 + R_IB_tmp_1 * R_IB_tmp_2;
+  R_IB[1] = R_IB_tmp_1 * R_IB_tmp_3;
+  R_IB_tmp = R_IB_tmp_1 * R_IB_tmp_tmp;
+  R_IB[4] = R_IB_tmp * R_IB_tmp_2 + rtb_Product2 * R_IB_tmp_0;
+  R_IB[7] = R_IB_tmp * R_IB_tmp_0 - rtb_Product2 * R_IB_tmp_2;
+  R_IB[2] = -R_IB_tmp_tmp;
+  R_IB[5] = R_IB_tmp_3 * R_IB_tmp_2;
+  R_IB[8] = R_IB_tmp_3 * R_IB_tmp_0;
+
   /* 'control_DRF_indi:31' h = R_IB\n_des; */
-  rtb_CastToDouble1_idx_1 = std::cos(rtb_VectorConcatenate_d[2]);
-  rtb_Saturation_k_tmp = std::cos(rtb_VectorConcatenate_d[1]);
-  tmp[0] = rtb_CastToDouble1_idx_1 * rtb_Saturation_k_tmp;
-  hdd_c_tmp_tmp = std::sin(rtb_VectorConcatenate_d[1]);
-  tmp_3 = rtb_CastToDouble1_idx_1 * hdd_c_tmp_tmp;
-  rtb_CastToDouble1_idx_0 = std::cos(rtb_VectorConcatenate_d[0]);
-  tmp_4 = std::sin(rtb_VectorConcatenate_d[2]);
-  tmp_5 = std::sin(rtb_VectorConcatenate_d[0]);
-  tmp[3] = tmp_3 * tmp_5 - tmp_4 * rtb_CastToDouble1_idx_0;
-  tmp[6] = tmp_3 * rtb_CastToDouble1_idx_0 + tmp_4 * tmp_5;
-  tmp[1] = tmp_4 * rtb_Saturation_k_tmp;
-  tmp_3 = tmp_4 * hdd_c_tmp_tmp;
-  tmp[4] = tmp_3 * tmp_5 + rtb_CastToDouble1_idx_1 * rtb_CastToDouble1_idx_0;
-  tmp[7] = tmp_3 * rtb_CastToDouble1_idx_0 - rtb_CastToDouble1_idx_1 * tmp_5;
-  tmp[2] = -hdd_c_tmp_tmp;
-  tmp[5] = rtb_Saturation_k_tmp * tmp_5;
-  tmp[8] = rtb_Saturation_k_tmp * rtb_CastToDouble1_idx_0;
-  PosDirectControl_mldivide(tmp, rtb_n_des_filtered, rtb_VectorConcatenate);
+  r1 = 0;
+  r2 = 1;
+  i = 2;
+  rtb_Product2 = std::abs(R_IB[0]);
+  rtb_VectorConcatenate_idx_0 = std::abs(R_IB[1]);
+  if (rtb_VectorConcatenate_idx_0 > rtb_Product2) {
+    rtb_Product2 = rtb_VectorConcatenate_idx_0;
+    r1 = 1;
+    r2 = 0;
+  }
+
+  if (std::abs(-std::sin(rtb_VectorConcatenate_d[1])) > rtb_Product2) {
+    r1 = 2;
+    r2 = 1;
+    i = 0;
+  }
+
+  R_IB[r2] /= R_IB[r1];
+  R_IB[i] /= R_IB[r1];
+  R_IB[3 + r2] -= R_IB[3 + r1] * R_IB[r2];
+  R_IB[3 + i] -= R_IB[3 + r1] * R_IB[i];
+  R_IB[6 + r2] -= R_IB[6 + r1] * R_IB[r2];
+  R_IB[6 + i] -= R_IB[6 + r1] * R_IB[i];
+  if (std::abs(R_IB[3 + i]) > std::abs(R_IB[3 + r2])) {
+    rtemp = r2;
+    r2 = i;
+    i = rtemp;
+  }
+
+  R_IB[3 + i] /= R_IB[3 + r2];
+  R_IB[6 + i] -= R_IB[3 + i] * R_IB[6 + r2];
+  rtb_VectorConcatenate_idx_1 = rtb_n_des_filtered[r2] - rtb_n_des_filtered[r1] *
+    R_IB[r2];
+  rtb_VectorConcatenate_idx_2 = ((rtb_n_des_filtered[i] - rtb_n_des_filtered[r1]
+    * R_IB[i]) - R_IB[3 + i] * rtb_VectorConcatenate_idx_1) / R_IB[6 + i];
+  rtb_VectorConcatenate_idx_1 -= R_IB[6 + r2] * rtb_VectorConcatenate_idx_2;
+  rtb_VectorConcatenate_idx_1 /= R_IB[3 + r2];
+  rtb_VectorConcatenate_idx_0 = ((rtb_n_des_filtered[r1] - R_IB[6 + r1] *
+    rtb_VectorConcatenate_idx_2) - R_IB[3 + r1] * rtb_VectorConcatenate_idx_1) /
+    R_IB[r1];
 
   /* 'control_DRF_indi:32' h1 = h(1); */
   /* 'control_DRF_indi:32' h2 = h(2); */
   /* 'control_DRF_indi:32' h3 = h(3); */
-  /* 'control_DRF_indi:33' nx = sim.primary_axis(1); */
-  /* 'control_DRF_indi:34' ny = sim.primary_axis(2); */
+  /* 'control_DRF_indi:33' nx = 0; */
+  /* 'control_DRF_indi:34' ny = 0; */
   /* 'control_DRF_indi:44' alpha = 0; */
   /* 'control_DRF_indi:45' beta = 1; */
   /* 'control_DRF_indi:47' y1 = alpha*(h1-nx)+beta*(h2-ny); */
@@ -1439,85 +1449,80 @@ void PosDirectControlModelClass::step()
   /* 'control_DRF_indi:59' nu3 = -kp*y2 - kp*dy2; */
   /* 'control_DRF_indi:60' nu4 = -kpr*(r-r_ref); */
   /* 'control_DRF_indi:62' nu = [nu1; nu2; nu3; nu4]; */
-  nu[0] = (rtb_CastToDouble[2] - rtb_Product1) * -10.0 - ((real_T)
-    PosDirectControl_U.pos[2] - PosDirectControl_U.pos_sp[2]) * 10.0;
-  nu[1] = (0.0 * rtb_VectorConcatenate[0] + rtb_VectorConcatenate[1]) * -30.0 -
-    (((-rtb_VectorConcatenate[2] * rtb_VectorConcatenate_d[4] +
-       rtb_VectorConcatenate[1] * rtb_VectorConcatenate_d[5]) + y) * 0.0 +
-     ((rtb_VectorConcatenate[2] * rtb_VectorConcatenate_d[3] -
-       rtb_VectorConcatenate[0] * rtb_VectorConcatenate_d[5]) +
-      rtb_CastToDouble4_idx_1)) * 20.0;
-
   /* 'control_DRF_indi:71' Ucons = sqrt(abs(U0)); */
   /* 'control_DRF_indi:72' Ucons(Ucons<500) = 500; */
   /* 'control_DRF_indi:73' G1 = [-cos(theta)*cos(phi)*k/m, -cos(theta)*cos(phi)*k/m, -cos(theta)*cos(phi)*k/m, -cos(theta)*cos(phi)*k/m; */
   /* 'control_DRF_indi:74'      h3*(b*k/Ix + Ip*q0/Ix/Ucons(1)), h3*(-b*k/Ix-Ip*q0/Ix/Ucons(2)), h3*(-b*k/Ix+Ip*q0/Ix/Ucons(3)), h3*(b*k/Ix-Ip*q0/Ix/Ucons(4)); */
   /* 'control_DRF_indi:75'      h3*(-l*k/Iy+ Ip*p0/Iy/Ucons(1)), h3*(-l*k/Iy-Ip*p0/Iy/Ucons(2)), h3*(l*k/Iy+Ip*p0/Iy/Ucons(3)), h3*(l*k/Iy-Ip*p0/Iy/Ucons(4)); */
   /* 'control_DRF_indi:76'      t/Iz, -t/Iz, t/Iz, -t/Iz]; */
-  /* 'control_DRF_indi:78' G2 = par.freq*[zeros(3,4); */
+  /* 'control_DRF_indi:78' G2 = params.freq*[zeros(3,4); */
   /* 'control_DRF_indi:79'                Ip/2/Ucons(1)/Iz, -Ip/2/Ucons(2)/Iz, Ip/2/Ucons(3)/Iz, -Ip/2/Ucons(4)/Iz]; */
-  for (b_r = 0; b_r < 4; b_r++) {
-    rtb_Product1 = std::sqrt(std::abs(rtb_DiscreteStateSpace3[b_r]));
-    if (rtb_Product1 < 500.0) {
-      rtb_Product1 = 500.0;
+  for (r2 = 0; r2 < 4; r2++) {
+    R_IB_tmp_tmp = std::sqrt(std::abs(rtb_DiscreteStateSpace3[r2]));
+    if (R_IB_tmp_tmp < 500.0) {
+      R_IB_tmp_tmp = 500.0;
     }
 
-    i = b_r << 2;
-    G2[i] = 0.0;
-    G2[1 + i] = 0.0;
-    G2[2 + i] = 0.0;
-    rtb_CastToDouble2[b_r] = rtb_Product1;
+    rtb_Product2 = PosDirectControlParams.freq * 0.0;
+    i = r2 << 2;
+    G2[i] = rtb_Product2;
+    G2[1 + i] = rtb_Product2;
+    G2[2 + i] = rtb_Product2;
+    rtb_CastToDouble2[r2] = R_IB_tmp_tmp;
   }
 
-  G2[3] = PosDirectControl_ConstP.indi_sim.drone.Ip[8] / 2.0 /
-    rtb_CastToDouble2[0] / PosDirectControl_ConstP.indi_sim.drone.Iv[8] * 500.0;
-  rtb_Product1 = -PosDirectControl_ConstP.indi_sim.drone.Ip[8] / 2.0;
-  G2[7] = rtb_Product1 / rtb_CastToDouble2[1] /
-    PosDirectControl_ConstP.indi_sim.drone.Iv[8] * 500.0;
-  G2[11] = PosDirectControl_ConstP.indi_sim.drone.Ip[8] / 2.0 /
-    rtb_CastToDouble2[2] / PosDirectControl_ConstP.indi_sim.drone.Iv[8] * 500.0;
-  G2[15] = rtb_Product1 / rtb_CastToDouble2[3] /
-    PosDirectControl_ConstP.indi_sim.drone.Iv[8] * 500.0;
+  rtb_Product2 = PosDirectControlParams.Ip / 2.0;
+  G2[3] = rtb_Product2 / rtb_CastToDouble2[0] / PosDirectControlParams.Iz *
+    PosDirectControlParams.freq;
+  R_IB_tmp_tmp = -PosDirectControlParams.Ip / 2.0;
+  G2[7] = R_IB_tmp_tmp / rtb_CastToDouble2[1] / PosDirectControlParams.Iz *
+    PosDirectControlParams.freq;
+  G2[11] = rtb_Product2 / rtb_CastToDouble2[2] / PosDirectControlParams.Iz *
+    PosDirectControlParams.freq;
+  G2[15] = R_IB_tmp_tmp / rtb_CastToDouble2[3] / PosDirectControlParams.Iz *
+    PosDirectControlParams.freq;
 
   /* 'control_DRF_indi:81' G = (G1+G2); */
-  rtb_CastToDouble1_idx_1 = -rtb_Saturation_k_tmp * rtb_CastToDouble1_idx_0 *
-    1.9035E-6 / 0.374;
-  X[0] = rtb_CastToDouble1_idx_1;
-  X[4] = rtb_CastToDouble1_idx_1;
-  X[8] = rtb_CastToDouble1_idx_1;
-  X[12] = rtb_CastToDouble1_idx_1;
-  rtb_CastToDouble1_idx_1 = PosDirectControl_ConstP.indi_sim.drone.Ip[8] *
-    rtb_DiscreteStateSpace1[4] / PosDirectControl_ConstP.indi_sim.drone.Iv[0];
-  X[1] = (rtb_CastToDouble1_idx_1 / rtb_CastToDouble2[0] + 2.1890250000000002E-7
-          / PosDirectControl_ConstP.indi_sim.drone.Iv[0]) *
-    rtb_VectorConcatenate[2];
-  X[5] = (-2.1890250000000002E-7 / PosDirectControl_ConstP.indi_sim.drone.Iv[0]
-          - rtb_CastToDouble1_idx_1 / rtb_CastToDouble2[1]) *
-    rtb_VectorConcatenate[2];
-  X[9] = (rtb_CastToDouble1_idx_1 / rtb_CastToDouble2[2] +
-          -2.1890250000000002E-7 / PosDirectControl_ConstP.indi_sim.drone.Iv[0])
-    * rtb_VectorConcatenate[2];
-  X[13] = (2.1890250000000002E-7 / PosDirectControl_ConstP.indi_sim.drone.Iv[0]
-           - rtb_CastToDouble1_idx_1 / rtb_CastToDouble2[3]) *
-    rtb_VectorConcatenate[2];
-  rtb_CastToDouble1_idx_1 = PosDirectControl_ConstP.indi_sim.drone.Ip[8] *
-    rtb_DiscreteStateSpace1[3] / PosDirectControl_ConstP.indi_sim.drone.Iv[4];
-  X[2] = (rtb_CastToDouble1_idx_1 / rtb_CastToDouble2[0] + -1.6655625E-7 /
-          PosDirectControl_ConstP.indi_sim.drone.Iv[4]) * rtb_VectorConcatenate
-    [2];
-  X[6] = (-1.6655625E-7 / PosDirectControl_ConstP.indi_sim.drone.Iv[4] -
-          rtb_CastToDouble1_idx_1 / rtb_CastToDouble2[1]) *
-    rtb_VectorConcatenate[2];
-  X[10] = (rtb_CastToDouble1_idx_1 / rtb_CastToDouble2[2] + 1.6655625E-7 /
-           PosDirectControl_ConstP.indi_sim.drone.Iv[4]) *
-    rtb_VectorConcatenate[2];
-  X[14] = (1.6655625E-7 / PosDirectControl_ConstP.indi_sim.drone.Iv[4] -
-           rtb_CastToDouble1_idx_1 / rtb_CastToDouble2[3]) *
-    rtb_VectorConcatenate[2];
-  X[3] = 1.9202951E-8 / PosDirectControl_ConstP.indi_sim.drone.Iv[8];
-  X[7] = -1.9202951E-8 / PosDirectControl_ConstP.indi_sim.drone.Iv[8];
-  X[11] = 1.9202951E-8 / PosDirectControl_ConstP.indi_sim.drone.Iv[8];
-  X[15] = -1.9202951E-8 / PosDirectControl_ConstP.indi_sim.drone.Iv[8];
+  R_IB_tmp_3 = -R_IB_tmp_3 * R_IB_tmp_0 * PosDirectControlParams.k /
+    PosDirectControlParams.m;
+  X[0] = R_IB_tmp_3;
+  X[4] = R_IB_tmp_3;
+  X[8] = R_IB_tmp_3;
+  X[12] = R_IB_tmp_3;
+  R_IB_tmp_3 = PosDirectControlParams.Ip * rtb_DiscreteStateSpace1[4] /
+    PosDirectControlParams.Ix;
+  R_IB_tmp_0 = PosDirectControlParams.b * PosDirectControlParams.k /
+    PosDirectControlParams.Ix;
+  X[1] = (R_IB_tmp_3 / rtb_CastToDouble2[0] + R_IB_tmp_0) *
+    rtb_VectorConcatenate_idx_2;
+  rtb_Product2 = -PosDirectControlParams.b * PosDirectControlParams.k /
+    PosDirectControlParams.Ix;
+  X[5] = (rtb_Product2 - R_IB_tmp_3 / rtb_CastToDouble2[1]) *
+    rtb_VectorConcatenate_idx_2;
+  X[9] = (R_IB_tmp_3 / rtb_CastToDouble2[2] + rtb_Product2) *
+    rtb_VectorConcatenate_idx_2;
+  X[13] = (R_IB_tmp_0 - R_IB_tmp_3 / rtb_CastToDouble2[3]) *
+    rtb_VectorConcatenate_idx_2;
+  R_IB_tmp_3 = PosDirectControlParams.Ip * rtb_DiscreteStateSpace1[3] /
+    PosDirectControlParams.Iy;
+  R_IB_tmp_0 = -PosDirectControlParams.l * PosDirectControlParams.k /
+    PosDirectControlParams.Iy;
+  X[2] = (R_IB_tmp_3 / rtb_CastToDouble2[0] + R_IB_tmp_0) *
+    rtb_VectorConcatenate_idx_2;
+  X[6] = (R_IB_tmp_0 - R_IB_tmp_3 / rtb_CastToDouble2[1]) *
+    rtb_VectorConcatenate_idx_2;
+  R_IB_tmp_0 = PosDirectControlParams.l * PosDirectControlParams.k /
+    PosDirectControlParams.Iy;
+  X[10] = (R_IB_tmp_3 / rtb_CastToDouble2[2] + R_IB_tmp_0) *
+    rtb_VectorConcatenate_idx_2;
+  X[14] = (R_IB_tmp_0 - R_IB_tmp_3 / rtb_CastToDouble2[3]) *
+    rtb_VectorConcatenate_idx_2;
+  R_IB_tmp_3 = PosDirectControlParams.t / PosDirectControlParams.Iz;
+  X[3] = R_IB_tmp_3;
+  R_IB_tmp_0 = -PosDirectControlParams.t / PosDirectControlParams.Iz;
+  X[7] = R_IB_tmp_0;
+  X[11] = R_IB_tmp_3;
+  X[15] = R_IB_tmp_0;
   for (i = 0; i < 16; i++) {
     G[i] = X[i] + G2[i];
   }
@@ -1534,27 +1539,23 @@ void PosDirectControlModelClass::step()
   /* 'control_DRF_indi:97' ddy02 = alpha*h0(2)*p0^2 - beta*h0(1)*q0^2 - (beta*h0(1)-alpha*h0(2))*r0^2 + (-alpha*h0(1)+beta*h0(2))*p0*q0 + beta*h0(3)*p0*r0  -alpha*h0(3)*q0*r0 + ... */
   /* 'control_DRF_indi:98'        -alpha*h0(3)*p_dot0 - beta*h0(3)*q_dot0 + (beta*h0(2)+alpha*h0(1))*r_dot0; */
   /* 'control_DRF_indi:100' hdd_c = -2*Omega0*R_IB0'*nd + R_IB0'*ndd; */
-  rtb_Product1 = std::cos(rtb_DiscreteStateSpace1[2]);
-  y = std::cos(rtb_DiscreteStateSpace1[1]);
-  hdd_c_tmp[0] = rtb_Product1 * y;
-  rtb_Saturation_k_tmp = std::sin(rtb_DiscreteStateSpace1[1]);
-  rtb_CastToDouble1_idx_0 = rtb_Product1 * rtb_Saturation_k_tmp;
-  rtb_CastToDouble4_idx_1 = std::cos(rtb_DiscreteStateSpace1[0]);
-  rtb_CastToDouble1_idx_1 = std::sin(rtb_DiscreteStateSpace1[2]);
-  hdd_c_tmp_tmp = std::sin(rtb_DiscreteStateSpace1[0]);
-  hdd_c_tmp[1] = rtb_CastToDouble1_idx_0 * hdd_c_tmp_tmp -
-    rtb_CastToDouble1_idx_1 * rtb_CastToDouble4_idx_1;
-  hdd_c_tmp[2] = rtb_CastToDouble1_idx_0 * rtb_CastToDouble4_idx_1 +
-    rtb_CastToDouble1_idx_1 * hdd_c_tmp_tmp;
-  hdd_c_tmp[3] = rtb_CastToDouble1_idx_1 * y;
-  rtb_CastToDouble1_idx_0 = rtb_CastToDouble1_idx_1 * rtb_Saturation_k_tmp;
-  hdd_c_tmp[4] = rtb_CastToDouble1_idx_0 * hdd_c_tmp_tmp + rtb_Product1 *
-    rtb_CastToDouble4_idx_1;
-  hdd_c_tmp[5] = rtb_CastToDouble1_idx_0 * rtb_CastToDouble4_idx_1 -
-    rtb_Product1 * hdd_c_tmp_tmp;
-  hdd_c_tmp[6] = -rtb_Saturation_k_tmp;
-  hdd_c_tmp[7] = y * hdd_c_tmp_tmp;
-  hdd_c_tmp[8] = y * rtb_CastToDouble4_idx_1;
+  rtb_Product2 = std::cos(rtb_DiscreteStateSpace1[2]);
+  R_IB_tmp_3 = std::cos(rtb_DiscreteStateSpace1[1]);
+  R_IB[0] = rtb_Product2 * R_IB_tmp_3;
+  R_IB_tmp_tmp = std::sin(rtb_DiscreteStateSpace1[1]);
+  R_IB_tmp = rtb_Product2 * R_IB_tmp_tmp;
+  R_IB_tmp_0 = std::cos(rtb_DiscreteStateSpace1[0]);
+  R_IB_tmp_1 = std::sin(rtb_DiscreteStateSpace1[2]);
+  R_IB_tmp_2 = std::sin(rtb_DiscreteStateSpace1[0]);
+  R_IB[1] = R_IB_tmp * R_IB_tmp_2 - R_IB_tmp_1 * R_IB_tmp_0;
+  R_IB[2] = R_IB_tmp * R_IB_tmp_0 + R_IB_tmp_1 * R_IB_tmp_2;
+  R_IB[3] = R_IB_tmp_1 * R_IB_tmp_3;
+  R_IB_tmp = R_IB_tmp_1 * R_IB_tmp_tmp;
+  R_IB[4] = R_IB_tmp * R_IB_tmp_2 + rtb_Product2 * R_IB_tmp_0;
+  R_IB[5] = R_IB_tmp * R_IB_tmp_0 - rtb_Product2 * R_IB_tmp_2;
+  R_IB[6] = -R_IB_tmp_tmp;
+  R_IB[7] = R_IB_tmp_3 * R_IB_tmp_2;
+  R_IB[8] = R_IB_tmp_3 * R_IB_tmp_0;
   tmp[0] = -0.0;
   tmp[3] = -2.0 * -rtb_DiscreteStateSpace1[5];
   tmp[6] = -2.0 * rtb_DiscreteStateSpace1[4];
@@ -1569,200 +1570,143 @@ void PosDirectControlModelClass::step()
      *  Sum: '<S3>/Diff'
      *  UnitDelay: '<S3>/UD'
      */
-    rtb_Product1 = rtb_TSamp_o2[i] - PosDirectControl_DW.UD_DSTATE_br[i];
-    if (rtb_Product1 > 10.0) {
+    R_IB_tmp_3 = rtb_TSamp_o2[i] - PosDirectControl_DW.UD_DSTATE_br[i];
+    if (R_IB_tmp_3 > 10.0) {
       tmp_1[i] = 10.0;
-    } else if (rtb_Product1 < -10.0) {
+    } else if (R_IB_tmp_3 < -10.0) {
       tmp_1[i] = -10.0;
     } else {
-      tmp_1[i] = rtb_Product1;
+      tmp_1[i] = R_IB_tmp_3;
     }
 
     /* End of Saturate: '<Root>/Saturation1' */
     tmp_2[i] = 0.0;
-    for (b_r = 0; b_r < 3; b_r++) {
-      vcol = i + 3 * b_r;
-      tmp_0[vcol] = 0.0;
-      ia = 3 * b_r + i;
-      tmp_0[vcol] = tmp_0[ia] + hdd_c_tmp[3 * b_r] * tmp[i];
-      tmp_0[vcol] = hdd_c_tmp[3 * b_r + 1] * tmp[i + 3] + tmp_0[ia];
-      tmp_0[vcol] = hdd_c_tmp[3 * b_r + 2] * tmp[i + 6] + tmp_0[ia];
-      tmp_2[i] += tmp_0[ia] * rtb_Saturation[b_r];
+    for (rtemp = 0; rtemp < 3; rtemp++) {
+      r2 = i + 3 * rtemp;
+      tmp_0[r2] = 0.0;
+      r1 = 3 * rtemp + i;
+      tmp_0[r2] = tmp_0[r1] + R_IB[3 * rtemp] * tmp[i];
+      tmp_0[r2] = R_IB[3 * rtemp + 1] * tmp[i + 3] + tmp_0[r1];
+      tmp_0[r2] = R_IB[3 * rtemp + 2] * tmp[i + 6] + tmp_0[r1];
+      tmp_2[i] += tmp_0[r1] * rtb_Saturation[rtemp];
     }
   }
 
   for (i = 0; i < 3; i++) {
-    hdd_c[i] = tmp_2[i] + (hdd_c_tmp[i + 6] * tmp_1[2] + (hdd_c_tmp[i + 3] *
-      tmp_1[1] + hdd_c_tmp[i] * tmp_1[0]));
+    hdd_c[i] = tmp_2[i] + (R_IB[i + 6] * tmp_1[2] + (R_IB[i + 3] * tmp_1[1] +
+      R_IB[i] * tmp_1[0]));
   }
 
   /* 'control_DRF_indi:101' ddy01 = ddy01 + alpha*hdd_c(1) +  beta*hdd_c(2); */
   /* 'control_DRF_indi:102' ddy02 = ddy02 + beta*hdd_c(1) - alpha*hdd_c(2); */
   /* 'control_DRF_indi:104' ddy0 = [ddz0;ddy01;ddy02;r_dot0]; */
-  b_ddy0[0] = rtb_Saturation2_b - PosDirectControl_DW.UD_DSTATE_o;
-  rtb_Product1 = rtb_DiscreteStateSpace1[3] * rtb_DiscreteStateSpace1[3];
-  y = rtb_DiscreteStateSpace1[4] * rtb_DiscreteStateSpace1[4];
-  rtb_Saturation_k_tmp = rtb_DiscreteStateSpace1[5] * rtb_DiscreteStateSpace1[5];
-  rtb_CastToDouble1_idx_0 = 0.0 * rtb_DiscreteStateSpace4[0] +
-    rtb_DiscreteStateSpace4[1];
-  b_ddy0[1] = (((((((((rtb_Product1 * -rtb_DiscreteStateSpace4[1] - 0.0 *
-                       rtb_DiscreteStateSpace4[0] * y) - rtb_CastToDouble1_idx_0
-                      * rtb_Saturation_k_tmp) + (0.0 * rtb_DiscreteStateSpace4[1]
-    + rtb_DiscreteStateSpace4[0]) * rtb_DiscreteStateSpace1[3] *
-                     rtb_DiscreteStateSpace1[4]) + 0.0 *
-                    rtb_DiscreteStateSpace4[2] * rtb_DiscreteStateSpace1[3] *
-                    rtb_DiscreteStateSpace1[5]) + rtb_DiscreteStateSpace4[2] *
-                   rtb_DiscreteStateSpace1[4] * rtb_DiscreteStateSpace1[5]) +
-                  rtb_DiscreteStateSpace4[2] * rtb_Diff[3]) - 0.0 *
-                 rtb_DiscreteStateSpace4[2] * rtb_Diff[4]) + (0.0 *
-    rtb_DiscreteStateSpace4[1] - rtb_DiscreteStateSpace4[0]) * rtb_Diff[5]) +
-               0.0 * hdd_c[0]) + hdd_c[1];
-  b_ddy0[2] = (((((((((0.0 * rtb_DiscreteStateSpace4[1] * rtb_Product1 - y *
-                       rtb_DiscreteStateSpace4[0]) - (rtb_DiscreteStateSpace4[0]
-    - 0.0 * rtb_DiscreteStateSpace4[1]) * rtb_Saturation_k_tmp) + (-0.0 *
-    rtb_DiscreteStateSpace4[0] + rtb_DiscreteStateSpace4[1]) *
-                     rtb_DiscreteStateSpace1[3] * rtb_DiscreteStateSpace1[4]) +
-                    rtb_DiscreteStateSpace4[2] * rtb_DiscreteStateSpace1[3] *
-                    rtb_DiscreteStateSpace1[5]) - 0.0 * rtb_DiscreteStateSpace4
-                   [2] * rtb_DiscreteStateSpace1[4] * rtb_DiscreteStateSpace1[5])
-                  + -0.0 * rtb_DiscreteStateSpace4[2] * rtb_Diff[3]) -
-                 rtb_DiscreteStateSpace4[2] * rtb_Diff[4]) +
-                rtb_CastToDouble1_idx_0 * rtb_Diff[5]) + hdd_c[0]) - 0.0 *
-    hdd_c[1];
-  b_ddy0[3] = rtb_Diff[5];
-
-  /* 'control_DRF_indi:106' if sim.failure_id ~= 0 */
-  b_y = true;
-
-  /* 'control_DRF_indi:108' G(:,sim.failure_id) = zeros(4,length(sim.failure_id)); */
-  /* 'control_DRF_indi:110' if length(sim.failure_id) == 2 */
-  /* 'control_DRF_indi:111' ddy0(3:4) = zeros(2,1); */
-  for (i = 0; i < 2; i++) {
-    b_r = ((int32_T)PosDirectControl_ConstP.indi_sim.failure_id[i] - 1) << 2;
-    G[b_r] = 0.0;
-    G[1 + b_r] = 0.0;
-    G[2 + b_r] = 0.0;
-    G[3 + b_r] = 0.0;
-    b_ddy0[i + 2] = 0.0;
-  }
-
-  /* 'control_DRF_indi:112' G(3:4,:) = zeros(size(G(3:4,:))); */
-  for (i = 0; i < 4; i++) {
-    b_r = i << 2;
-    G[2 + b_r] = 0.0;
-    G[3 + b_r] = 0.0;
-  }
-
-  /* 'control_DRF_indi:113' nu(3:4) = zeros(2,1); */
-  nu[2] = 0.0;
-  nu[3] = 0.0;
-
-  /* 'control_DRF_indi:122' dU = pinv(G)*(nu-ddy0+G2*dU0); */
-  for (b_r = 0; b_r < 16; b_r++) {
-    X[b_r] = 0.0;
-    if (b_y && ((!rtIsInf(G[b_r])) && (!rtIsNaN(G[b_r])))) {
+  /* 'control_DRF_indi:126' dU = pinv(G)*(nu-ddy0+G2*dU0); */
+  b_p = true;
+  for (r1 = 0; r1 < 16; r1++) {
+    X[r1] = 0.0;
+    if (b_p && ((!rtIsInf(G[r1])) && (!rtIsNaN(G[r1])))) {
     } else {
-      b_y = false;
+      b_p = false;
     }
   }
 
-  if (!b_y) {
+  if (!b_p) {
     for (i = 0; i < 16; i++) {
       X[i] = (rtNaN);
     }
   } else {
-    PosDirectControl_svd(G, b_U, rtb_CastToDouble2, V);
-    rtb_Product1 = std::abs(rtb_CastToDouble2[0]);
-    if ((!rtIsInf(rtb_Product1)) && (!rtIsNaN(rtb_Product1))) {
-      if (rtb_Product1 <= 2.2250738585072014E-308) {
-        rtb_Product1 = 4.94065645841247E-324;
+    PosDirectControl_svd(G, U, rtb_CastToDouble2, V);
+    rtb_Product2 = std::abs(rtb_CastToDouble2[0]);
+    if ((!rtIsInf(rtb_Product2)) && (!rtIsNaN(rtb_Product2))) {
+      if (rtb_Product2 <= 2.2250738585072014E-308) {
+        rtb_Product2 = 4.94065645841247E-324;
       } else {
-        frexp(rtb_Product1, &br);
-        rtb_Product1 = std::ldexp(1.0, br - 53);
+        frexp(rtb_Product2, &r);
+        rtb_Product2 = std::ldexp(1.0, r - 53);
       }
     } else {
-      rtb_Product1 = (rtNaN);
+      rtb_Product2 = (rtNaN);
     }
 
-    rtb_Product1 *= 4.0;
-    b_r = -1;
-    br = 0;
-    while ((br < 4) && (rtb_CastToDouble2[br] > rtb_Product1)) {
-      b_r++;
-      br++;
+    rtb_Product2 *= 4.0;
+    r = -1;
+    r1 = 0;
+    while ((r1 < 4) && (rtb_CastToDouble2[r1] > rtb_Product2)) {
+      r++;
+      r1++;
     }
 
-    if (b_r + 1 > 0) {
-      vcol = 0;
-      for (br = 0; br <= b_r; br++) {
-        rtb_Product1 = 1.0 / rtb_CastToDouble2[br];
-        for (i = vcol; i < vcol + 4; i++) {
-          V[i] *= rtb_Product1;
+    if (r + 1 > 0) {
+      r2 = 0;
+      for (r1 = 0; r1 <= r; r1++) {
+        rtb_Product2 = 1.0 / rtb_CastToDouble2[r1];
+        for (i = r2; i < r2 + 4; i++) {
+          V[i] *= rtb_Product2;
         }
 
-        vcol += 4;
+        r2 += 4;
       }
 
-      for (vcol = 0; vcol < 4; vcol++) {
-        X[vcol] = 0.0;
+      for (r2 = 0; r2 < 4; r2++) {
+        X[r2] = 0.0;
       }
 
-      for (vcol = 4; vcol < 8; vcol++) {
-        X[vcol] = 0.0;
+      for (r2 = 4; r2 < 8; r2++) {
+        X[r2] = 0.0;
       }
 
-      for (vcol = 8; vcol < 12; vcol++) {
-        X[vcol] = 0.0;
+      for (r2 = 8; r2 < 12; r2++) {
+        X[r2] = 0.0;
       }
 
-      for (vcol = 12; vcol < 16; vcol++) {
-        X[vcol] = 0.0;
+      for (r2 = 12; r2 < 16; r2++) {
+        X[r2] = 0.0;
       }
 
       i = -1;
-      br = b_r << 2;
-      b_r = br + 1;
-      for (vcol = 1; vcol <= b_r; vcol += 4) {
-        ia = i;
+      r <<= 2;
+      rtemp = r + 1;
+      for (r2 = 1; r2 <= rtemp; r2 += 4) {
+        r1 = i;
         for (b_ic = 0; b_ic < 4; b_ic++) {
-          ia++;
-          X[b_ic] += b_U[vcol - 1] * V[ia];
+          r1++;
+          X[b_ic] += U[r2 - 1] * V[r1];
         }
 
         i += 4;
       }
 
       i = -1;
-      b_r = br + 2;
-      for (vcol = 2; vcol <= b_r; vcol += 4) {
-        ia = i;
+      rtemp = r + 2;
+      for (r2 = 2; r2 <= rtemp; r2 += 4) {
+        r1 = i;
         for (b_ic = 4; b_ic < 8; b_ic++) {
-          ia++;
-          X[b_ic] += b_U[vcol - 1] * V[ia];
+          r1++;
+          X[b_ic] += U[r2 - 1] * V[r1];
         }
 
         i += 4;
       }
 
       i = -1;
-      b_r = br + 3;
-      for (vcol = 3; vcol <= b_r; vcol += 4) {
-        ia = i;
+      rtemp = r + 3;
+      for (r2 = 3; r2 <= rtemp; r2 += 4) {
+        r1 = i;
         for (b_ic = 8; b_ic < 12; b_ic++) {
-          ia++;
-          X[b_ic] += b_U[vcol - 1] * V[ia];
+          r1++;
+          X[b_ic] += U[r2 - 1] * V[r1];
         }
 
         i += 4;
       }
 
       i = -1;
-      b_r = br + 4;
-      for (vcol = 4; vcol <= b_r; vcol += 4) {
-        ia = i;
+      rtemp = r + 4;
+      for (r2 = 4; r2 <= rtemp; r2 += 4) {
+        r1 = i;
         for (b_ic = 12; b_ic < 16; b_ic++) {
-          ia++;
-          X[b_ic] += b_U[vcol - 1] * V[ia];
+          r1++;
+          X[b_ic] += U[r2 - 1] * V[r1];
         }
 
         i += 4;
@@ -1770,63 +1714,129 @@ void PosDirectControlModelClass::step()
     }
   }
 
+  rtb_CastToDouble2[0] = (rtb_CastToDouble[2] - rtb_Product1) * -10.0 - ((real_T)
+    PosDirectControl_U.pos[2] - PosDirectControl_U.pos_sp[2]) * 10.0;
+  R_IB_tmp_3 = (rtb_VectorConcatenate_idx_2 * rtb_VectorConcatenate_d[3] -
+                rtb_VectorConcatenate_idx_0 * rtb_VectorConcatenate_d[5]) +
+    rtb_CastToDouble1_idx_1;
+  R_IB_tmp_0 = (-rtb_VectorConcatenate_idx_2 * rtb_VectorConcatenate_d[4] +
+                rtb_VectorConcatenate_idx_1 * rtb_VectorConcatenate_d[5]) +
+    rtb_U_idx_1;
+  rtb_CastToDouble2[1] = (0.0 * rtb_VectorConcatenate_idx_0 +
+    rtb_VectorConcatenate_idx_1) * -30.0 - (R_IB_tmp_0 * 0.0 + R_IB_tmp_3) *
+    20.0;
+  rtb_CastToDouble2[2] = (rtb_VectorConcatenate_idx_0 - 0.0 *
+    rtb_VectorConcatenate_idx_1) * -30.0 - (R_IB_tmp_0 - R_IB_tmp_3 * 0.0) *
+    30.0;
+  rtb_CastToDouble2[3] = (rtb_VectorConcatenate_d[5] - 2.0 * rtb_Saturation_k) *
+    -5.0;
+  rtb_Saturation2_l[0] = rtb_Saturation2_b - PosDirectControl_DW.UD_DSTATE_o;
+  rtb_Product1 = rtb_DiscreteStateSpace1[3] * rtb_DiscreteStateSpace1[3];
+  rtb_U_idx_1 = rtb_DiscreteStateSpace1[4] * rtb_DiscreteStateSpace1[4];
+  rtb_CastToDouble1_idx_1 = rtb_DiscreteStateSpace1[5] *
+    rtb_DiscreteStateSpace1[5];
+  R_IB_tmp_3 = 0.0 * rtb_DiscreteStateSpace4[0] + rtb_DiscreteStateSpace4[1];
+  rtb_Saturation2_l[1] = (((((((((rtb_Product1 * -rtb_DiscreteStateSpace4[1] -
+    0.0 * rtb_DiscreteStateSpace4[0] * rtb_U_idx_1) - R_IB_tmp_3 *
+    rtb_CastToDouble1_idx_1) + (0.0 * rtb_DiscreteStateSpace4[1] +
+    rtb_DiscreteStateSpace4[0]) * rtb_DiscreteStateSpace1[3] *
+    rtb_DiscreteStateSpace1[4]) + 0.0 * rtb_DiscreteStateSpace4[2] *
+    rtb_DiscreteStateSpace1[3] * rtb_DiscreteStateSpace1[5]) +
+    rtb_DiscreteStateSpace4[2] * rtb_DiscreteStateSpace1[4] *
+    rtb_DiscreteStateSpace1[5]) + rtb_DiscreteStateSpace4[2] * rtb_Diff[3]) -
+    0.0 * rtb_DiscreteStateSpace4[2] * rtb_Diff[4]) + (0.0 *
+    rtb_DiscreteStateSpace4[1] - rtb_DiscreteStateSpace4[0]) * rtb_Diff[5]) +
+    0.0 * hdd_c[0]) + hdd_c[1];
+  rtb_Saturation2_l[2] = (((((((((0.0 * rtb_DiscreteStateSpace4[1] *
+    rtb_Product1 - rtb_U_idx_1 * rtb_DiscreteStateSpace4[0]) -
+    (rtb_DiscreteStateSpace4[0] - 0.0 * rtb_DiscreteStateSpace4[1]) *
+    rtb_CastToDouble1_idx_1) + (-0.0 * rtb_DiscreteStateSpace4[0] +
+    rtb_DiscreteStateSpace4[1]) * rtb_DiscreteStateSpace1[3] *
+    rtb_DiscreteStateSpace1[4]) + rtb_DiscreteStateSpace4[2] *
+    rtb_DiscreteStateSpace1[3] * rtb_DiscreteStateSpace1[5]) - 0.0 *
+    rtb_DiscreteStateSpace4[2] * rtb_DiscreteStateSpace1[4] *
+    rtb_DiscreteStateSpace1[5]) + -0.0 * rtb_DiscreteStateSpace4[2] * rtb_Diff[3])
+    - rtb_DiscreteStateSpace4[2] * rtb_Diff[4]) + R_IB_tmp_3 * rtb_Diff[5]) +
+    hdd_c[0]) - 0.0 * hdd_c[1];
+  rtb_Saturation2_l[3] = rtb_Diff[5];
   for (i = 0; i < 4; i++) {
-    nu_0[i] = (((G2[i + 4] * PosDirectControl_DW.Memory_PreviousInput[1] + G2[i]
-                 * PosDirectControl_DW.Memory_PreviousInput[0]) + G2[i + 8] *
-                PosDirectControl_DW.Memory_PreviousInput[2]) + G2[i + 12] *
-               PosDirectControl_DW.Memory_PreviousInput[3]) + (nu[i] - b_ddy0[i]);
+    tmp_3[i] = (((G2[i + 4] * PosDirectControl_DW.Memory_PreviousInput[1] + G2[i]
+                  * PosDirectControl_DW.Memory_PreviousInput[0]) + G2[i + 8] *
+                 PosDirectControl_DW.Memory_PreviousInput[2]) + G2[i + 12] *
+                PosDirectControl_DW.Memory_PreviousInput[3]) +
+      (rtb_CastToDouble2[i] - rtb_Saturation2_l[i]);
   }
 
-  /* 'control_DRF_indi:123' dU01 = dU; */
-  /* 'control_DRF_indi:125' U = U0+dU; */
   for (i = 0; i < 4; i++) {
-    rtb_Product1 = X[i + 12] * nu_0[3] + (X[i + 8] * nu_0[2] + (X[i + 4] * nu_0
-      [1] + X[i] * nu_0[0]));
-    nu[i] = rtb_DiscreteStateSpace3[i] + rtb_Product1;
-    rtb_CastToDouble2[i] = rtb_Product1;
+    R_IB_tmp_tmp = X[i + 12] * tmp_3[3] + (X[i + 8] * tmp_3[2] + (X[i + 4] *
+      tmp_3[1] + X[i] * tmp_3[0]));
+    rtb_CastToDouble2[i] = R_IB_tmp_tmp;
   }
 
-  /* 'control_DRF_indi:127' if sim.failure_id ~= 0 */
-  /* 'control_DRF_indi:128' U(sim.failure_id) = 0; */
-  rtb_h[0] = rtb_VectorConcatenate[0];
-  rtb_h[1] = rtb_VectorConcatenate[1];
-  rtb_h[2] = rtb_VectorConcatenate[2];
+  /* 'control_DRF_indi:127' dU01 = dU; */
+  /* 'control_DRF_indi:129' U = U0+dU; */
+  rtb_h[0] = rtb_VectorConcatenate_idx_0;
+  rtb_h[1] = rtb_VectorConcatenate_idx_1;
+  rtb_h[2] = rtb_VectorConcatenate_idx_2;
+  rtb_VectorConcatenate_idx_2 = rtb_DiscreteStateSpace3[0] + rtb_CastToDouble2[0];
+  rtb_U_idx_1 = rtb_DiscreteStateSpace3[1] + rtb_CastToDouble2[1];
+  rtb_VectorConcatenate_idx_0 = rtb_DiscreteStateSpace3[2] + rtb_CastToDouble2[2];
+  rtb_Product1 = rtb_DiscreteStateSpace3[3] + rtb_CastToDouble2[3];
 
-  /* MATLAB Function: '<Root>/MATLAB Function1' incorporates:
-   *  MATLAB Function: '<Root>/indi'
-   */
+  /* MATLAB Function: '<Root>/MATLAB Function1' */
   /* :  w = zeros(4,1); */
   /* :  w(1) = sqrt(abs(U(1)))*sign(U(1)); */
-  rtb_w_b[0] = 0.0;
+  if (rtb_VectorConcatenate_idx_2 < 0.0) {
+    rtb_VectorConcatenate_idx_1 = -1.0;
+  } else if (rtb_VectorConcatenate_idx_2 > 0.0) {
+    rtb_VectorConcatenate_idx_1 = 1.0;
+  } else if (rtb_VectorConcatenate_idx_2 == 0.0) {
+    rtb_VectorConcatenate_idx_1 = 0.0;
+  } else {
+    rtb_VectorConcatenate_idx_1 = (rtNaN);
+  }
+
+  rtb_w_b[0] = std::sqrt(std::abs(rtb_VectorConcatenate_idx_2)) *
+    rtb_VectorConcatenate_idx_1;
 
   /* :  w(2) = sqrt(abs(U(2)))*sign(U(2)); */
-  if (nu[1] < 0.0) {
-    rtb_Product1 = -1.0;
-  } else if (nu[1] > 0.0) {
-    rtb_Product1 = 1.0;
-  } else if (nu[1] == 0.0) {
-    rtb_Product1 = 0.0;
+  if (rtb_U_idx_1 < 0.0) {
+    rtb_VectorConcatenate_idx_2 = -1.0;
+  } else if (rtb_U_idx_1 > 0.0) {
+    rtb_VectorConcatenate_idx_2 = 1.0;
+  } else if (rtb_U_idx_1 == 0.0) {
+    rtb_VectorConcatenate_idx_2 = 0.0;
   } else {
-    rtb_Product1 = (rtNaN);
+    rtb_VectorConcatenate_idx_2 = (rtNaN);
   }
 
-  rtb_w_b[1] = std::sqrt(std::abs(nu[1])) * rtb_Product1;
+  rtb_w_b[1] = std::sqrt(std::abs(rtb_U_idx_1)) * rtb_VectorConcatenate_idx_2;
 
   /* :  w(3) = sqrt(abs(U(3)))*sign(U(3)); */
-  rtb_w_b[2] = 0.0;
-
-  /* :  w(4) = sqrt(abs(U(4)))*sign(U(4)); */
-  if (nu[3] < 0.0) {
-    rtb_Product1 = -1.0;
-  } else if (nu[3] > 0.0) {
-    rtb_Product1 = 1.0;
-  } else if (nu[3] == 0.0) {
-    rtb_Product1 = 0.0;
+  if (rtb_VectorConcatenate_idx_0 < 0.0) {
+    rtb_U_idx_1 = -1.0;
+  } else if (rtb_VectorConcatenate_idx_0 > 0.0) {
+    rtb_U_idx_1 = 1.0;
+  } else if (rtb_VectorConcatenate_idx_0 == 0.0) {
+    rtb_U_idx_1 = 0.0;
   } else {
-    rtb_Product1 = (rtNaN);
+    rtb_U_idx_1 = (rtNaN);
   }
 
-  rtb_w_b[3] = std::sqrt(std::abs(nu[3])) * rtb_Product1;
+  rtb_w_b[2] = std::sqrt(std::abs(rtb_VectorConcatenate_idx_0)) * rtb_U_idx_1;
+
+  /* :  w(4) = sqrt(abs(U(4)))*sign(U(4)); */
+  if (rtb_Product1 < 0.0) {
+    rtb_VectorConcatenate_idx_0 = -1.0;
+  } else if (rtb_Product1 > 0.0) {
+    rtb_VectorConcatenate_idx_0 = 1.0;
+  } else if (rtb_Product1 == 0.0) {
+    rtb_VectorConcatenate_idx_0 = 0.0;
+  } else {
+    rtb_VectorConcatenate_idx_0 = (rtNaN);
+  }
+
+  rtb_w_b[3] = std::sqrt(std::abs(rtb_Product1)) * rtb_VectorConcatenate_idx_0;
 
   /* End of MATLAB Function: '<Root>/MATLAB Function1' */
 
@@ -1888,30 +1898,30 @@ void PosDirectControlModelClass::step()
    *  Inport: '<Root>/pos'
    *  Inport: '<Root>/pos_sp'
    */
-  rtb_Saturation_k_tmp = (real_T)PosDirectControl_U.pos_sp[0] -
+  rtb_VectorConcatenate_idx_0 = (real_T)PosDirectControl_U.pos_sp[0] -
     PosDirectControl_U.pos[0];
 
   /* Gain: '<S60>/Integral Gain' */
-  rtb_Saturation[0] = 0.0 * rtb_Saturation_k_tmp;
+  rtb_Saturation[0] = 0.0 * rtb_VectorConcatenate_idx_0;
 
   /* Gain: '<S80>/Filter Coefficient' incorporates:
    *  DiscreteIntegrator: '<S52>/Filter'
    *  Gain: '<S47>/Derivative Gain'
    *  Sum: '<S52>/SumD'
    */
-  y = (1.5 * rtb_Saturation_k_tmp - PosDirectControl_DW.Filter_DSTATE[0]) *
-    100.0;
+  rtb_U_idx_1 = (1.5 * rtb_VectorConcatenate_idx_0 -
+                 PosDirectControl_DW.Filter_DSTATE[0]) * 100.0;
 
   /* Sum: '<Root>/Sum5' incorporates:
    *  DiscreteIntegrator: '<S70>/Integrator'
    *  Gain: '<S87>/Proportional Gain'
    *  Sum: '<S100>/Sum'
    */
-  rtb_Product1 = (1.5 * rtb_Saturation_k_tmp +
-                  PosDirectControl_DW.Integrator_DSTATE[0]) + y;
+  rtb_Product1 = (1.5 * rtb_VectorConcatenate_idx_0 +
+                  PosDirectControl_DW.Integrator_DSTATE[0]) + rtb_U_idx_1;
 
   /* Gain: '<S80>/Filter Coefficient' */
-  rtb_CastToDouble1_idx_0 = y;
+  rtb_VectorConcatenate_idx_2 = rtb_U_idx_1;
 
   /* Sum: '<Root>/Sum5' incorporates:
    *  DataTypeConversion: '<Root>/Cast To Double1'
@@ -1919,30 +1929,30 @@ void PosDirectControlModelClass::step()
    *  Inport: '<Root>/pos'
    *  Inport: '<Root>/pos_sp'
    */
-  rtb_Saturation_k_tmp = (real_T)PosDirectControl_U.pos_sp[1] -
+  rtb_VectorConcatenate_idx_0 = (real_T)PosDirectControl_U.pos_sp[1] -
     PosDirectControl_U.pos[1];
 
   /* Gain: '<S60>/Integral Gain' */
-  rtb_Saturation[1] = 0.0 * rtb_Saturation_k_tmp;
+  rtb_Saturation[1] = 0.0 * rtb_VectorConcatenate_idx_0;
 
   /* Gain: '<S80>/Filter Coefficient' incorporates:
    *  DiscreteIntegrator: '<S52>/Filter'
    *  Gain: '<S47>/Derivative Gain'
    *  Sum: '<S52>/SumD'
    */
-  y = (1.5 * rtb_Saturation_k_tmp - PosDirectControl_DW.Filter_DSTATE[1]) *
-    100.0;
+  rtb_U_idx_1 = (1.5 * rtb_VectorConcatenate_idx_0 -
+                 PosDirectControl_DW.Filter_DSTATE[1]) * 100.0;
 
   /* Sum: '<Root>/Sum5' incorporates:
    *  DiscreteIntegrator: '<S70>/Integrator'
    *  Gain: '<S87>/Proportional Gain'
    *  Sum: '<S100>/Sum'
    */
-  rtb_CastToDouble4_idx_1 = (1.5 * rtb_Saturation_k_tmp +
-    PosDirectControl_DW.Integrator_DSTATE[1]) + y;
+  rtb_VectorConcatenate_idx_1 = (1.5 * rtb_VectorConcatenate_idx_0 +
+    PosDirectControl_DW.Integrator_DSTATE[1]) + rtb_U_idx_1;
 
   /* Gain: '<S80>/Filter Coefficient' */
-  rtb_CastToDouble1_idx_1 = y;
+  rtb_CastToDouble1_idx_1 = rtb_U_idx_1;
 
   /* Sum: '<Root>/Sum5' incorporates:
    *  DataTypeConversion: '<Root>/Cast To Double1'
@@ -1950,26 +1960,26 @@ void PosDirectControlModelClass::step()
    *  Inport: '<Root>/pos'
    *  Inport: '<Root>/pos_sp'
    */
-  rtb_Saturation_k_tmp = (real_T)PosDirectControl_U.pos_sp[2] -
+  rtb_VectorConcatenate_idx_0 = (real_T)PosDirectControl_U.pos_sp[2] -
     PosDirectControl_U.pos[2];
 
   /* Gain: '<S60>/Integral Gain' */
-  rtb_Saturation[2] = 0.2 * rtb_Saturation_k_tmp;
+  rtb_Saturation[2] = 0.2 * rtb_VectorConcatenate_idx_0;
 
   /* Gain: '<S80>/Filter Coefficient' incorporates:
    *  DiscreteIntegrator: '<S52>/Filter'
    *  Gain: '<S47>/Derivative Gain'
    *  Sum: '<S52>/SumD'
    */
-  y = (2.0 * rtb_Saturation_k_tmp - PosDirectControl_DW.Filter_DSTATE[2]) *
-    100.0;
+  rtb_U_idx_1 = (2.0 * rtb_VectorConcatenate_idx_0 -
+                 PosDirectControl_DW.Filter_DSTATE[2]) * 100.0;
 
   /* Sum: '<S100>/Sum' incorporates:
    *  DiscreteIntegrator: '<S70>/Integrator'
    *  Gain: '<S87>/Proportional Gain'
    */
-  rtb_Saturation_k_tmp = (10.0 * rtb_Saturation_k_tmp +
-    PosDirectControl_DW.Integrator_DSTATE[2]) + y;
+  rtb_VectorConcatenate_idx_0 = (10.0 * rtb_VectorConcatenate_idx_0 +
+    PosDirectControl_DW.Integrator_DSTATE[2]) + rtb_U_idx_1;
 
   /* MATLAB Function: '<Root>/MATLAB Function' */
   /* :  U = zeros(4,1); */
@@ -1997,20 +2007,20 @@ void PosDirectControlModelClass::step()
   /* End of Saturate: '<S14>/Saturation' */
 
   /* Saturate: '<S14>/Saturation1' */
-  if (rtb_CastToDouble4_idx_1 > 3.0) {
-    rtb_CastToDouble4_idx_1 = 3.0;
+  if (rtb_VectorConcatenate_idx_1 > 3.0) {
+    rtb_VectorConcatenate_idx_1 = 3.0;
   } else {
-    if (rtb_CastToDouble4_idx_1 < -3.0) {
-      rtb_CastToDouble4_idx_1 = -3.0;
+    if (rtb_VectorConcatenate_idx_1 < -3.0) {
+      rtb_VectorConcatenate_idx_1 = -3.0;
     }
   }
 
   /* Saturate: '<S14>/Saturation2' */
-  if (rtb_Saturation_k_tmp > 3.0) {
-    rtb_Saturation_k_tmp = 3.0;
+  if (rtb_VectorConcatenate_idx_0 > 3.0) {
+    rtb_VectorConcatenate_idx_0 = 3.0;
   } else {
-    if (rtb_Saturation_k_tmp < -3.0) {
-      rtb_Saturation_k_tmp = -3.0;
+    if (rtb_VectorConcatenate_idx_0 < -3.0) {
+      rtb_VectorConcatenate_idx_0 = -3.0;
     }
   }
 
@@ -2020,11 +2030,12 @@ void PosDirectControlModelClass::step()
    *  Sum: '<S14>/Sum'
    */
   rtb_Product1 = 1.0 / (std::sqrt((rtb_Saturation_k * rtb_Saturation_k +
-    rtb_CastToDouble4_idx_1 * rtb_CastToDouble4_idx_1) + (rtb_Saturation_k_tmp -
-    9.8124) * (rtb_Saturation_k_tmp - 9.8124)) + 1.0E-10);
+    rtb_VectorConcatenate_idx_1 * rtb_VectorConcatenate_idx_1) +
+    (rtb_VectorConcatenate_idx_0 - 9.8124) * (rtb_VectorConcatenate_idx_0 -
+    9.8124)) + 1.0E-10);
   rtb_Normalization[0] = rtb_Saturation_k * rtb_Product1;
-  rtb_Normalization[1] = rtb_CastToDouble4_idx_1 * rtb_Product1;
-  rtb_Normalization[2] = (rtb_Saturation_k_tmp - 9.8124) * rtb_Product1;
+  rtb_Normalization[1] = rtb_VectorConcatenate_idx_1 * rtb_Product1;
+  rtb_Normalization[2] = (rtb_VectorConcatenate_idx_0 - 9.8124) * rtb_Product1;
 
   /* Update for DiscreteStateSpace: '<Root>/Discrete State-Space1' */
   {
@@ -2087,7 +2098,7 @@ void PosDirectControlModelClass::step()
   PosDirectControl_DW.UD_DSTATE_br[1] = rtb_TSamp_o2[1];
 
   /* Update for UnitDelay: '<S4>/UD' */
-  PosDirectControl_DW.UD_DSTATE_b[2] = rtb_Product2;
+  PosDirectControl_DW.UD_DSTATE_b[2] = rtb_Saturation_k_tmp;
 
   /* Update for UnitDelay: '<S3>/UD' */
   PosDirectControl_DW.UD_DSTATE_br[2] = rtb_TSamp_o2[2];
@@ -2166,7 +2177,7 @@ void PosDirectControlModelClass::step()
   }
 
   /* Update for DiscreteIntegrator: '<S52>/Filter' */
-  PosDirectControl_DW.Filter_DSTATE[0] += 0.002 * rtb_CastToDouble1_idx_0;
+  PosDirectControl_DW.Filter_DSTATE[0] += 0.002 * rtb_VectorConcatenate_idx_2;
 
   /* Update for DiscreteIntegrator: '<S70>/Integrator' */
   PosDirectControl_DW.Integrator_DSTATE[0] += 0.002 * rtb_Saturation[0];
@@ -2178,7 +2189,7 @@ void PosDirectControlModelClass::step()
   PosDirectControl_DW.Integrator_DSTATE[1] += 0.002 * rtb_Saturation[1];
 
   /* Update for DiscreteIntegrator: '<S52>/Filter' */
-  PosDirectControl_DW.Filter_DSTATE[2] += 0.002 * y;
+  PosDirectControl_DW.Filter_DSTATE[2] += 0.002 * rtb_U_idx_1;
 
   /* Update for DiscreteIntegrator: '<S70>/Integrator' */
   PosDirectControl_DW.Integrator_DSTATE[2] += 0.002 * rtb_Saturation[2];
