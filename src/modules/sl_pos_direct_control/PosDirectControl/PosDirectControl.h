@@ -7,9 +7,9 @@
  *
  * Code generation for model "PosDirectControl".
  *
- * Model version              : 1.220
+ * Model version              : 1.229
  * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C++ source code generated on : Thu Dec 20 14:54:02 2018
+ * C++ source code generated on : Thu Dec 20 19:34:24 2018
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -37,7 +37,6 @@
 #include "multiword_types.h"
 #include "rtGetNaN.h"
 #include "rt_nonfinite.h"
-#include "rt_defines.h"
 #include "rtGetInf.h"
 
 /* Macros for accessing real-time model data structure */
@@ -62,8 +61,8 @@ typedef struct {
   real_T DiscreteStateSpace3_DSTATE[4];/* '<Root>/Discrete State-Space3' */
   real_T DiscreteStateSpace4_DSTATE[3];/* '<Root>/Discrete State-Space4' */
   real_T ActuatorDynamics_DSTATE[4];   /* '<Root>/ActuatorDynamics' */
-  real_T Filter_DSTATE[3];             /* '<S52>/Filter' */
-  real_T Integrator_DSTATE[3];         /* '<S70>/Integrator' */
+  real_T Filter_DSTATE[3];             /* '<S51>/Filter' */
+  real_T Integrator_DSTATE[3];         /* '<S69>/Integrator' */
   real_T Memory_PreviousInput[4];      /* '<Root>/Memory' */
   real_T psi_last;                     /* '<Root>/unwrap2pi' */
   real_T N;                            /* '<Root>/unwrap2pi' */
@@ -87,22 +86,17 @@ typedef struct {
   real32_T actuators_control[4];       /* '<Root>/actuators_control' */
 } ExtY_PosDirectControl_T;
 
+/* Parameters (default storage) */
+struct P_PosDirectControl_T_ {
+  PosDirectControlParamsType PosDirectControlParams;/* Variable: PosDirectControlParams
+                                                     * Referenced by: '<Root>/indi'
+                                                     */
+};
+
 /* Real-time Model Data Structure */
 struct tag_RTM_PosDirectControl_T {
   const char_T *errorStatus;
 };
-
-/*
- * Exported Global Parameters
- *
- * Note: Exported global parameters are tunable parameters with an exported
- * global storage class designation.  Code generation will declare the memory for
- * these parameters and exports their symbols.
- *
- */
-extern PosDirectControlParamsType PosDirectControlParams;/* Variable: PosDirectControlParams
-                                                          * Referenced by: '<Root>/indi'
-                                                          */
 
 /* Class declaration for model PosDirectControl */
 class PosDirectControlModelClass {
@@ -134,6 +128,9 @@ class PosDirectControlModelClass {
 
   /* private data and function members */
  private:
+  /* Tunable parameters */
+  P_PosDirectControl_T PosDirectControl_P;
+
   /* Block states */
   DW_PosDirectControl_T PosDirectControl_DW;
 
@@ -186,109 +183,104 @@ class PosDirectControlModelClass {
  * '<S9>'   : 'PosDirectControl/MATLAB Function'
  * '<S10>'  : 'PosDirectControl/MATLAB Function1'
  * '<S11>'  : 'PosDirectControl/MATLAB Function2'
- * '<S12>'  : 'PosDirectControl/Quaternions to Rotation Angles'
- * '<S13>'  : 'PosDirectControl/indi'
- * '<S14>'  : 'PosDirectControl/n_des from a_ref'
- * '<S15>'  : 'PosDirectControl/unwrap2pi'
- * '<S16>'  : 'PosDirectControl/Discrete PID Controller/Anti-windup'
- * '<S17>'  : 'PosDirectControl/Discrete PID Controller/D Gain'
- * '<S18>'  : 'PosDirectControl/Discrete PID Controller/Filter'
- * '<S19>'  : 'PosDirectControl/Discrete PID Controller/Filter ICs'
- * '<S20>'  : 'PosDirectControl/Discrete PID Controller/I Gain'
- * '<S21>'  : 'PosDirectControl/Discrete PID Controller/Ideal P Gain'
- * '<S22>'  : 'PosDirectControl/Discrete PID Controller/Ideal P Gain Fdbk'
- * '<S23>'  : 'PosDirectControl/Discrete PID Controller/Integrator'
- * '<S24>'  : 'PosDirectControl/Discrete PID Controller/Integrator ICs'
- * '<S25>'  : 'PosDirectControl/Discrete PID Controller/N Copy'
- * '<S26>'  : 'PosDirectControl/Discrete PID Controller/N Gain'
- * '<S27>'  : 'PosDirectControl/Discrete PID Controller/P Copy'
- * '<S28>'  : 'PosDirectControl/Discrete PID Controller/Parallel P Gain'
- * '<S29>'  : 'PosDirectControl/Discrete PID Controller/Reset Signal'
- * '<S30>'  : 'PosDirectControl/Discrete PID Controller/Saturation'
- * '<S31>'  : 'PosDirectControl/Discrete PID Controller/Saturation Fdbk'
- * '<S32>'  : 'PosDirectControl/Discrete PID Controller/Sum'
- * '<S33>'  : 'PosDirectControl/Discrete PID Controller/Sum Fdbk'
- * '<S34>'  : 'PosDirectControl/Discrete PID Controller/Tracking Mode'
- * '<S35>'  : 'PosDirectControl/Discrete PID Controller/Tracking Mode Sum'
- * '<S36>'  : 'PosDirectControl/Discrete PID Controller/postSat Signal'
- * '<S37>'  : 'PosDirectControl/Discrete PID Controller/preSat Signal'
- * '<S38>'  : 'PosDirectControl/Discrete PID Controller/Anti-windup/Back Calculation'
- * '<S39>'  : 'PosDirectControl/Discrete PID Controller/Anti-windup/Cont. Clamping Ideal'
- * '<S40>'  : 'PosDirectControl/Discrete PID Controller/Anti-windup/Cont. Clamping Parallel'
- * '<S41>'  : 'PosDirectControl/Discrete PID Controller/Anti-windup/Disabled'
- * '<S42>'  : 'PosDirectControl/Discrete PID Controller/Anti-windup/Disc. Clamping Ideal'
- * '<S43>'  : 'PosDirectControl/Discrete PID Controller/Anti-windup/Disc. Clamping Parallel'
- * '<S44>'  : 'PosDirectControl/Discrete PID Controller/Anti-windup/Passthrough'
- * '<S45>'  : 'PosDirectControl/Discrete PID Controller/D Gain/Disabled'
- * '<S46>'  : 'PosDirectControl/Discrete PID Controller/D Gain/External Parameters'
- * '<S47>'  : 'PosDirectControl/Discrete PID Controller/D Gain/Internal Parameters'
- * '<S48>'  : 'PosDirectControl/Discrete PID Controller/Filter/Cont. Filter'
- * '<S49>'  : 'PosDirectControl/Discrete PID Controller/Filter/Differentiator'
- * '<S50>'  : 'PosDirectControl/Discrete PID Controller/Filter/Disabled'
- * '<S51>'  : 'PosDirectControl/Discrete PID Controller/Filter/Disc. Backward Euler Filter'
- * '<S52>'  : 'PosDirectControl/Discrete PID Controller/Filter/Disc. Forward Euler Filter'
- * '<S53>'  : 'PosDirectControl/Discrete PID Controller/Filter/Disc. Trapezoidal Filter'
- * '<S54>'  : 'PosDirectControl/Discrete PID Controller/Filter ICs/Disabled'
- * '<S55>'  : 'PosDirectControl/Discrete PID Controller/Filter ICs/External IC'
- * '<S56>'  : 'PosDirectControl/Discrete PID Controller/Filter ICs/Internal IC - Differentiator'
- * '<S57>'  : 'PosDirectControl/Discrete PID Controller/Filter ICs/Internal IC - Filter'
- * '<S58>'  : 'PosDirectControl/Discrete PID Controller/I Gain/Disabled'
- * '<S59>'  : 'PosDirectControl/Discrete PID Controller/I Gain/External Parameters'
- * '<S60>'  : 'PosDirectControl/Discrete PID Controller/I Gain/Internal Parameters'
- * '<S61>'  : 'PosDirectControl/Discrete PID Controller/Ideal P Gain/External Parameters'
- * '<S62>'  : 'PosDirectControl/Discrete PID Controller/Ideal P Gain/Internal Parameters'
- * '<S63>'  : 'PosDirectControl/Discrete PID Controller/Ideal P Gain/Passthrough'
- * '<S64>'  : 'PosDirectControl/Discrete PID Controller/Ideal P Gain Fdbk/Disabled'
- * '<S65>'  : 'PosDirectControl/Discrete PID Controller/Ideal P Gain Fdbk/External Parameters'
- * '<S66>'  : 'PosDirectControl/Discrete PID Controller/Ideal P Gain Fdbk/Internal Parameters'
- * '<S67>'  : 'PosDirectControl/Discrete PID Controller/Ideal P Gain Fdbk/Passthrough'
- * '<S68>'  : 'PosDirectControl/Discrete PID Controller/Integrator/Continuous'
- * '<S69>'  : 'PosDirectControl/Discrete PID Controller/Integrator/Disabled'
- * '<S70>'  : 'PosDirectControl/Discrete PID Controller/Integrator/Discrete'
- * '<S71>'  : 'PosDirectControl/Discrete PID Controller/Integrator ICs/Disabled'
- * '<S72>'  : 'PosDirectControl/Discrete PID Controller/Integrator ICs/External IC'
- * '<S73>'  : 'PosDirectControl/Discrete PID Controller/Integrator ICs/Internal IC'
- * '<S74>'  : 'PosDirectControl/Discrete PID Controller/N Copy/Disabled'
- * '<S75>'  : 'PosDirectControl/Discrete PID Controller/N Copy/Disabled wSignal Specification'
- * '<S76>'  : 'PosDirectControl/Discrete PID Controller/N Copy/External Parameters'
- * '<S77>'  : 'PosDirectControl/Discrete PID Controller/N Copy/Internal Parameters'
- * '<S78>'  : 'PosDirectControl/Discrete PID Controller/N Gain/Disabled'
- * '<S79>'  : 'PosDirectControl/Discrete PID Controller/N Gain/External Parameters'
- * '<S80>'  : 'PosDirectControl/Discrete PID Controller/N Gain/Internal Parameters'
- * '<S81>'  : 'PosDirectControl/Discrete PID Controller/N Gain/Passthrough'
- * '<S82>'  : 'PosDirectControl/Discrete PID Controller/P Copy/Disabled'
- * '<S83>'  : 'PosDirectControl/Discrete PID Controller/P Copy/External Parameters Ideal'
- * '<S84>'  : 'PosDirectControl/Discrete PID Controller/P Copy/Internal Parameters Ideal'
- * '<S85>'  : 'PosDirectControl/Discrete PID Controller/Parallel P Gain/Disabled'
- * '<S86>'  : 'PosDirectControl/Discrete PID Controller/Parallel P Gain/External Parameters'
- * '<S87>'  : 'PosDirectControl/Discrete PID Controller/Parallel P Gain/Internal Parameters'
- * '<S88>'  : 'PosDirectControl/Discrete PID Controller/Parallel P Gain/Passthrough'
- * '<S89>'  : 'PosDirectControl/Discrete PID Controller/Reset Signal/Disabled'
- * '<S90>'  : 'PosDirectControl/Discrete PID Controller/Reset Signal/External Reset'
- * '<S91>'  : 'PosDirectControl/Discrete PID Controller/Saturation/Enabled'
- * '<S92>'  : 'PosDirectControl/Discrete PID Controller/Saturation/Passthrough'
- * '<S93>'  : 'PosDirectControl/Discrete PID Controller/Saturation Fdbk/Disabled'
- * '<S94>'  : 'PosDirectControl/Discrete PID Controller/Saturation Fdbk/Enabled'
- * '<S95>'  : 'PosDirectControl/Discrete PID Controller/Saturation Fdbk/Passthrough'
- * '<S96>'  : 'PosDirectControl/Discrete PID Controller/Sum/Passthrough_I'
- * '<S97>'  : 'PosDirectControl/Discrete PID Controller/Sum/Passthrough_P'
- * '<S98>'  : 'PosDirectControl/Discrete PID Controller/Sum/Sum_PD'
- * '<S99>'  : 'PosDirectControl/Discrete PID Controller/Sum/Sum_PI'
- * '<S100>' : 'PosDirectControl/Discrete PID Controller/Sum/Sum_PID'
- * '<S101>' : 'PosDirectControl/Discrete PID Controller/Sum Fdbk/Disabled'
- * '<S102>' : 'PosDirectControl/Discrete PID Controller/Sum Fdbk/Enabled'
- * '<S103>' : 'PosDirectControl/Discrete PID Controller/Sum Fdbk/Passthrough'
- * '<S104>' : 'PosDirectControl/Discrete PID Controller/Tracking Mode/Disabled'
- * '<S105>' : 'PosDirectControl/Discrete PID Controller/Tracking Mode/Enabled'
- * '<S106>' : 'PosDirectControl/Discrete PID Controller/Tracking Mode Sum/Passthrough'
- * '<S107>' : 'PosDirectControl/Discrete PID Controller/Tracking Mode Sum/Tracking Mode'
- * '<S108>' : 'PosDirectControl/Discrete PID Controller/postSat Signal/Feedback_Path'
- * '<S109>' : 'PosDirectControl/Discrete PID Controller/postSat Signal/Forward_Path'
- * '<S110>' : 'PosDirectControl/Discrete PID Controller/preSat Signal/Feedback_Path'
- * '<S111>' : 'PosDirectControl/Discrete PID Controller/preSat Signal/Forward_Path'
- * '<S112>' : 'PosDirectControl/Quaternions to Rotation Angles/Angle Calculation'
- * '<S113>' : 'PosDirectControl/Quaternions to Rotation Angles/Quaternion Normalize'
- * '<S114>' : 'PosDirectControl/Quaternions to Rotation Angles/Quaternion Normalize/Quaternion Modulus'
- * '<S115>' : 'PosDirectControl/Quaternions to Rotation Angles/Quaternion Normalize/Quaternion Modulus/Quaternion Norm'
+ * '<S12>'  : 'PosDirectControl/indi'
+ * '<S13>'  : 'PosDirectControl/n_des from a_ref'
+ * '<S14>'  : 'PosDirectControl/unwrap2pi'
+ * '<S15>'  : 'PosDirectControl/Discrete PID Controller/Anti-windup'
+ * '<S16>'  : 'PosDirectControl/Discrete PID Controller/D Gain'
+ * '<S17>'  : 'PosDirectControl/Discrete PID Controller/Filter'
+ * '<S18>'  : 'PosDirectControl/Discrete PID Controller/Filter ICs'
+ * '<S19>'  : 'PosDirectControl/Discrete PID Controller/I Gain'
+ * '<S20>'  : 'PosDirectControl/Discrete PID Controller/Ideal P Gain'
+ * '<S21>'  : 'PosDirectControl/Discrete PID Controller/Ideal P Gain Fdbk'
+ * '<S22>'  : 'PosDirectControl/Discrete PID Controller/Integrator'
+ * '<S23>'  : 'PosDirectControl/Discrete PID Controller/Integrator ICs'
+ * '<S24>'  : 'PosDirectControl/Discrete PID Controller/N Copy'
+ * '<S25>'  : 'PosDirectControl/Discrete PID Controller/N Gain'
+ * '<S26>'  : 'PosDirectControl/Discrete PID Controller/P Copy'
+ * '<S27>'  : 'PosDirectControl/Discrete PID Controller/Parallel P Gain'
+ * '<S28>'  : 'PosDirectControl/Discrete PID Controller/Reset Signal'
+ * '<S29>'  : 'PosDirectControl/Discrete PID Controller/Saturation'
+ * '<S30>'  : 'PosDirectControl/Discrete PID Controller/Saturation Fdbk'
+ * '<S31>'  : 'PosDirectControl/Discrete PID Controller/Sum'
+ * '<S32>'  : 'PosDirectControl/Discrete PID Controller/Sum Fdbk'
+ * '<S33>'  : 'PosDirectControl/Discrete PID Controller/Tracking Mode'
+ * '<S34>'  : 'PosDirectControl/Discrete PID Controller/Tracking Mode Sum'
+ * '<S35>'  : 'PosDirectControl/Discrete PID Controller/postSat Signal'
+ * '<S36>'  : 'PosDirectControl/Discrete PID Controller/preSat Signal'
+ * '<S37>'  : 'PosDirectControl/Discrete PID Controller/Anti-windup/Back Calculation'
+ * '<S38>'  : 'PosDirectControl/Discrete PID Controller/Anti-windup/Cont. Clamping Ideal'
+ * '<S39>'  : 'PosDirectControl/Discrete PID Controller/Anti-windup/Cont. Clamping Parallel'
+ * '<S40>'  : 'PosDirectControl/Discrete PID Controller/Anti-windup/Disabled'
+ * '<S41>'  : 'PosDirectControl/Discrete PID Controller/Anti-windup/Disc. Clamping Ideal'
+ * '<S42>'  : 'PosDirectControl/Discrete PID Controller/Anti-windup/Disc. Clamping Parallel'
+ * '<S43>'  : 'PosDirectControl/Discrete PID Controller/Anti-windup/Passthrough'
+ * '<S44>'  : 'PosDirectControl/Discrete PID Controller/D Gain/Disabled'
+ * '<S45>'  : 'PosDirectControl/Discrete PID Controller/D Gain/External Parameters'
+ * '<S46>'  : 'PosDirectControl/Discrete PID Controller/D Gain/Internal Parameters'
+ * '<S47>'  : 'PosDirectControl/Discrete PID Controller/Filter/Cont. Filter'
+ * '<S48>'  : 'PosDirectControl/Discrete PID Controller/Filter/Differentiator'
+ * '<S49>'  : 'PosDirectControl/Discrete PID Controller/Filter/Disabled'
+ * '<S50>'  : 'PosDirectControl/Discrete PID Controller/Filter/Disc. Backward Euler Filter'
+ * '<S51>'  : 'PosDirectControl/Discrete PID Controller/Filter/Disc. Forward Euler Filter'
+ * '<S52>'  : 'PosDirectControl/Discrete PID Controller/Filter/Disc. Trapezoidal Filter'
+ * '<S53>'  : 'PosDirectControl/Discrete PID Controller/Filter ICs/Disabled'
+ * '<S54>'  : 'PosDirectControl/Discrete PID Controller/Filter ICs/External IC'
+ * '<S55>'  : 'PosDirectControl/Discrete PID Controller/Filter ICs/Internal IC - Differentiator'
+ * '<S56>'  : 'PosDirectControl/Discrete PID Controller/Filter ICs/Internal IC - Filter'
+ * '<S57>'  : 'PosDirectControl/Discrete PID Controller/I Gain/Disabled'
+ * '<S58>'  : 'PosDirectControl/Discrete PID Controller/I Gain/External Parameters'
+ * '<S59>'  : 'PosDirectControl/Discrete PID Controller/I Gain/Internal Parameters'
+ * '<S60>'  : 'PosDirectControl/Discrete PID Controller/Ideal P Gain/External Parameters'
+ * '<S61>'  : 'PosDirectControl/Discrete PID Controller/Ideal P Gain/Internal Parameters'
+ * '<S62>'  : 'PosDirectControl/Discrete PID Controller/Ideal P Gain/Passthrough'
+ * '<S63>'  : 'PosDirectControl/Discrete PID Controller/Ideal P Gain Fdbk/Disabled'
+ * '<S64>'  : 'PosDirectControl/Discrete PID Controller/Ideal P Gain Fdbk/External Parameters'
+ * '<S65>'  : 'PosDirectControl/Discrete PID Controller/Ideal P Gain Fdbk/Internal Parameters'
+ * '<S66>'  : 'PosDirectControl/Discrete PID Controller/Ideal P Gain Fdbk/Passthrough'
+ * '<S67>'  : 'PosDirectControl/Discrete PID Controller/Integrator/Continuous'
+ * '<S68>'  : 'PosDirectControl/Discrete PID Controller/Integrator/Disabled'
+ * '<S69>'  : 'PosDirectControl/Discrete PID Controller/Integrator/Discrete'
+ * '<S70>'  : 'PosDirectControl/Discrete PID Controller/Integrator ICs/Disabled'
+ * '<S71>'  : 'PosDirectControl/Discrete PID Controller/Integrator ICs/External IC'
+ * '<S72>'  : 'PosDirectControl/Discrete PID Controller/Integrator ICs/Internal IC'
+ * '<S73>'  : 'PosDirectControl/Discrete PID Controller/N Copy/Disabled'
+ * '<S74>'  : 'PosDirectControl/Discrete PID Controller/N Copy/Disabled wSignal Specification'
+ * '<S75>'  : 'PosDirectControl/Discrete PID Controller/N Copy/External Parameters'
+ * '<S76>'  : 'PosDirectControl/Discrete PID Controller/N Copy/Internal Parameters'
+ * '<S77>'  : 'PosDirectControl/Discrete PID Controller/N Gain/Disabled'
+ * '<S78>'  : 'PosDirectControl/Discrete PID Controller/N Gain/External Parameters'
+ * '<S79>'  : 'PosDirectControl/Discrete PID Controller/N Gain/Internal Parameters'
+ * '<S80>'  : 'PosDirectControl/Discrete PID Controller/N Gain/Passthrough'
+ * '<S81>'  : 'PosDirectControl/Discrete PID Controller/P Copy/Disabled'
+ * '<S82>'  : 'PosDirectControl/Discrete PID Controller/P Copy/External Parameters Ideal'
+ * '<S83>'  : 'PosDirectControl/Discrete PID Controller/P Copy/Internal Parameters Ideal'
+ * '<S84>'  : 'PosDirectControl/Discrete PID Controller/Parallel P Gain/Disabled'
+ * '<S85>'  : 'PosDirectControl/Discrete PID Controller/Parallel P Gain/External Parameters'
+ * '<S86>'  : 'PosDirectControl/Discrete PID Controller/Parallel P Gain/Internal Parameters'
+ * '<S87>'  : 'PosDirectControl/Discrete PID Controller/Parallel P Gain/Passthrough'
+ * '<S88>'  : 'PosDirectControl/Discrete PID Controller/Reset Signal/Disabled'
+ * '<S89>'  : 'PosDirectControl/Discrete PID Controller/Reset Signal/External Reset'
+ * '<S90>'  : 'PosDirectControl/Discrete PID Controller/Saturation/Enabled'
+ * '<S91>'  : 'PosDirectControl/Discrete PID Controller/Saturation/Passthrough'
+ * '<S92>'  : 'PosDirectControl/Discrete PID Controller/Saturation Fdbk/Disabled'
+ * '<S93>'  : 'PosDirectControl/Discrete PID Controller/Saturation Fdbk/Enabled'
+ * '<S94>'  : 'PosDirectControl/Discrete PID Controller/Saturation Fdbk/Passthrough'
+ * '<S95>'  : 'PosDirectControl/Discrete PID Controller/Sum/Passthrough_I'
+ * '<S96>'  : 'PosDirectControl/Discrete PID Controller/Sum/Passthrough_P'
+ * '<S97>'  : 'PosDirectControl/Discrete PID Controller/Sum/Sum_PD'
+ * '<S98>'  : 'PosDirectControl/Discrete PID Controller/Sum/Sum_PI'
+ * '<S99>'  : 'PosDirectControl/Discrete PID Controller/Sum/Sum_PID'
+ * '<S100>' : 'PosDirectControl/Discrete PID Controller/Sum Fdbk/Disabled'
+ * '<S101>' : 'PosDirectControl/Discrete PID Controller/Sum Fdbk/Enabled'
+ * '<S102>' : 'PosDirectControl/Discrete PID Controller/Sum Fdbk/Passthrough'
+ * '<S103>' : 'PosDirectControl/Discrete PID Controller/Tracking Mode/Disabled'
+ * '<S104>' : 'PosDirectControl/Discrete PID Controller/Tracking Mode/Enabled'
+ * '<S105>' : 'PosDirectControl/Discrete PID Controller/Tracking Mode Sum/Passthrough'
+ * '<S106>' : 'PosDirectControl/Discrete PID Controller/Tracking Mode Sum/Tracking Mode'
+ * '<S107>' : 'PosDirectControl/Discrete PID Controller/postSat Signal/Feedback_Path'
+ * '<S108>' : 'PosDirectControl/Discrete PID Controller/postSat Signal/Forward_Path'
+ * '<S109>' : 'PosDirectControl/Discrete PID Controller/preSat Signal/Feedback_Path'
+ * '<S110>' : 'PosDirectControl/Discrete PID Controller/preSat Signal/Forward_Path'
  */
 #endif                                 /* RTW_HEADER_PosDirectControl_h_ */
