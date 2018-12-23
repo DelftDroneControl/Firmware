@@ -221,6 +221,10 @@ private:
 		(ParamFloat<px4::params::SL_INERTIA_PROP>) _sl_inertia_prop,
 		(ParamFloat<px4::params::SL_TORQUE_COEFF>) _sl_torque_coeff,
 
+		(ParamFloat<px4::params::SL_X_POS_SP>) _sl_x_pos_sp,
+		(ParamFloat<px4::params::SL_Y_POS_SP>) _sl_y_pos_sp,
+		(ParamFloat<px4::params::SL_Z_POS_SP>) _sl_z_pos_sp,
+
 		(ParamFloat<px4::params::MC_ATT_T_ACT>) _att_t_act
 	)
 

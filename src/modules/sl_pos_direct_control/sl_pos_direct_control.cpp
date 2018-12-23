@@ -159,6 +159,13 @@ SlPosDirectControl::parameters_updated()
 	PosDirectControlParams.Ip = _sl_inertia_prop.get();
 	PosDirectControlParams.t = _sl_torque_coeff.get();
 
+	PosDirectControl.PosDirectControl_U.pos_sp[0] = _sl_x_pos_sp.get();
+	PosDirectControl.PosDirectControl_U.pos_sp[1] = _sl_y_pos_sp.get();
+	PosDirectControl.PosDirectControl_U.pos_sp[2] = _sl_z_pos_sp.get();
+
+	_pos_direct_control_input.pos_sp[0] = _sl_x_pos_sp.get();
+	_pos_direct_control_input.pos_sp[1] = _sl_y_pos_sp.get();
+	_pos_direct_control_input.pos_sp[2] = _sl_z_pos_sp.get();
 }
 
 void
@@ -443,25 +450,27 @@ SlPosDirectControl::control_pos_direct(float dt)
 	PosDirectControl_input.rates[1] = rates(1);
 	PosDirectControl_input.rates[2] = rates(2);
 
-	PosDirectControl_input.q[0] = q(0); // w
-	PosDirectControl_input.q[1] = q(1); // x
-	PosDirectControl_input.q[2] = q(2); // y
-	PosDirectControl_input.q[3] = q(3); // z
+	Eulerf euler_angles(q);
 
-	PosDirectControl_input.pos_sp[0] = _local_pos_sp.x;
-	PosDirectControl_input.pos_sp[1] = _local_pos_sp.y;
-	PosDirectControl_input.pos_sp[2] = _local_pos_sp.z;
+	PosDirectControl_input.att[0] = euler_angles.phi(); 
+	PosDirectControl_input.att[1] = euler_angles.theta();
+	PosDirectControl_input.att[2] = euler_angles.psi();
+
+
+	// Set in params for now..
+	// PosDirectControl_input.pos_sp[0] = _local_pos_sp.x;
+	// PosDirectControl_input.pos_sp[1] = _local_pos_sp.y;
+	// PosDirectControl_input.pos_sp[2] = _local_pos_sp.z;
 
 	PosDirectControl_input.yaw_sp = 0.f;
 
 	PosDirectControl.PosDirectControl_U = PosDirectControl_input;
 
-	// float t_step_start = hrt_absolute_time();
+	float t_step_start = hrt_absolute_time();
 	
 	PosDirectControl.step();
 
 	// `pos_direct_control_input` logger
-
 	_pos_direct_control_input.timestamp = hrt_absolute_time();
 
 	_pos_direct_control_input.vel[0] = _vehicle_local_position.vx;
@@ -476,19 +485,20 @@ SlPosDirectControl::control_pos_direct(float dt)
 	_pos_direct_control_input.rates[1] = rates(1);
 	_pos_direct_control_input.rates[2] = rates(2);
 
-	_pos_direct_control_input.q[0] = q(0);
-	_pos_direct_control_input.q[1] = q(1);
-	_pos_direct_control_input.q[2] = q(2);
-	_pos_direct_control_input.q[3] = q(3);
+	_pos_direct_control_input.att[0] = euler_angles.phi();
+	_pos_direct_control_input.att[1] = euler_angles.theta();
+	_pos_direct_control_input.att[2] = euler_angles.psi();
 
+	// TODO
 	_pos_direct_control_input.w_rotor_meas[0] = 0;
 	_pos_direct_control_input.w_rotor_meas[1] = 0;
 	_pos_direct_control_input.w_rotor_meas[2] = 0;
 	_pos_direct_control_input.w_rotor_meas[3] = 0;
 
-	_pos_direct_control_input.pos_sp[0] = _local_pos_sp.x;
-	_pos_direct_control_input.pos_sp[1] = _local_pos_sp.y;
-	_pos_direct_control_input.pos_sp[2] = _local_pos_sp.z;
+	// Set in params for now..
+	// _pos_direct_control_input.pos_sp[0] = _local_pos_sp.x;
+	// _pos_direct_control_input.pos_sp[1] = _local_pos_sp.y;
+	// _pos_direct_control_input.pos_sp[2] = _local_pos_sp.z;
 
 	_pos_direct_control_input.yaw_sp = 0.f;
 
@@ -497,14 +507,6 @@ SlPosDirectControl::control_pos_direct(float dt)
 	_actuators.control[1] = PosDirectControl.PosDirectControl_Y.actuators_control[1];
 	_actuators.control[2] = PosDirectControl.PosDirectControl_Y.actuators_control[2];
 	_actuators.control[3] = PosDirectControl.PosDirectControl_Y.actuators_control[3];
-
-
-	// PX4_INFO("HI");
-	// See mixer file `pass.main.mix` for exact control allocation.
-	// _actuators.control[0] = 0.f;
-	// _actuators.control[1] = -1.f;
-	// _actuators.control[2] = -1.f;
-	// _actuators.control[3] = 1.f;
 
 }
 

@@ -111,3 +111,40 @@ PARAM_DEFINE_FLOAT(SL_INERTIA_PROP, 8.00e-6);
  * @group Multicopter Attitude Control
  */
 PARAM_DEFINE_FLOAT(SL_TORQUE_COEFF, 1.9203e-8);
+
+
+/**
+ * INDI control actuator roll control gain.
+ *
+ * @unit
+ * @min 0
+ * @max 100
+ * @decimal 0
+ * @increment .1
+ * @group Multicopter Attitude Control
+ */
+PARAM_DEFINE_FLOAT(SL_X_POS_SP, 0.f);
+
+/**
+ * INDI control actuator roll control gain.
+ *
+ * @unit
+ * @min 0
+ * @max 100
+ * @decimal 0
+ * @increment .1
+ * @group Multicopter Attitude Control
+ */
+PARAM_DEFINE_FLOAT(SL_Y_POS_SP, 0.f);
+
+/**
+ * INDI control actuator roll control gain.
+ *
+ * @unit
+ * @min 0
+ * @max 100
+ * @decimal 0
+ * @increment .1
+ * @group Multicopter Attitude Control
+ */
+PARAM_DEFINE_FLOAT(SL_Z_POS_SP, 0.f);
