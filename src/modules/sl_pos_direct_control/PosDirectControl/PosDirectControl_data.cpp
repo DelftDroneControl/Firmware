@@ -1,5 +1,5 @@
 /*
- * rtwtypes.h
+ * PosDirectControl_data.cpp
  *
  * Academic License - for use in teaching, academic research, and meeting
  * course requirements at degree granting institutions only.  Not for
@@ -18,25 +18,22 @@
  * Validation result: Not run
  */
 
-#ifndef RTWTYPES_H
-#define RTWTYPES_H
-#include "tmwtypes.h"
-#include "simstruc_types.h"
-#ifndef POINTER_T
-# define POINTER_T
+#include "PosDirectControl.h"
+#include "PosDirectControl_private.h"
 
-typedef void * pointer_T;
+/* Invariant block signals (default storage) */
+const ConstB_PosDirectControl_T PosDirectControl_ConstB = {
+  {
+    0.0,
+    0.0,
+    -9.8124
+  }
+  ,                                    /* '<S15>/Sum' */
 
-#endif
-
-/* Logical type definitions */
-#if (!defined(__cplusplus))
-#  ifndef false
-#   define false                       (0U)
-#  endif
-
-#  ifndef true
-#   define true                        (1U)
-#  endif
-#endif
-#endif                                 /* RTWTYPES_H */
+  {
+    0.0,
+    0.0,
+    -0.99999999998980882
+  }
+  /* '<S15>/Normalization' */
+};
