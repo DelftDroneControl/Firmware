@@ -7,9 +7,9 @@
  *
  * Code generation for model "PosDirectControl".
  *
- * Model version              : 1.229
+ * Model version              : 1.247
  * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C++ source code generated on : Thu Dec 20 19:34:24 2018
+ * C++ source code generated on : Fri Dec 28 16:51:21 2018
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -21,11 +21,20 @@
 #ifndef RTW_HEADER_PosDirectControl_types_h_
 #define RTW_HEADER_PosDirectControl_types_h_
 #include "rtwtypes.h"
-#include "multiword_types.h"
 #ifndef DEFINED_TYPEDEF_FOR_PosDirectControlParamsType_
 #define DEFINED_TYPEDEF_FOR_PosDirectControlParamsType_
 
 typedef struct {
+  real_T rot_direction;
+  real_T pos_x_p_gain;
+  real_T pos_y_p_gain;
+  real_T pos_z_p_gain;
+  real_T pos_x_d_gain;
+  real_T pos_y_d_gain;
+  real_T pos_z_d_gain;
+  real_T att_p_gain;
+  real_T att_d_gain;
+  real_T yaw_p_gain;
   real_T k;
   real_T l;
   real_T b;
@@ -61,9 +70,6 @@ typedef struct {
 } struct_NNmTOa2Ph7lEylGX7GoUhE;
 
 #endif
-
-/* Parameters (default storage) */
-typedef struct P_PosDirectControl_T_ P_PosDirectControl_T;
 
 /* Forward declaration for rtModel */
 typedef struct tag_RTM_PosDirectControl_T RT_MODEL_PosDirectControl_T;

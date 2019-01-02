@@ -211,6 +211,20 @@ private:
 
 		(ParamFloat<px4::params::MC_ATT_RATE_MAX>) _att_rate_sample_rate_max,
 
+		(ParamFloat<px4::params::SL_ROT_DIRECTION>) _sl_rot_direction,
+
+		(ParamFloat<px4::params::SL_POS_X_P_GAIN>) _sl_pos_x_p_gain,
+		(ParamFloat<px4::params::SL_POS_Y_P_GAIN>) _sl_pos_y_p_gain,
+		(ParamFloat<px4::params::SL_POS_Z_P_GAIN>) _sl_pos_z_p_gain,
+
+		(ParamFloat<px4::params::SL_POS_X_D_GAIN>) _sl_pos_x_d_gain,
+		(ParamFloat<px4::params::SL_POS_Y_D_GAIN>) _sl_pos_y_d_gain,
+		(ParamFloat<px4::params::SL_POS_Z_D_GAIN>) _sl_pos_z_d_gain,
+
+		(ParamFloat<px4::params::SL_ATT_P_GAIN>) _sl_att_p_gain,
+		(ParamFloat<px4::params::SL_ATT_D_GAIN>) _sl_att_d_gain,
+		(ParamFloat<px4::params::SL_YAW_P_GAIN>) _sl_yaw_p_gain,
+
 		(ParamFloat<px4::params::SL_THRUST_COEFF>) _sl_thrust_coeff,
 		(ParamFloat<px4::params::SL_GEOM_L>) _sl_geom_l,
 		(ParamFloat<px4::params::SL_GEOM_B>) _sl_geom_b,
@@ -224,6 +238,8 @@ private:
 		(ParamFloat<px4::params::SL_X_POS_SP>) _sl_x_pos_sp,
 		(ParamFloat<px4::params::SL_Y_POS_SP>) _sl_y_pos_sp,
 		(ParamFloat<px4::params::SL_Z_POS_SP>) _sl_z_pos_sp,
+
+		(ParamInt<px4::params::SL_FAIL_FLAG>) _sl_fail_flag,
 
 		(ParamFloat<px4::params::MC_ATT_T_ACT>) _att_t_act
 	)

@@ -149,6 +149,20 @@ SlPosDirectControl::parameters_updated()
 
 	_sample_rate_max = _att_rate_sample_rate_max.get();
 
+	PosDirectControlParams.rot_direction = _sl_rot_direction.get();
+
+	PosDirectControlParams.pos_x_p_gain = _sl_pos_x_p_gain.get();
+	PosDirectControlParams.pos_y_p_gain = _sl_pos_y_p_gain.get();
+	PosDirectControlParams.pos_z_p_gain = _sl_pos_z_p_gain.get();
+
+	PosDirectControlParams.pos_x_d_gain = _sl_pos_x_d_gain.get();
+	PosDirectControlParams.pos_y_d_gain = _sl_pos_y_d_gain.get();
+	PosDirectControlParams.pos_z_d_gain = _sl_pos_z_d_gain.get();
+
+	PosDirectControlParams.att_p_gain = _sl_att_p_gain.get();
+	PosDirectControlParams.att_d_gain = _sl_att_d_gain.get();
+	PosDirectControlParams.yaw_p_gain = _sl_yaw_p_gain.get();
+	
 	PosDirectControlParams.k = _sl_thrust_coeff.get();
 	PosDirectControlParams.l = _sl_geom_l.get();
 	PosDirectControlParams.b = _sl_geom_b.get();
@@ -162,10 +176,12 @@ SlPosDirectControl::parameters_updated()
 	PosDirectControl.PosDirectControl_U.pos_sp[0] = _sl_x_pos_sp.get();
 	PosDirectControl.PosDirectControl_U.pos_sp[1] = _sl_y_pos_sp.get();
 	PosDirectControl.PosDirectControl_U.pos_sp[2] = _sl_z_pos_sp.get();
+	PosDirectControl.PosDirectControl_U.fail_flag = _sl_fail_flag.get();
 
 	_pos_direct_control_input.pos_sp[0] = _sl_x_pos_sp.get();
 	_pos_direct_control_input.pos_sp[1] = _sl_y_pos_sp.get();
 	_pos_direct_control_input.pos_sp[2] = _sl_z_pos_sp.get();
+	_pos_direct_control_input.fail_flag = _sl_fail_flag.get();
 }
 
 void
@@ -466,7 +482,7 @@ SlPosDirectControl::control_pos_direct(float dt)
 
 	PosDirectControl.PosDirectControl_U = PosDirectControl_input;
 
-	float t_step_start = hrt_absolute_time();
+	// float t_step_start = hrt_absolute_time();
 	
 	PosDirectControl.step();
 
@@ -500,7 +516,7 @@ SlPosDirectControl::control_pos_direct(float dt)
 	// _pos_direct_control_input.pos_sp[1] = _local_pos_sp.y;
 	// _pos_direct_control_input.pos_sp[2] = _local_pos_sp.z;
 
-	_pos_direct_control_input.yaw_sp = 0.f;
+	_pos_direct_control_input.yaw_sp = 0;
 
 	// See mixer file `pass.main.mix` for exact control allocation.
 	_actuators.control[0] = PosDirectControl.PosDirectControl_Y.actuators_control[0];
