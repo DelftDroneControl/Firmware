@@ -1,0 +1,42 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "forcedInclude": [
+                "${workspaceFolder}/src/include/visibility.h"
+            ],
+            "includePath": [
+                "${workspaceFolder}/src",
+                "${workspaceFolder}/src/lib",
+                "${workspaceFolder}/src/lib/matrix",
+                "${workspaceFolder}/src/platforms",
+                "${workspaceFolder}/src/include",
+                "${workspaceFolder}/src/modules",
+                "${workspaceFolder}/src/modules/**",
+                "${workspaceFolder}/build/posix_sitl_default",
+                "${workspaceFolder}/build/posix_sitl_default/uORB/topics",
+                "${workspaceFolder}/build/posix_sitl_default/src/lib",
+                "${workspaceFolder}/build/posix_sitl_default/src/modules/systemlib/param",
+                "${workspaceFolder}/platforms",
+                "${workspaceFolder}/platforms/posix/include",
+                "${workspaceFolder}/src/drivers/boards/sitl",
+                "${workspaceFolder}/src/lib/DriverFramework/dspal/include",
+                "/usr/include/x86_64-linux-gnu/sys"
+            ],
+            "defines": [
+                "__PX4_POSIX=1",
+                "__PX4_LINUX=1",
+                "__cplusplus=1"
+            ],
+            "macFrameworkPath": [
+                "/System/Library/Frameworks",
+                "/Library/Frameworks"
+            ],
+            "compilerPath": "/usr/bin/clang",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "clang-x64"
+        }
+    ],
+    "version": 4
+}
