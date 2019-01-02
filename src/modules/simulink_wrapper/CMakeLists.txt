@@ -42,6 +42,6 @@ px4_add_module(
 	SRCS
 		simulink_wrapper.cpp
 	DEPENDS
-		simulink_RateControl
+		sl_RateControl
 	)
 

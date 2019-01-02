@@ -554,7 +554,7 @@ SimulinkWrapper::control_attitude_rates(float dt)
 
 	float t_step_start = hrt_absolute_time();
 	
-	RateControl.step0();
+	RateControl.step();
 
 	// `rate_control_input` logger
 
