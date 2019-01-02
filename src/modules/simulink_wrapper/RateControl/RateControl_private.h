@@ -7,9 +7,9 @@
  *
  * Code generation for model "RateControl".
  *
- * Model version              : 1.491
+ * Model version              : 1.576
  * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C++ source code generated on : Fri Nov 30 17:32:08 2018
+ * C++ source code generated on : Wed Jan  2 14:25:39 2019
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -22,7 +22,4 @@
 #define RTW_HEADER_RateControl_private_h_
 #include "rtwtypes.h"
 #include "multiword_types.h"
-
-extern real_T rt_modd_snf(real_T u0, real_T u1);
-
 #endif                                 /* RTW_HEADER_RateControl_private_h_ */

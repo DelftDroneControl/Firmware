@@ -7,9 +7,9 @@
  *
  * Code generation for model "RateControl".
  *
- * Model version              : 1.491
+ * Model version              : 1.576
  * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C++ source code generated on : Fri Nov 30 17:32:08 2018
+ * C++ source code generated on : Wed Jan  2 14:25:39 2019
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -22,7 +22,6 @@
 #define RTW_HEADER_RateControl_h_
 #include <string.h>
 #include <cmath>
-#include <float.h>
 #include <math.h>
 #include <stddef.h>
 #ifndef RateControl_COMMON_INCLUDES_
@@ -41,10 +40,6 @@
 #include "rtGetInf.h"
 
 /* Macros for accessing real-time model data structure */
-#ifndef rtmCounterLimit
-# define rtmCounterLimit(rtm, idx)     ((rtm)->Timing.TaskCounters.cLimit[(idx)])
-#endif
-
 #ifndef rtmGetErrorStatus
 # define rtmGetErrorStatus(rtm)        ((rtm)->errorStatus)
 #endif
@@ -53,76 +48,49 @@
 # define rtmSetErrorStatus(rtm, val)   ((rtm)->errorStatus = (val))
 #endif
 
-#ifndef rtmStepTask
-# define rtmStepTask(rtm, idx)         ((rtm)->Timing.TaskCounters.TID[(idx)] == 0)
-#endif
-
-#ifndef rtmTaskCounter
-# define rtmTaskCounter(rtm, idx)      ((rtm)->Timing.TaskCounters.TID[(idx)])
-#endif
-
-/* Block signals (default storage) */
-typedef struct {
-  real_T Diff[3];                      /* '<S2>/Diff' */
-  real_T est_Omega_ddot_pred[4];       /* '<Root>/MATLAB Function1' */
-  real_T MathFunction;                 /* '<S18>/Math Function' */
-  real_T OverwriteValues[3];           /* '<S19>/Overwrite Values' */
-} B_RateControl_T;
-
 /* Block states (default storage) for system '<Root>' */
 typedef struct {
-  real_T H_est_actuators_DSTATE[8];    /* '<Root>/H_est_actuators' */
-  real_T UD_DSTATE[4];                 /* '<S3>/UD' */
-  real_T UD_DSTATE_k[4];               /* '<S5>/UD' */
-  real_T H_est_rates_DSTATE[6];        /* '<Root>/H_est_rates' */
-  real_T UD_DSTATE_b[3];               /* '<S4>/UD' */
-  real_T UD_DSTATE_n[3];               /* '<S2>/UD' */
-  real_T H_est_accel_DSTATE[2];        /* '<Root>/H_est_accel' */
-  real_T UD_DSTATE_d;                  /* '<S6>/UD' */
-  real_T Buffer1_CircBuf[400];         /* '<S8>/Buffer1' */
   real_T H_rates_DSTATE[6];            /* '<Root>/H_rates' */
-  real_T UD_DSTATE_m[3];               /* '<S1>/UD' */
+  real_T UD_DSTATE[3];                 /* '<S1>/UD' */
   real_T H_accel_DSTATE[2];            /* '<Root>/H_accel' */
-  real_T Integrator_DSTATE;            /* '<S170>/Integrator' */
-  real_T UD_DSTATE_b2;                 /* '<S149>/UD' */
-  real_T Integrator_DSTATE_f;          /* '<S74>/Integrator' */
-  real_T UD_DSTATE_l;                  /* '<S53>/UD' */
-  real_T Integrator_DSTATE_b;          /* '<S266>/Integrator' */
-  real_T UD_DSTATE_bg;                 /* '<S245>/UD' */
+  real_T H_virtual_control_input_DSTATE[8];/* '<Root>/H_virtual_control_input' */
   real_T H_actuators_DSTATE[8];        /* '<Root>/H_actuators' */
-  real_T Buffer2_CircBuf[400];         /* '<S8>/Buffer2' */
-  real_T DelayLine_Buff[3];            /* '<S19>/Delay Line' */
+  real_T H_est_actuators_DSTATE[8];    /* '<Root>/H_est_actuators' */
+  real_T UD_DSTATE_p[4];               /* '<S3>/UD' */
+  real_T UD_DSTATE_e[4];               /* '<S5>/UD' */
+  real_T H_est_rates_DSTATE[6];        /* '<Root>/H_est_rates' */
+  real_T UD_DSTATE_d[3];               /* '<S4>/UD' */
+  real_T UD_DSTATE_g[3];               /* '<S2>/UD' */
+  real_T H_est_accel_DSTATE[2];        /* '<Root>/H_est_accel' */
+  real_T UD_DSTATE_j;                  /* '<S6>/UD' */
   real_T Delay_DSTATE[8];              /* '<Root>/Delay' */
-  real_T actuatordynamics_DSTATE[4];   /* '<Root>/actuator dynamics' */
-  real_T Maximum_Valdata;              /* '<S18>/Maximum' */
-  real_T Memory3_PreviousInput[32];    /* '<Root>/Memory3' */
+  real_T ActuatorDynamics_DSTATE[4];   /* '<Root>/ActuatorDynamics' */
+  real_T UD_DSTATE_l;                  /* '<S48>/UD' */
+  real_T Integrator_DSTATE;            /* '<S69>/Integrator' */
+  real_T UD_DSTATE_b;                  /* '<S144>/UD' */
+  real_T Integrator_DSTATE_k;          /* '<S165>/Integrator' */
+  real_T UD_DSTATE_bg;                 /* '<S240>/UD' */
+  real_T Integrator_DSTATE_b;          /* '<S261>/Integrator' */
   real_T du_last[4];                   /* '<Root>/INDI_allocator' */
-  real_T Correlation_DWORK1[200];      /* '<S18>/Correlation' */
-  int32_T Buffer1_inBufPtrIdx;         /* '<S8>/Buffer1' */
-  int32_T Buffer1_outBufPtrIdx;        /* '<S8>/Buffer1' */
-  int32_T Buffer1_bufferLength;        /* '<S8>/Buffer1' */
-  int32_T Buffer2_inBufPtrIdx;         /* '<S8>/Buffer2' */
-  int32_T Buffer2_outBufPtrIdx;        /* '<S8>/Buffer2' */
-  int32_T Buffer2_bufferLength;        /* '<S8>/Buffer2' */
-  int32_T DelayLine_BUFF_OFFSET;       /* '<S19>/Delay Line' */
+  real32_T Memory3_PreviousInput[32];  /* '<Root>/Memory3' */
 } DW_RateControl_T;
 
 /* Constant parameters (default storage) */
 typedef struct {
   /* Pooled Parameter (Mixed Expressions)
-   * Referenced by: '<Root>/actuator dynamics'
+   * Referenced by: '<Root>/ActuatorDynamics'
    */
   real_T pooled1[16];
 
-  /* Expression: control_eff_matrix(rateControlParams)
+  /* Expression: eye(4)
+   * Referenced by: '<Root>/ActuatorDynamics'
+   */
+  real_T ActuatorDynamics_C[16];
+
+  /* Computed Parameter: Memory3_InitialCondition
    * Referenced by: '<Root>/Memory3'
    */
-  real_T Memory3_InitialCondition[32];
-
-  /* Expression: eye(4)
-   * Referenced by: '<Root>/actuator dynamics'
-   */
-  real_T actuatordynamics_C[16];
+  real32_T Memory3_InitialCondition[32];
 } ConstP_RateControl_T;
 
 /* External inputs (root inport signals with default storage) */
@@ -132,30 +100,19 @@ typedef struct {
   real32_T accel_z;                    /* '<Root>/accel_z' */
   real32_T thrust_sp;                  /* '<Root>/thrust_sp' */
   real_T wRotor[4];                    /* '<Root>/wRotor' */
+  real_T fail_id;                      /* '<Root>/fail_id' */
 } ExtU_RateControl_T;
 
 /* External outputs (root outports fed by signals with default storage) */
 typedef struct {
   real_T w_cmd[4];                     /* '<Root>/w_cmd' */
   real32_T actuators_control[4];       /* '<Root>/actuators_control' */
-  real_T G[32];                        /* '<Root>/G' */
+  real32_T G[32];                      /* '<Root>/G' */
 } ExtY_RateControl_T;
 
 /* Real-time Model Data Structure */
 struct tag_RTM_RateControl_T {
   const char_T *errorStatus;
-
-  /*
-   * Timing:
-   * The following substructure contains information regarding
-   * the timing information for the model.
-   */
-  struct {
-    struct {
-      uint16_T TID[2];
-      uint16_T cLimit[2];
-    } TaskCounters;
-  } Timing;
 };
 
 /* Constant parameters (default storage) */
@@ -172,10 +129,10 @@ extern const ConstP_RateControl_T RateControl_ConstP;
 extern RateControlParamsType RateControlParams;/* Variable: RateControlParams
                                                 * Referenced by:
                                                 *   '<Root>/controlEffMatrix'
-                                                *   '<Root>/actuator dynamics'
-                                                *   '<S91>/Proportional Gain'
-                                                *   '<S187>/Proportional Gain'
-                                                *   '<S283>/Proportional Gain'
+                                                *   '<Root>/ActuatorDynamics'
+                                                *   '<S86>/Proportional Gain'
+                                                *   '<S182>/Proportional Gain'
+                                                *   '<S278>/Proportional Gain'
                                                 */
 
 /* Class declaration for model RateControl */
@@ -192,10 +149,7 @@ class RateControlModelClass {
   void initialize();
 
   /* model step function */
-  void step0();
-
-  /* model step function */
-  void step1();
+  void step();
 
   /* model terminate function */
   void terminate();
@@ -211,9 +165,6 @@ class RateControlModelClass {
 
   /* private data and function members */
  private:
-  /* Block signals */
-  B_RateControl_T RateControl_B;
-
   /* Block states */
   DW_RateControl_T RateControl_DW;
 
@@ -241,9 +192,6 @@ class RateControlModelClass {
   void RateControl_pinv(const real_T A[16], real_T X[16]);
 };
 
-// Model step wrapper function for compatibility with a static main program
-void RateControl_step(RateControlModelClass & RateControl_Obj, int_T tid);
-
 /*-
  * The generated code includes comments that allow you to trace directly
  * back to the appropriate location in the model.  The basic format
@@ -266,305 +214,300 @@ void RateControl_step(RateControlModelClass & RateControl_Obj, int_T tid);
  * '<S5>'   : 'RateControl/Discrete Derivative5'
  * '<S6>'   : 'RateControl/Discrete Derivative6'
  * '<S7>'   : 'RateControl/FD'
- * '<S8>'   : 'RateControl/Find Delay'
- * '<S9>'   : 'RateControl/INDI_allocator'
- * '<S10>'  : 'RateControl/MATLAB Function'
- * '<S11>'  : 'RateControl/MATLAB Function1'
- * '<S12>'  : 'RateControl/PD_pitch'
- * '<S13>'  : 'RateControl/PD_roll'
- * '<S14>'  : 'RateControl/PD_yaw'
- * '<S15>'  : 'RateControl/controlEffMatrix'
- * '<S16>'  : 'RateControl/lms'
- * '<S17>'  : 'RateControl/wobbler'
- * '<S18>'  : 'RateControl/Find Delay/Compute Delay'
- * '<S19>'  : 'RateControl/Find Delay/Enable Logic'
- * '<S20>'  : 'RateControl/PD_pitch/Anti-windup'
- * '<S21>'  : 'RateControl/PD_pitch/D Gain'
- * '<S22>'  : 'RateControl/PD_pitch/Filter'
- * '<S23>'  : 'RateControl/PD_pitch/Filter ICs'
- * '<S24>'  : 'RateControl/PD_pitch/I Gain'
- * '<S25>'  : 'RateControl/PD_pitch/Ideal P Gain'
- * '<S26>'  : 'RateControl/PD_pitch/Ideal P Gain Fdbk'
- * '<S27>'  : 'RateControl/PD_pitch/Integrator'
- * '<S28>'  : 'RateControl/PD_pitch/Integrator ICs'
- * '<S29>'  : 'RateControl/PD_pitch/N Copy'
- * '<S30>'  : 'RateControl/PD_pitch/N Gain'
- * '<S31>'  : 'RateControl/PD_pitch/P Copy'
- * '<S32>'  : 'RateControl/PD_pitch/Parallel P Gain'
- * '<S33>'  : 'RateControl/PD_pitch/Reset Signal'
- * '<S34>'  : 'RateControl/PD_pitch/Saturation'
- * '<S35>'  : 'RateControl/PD_pitch/Saturation Fdbk'
- * '<S36>'  : 'RateControl/PD_pitch/Sum'
- * '<S37>'  : 'RateControl/PD_pitch/Sum Fdbk'
- * '<S38>'  : 'RateControl/PD_pitch/Tracking Mode'
- * '<S39>'  : 'RateControl/PD_pitch/Tracking Mode Sum'
- * '<S40>'  : 'RateControl/PD_pitch/postSat Signal'
- * '<S41>'  : 'RateControl/PD_pitch/preSat Signal'
- * '<S42>'  : 'RateControl/PD_pitch/Anti-windup/Back Calculation'
- * '<S43>'  : 'RateControl/PD_pitch/Anti-windup/Cont. Clamping Ideal'
- * '<S44>'  : 'RateControl/PD_pitch/Anti-windup/Cont. Clamping Parallel'
- * '<S45>'  : 'RateControl/PD_pitch/Anti-windup/Disabled'
- * '<S46>'  : 'RateControl/PD_pitch/Anti-windup/Disc. Clamping Ideal'
- * '<S47>'  : 'RateControl/PD_pitch/Anti-windup/Disc. Clamping Parallel'
- * '<S48>'  : 'RateControl/PD_pitch/Anti-windup/Passthrough'
- * '<S49>'  : 'RateControl/PD_pitch/D Gain/Disabled'
- * '<S50>'  : 'RateControl/PD_pitch/D Gain/External Parameters'
- * '<S51>'  : 'RateControl/PD_pitch/D Gain/Internal Parameters'
- * '<S52>'  : 'RateControl/PD_pitch/Filter/Cont. Filter'
- * '<S53>'  : 'RateControl/PD_pitch/Filter/Differentiator'
- * '<S54>'  : 'RateControl/PD_pitch/Filter/Disabled'
- * '<S55>'  : 'RateControl/PD_pitch/Filter/Disc. Backward Euler Filter'
- * '<S56>'  : 'RateControl/PD_pitch/Filter/Disc. Forward Euler Filter'
- * '<S57>'  : 'RateControl/PD_pitch/Filter/Disc. Trapezoidal Filter'
- * '<S58>'  : 'RateControl/PD_pitch/Filter ICs/Disabled'
- * '<S59>'  : 'RateControl/PD_pitch/Filter ICs/External IC'
- * '<S60>'  : 'RateControl/PD_pitch/Filter ICs/Internal IC - Differentiator'
- * '<S61>'  : 'RateControl/PD_pitch/Filter ICs/Internal IC - Filter'
- * '<S62>'  : 'RateControl/PD_pitch/I Gain/Disabled'
- * '<S63>'  : 'RateControl/PD_pitch/I Gain/External Parameters'
- * '<S64>'  : 'RateControl/PD_pitch/I Gain/Internal Parameters'
- * '<S65>'  : 'RateControl/PD_pitch/Ideal P Gain/External Parameters'
- * '<S66>'  : 'RateControl/PD_pitch/Ideal P Gain/Internal Parameters'
- * '<S67>'  : 'RateControl/PD_pitch/Ideal P Gain/Passthrough'
- * '<S68>'  : 'RateControl/PD_pitch/Ideal P Gain Fdbk/Disabled'
- * '<S69>'  : 'RateControl/PD_pitch/Ideal P Gain Fdbk/External Parameters'
- * '<S70>'  : 'RateControl/PD_pitch/Ideal P Gain Fdbk/Internal Parameters'
- * '<S71>'  : 'RateControl/PD_pitch/Ideal P Gain Fdbk/Passthrough'
- * '<S72>'  : 'RateControl/PD_pitch/Integrator/Continuous'
- * '<S73>'  : 'RateControl/PD_pitch/Integrator/Disabled'
- * '<S74>'  : 'RateControl/PD_pitch/Integrator/Discrete'
- * '<S75>'  : 'RateControl/PD_pitch/Integrator ICs/Disabled'
- * '<S76>'  : 'RateControl/PD_pitch/Integrator ICs/External IC'
- * '<S77>'  : 'RateControl/PD_pitch/Integrator ICs/Internal IC'
- * '<S78>'  : 'RateControl/PD_pitch/N Copy/Disabled'
- * '<S79>'  : 'RateControl/PD_pitch/N Copy/Disabled wSignal Specification'
- * '<S80>'  : 'RateControl/PD_pitch/N Copy/External Parameters'
- * '<S81>'  : 'RateControl/PD_pitch/N Copy/Internal Parameters'
- * '<S82>'  : 'RateControl/PD_pitch/N Gain/Disabled'
- * '<S83>'  : 'RateControl/PD_pitch/N Gain/External Parameters'
- * '<S84>'  : 'RateControl/PD_pitch/N Gain/Internal Parameters'
- * '<S85>'  : 'RateControl/PD_pitch/N Gain/Passthrough'
- * '<S86>'  : 'RateControl/PD_pitch/P Copy/Disabled'
- * '<S87>'  : 'RateControl/PD_pitch/P Copy/External Parameters Ideal'
- * '<S88>'  : 'RateControl/PD_pitch/P Copy/Internal Parameters Ideal'
- * '<S89>'  : 'RateControl/PD_pitch/Parallel P Gain/Disabled'
- * '<S90>'  : 'RateControl/PD_pitch/Parallel P Gain/External Parameters'
- * '<S91>'  : 'RateControl/PD_pitch/Parallel P Gain/Internal Parameters'
- * '<S92>'  : 'RateControl/PD_pitch/Parallel P Gain/Passthrough'
- * '<S93>'  : 'RateControl/PD_pitch/Reset Signal/Disabled'
- * '<S94>'  : 'RateControl/PD_pitch/Reset Signal/External Reset'
- * '<S95>'  : 'RateControl/PD_pitch/Saturation/Enabled'
- * '<S96>'  : 'RateControl/PD_pitch/Saturation/Passthrough'
- * '<S97>'  : 'RateControl/PD_pitch/Saturation Fdbk/Disabled'
- * '<S98>'  : 'RateControl/PD_pitch/Saturation Fdbk/Enabled'
- * '<S99>'  : 'RateControl/PD_pitch/Saturation Fdbk/Passthrough'
- * '<S100>' : 'RateControl/PD_pitch/Sum/Passthrough_I'
- * '<S101>' : 'RateControl/PD_pitch/Sum/Passthrough_P'
- * '<S102>' : 'RateControl/PD_pitch/Sum/Sum_PD'
- * '<S103>' : 'RateControl/PD_pitch/Sum/Sum_PI'
- * '<S104>' : 'RateControl/PD_pitch/Sum/Sum_PID'
- * '<S105>' : 'RateControl/PD_pitch/Sum Fdbk/Disabled'
- * '<S106>' : 'RateControl/PD_pitch/Sum Fdbk/Enabled'
- * '<S107>' : 'RateControl/PD_pitch/Sum Fdbk/Passthrough'
- * '<S108>' : 'RateControl/PD_pitch/Tracking Mode/Disabled'
- * '<S109>' : 'RateControl/PD_pitch/Tracking Mode/Enabled'
- * '<S110>' : 'RateControl/PD_pitch/Tracking Mode Sum/Passthrough'
- * '<S111>' : 'RateControl/PD_pitch/Tracking Mode Sum/Tracking Mode'
- * '<S112>' : 'RateControl/PD_pitch/postSat Signal/Feedback_Path'
- * '<S113>' : 'RateControl/PD_pitch/postSat Signal/Forward_Path'
- * '<S114>' : 'RateControl/PD_pitch/preSat Signal/Feedback_Path'
- * '<S115>' : 'RateControl/PD_pitch/preSat Signal/Forward_Path'
- * '<S116>' : 'RateControl/PD_roll/Anti-windup'
- * '<S117>' : 'RateControl/PD_roll/D Gain'
- * '<S118>' : 'RateControl/PD_roll/Filter'
- * '<S119>' : 'RateControl/PD_roll/Filter ICs'
- * '<S120>' : 'RateControl/PD_roll/I Gain'
- * '<S121>' : 'RateControl/PD_roll/Ideal P Gain'
- * '<S122>' : 'RateControl/PD_roll/Ideal P Gain Fdbk'
- * '<S123>' : 'RateControl/PD_roll/Integrator'
- * '<S124>' : 'RateControl/PD_roll/Integrator ICs'
- * '<S125>' : 'RateControl/PD_roll/N Copy'
- * '<S126>' : 'RateControl/PD_roll/N Gain'
- * '<S127>' : 'RateControl/PD_roll/P Copy'
- * '<S128>' : 'RateControl/PD_roll/Parallel P Gain'
- * '<S129>' : 'RateControl/PD_roll/Reset Signal'
- * '<S130>' : 'RateControl/PD_roll/Saturation'
- * '<S131>' : 'RateControl/PD_roll/Saturation Fdbk'
- * '<S132>' : 'RateControl/PD_roll/Sum'
- * '<S133>' : 'RateControl/PD_roll/Sum Fdbk'
- * '<S134>' : 'RateControl/PD_roll/Tracking Mode'
- * '<S135>' : 'RateControl/PD_roll/Tracking Mode Sum'
- * '<S136>' : 'RateControl/PD_roll/postSat Signal'
- * '<S137>' : 'RateControl/PD_roll/preSat Signal'
- * '<S138>' : 'RateControl/PD_roll/Anti-windup/Back Calculation'
- * '<S139>' : 'RateControl/PD_roll/Anti-windup/Cont. Clamping Ideal'
- * '<S140>' : 'RateControl/PD_roll/Anti-windup/Cont. Clamping Parallel'
- * '<S141>' : 'RateControl/PD_roll/Anti-windup/Disabled'
- * '<S142>' : 'RateControl/PD_roll/Anti-windup/Disc. Clamping Ideal'
- * '<S143>' : 'RateControl/PD_roll/Anti-windup/Disc. Clamping Parallel'
- * '<S144>' : 'RateControl/PD_roll/Anti-windup/Passthrough'
- * '<S145>' : 'RateControl/PD_roll/D Gain/Disabled'
- * '<S146>' : 'RateControl/PD_roll/D Gain/External Parameters'
- * '<S147>' : 'RateControl/PD_roll/D Gain/Internal Parameters'
- * '<S148>' : 'RateControl/PD_roll/Filter/Cont. Filter'
- * '<S149>' : 'RateControl/PD_roll/Filter/Differentiator'
- * '<S150>' : 'RateControl/PD_roll/Filter/Disabled'
- * '<S151>' : 'RateControl/PD_roll/Filter/Disc. Backward Euler Filter'
- * '<S152>' : 'RateControl/PD_roll/Filter/Disc. Forward Euler Filter'
- * '<S153>' : 'RateControl/PD_roll/Filter/Disc. Trapezoidal Filter'
- * '<S154>' : 'RateControl/PD_roll/Filter ICs/Disabled'
- * '<S155>' : 'RateControl/PD_roll/Filter ICs/External IC'
- * '<S156>' : 'RateControl/PD_roll/Filter ICs/Internal IC - Differentiator'
- * '<S157>' : 'RateControl/PD_roll/Filter ICs/Internal IC - Filter'
- * '<S158>' : 'RateControl/PD_roll/I Gain/Disabled'
- * '<S159>' : 'RateControl/PD_roll/I Gain/External Parameters'
- * '<S160>' : 'RateControl/PD_roll/I Gain/Internal Parameters'
- * '<S161>' : 'RateControl/PD_roll/Ideal P Gain/External Parameters'
- * '<S162>' : 'RateControl/PD_roll/Ideal P Gain/Internal Parameters'
- * '<S163>' : 'RateControl/PD_roll/Ideal P Gain/Passthrough'
- * '<S164>' : 'RateControl/PD_roll/Ideal P Gain Fdbk/Disabled'
- * '<S165>' : 'RateControl/PD_roll/Ideal P Gain Fdbk/External Parameters'
- * '<S166>' : 'RateControl/PD_roll/Ideal P Gain Fdbk/Internal Parameters'
- * '<S167>' : 'RateControl/PD_roll/Ideal P Gain Fdbk/Passthrough'
- * '<S168>' : 'RateControl/PD_roll/Integrator/Continuous'
- * '<S169>' : 'RateControl/PD_roll/Integrator/Disabled'
- * '<S170>' : 'RateControl/PD_roll/Integrator/Discrete'
- * '<S171>' : 'RateControl/PD_roll/Integrator ICs/Disabled'
- * '<S172>' : 'RateControl/PD_roll/Integrator ICs/External IC'
- * '<S173>' : 'RateControl/PD_roll/Integrator ICs/Internal IC'
- * '<S174>' : 'RateControl/PD_roll/N Copy/Disabled'
- * '<S175>' : 'RateControl/PD_roll/N Copy/Disabled wSignal Specification'
- * '<S176>' : 'RateControl/PD_roll/N Copy/External Parameters'
- * '<S177>' : 'RateControl/PD_roll/N Copy/Internal Parameters'
- * '<S178>' : 'RateControl/PD_roll/N Gain/Disabled'
- * '<S179>' : 'RateControl/PD_roll/N Gain/External Parameters'
- * '<S180>' : 'RateControl/PD_roll/N Gain/Internal Parameters'
- * '<S181>' : 'RateControl/PD_roll/N Gain/Passthrough'
- * '<S182>' : 'RateControl/PD_roll/P Copy/Disabled'
- * '<S183>' : 'RateControl/PD_roll/P Copy/External Parameters Ideal'
- * '<S184>' : 'RateControl/PD_roll/P Copy/Internal Parameters Ideal'
- * '<S185>' : 'RateControl/PD_roll/Parallel P Gain/Disabled'
- * '<S186>' : 'RateControl/PD_roll/Parallel P Gain/External Parameters'
- * '<S187>' : 'RateControl/PD_roll/Parallel P Gain/Internal Parameters'
- * '<S188>' : 'RateControl/PD_roll/Parallel P Gain/Passthrough'
- * '<S189>' : 'RateControl/PD_roll/Reset Signal/Disabled'
- * '<S190>' : 'RateControl/PD_roll/Reset Signal/External Reset'
- * '<S191>' : 'RateControl/PD_roll/Saturation/Enabled'
- * '<S192>' : 'RateControl/PD_roll/Saturation/Passthrough'
- * '<S193>' : 'RateControl/PD_roll/Saturation Fdbk/Disabled'
- * '<S194>' : 'RateControl/PD_roll/Saturation Fdbk/Enabled'
- * '<S195>' : 'RateControl/PD_roll/Saturation Fdbk/Passthrough'
- * '<S196>' : 'RateControl/PD_roll/Sum/Passthrough_I'
- * '<S197>' : 'RateControl/PD_roll/Sum/Passthrough_P'
- * '<S198>' : 'RateControl/PD_roll/Sum/Sum_PD'
- * '<S199>' : 'RateControl/PD_roll/Sum/Sum_PI'
- * '<S200>' : 'RateControl/PD_roll/Sum/Sum_PID'
- * '<S201>' : 'RateControl/PD_roll/Sum Fdbk/Disabled'
- * '<S202>' : 'RateControl/PD_roll/Sum Fdbk/Enabled'
- * '<S203>' : 'RateControl/PD_roll/Sum Fdbk/Passthrough'
- * '<S204>' : 'RateControl/PD_roll/Tracking Mode/Disabled'
- * '<S205>' : 'RateControl/PD_roll/Tracking Mode/Enabled'
- * '<S206>' : 'RateControl/PD_roll/Tracking Mode Sum/Passthrough'
- * '<S207>' : 'RateControl/PD_roll/Tracking Mode Sum/Tracking Mode'
- * '<S208>' : 'RateControl/PD_roll/postSat Signal/Feedback_Path'
- * '<S209>' : 'RateControl/PD_roll/postSat Signal/Forward_Path'
- * '<S210>' : 'RateControl/PD_roll/preSat Signal/Feedback_Path'
- * '<S211>' : 'RateControl/PD_roll/preSat Signal/Forward_Path'
- * '<S212>' : 'RateControl/PD_yaw/Anti-windup'
- * '<S213>' : 'RateControl/PD_yaw/D Gain'
- * '<S214>' : 'RateControl/PD_yaw/Filter'
- * '<S215>' : 'RateControl/PD_yaw/Filter ICs'
- * '<S216>' : 'RateControl/PD_yaw/I Gain'
- * '<S217>' : 'RateControl/PD_yaw/Ideal P Gain'
- * '<S218>' : 'RateControl/PD_yaw/Ideal P Gain Fdbk'
- * '<S219>' : 'RateControl/PD_yaw/Integrator'
- * '<S220>' : 'RateControl/PD_yaw/Integrator ICs'
- * '<S221>' : 'RateControl/PD_yaw/N Copy'
- * '<S222>' : 'RateControl/PD_yaw/N Gain'
- * '<S223>' : 'RateControl/PD_yaw/P Copy'
- * '<S224>' : 'RateControl/PD_yaw/Parallel P Gain'
- * '<S225>' : 'RateControl/PD_yaw/Reset Signal'
- * '<S226>' : 'RateControl/PD_yaw/Saturation'
- * '<S227>' : 'RateControl/PD_yaw/Saturation Fdbk'
- * '<S228>' : 'RateControl/PD_yaw/Sum'
- * '<S229>' : 'RateControl/PD_yaw/Sum Fdbk'
- * '<S230>' : 'RateControl/PD_yaw/Tracking Mode'
- * '<S231>' : 'RateControl/PD_yaw/Tracking Mode Sum'
- * '<S232>' : 'RateControl/PD_yaw/postSat Signal'
- * '<S233>' : 'RateControl/PD_yaw/preSat Signal'
- * '<S234>' : 'RateControl/PD_yaw/Anti-windup/Back Calculation'
- * '<S235>' : 'RateControl/PD_yaw/Anti-windup/Cont. Clamping Ideal'
- * '<S236>' : 'RateControl/PD_yaw/Anti-windup/Cont. Clamping Parallel'
- * '<S237>' : 'RateControl/PD_yaw/Anti-windup/Disabled'
- * '<S238>' : 'RateControl/PD_yaw/Anti-windup/Disc. Clamping Ideal'
- * '<S239>' : 'RateControl/PD_yaw/Anti-windup/Disc. Clamping Parallel'
- * '<S240>' : 'RateControl/PD_yaw/Anti-windup/Passthrough'
- * '<S241>' : 'RateControl/PD_yaw/D Gain/Disabled'
- * '<S242>' : 'RateControl/PD_yaw/D Gain/External Parameters'
- * '<S243>' : 'RateControl/PD_yaw/D Gain/Internal Parameters'
- * '<S244>' : 'RateControl/PD_yaw/Filter/Cont. Filter'
- * '<S245>' : 'RateControl/PD_yaw/Filter/Differentiator'
- * '<S246>' : 'RateControl/PD_yaw/Filter/Disabled'
- * '<S247>' : 'RateControl/PD_yaw/Filter/Disc. Backward Euler Filter'
- * '<S248>' : 'RateControl/PD_yaw/Filter/Disc. Forward Euler Filter'
- * '<S249>' : 'RateControl/PD_yaw/Filter/Disc. Trapezoidal Filter'
- * '<S250>' : 'RateControl/PD_yaw/Filter ICs/Disabled'
- * '<S251>' : 'RateControl/PD_yaw/Filter ICs/External IC'
- * '<S252>' : 'RateControl/PD_yaw/Filter ICs/Internal IC - Differentiator'
- * '<S253>' : 'RateControl/PD_yaw/Filter ICs/Internal IC - Filter'
- * '<S254>' : 'RateControl/PD_yaw/I Gain/Disabled'
- * '<S255>' : 'RateControl/PD_yaw/I Gain/External Parameters'
- * '<S256>' : 'RateControl/PD_yaw/I Gain/Internal Parameters'
- * '<S257>' : 'RateControl/PD_yaw/Ideal P Gain/External Parameters'
- * '<S258>' : 'RateControl/PD_yaw/Ideal P Gain/Internal Parameters'
- * '<S259>' : 'RateControl/PD_yaw/Ideal P Gain/Passthrough'
- * '<S260>' : 'RateControl/PD_yaw/Ideal P Gain Fdbk/Disabled'
- * '<S261>' : 'RateControl/PD_yaw/Ideal P Gain Fdbk/External Parameters'
- * '<S262>' : 'RateControl/PD_yaw/Ideal P Gain Fdbk/Internal Parameters'
- * '<S263>' : 'RateControl/PD_yaw/Ideal P Gain Fdbk/Passthrough'
- * '<S264>' : 'RateControl/PD_yaw/Integrator/Continuous'
- * '<S265>' : 'RateControl/PD_yaw/Integrator/Disabled'
- * '<S266>' : 'RateControl/PD_yaw/Integrator/Discrete'
- * '<S267>' : 'RateControl/PD_yaw/Integrator ICs/Disabled'
- * '<S268>' : 'RateControl/PD_yaw/Integrator ICs/External IC'
- * '<S269>' : 'RateControl/PD_yaw/Integrator ICs/Internal IC'
- * '<S270>' : 'RateControl/PD_yaw/N Copy/Disabled'
- * '<S271>' : 'RateControl/PD_yaw/N Copy/Disabled wSignal Specification'
- * '<S272>' : 'RateControl/PD_yaw/N Copy/External Parameters'
- * '<S273>' : 'RateControl/PD_yaw/N Copy/Internal Parameters'
- * '<S274>' : 'RateControl/PD_yaw/N Gain/Disabled'
- * '<S275>' : 'RateControl/PD_yaw/N Gain/External Parameters'
- * '<S276>' : 'RateControl/PD_yaw/N Gain/Internal Parameters'
- * '<S277>' : 'RateControl/PD_yaw/N Gain/Passthrough'
- * '<S278>' : 'RateControl/PD_yaw/P Copy/Disabled'
- * '<S279>' : 'RateControl/PD_yaw/P Copy/External Parameters Ideal'
- * '<S280>' : 'RateControl/PD_yaw/P Copy/Internal Parameters Ideal'
- * '<S281>' : 'RateControl/PD_yaw/Parallel P Gain/Disabled'
- * '<S282>' : 'RateControl/PD_yaw/Parallel P Gain/External Parameters'
- * '<S283>' : 'RateControl/PD_yaw/Parallel P Gain/Internal Parameters'
- * '<S284>' : 'RateControl/PD_yaw/Parallel P Gain/Passthrough'
- * '<S285>' : 'RateControl/PD_yaw/Reset Signal/Disabled'
- * '<S286>' : 'RateControl/PD_yaw/Reset Signal/External Reset'
- * '<S287>' : 'RateControl/PD_yaw/Saturation/Enabled'
- * '<S288>' : 'RateControl/PD_yaw/Saturation/Passthrough'
- * '<S289>' : 'RateControl/PD_yaw/Saturation Fdbk/Disabled'
- * '<S290>' : 'RateControl/PD_yaw/Saturation Fdbk/Enabled'
- * '<S291>' : 'RateControl/PD_yaw/Saturation Fdbk/Passthrough'
- * '<S292>' : 'RateControl/PD_yaw/Sum/Passthrough_I'
- * '<S293>' : 'RateControl/PD_yaw/Sum/Passthrough_P'
- * '<S294>' : 'RateControl/PD_yaw/Sum/Sum_PD'
- * '<S295>' : 'RateControl/PD_yaw/Sum/Sum_PI'
- * '<S296>' : 'RateControl/PD_yaw/Sum/Sum_PID'
- * '<S297>' : 'RateControl/PD_yaw/Sum Fdbk/Disabled'
- * '<S298>' : 'RateControl/PD_yaw/Sum Fdbk/Enabled'
- * '<S299>' : 'RateControl/PD_yaw/Sum Fdbk/Passthrough'
- * '<S300>' : 'RateControl/PD_yaw/Tracking Mode/Disabled'
- * '<S301>' : 'RateControl/PD_yaw/Tracking Mode/Enabled'
- * '<S302>' : 'RateControl/PD_yaw/Tracking Mode Sum/Passthrough'
- * '<S303>' : 'RateControl/PD_yaw/Tracking Mode Sum/Tracking Mode'
- * '<S304>' : 'RateControl/PD_yaw/postSat Signal/Feedback_Path'
- * '<S305>' : 'RateControl/PD_yaw/postSat Signal/Forward_Path'
- * '<S306>' : 'RateControl/PD_yaw/preSat Signal/Feedback_Path'
- * '<S307>' : 'RateControl/PD_yaw/preSat Signal/Forward_Path'
+ * '<S8>'   : 'RateControl/INDI_allocator'
+ * '<S9>'   : 'RateControl/MATLAB Function'
+ * '<S10>'  : 'RateControl/P_pitch'
+ * '<S11>'  : 'RateControl/P_roll'
+ * '<S12>'  : 'RateControl/P_yaw'
+ * '<S13>'  : 'RateControl/controlEffMatrix'
+ * '<S14>'  : 'RateControl/lms'
+ * '<S15>'  : 'RateControl/P_pitch/Anti-windup'
+ * '<S16>'  : 'RateControl/P_pitch/D Gain'
+ * '<S17>'  : 'RateControl/P_pitch/Filter'
+ * '<S18>'  : 'RateControl/P_pitch/Filter ICs'
+ * '<S19>'  : 'RateControl/P_pitch/I Gain'
+ * '<S20>'  : 'RateControl/P_pitch/Ideal P Gain'
+ * '<S21>'  : 'RateControl/P_pitch/Ideal P Gain Fdbk'
+ * '<S22>'  : 'RateControl/P_pitch/Integrator'
+ * '<S23>'  : 'RateControl/P_pitch/Integrator ICs'
+ * '<S24>'  : 'RateControl/P_pitch/N Copy'
+ * '<S25>'  : 'RateControl/P_pitch/N Gain'
+ * '<S26>'  : 'RateControl/P_pitch/P Copy'
+ * '<S27>'  : 'RateControl/P_pitch/Parallel P Gain'
+ * '<S28>'  : 'RateControl/P_pitch/Reset Signal'
+ * '<S29>'  : 'RateControl/P_pitch/Saturation'
+ * '<S30>'  : 'RateControl/P_pitch/Saturation Fdbk'
+ * '<S31>'  : 'RateControl/P_pitch/Sum'
+ * '<S32>'  : 'RateControl/P_pitch/Sum Fdbk'
+ * '<S33>'  : 'RateControl/P_pitch/Tracking Mode'
+ * '<S34>'  : 'RateControl/P_pitch/Tracking Mode Sum'
+ * '<S35>'  : 'RateControl/P_pitch/postSat Signal'
+ * '<S36>'  : 'RateControl/P_pitch/preSat Signal'
+ * '<S37>'  : 'RateControl/P_pitch/Anti-windup/Back Calculation'
+ * '<S38>'  : 'RateControl/P_pitch/Anti-windup/Cont. Clamping Ideal'
+ * '<S39>'  : 'RateControl/P_pitch/Anti-windup/Cont. Clamping Parallel'
+ * '<S40>'  : 'RateControl/P_pitch/Anti-windup/Disabled'
+ * '<S41>'  : 'RateControl/P_pitch/Anti-windup/Disc. Clamping Ideal'
+ * '<S42>'  : 'RateControl/P_pitch/Anti-windup/Disc. Clamping Parallel'
+ * '<S43>'  : 'RateControl/P_pitch/Anti-windup/Passthrough'
+ * '<S44>'  : 'RateControl/P_pitch/D Gain/Disabled'
+ * '<S45>'  : 'RateControl/P_pitch/D Gain/External Parameters'
+ * '<S46>'  : 'RateControl/P_pitch/D Gain/Internal Parameters'
+ * '<S47>'  : 'RateControl/P_pitch/Filter/Cont. Filter'
+ * '<S48>'  : 'RateControl/P_pitch/Filter/Differentiator'
+ * '<S49>'  : 'RateControl/P_pitch/Filter/Disabled'
+ * '<S50>'  : 'RateControl/P_pitch/Filter/Disc. Backward Euler Filter'
+ * '<S51>'  : 'RateControl/P_pitch/Filter/Disc. Forward Euler Filter'
+ * '<S52>'  : 'RateControl/P_pitch/Filter/Disc. Trapezoidal Filter'
+ * '<S53>'  : 'RateControl/P_pitch/Filter ICs/Disabled'
+ * '<S54>'  : 'RateControl/P_pitch/Filter ICs/External IC'
+ * '<S55>'  : 'RateControl/P_pitch/Filter ICs/Internal IC - Differentiator'
+ * '<S56>'  : 'RateControl/P_pitch/Filter ICs/Internal IC - Filter'
+ * '<S57>'  : 'RateControl/P_pitch/I Gain/Disabled'
+ * '<S58>'  : 'RateControl/P_pitch/I Gain/External Parameters'
+ * '<S59>'  : 'RateControl/P_pitch/I Gain/Internal Parameters'
+ * '<S60>'  : 'RateControl/P_pitch/Ideal P Gain/External Parameters'
+ * '<S61>'  : 'RateControl/P_pitch/Ideal P Gain/Internal Parameters'
+ * '<S62>'  : 'RateControl/P_pitch/Ideal P Gain/Passthrough'
+ * '<S63>'  : 'RateControl/P_pitch/Ideal P Gain Fdbk/Disabled'
+ * '<S64>'  : 'RateControl/P_pitch/Ideal P Gain Fdbk/External Parameters'
+ * '<S65>'  : 'RateControl/P_pitch/Ideal P Gain Fdbk/Internal Parameters'
+ * '<S66>'  : 'RateControl/P_pitch/Ideal P Gain Fdbk/Passthrough'
+ * '<S67>'  : 'RateControl/P_pitch/Integrator/Continuous'
+ * '<S68>'  : 'RateControl/P_pitch/Integrator/Disabled'
+ * '<S69>'  : 'RateControl/P_pitch/Integrator/Discrete'
+ * '<S70>'  : 'RateControl/P_pitch/Integrator ICs/Disabled'
+ * '<S71>'  : 'RateControl/P_pitch/Integrator ICs/External IC'
+ * '<S72>'  : 'RateControl/P_pitch/Integrator ICs/Internal IC'
+ * '<S73>'  : 'RateControl/P_pitch/N Copy/Disabled'
+ * '<S74>'  : 'RateControl/P_pitch/N Copy/Disabled wSignal Specification'
+ * '<S75>'  : 'RateControl/P_pitch/N Copy/External Parameters'
+ * '<S76>'  : 'RateControl/P_pitch/N Copy/Internal Parameters'
+ * '<S77>'  : 'RateControl/P_pitch/N Gain/Disabled'
+ * '<S78>'  : 'RateControl/P_pitch/N Gain/External Parameters'
+ * '<S79>'  : 'RateControl/P_pitch/N Gain/Internal Parameters'
+ * '<S80>'  : 'RateControl/P_pitch/N Gain/Passthrough'
+ * '<S81>'  : 'RateControl/P_pitch/P Copy/Disabled'
+ * '<S82>'  : 'RateControl/P_pitch/P Copy/External Parameters Ideal'
+ * '<S83>'  : 'RateControl/P_pitch/P Copy/Internal Parameters Ideal'
+ * '<S84>'  : 'RateControl/P_pitch/Parallel P Gain/Disabled'
+ * '<S85>'  : 'RateControl/P_pitch/Parallel P Gain/External Parameters'
+ * '<S86>'  : 'RateControl/P_pitch/Parallel P Gain/Internal Parameters'
+ * '<S87>'  : 'RateControl/P_pitch/Parallel P Gain/Passthrough'
+ * '<S88>'  : 'RateControl/P_pitch/Reset Signal/Disabled'
+ * '<S89>'  : 'RateControl/P_pitch/Reset Signal/External Reset'
+ * '<S90>'  : 'RateControl/P_pitch/Saturation/Enabled'
+ * '<S91>'  : 'RateControl/P_pitch/Saturation/Passthrough'
+ * '<S92>'  : 'RateControl/P_pitch/Saturation Fdbk/Disabled'
+ * '<S93>'  : 'RateControl/P_pitch/Saturation Fdbk/Enabled'
+ * '<S94>'  : 'RateControl/P_pitch/Saturation Fdbk/Passthrough'
+ * '<S95>'  : 'RateControl/P_pitch/Sum/Passthrough_I'
+ * '<S96>'  : 'RateControl/P_pitch/Sum/Passthrough_P'
+ * '<S97>'  : 'RateControl/P_pitch/Sum/Sum_PD'
+ * '<S98>'  : 'RateControl/P_pitch/Sum/Sum_PI'
+ * '<S99>'  : 'RateControl/P_pitch/Sum/Sum_PID'
+ * '<S100>' : 'RateControl/P_pitch/Sum Fdbk/Disabled'
+ * '<S101>' : 'RateControl/P_pitch/Sum Fdbk/Enabled'
+ * '<S102>' : 'RateControl/P_pitch/Sum Fdbk/Passthrough'
+ * '<S103>' : 'RateControl/P_pitch/Tracking Mode/Disabled'
+ * '<S104>' : 'RateControl/P_pitch/Tracking Mode/Enabled'
+ * '<S105>' : 'RateControl/P_pitch/Tracking Mode Sum/Passthrough'
+ * '<S106>' : 'RateControl/P_pitch/Tracking Mode Sum/Tracking Mode'
+ * '<S107>' : 'RateControl/P_pitch/postSat Signal/Feedback_Path'
+ * '<S108>' : 'RateControl/P_pitch/postSat Signal/Forward_Path'
+ * '<S109>' : 'RateControl/P_pitch/preSat Signal/Feedback_Path'
+ * '<S110>' : 'RateControl/P_pitch/preSat Signal/Forward_Path'
+ * '<S111>' : 'RateControl/P_roll/Anti-windup'
+ * '<S112>' : 'RateControl/P_roll/D Gain'
+ * '<S113>' : 'RateControl/P_roll/Filter'
+ * '<S114>' : 'RateControl/P_roll/Filter ICs'
+ * '<S115>' : 'RateControl/P_roll/I Gain'
+ * '<S116>' : 'RateControl/P_roll/Ideal P Gain'
+ * '<S117>' : 'RateControl/P_roll/Ideal P Gain Fdbk'
+ * '<S118>' : 'RateControl/P_roll/Integrator'
+ * '<S119>' : 'RateControl/P_roll/Integrator ICs'
+ * '<S120>' : 'RateControl/P_roll/N Copy'
+ * '<S121>' : 'RateControl/P_roll/N Gain'
+ * '<S122>' : 'RateControl/P_roll/P Copy'
+ * '<S123>' : 'RateControl/P_roll/Parallel P Gain'
+ * '<S124>' : 'RateControl/P_roll/Reset Signal'
+ * '<S125>' : 'RateControl/P_roll/Saturation'
+ * '<S126>' : 'RateControl/P_roll/Saturation Fdbk'
+ * '<S127>' : 'RateControl/P_roll/Sum'
+ * '<S128>' : 'RateControl/P_roll/Sum Fdbk'
+ * '<S129>' : 'RateControl/P_roll/Tracking Mode'
+ * '<S130>' : 'RateControl/P_roll/Tracking Mode Sum'
+ * '<S131>' : 'RateControl/P_roll/postSat Signal'
+ * '<S132>' : 'RateControl/P_roll/preSat Signal'
+ * '<S133>' : 'RateControl/P_roll/Anti-windup/Back Calculation'
+ * '<S134>' : 'RateControl/P_roll/Anti-windup/Cont. Clamping Ideal'
+ * '<S135>' : 'RateControl/P_roll/Anti-windup/Cont. Clamping Parallel'
+ * '<S136>' : 'RateControl/P_roll/Anti-windup/Disabled'
+ * '<S137>' : 'RateControl/P_roll/Anti-windup/Disc. Clamping Ideal'
+ * '<S138>' : 'RateControl/P_roll/Anti-windup/Disc. Clamping Parallel'
+ * '<S139>' : 'RateControl/P_roll/Anti-windup/Passthrough'
+ * '<S140>' : 'RateControl/P_roll/D Gain/Disabled'
+ * '<S141>' : 'RateControl/P_roll/D Gain/External Parameters'
+ * '<S142>' : 'RateControl/P_roll/D Gain/Internal Parameters'
+ * '<S143>' : 'RateControl/P_roll/Filter/Cont. Filter'
+ * '<S144>' : 'RateControl/P_roll/Filter/Differentiator'
+ * '<S145>' : 'RateControl/P_roll/Filter/Disabled'
+ * '<S146>' : 'RateControl/P_roll/Filter/Disc. Backward Euler Filter'
+ * '<S147>' : 'RateControl/P_roll/Filter/Disc. Forward Euler Filter'
+ * '<S148>' : 'RateControl/P_roll/Filter/Disc. Trapezoidal Filter'
+ * '<S149>' : 'RateControl/P_roll/Filter ICs/Disabled'
+ * '<S150>' : 'RateControl/P_roll/Filter ICs/External IC'
+ * '<S151>' : 'RateControl/P_roll/Filter ICs/Internal IC - Differentiator'
+ * '<S152>' : 'RateControl/P_roll/Filter ICs/Internal IC - Filter'
+ * '<S153>' : 'RateControl/P_roll/I Gain/Disabled'
+ * '<S154>' : 'RateControl/P_roll/I Gain/External Parameters'
+ * '<S155>' : 'RateControl/P_roll/I Gain/Internal Parameters'
+ * '<S156>' : 'RateControl/P_roll/Ideal P Gain/External Parameters'
+ * '<S157>' : 'RateControl/P_roll/Ideal P Gain/Internal Parameters'
+ * '<S158>' : 'RateControl/P_roll/Ideal P Gain/Passthrough'
+ * '<S159>' : 'RateControl/P_roll/Ideal P Gain Fdbk/Disabled'
+ * '<S160>' : 'RateControl/P_roll/Ideal P Gain Fdbk/External Parameters'
+ * '<S161>' : 'RateControl/P_roll/Ideal P Gain Fdbk/Internal Parameters'
+ * '<S162>' : 'RateControl/P_roll/Ideal P Gain Fdbk/Passthrough'
+ * '<S163>' : 'RateControl/P_roll/Integrator/Continuous'
+ * '<S164>' : 'RateControl/P_roll/Integrator/Disabled'
+ * '<S165>' : 'RateControl/P_roll/Integrator/Discrete'
+ * '<S166>' : 'RateControl/P_roll/Integrator ICs/Disabled'
+ * '<S167>' : 'RateControl/P_roll/Integrator ICs/External IC'
+ * '<S168>' : 'RateControl/P_roll/Integrator ICs/Internal IC'
+ * '<S169>' : 'RateControl/P_roll/N Copy/Disabled'
+ * '<S170>' : 'RateControl/P_roll/N Copy/Disabled wSignal Specification'
+ * '<S171>' : 'RateControl/P_roll/N Copy/External Parameters'
+ * '<S172>' : 'RateControl/P_roll/N Copy/Internal Parameters'
+ * '<S173>' : 'RateControl/P_roll/N Gain/Disabled'
+ * '<S174>' : 'RateControl/P_roll/N Gain/External Parameters'
+ * '<S175>' : 'RateControl/P_roll/N Gain/Internal Parameters'
+ * '<S176>' : 'RateControl/P_roll/N Gain/Passthrough'
+ * '<S177>' : 'RateControl/P_roll/P Copy/Disabled'
+ * '<S178>' : 'RateControl/P_roll/P Copy/External Parameters Ideal'
+ * '<S179>' : 'RateControl/P_roll/P Copy/Internal Parameters Ideal'
+ * '<S180>' : 'RateControl/P_roll/Parallel P Gain/Disabled'
+ * '<S181>' : 'RateControl/P_roll/Parallel P Gain/External Parameters'
+ * '<S182>' : 'RateControl/P_roll/Parallel P Gain/Internal Parameters'
+ * '<S183>' : 'RateControl/P_roll/Parallel P Gain/Passthrough'
+ * '<S184>' : 'RateControl/P_roll/Reset Signal/Disabled'
+ * '<S185>' : 'RateControl/P_roll/Reset Signal/External Reset'
+ * '<S186>' : 'RateControl/P_roll/Saturation/Enabled'
+ * '<S187>' : 'RateControl/P_roll/Saturation/Passthrough'
+ * '<S188>' : 'RateControl/P_roll/Saturation Fdbk/Disabled'
+ * '<S189>' : 'RateControl/P_roll/Saturation Fdbk/Enabled'
+ * '<S190>' : 'RateControl/P_roll/Saturation Fdbk/Passthrough'
+ * '<S191>' : 'RateControl/P_roll/Sum/Passthrough_I'
+ * '<S192>' : 'RateControl/P_roll/Sum/Passthrough_P'
+ * '<S193>' : 'RateControl/P_roll/Sum/Sum_PD'
+ * '<S194>' : 'RateControl/P_roll/Sum/Sum_PI'
+ * '<S195>' : 'RateControl/P_roll/Sum/Sum_PID'
+ * '<S196>' : 'RateControl/P_roll/Sum Fdbk/Disabled'
+ * '<S197>' : 'RateControl/P_roll/Sum Fdbk/Enabled'
+ * '<S198>' : 'RateControl/P_roll/Sum Fdbk/Passthrough'
+ * '<S199>' : 'RateControl/P_roll/Tracking Mode/Disabled'
+ * '<S200>' : 'RateControl/P_roll/Tracking Mode/Enabled'
+ * '<S201>' : 'RateControl/P_roll/Tracking Mode Sum/Passthrough'
+ * '<S202>' : 'RateControl/P_roll/Tracking Mode Sum/Tracking Mode'
+ * '<S203>' : 'RateControl/P_roll/postSat Signal/Feedback_Path'
+ * '<S204>' : 'RateControl/P_roll/postSat Signal/Forward_Path'
+ * '<S205>' : 'RateControl/P_roll/preSat Signal/Feedback_Path'
+ * '<S206>' : 'RateControl/P_roll/preSat Signal/Forward_Path'
+ * '<S207>' : 'RateControl/P_yaw/Anti-windup'
+ * '<S208>' : 'RateControl/P_yaw/D Gain'
+ * '<S209>' : 'RateControl/P_yaw/Filter'
+ * '<S210>' : 'RateControl/P_yaw/Filter ICs'
+ * '<S211>' : 'RateControl/P_yaw/I Gain'
+ * '<S212>' : 'RateControl/P_yaw/Ideal P Gain'
+ * '<S213>' : 'RateControl/P_yaw/Ideal P Gain Fdbk'
+ * '<S214>' : 'RateControl/P_yaw/Integrator'
+ * '<S215>' : 'RateControl/P_yaw/Integrator ICs'
+ * '<S216>' : 'RateControl/P_yaw/N Copy'
+ * '<S217>' : 'RateControl/P_yaw/N Gain'
+ * '<S218>' : 'RateControl/P_yaw/P Copy'
+ * '<S219>' : 'RateControl/P_yaw/Parallel P Gain'
+ * '<S220>' : 'RateControl/P_yaw/Reset Signal'
+ * '<S221>' : 'RateControl/P_yaw/Saturation'
+ * '<S222>' : 'RateControl/P_yaw/Saturation Fdbk'
+ * '<S223>' : 'RateControl/P_yaw/Sum'
+ * '<S224>' : 'RateControl/P_yaw/Sum Fdbk'
+ * '<S225>' : 'RateControl/P_yaw/Tracking Mode'
+ * '<S226>' : 'RateControl/P_yaw/Tracking Mode Sum'
+ * '<S227>' : 'RateControl/P_yaw/postSat Signal'
+ * '<S228>' : 'RateControl/P_yaw/preSat Signal'
+ * '<S229>' : 'RateControl/P_yaw/Anti-windup/Back Calculation'
+ * '<S230>' : 'RateControl/P_yaw/Anti-windup/Cont. Clamping Ideal'
+ * '<S231>' : 'RateControl/P_yaw/Anti-windup/Cont. Clamping Parallel'
+ * '<S232>' : 'RateControl/P_yaw/Anti-windup/Disabled'
+ * '<S233>' : 'RateControl/P_yaw/Anti-windup/Disc. Clamping Ideal'
+ * '<S234>' : 'RateControl/P_yaw/Anti-windup/Disc. Clamping Parallel'
+ * '<S235>' : 'RateControl/P_yaw/Anti-windup/Passthrough'
+ * '<S236>' : 'RateControl/P_yaw/D Gain/Disabled'
+ * '<S237>' : 'RateControl/P_yaw/D Gain/External Parameters'
+ * '<S238>' : 'RateControl/P_yaw/D Gain/Internal Parameters'
+ * '<S239>' : 'RateControl/P_yaw/Filter/Cont. Filter'
+ * '<S240>' : 'RateControl/P_yaw/Filter/Differentiator'
+ * '<S241>' : 'RateControl/P_yaw/Filter/Disabled'
+ * '<S242>' : 'RateControl/P_yaw/Filter/Disc. Backward Euler Filter'
+ * '<S243>' : 'RateControl/P_yaw/Filter/Disc. Forward Euler Filter'
+ * '<S244>' : 'RateControl/P_yaw/Filter/Disc. Trapezoidal Filter'
+ * '<S245>' : 'RateControl/P_yaw/Filter ICs/Disabled'
+ * '<S246>' : 'RateControl/P_yaw/Filter ICs/External IC'
+ * '<S247>' : 'RateControl/P_yaw/Filter ICs/Internal IC - Differentiator'
+ * '<S248>' : 'RateControl/P_yaw/Filter ICs/Internal IC - Filter'
+ * '<S249>' : 'RateControl/P_yaw/I Gain/Disabled'
+ * '<S250>' : 'RateControl/P_yaw/I Gain/External Parameters'
+ * '<S251>' : 'RateControl/P_yaw/I Gain/Internal Parameters'
+ * '<S252>' : 'RateControl/P_yaw/Ideal P Gain/External Parameters'
+ * '<S253>' : 'RateControl/P_yaw/Ideal P Gain/Internal Parameters'
+ * '<S254>' : 'RateControl/P_yaw/Ideal P Gain/Passthrough'
+ * '<S255>' : 'RateControl/P_yaw/Ideal P Gain Fdbk/Disabled'
+ * '<S256>' : 'RateControl/P_yaw/Ideal P Gain Fdbk/External Parameters'
+ * '<S257>' : 'RateControl/P_yaw/Ideal P Gain Fdbk/Internal Parameters'
+ * '<S258>' : 'RateControl/P_yaw/Ideal P Gain Fdbk/Passthrough'
+ * '<S259>' : 'RateControl/P_yaw/Integrator/Continuous'
+ * '<S260>' : 'RateControl/P_yaw/Integrator/Disabled'
+ * '<S261>' : 'RateControl/P_yaw/Integrator/Discrete'
+ * '<S262>' : 'RateControl/P_yaw/Integrator ICs/Disabled'
+ * '<S263>' : 'RateControl/P_yaw/Integrator ICs/External IC'
+ * '<S264>' : 'RateControl/P_yaw/Integrator ICs/Internal IC'
+ * '<S265>' : 'RateControl/P_yaw/N Copy/Disabled'
+ * '<S266>' : 'RateControl/P_yaw/N Copy/Disabled wSignal Specification'
+ * '<S267>' : 'RateControl/P_yaw/N Copy/External Parameters'
+ * '<S268>' : 'RateControl/P_yaw/N Copy/Internal Parameters'
+ * '<S269>' : 'RateControl/P_yaw/N Gain/Disabled'
+ * '<S270>' : 'RateControl/P_yaw/N Gain/External Parameters'
+ * '<S271>' : 'RateControl/P_yaw/N Gain/Internal Parameters'
+ * '<S272>' : 'RateControl/P_yaw/N Gain/Passthrough'
+ * '<S273>' : 'RateControl/P_yaw/P Copy/Disabled'
+ * '<S274>' : 'RateControl/P_yaw/P Copy/External Parameters Ideal'
+ * '<S275>' : 'RateControl/P_yaw/P Copy/Internal Parameters Ideal'
+ * '<S276>' : 'RateControl/P_yaw/Parallel P Gain/Disabled'
+ * '<S277>' : 'RateControl/P_yaw/Parallel P Gain/External Parameters'
+ * '<S278>' : 'RateControl/P_yaw/Parallel P Gain/Internal Parameters'
+ * '<S279>' : 'RateControl/P_yaw/Parallel P Gain/Passthrough'
+ * '<S280>' : 'RateControl/P_yaw/Reset Signal/Disabled'
+ * '<S281>' : 'RateControl/P_yaw/Reset Signal/External Reset'
+ * '<S282>' : 'RateControl/P_yaw/Saturation/Enabled'
+ * '<S283>' : 'RateControl/P_yaw/Saturation/Passthrough'
+ * '<S284>' : 'RateControl/P_yaw/Saturation Fdbk/Disabled'
+ * '<S285>' : 'RateControl/P_yaw/Saturation Fdbk/Enabled'
+ * '<S286>' : 'RateControl/P_yaw/Saturation Fdbk/Passthrough'
+ * '<S287>' : 'RateControl/P_yaw/Sum/Passthrough_I'
+ * '<S288>' : 'RateControl/P_yaw/Sum/Passthrough_P'
+ * '<S289>' : 'RateControl/P_yaw/Sum/Sum_PD'
+ * '<S290>' : 'RateControl/P_yaw/Sum/Sum_PI'
+ * '<S291>' : 'RateControl/P_yaw/Sum/Sum_PID'
+ * '<S292>' : 'RateControl/P_yaw/Sum Fdbk/Disabled'
+ * '<S293>' : 'RateControl/P_yaw/Sum Fdbk/Enabled'
+ * '<S294>' : 'RateControl/P_yaw/Sum Fdbk/Passthrough'
+ * '<S295>' : 'RateControl/P_yaw/Tracking Mode/Disabled'
+ * '<S296>' : 'RateControl/P_yaw/Tracking Mode/Enabled'
+ * '<S297>' : 'RateControl/P_yaw/Tracking Mode Sum/Passthrough'
+ * '<S298>' : 'RateControl/P_yaw/Tracking Mode Sum/Tracking Mode'
+ * '<S299>' : 'RateControl/P_yaw/postSat Signal/Feedback_Path'
+ * '<S300>' : 'RateControl/P_yaw/postSat Signal/Forward_Path'
+ * '<S301>' : 'RateControl/P_yaw/preSat Signal/Feedback_Path'
+ * '<S302>' : 'RateControl/P_yaw/preSat Signal/Forward_Path'
  */
 #endif                                 /* RTW_HEADER_RateControl_h_ */

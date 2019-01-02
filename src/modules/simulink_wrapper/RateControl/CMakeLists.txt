@@ -8,7 +8,7 @@
     )
     add_definitions(
         -DMODEL=RateControl
--DNUMST=2
+-DNUMST=1
 -DNCSTATES=0
 -DHAVESTDIO
 -DRT
@@ -22,14 +22,14 @@
 -DTERMFCN=1
 -DMULTI_INSTANCE_CODE=1
 -DINTEGER_CODE=0
--DMT=1
+-DMT=0
 
     )
 
     # From: https://stackoverflow.com/questions/2110795/how-to-use-all-c-files-in-a-directory-with-the-cmake-build-system
     # Automatically add all source files.
     file(GLOB SRCS ./*.cpp ./*/*.cpp ./*/*/*.cpp ./*/*/*/*.cpp ./*.c ./*/*.c ./*/*/*.c ./*/*/*/*.c)
-    px4_add_library(simulink_RateControl 
+    px4_add_library(sl_RateControl
         ${SRCS}
     )
     

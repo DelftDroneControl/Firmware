@@ -115,7 +115,7 @@ Header file
 
 </table>
 <p>
-Function: <a href="RateControl_cpp.html#fcn_step0">step0</a>
+Function: <a href="RateControl_cpp.html#fcn_step">step</a>
 </p>
 <table width="100%" class="AltRow" cellspacing="0">
 <tr class="even">
@@ -124,7 +124,7 @@ Prototype
 </td>
 <td width="75%" align="left" valign="top">
 <b>
-void step0(void)
+void step(void)
 </b>
 
 </td>
@@ -145,69 +145,6 @@ Timing
 </td>
 <td width="75%" align="left" valign="top">
 Must be called periodically, every 0.002 seconds
-</td>
-
-</tr>
-<tr class="odd">
-<td width="25%" align="left" valign="top">
-Arguments
-</td>
-<td width="75%" align="left" valign="top">
-None
-</td>
-
-</tr>
-<tr class="even">
-<td width="25%" align="left" valign="top">
-Return value
-</td>
-<td width="75%" align="left" valign="top">
-None
-</td>
-
-</tr>
-<tr class="odd">
-<td width="25%" align="left" valign="top">
-Header file
-</td>
-<td width="75%" align="left" valign="top">
-<a href="RateControl_h.html">RateControl.h</a>
-</td>
-
-</tr>
-
-</table>
-<p>
-Function: <a href="RateControl_cpp.html#fcn_step1">step1</a>
-</p>
-<table width="100%" class="AltRow" cellspacing="0">
-<tr class="even">
-<td width="25%" align="left" valign="top">
-Prototype
-</td>
-<td width="75%" align="left" valign="top">
-<b>
-void step1(void)
-</b>
-
-</td>
-
-</tr>
-<tr class="odd">
-<td width="25%" align="left" valign="top">
-Description
-</td>
-<td width="75%" align="left" valign="top">
-Output entry point of generated code
-</td>
-
-</tr>
-<tr class="even">
-<td width="25%" align="left" valign="top">
-Timing
-</td>
-<td width="75%" align="left" valign="top">
-Must be called periodically, every 0.4 seconds
 </td>
 
 </tr>
@@ -427,6 +364,24 @@ real_T
 </td>
 
 </tr>
+<tr class="odd">
+<td width="42%" align="left" valign="top">
+&lt;Root&gt;/fail_id
+</td>
+<td width="26%" align="left" valign="top">
+<i>
+Defined externally
+</i>
+
+</td>
+<td width="21%" align="left" valign="top">
+real_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
 
 </table>
 <h3>
@@ -510,7 +465,7 @@ Defined externally
 
 </td>
 <td width="21%" align="left" valign="top">
-real_T
+real32_T
 </td>
 <td width="10%" align="right" valign="top">
 [4  8]

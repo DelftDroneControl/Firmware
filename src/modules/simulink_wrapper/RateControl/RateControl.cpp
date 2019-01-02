@@ -7,9 +7,9 @@
  *
  * Code generation for model "RateControl".
  *
- * Model version              : 1.491
+ * Model version              : 1.576
  * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C++ source code generated on : Fri Nov 30 17:32:08 2018
+ * C++ source code generated on : Wed Jan  2 14:25:39 2019
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -28,20 +28,20 @@ RateControlParamsType RateControlParams = {
     0.0, 0.0, 1.0, 0.0 },
   16.0,
   16.0,
-  16.0,
+  8.0,
   170.0,
   170.0,
-  -50.0,
-  0.8,
+  -150.0,
+  0.3,
   8.0,
   0.025
 } ;                                    /* Variable: RateControlParams
                                         * Referenced by:
                                         *   '<Root>/controlEffMatrix'
-                                        *   '<Root>/actuator dynamics'
-                                        *   '<S91>/Proportional Gain'
-                                        *   '<S187>/Proportional Gain'
-                                        *   '<S283>/Proportional Gain'
+                                        *   '<Root>/ActuatorDynamics'
+                                        *   '<S86>/Proportional Gain'
+                                        *   '<S182>/Proportional Gain'
+                                        *   '<S278>/Proportional Gain'
                                         */
 
 /* Function for MATLAB Function: '<Root>/INDI_allocator' */
@@ -994,104 +994,77 @@ void RateControlModelClass::RateControl_pinv(const real_T A[16], real_T X[16])
   }
 }
 
-real_T rt_modd_snf(real_T u0, real_T u1)
-{
-  real_T y;
-  boolean_T yEq;
-  real_T q;
-  y = u0;
-  if (rtIsNaN(u0) || rtIsInf(u0) || (rtIsNaN(u1) || rtIsInf(u1))) {
-    if (u1 != 0.0) {
-      y = (rtNaN);
-    }
-  } else if (u0 == 0.0) {
-    y = u1 * 0.0;
-  } else {
-    if (u1 != 0.0) {
-      y = std::fmod(u0, u1);
-      yEq = (y == 0.0);
-      if ((!yEq) && (u1 > std::floor(u1))) {
-        q = std::abs(u0 / u1);
-        yEq = (std::abs(q - std::floor(q + 0.5)) <= DBL_EPSILON * q);
-      }
-
-      if (yEq) {
-        y = u1 * 0.0;
-      } else {
-        if ((u0 < 0.0) != (u1 < 0.0)) {
-          y += u1;
-        }
-      }
-    }
-  }
-
-  return y;
-}
-
-/* Model step function for TID0 */
-void RateControlModelClass::step0()    /* Sample time: [0.002s, 0.0s] */
+/* Model step function */
+void RateControlModelClass::step()
 {
   /* local block i/o variables */
   real_T rtb_accel_z_f;
-  real_T rtb_CastToDouble2[3];
+  real_T rtb_virtual_control_input_filte[4];
   real_T rtb_w_filtered[4];
-  real_T rtb_Delay[4];
+  real_T rtb_w[4];
+  real_T rtb_w_l[4];
+  real_T rtb_CastToDouble2[3];
+  real_T rtb_Sum;
+  real_T rtb_Sum_g;
+  real_T rtb_Sum_e;
   real_T rtb_CastToDouble4;
-  real_T rtb_TmpSignalConversionAtSFun_p[4];
-  real_T rtb_Integrator_j;
+  real_T rtb_accel_z_sp;
+  real_T rtb_TmpSignalConversionAtSFunct[4];
+  real_T rtb_Integrator;
   real_T rtb_Minus[3];
   real_T rows_multiplier[64];
   real_T control_eff_matrix[32];
   real_T v[8];
   int32_T j;
-  static const real_T a[16] = { 1.0E-8, 0.0, 0.0, 0.0, 0.0, 1.0E-8, 0.0, 0.0,
-    0.0, 0.0, 3.0E-10, 0.0, 0.0, 0.0, 0.0, 1.0E-8 };
-
-  static const real_T b[64] = { 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0,
-    0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-    0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.002, 0.0, 0.0, 0.0,
-    0.0, 0.0, 0.0, 0.0, 0.0, 0.002, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-    0.002, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.002 };
-
-  real_T G2[16];
+  real_T G[32];
+  real_T G1[16];
+  real_T G_pinv[16];
   boolean_T x[4];
   int8_T ii_data[4];
   int32_T idx;
   int8_T c_ii_data[4];
   int32_T b_idx;
+  static const real32_T b[16] = { 1.0E-8F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0E-8F, 0.0F,
+    0.0F, 0.0F, 0.0F, 3.0E-10F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0E-8F };
+
+  static const real_T b_b[64] = { 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+    1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+    0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.002, 0.0, 0.0,
+    0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.002, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+    0.002, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.002 };
+
+  real_T xnew[4];
+  real_T rtb_TSamp_p2;
   real_T rtb_TSamp_j;
-  real_T rtb_TSamp_d;
-  real_T rtb_TSamp_gc;
-  real_T rtb_TSamp_p;
   real_T rtb_IntegralGain;
+  real_T rtb_TSamp_a1;
   real_T rtb_IntegralGain_i;
-  real_T rtb_w[4];
-  real_T rtb_Sum;
-  real_T rtb_matrix[32];
-  real_T rtb_matrix_0[16];
-  real_T tmp[8];
-  real_T a_0[4];
-  real_T rtb_Sum_0[4];
-  int32_T i;
-  real_T rtb_TSamp;
-  real_T rtb_TSamp_n;
-  real_T rtb_TSamp_e;
-  real_T rtb_TSamp_o_tmp;
-  real_T rtb_TSamp_ne_idx_2;
-  real_T rtb_TSamp_ne_idx_1;
-  real_T rtb_TSamp_o_tmp_idx_1;
-  real_T rtb_TSamp_k_idx_1;
-  real_T rtb_TSamp_o_tmp_idx_0;
-  real_T rtb_TSamp_k_idx_0;
-  real_T rtb_TSamp_b_idx_2;
-  real_T rtb_TSamp_idx_2;
-  real_T rtb_TSamp_b_idx_1;
-  real_T rtb_TSamp_idx_1;
+  real_T rtb_TSamp_g;
+  real_T rtb_IntegralGain_p;
+  real_T rtb_TSamp_tmp[4];
+  real32_T tmp[8];
+  real32_T tmp_0[4];
+  real32_T b_0[4];
+  real_T rtb_TSamp_l;
+  real_T rtb_TSamp_o;
+  real_T rtb_TSamp_oo_0;
+  real_T rtb_TSamp_tmp_idx_0;
+  real_T rtb_TSamp_tmp_idx_1;
+  real_T rtb_TSamp_tmp_idx_2;
   real_T rtb_TSamp_b_idx_0;
-  real_T rtb_TSamp_idx_0;
-  real_T a_1;
-  real_T rtb_w_c;
+  real_T rtb_TSamp_o_idx_0;
+  real_T rtb_TSamp_b_idx_1;
+  real_T rtb_TSamp_o_idx_1;
+  real_T rtb_TSamp_b_idx_2;
+  real_T rtb_TSamp_o_idx_2;
+  real_T rtb_TSamp_c_idx_0;
+  real_T rtb_TSamp_oo_idx_0;
+  real_T rtb_TSamp_c_idx_1;
+  real_T rtb_TSamp_oo_idx_1;
+  real_T rtb_TSamp_c_idx_2;
+  real32_T b_1;
   int32_T control_eff_matrix_tmp;
+  int32_T G_tmp;
   boolean_T exitg1;
 
   /* MATLAB Function: '<Root>/controlEffMatrix' */
@@ -1122,439 +1095,18 @@ void RateControlModelClass::step0()    /* Sample time: [0.002s, 0.0s] */
       b_idx = j << 3;
       control_eff_matrix_tmp = idx + b_idx;
       control_eff_matrix[control_eff_matrix_tmp] = 0.0;
-      for (i = 0; i < 8; i++) {
-        control_eff_matrix[control_eff_matrix_tmp] = rows_multiplier[(i << 3) +
-          idx] * RateControlParams.unit_matrix[b_idx + i] +
+      for (G_tmp = 0; G_tmp < 8; G_tmp++) {
+        control_eff_matrix[control_eff_matrix_tmp] = rows_multiplier[(G_tmp << 3)
+          + idx] * RateControlParams.unit_matrix[b_idx + G_tmp] +
           control_eff_matrix[b_idx + idx];
       }
     }
   }
 
+  /* DiscreteStateSpace: '<Root>/H_rates' */
   /* 'control_eff_matrix:18' control_eff_matrix = [ */
   /* 'control_eff_matrix:19'     control_eff_matrix(1:4, :) control_eff_matrix(5:8, :) % [G1 G2] */
   /* 'control_eff_matrix:20'     ]; */
-  for (j = 0; j < 4; j++) {
-    idx = j << 3;
-    b_idx = j << 2;
-    rtb_matrix[b_idx] = control_eff_matrix[idx];
-    control_eff_matrix_tmp = (j + 4) << 2;
-    rtb_matrix[control_eff_matrix_tmp] = control_eff_matrix[idx + 4];
-    rtb_matrix[1 + b_idx] = control_eff_matrix[idx + 1];
-    rtb_matrix[1 + control_eff_matrix_tmp] = control_eff_matrix[idx + 5];
-    rtb_matrix[2 + b_idx] = control_eff_matrix[idx + 2];
-    rtb_matrix[2 + control_eff_matrix_tmp] = control_eff_matrix[idx + 6];
-    rtb_matrix[3 + b_idx] = control_eff_matrix[idx + 3];
-    rtb_matrix[3 + control_eff_matrix_tmp] = control_eff_matrix[idx + 7];
-  }
-
-  /* End of MATLAB Function: '<Root>/controlEffMatrix' */
-
-  /* DiscreteStateSpace: '<Root>/H_est_actuators' */
-  {
-    rtb_TmpSignalConversionAtSFun_p[0] = (0.012706224409800739)*
-      RateControl_DW.H_est_actuators_DSTATE[0]
-      + (0.012613385351727553)*RateControl_DW.H_est_actuators_DSTATE[1];
-    rtb_TmpSignalConversionAtSFun_p[1] = (0.012706224409800739)*
-      RateControl_DW.H_est_actuators_DSTATE[2]
-      + (0.012613385351727553)*RateControl_DW.H_est_actuators_DSTATE[3];
-    rtb_TmpSignalConversionAtSFun_p[2] = (0.012706224409800739)*
-      RateControl_DW.H_est_actuators_DSTATE[4]
-      + (0.012613385351727553)*RateControl_DW.H_est_actuators_DSTATE[5];
-    rtb_TmpSignalConversionAtSFun_p[3] = (0.012706224409800739)*
-      RateControl_DW.H_est_actuators_DSTATE[6]
-      + (0.012613385351727553)*RateControl_DW.H_est_actuators_DSTATE[7];
-  }
-
-  /* SampleTimeMath: '<S3>/TSamp'
-   *
-   * About '<S3>/TSamp':
-   *  y = u * K where K = 1 / ( w * Ts )
-   */
-  rtb_TSamp = rtb_TmpSignalConversionAtSFun_p[0] * 500.0;
-
-  /* Sum: '<S3>/Diff' incorporates:
-   *  UnitDelay: '<S3>/UD'
-   */
-  RateControl_DW.UD_DSTATE[0] = rtb_TSamp - RateControl_DW.UD_DSTATE[0];
-
-  /* SampleTimeMath: '<S5>/TSamp'
-   *
-   * About '<S5>/TSamp':
-   *  y = u * K where K = 1 / ( w * Ts )
-   */
-  rtb_TSamp_n = RateControl_DW.UD_DSTATE[0] * 500.0;
-
-  /* Sum: '<S5>/Diff' incorporates:
-   *  UnitDelay: '<S5>/UD'
-   */
-  RateControl_DW.UD_DSTATE_k[0] = rtb_TSamp_n - RateControl_DW.UD_DSTATE_k[0];
-
-  /* SampleTimeMath: '<S3>/TSamp'
-   *
-   * About '<S3>/TSamp':
-   *  y = u * K where K = 1 / ( w * Ts )
-   */
-  rtb_TSamp_idx_0 = rtb_TSamp;
-
-  /* SampleTimeMath: '<S5>/TSamp'
-   *
-   * About '<S5>/TSamp':
-   *  y = u * K where K = 1 / ( w * Ts )
-   */
-  rtb_TSamp_b_idx_0 = rtb_TSamp_n;
-
-  /* SampleTimeMath: '<S3>/TSamp'
-   *
-   * About '<S3>/TSamp':
-   *  y = u * K where K = 1 / ( w * Ts )
-   */
-  rtb_TSamp = rtb_TmpSignalConversionAtSFun_p[1] * 500.0;
-
-  /* Sum: '<S3>/Diff' incorporates:
-   *  UnitDelay: '<S3>/UD'
-   */
-  RateControl_DW.UD_DSTATE[1] = rtb_TSamp - RateControl_DW.UD_DSTATE[1];
-
-  /* SampleTimeMath: '<S5>/TSamp'
-   *
-   * About '<S5>/TSamp':
-   *  y = u * K where K = 1 / ( w * Ts )
-   */
-  rtb_TSamp_n = RateControl_DW.UD_DSTATE[1] * 500.0;
-
-  /* Sum: '<S5>/Diff' incorporates:
-   *  UnitDelay: '<S5>/UD'
-   */
-  RateControl_DW.UD_DSTATE_k[1] = rtb_TSamp_n - RateControl_DW.UD_DSTATE_k[1];
-
-  /* SampleTimeMath: '<S3>/TSamp'
-   *
-   * About '<S3>/TSamp':
-   *  y = u * K where K = 1 / ( w * Ts )
-   */
-  rtb_TSamp_idx_1 = rtb_TSamp;
-
-  /* SampleTimeMath: '<S5>/TSamp'
-   *
-   * About '<S5>/TSamp':
-   *  y = u * K where K = 1 / ( w * Ts )
-   */
-  rtb_TSamp_b_idx_1 = rtb_TSamp_n;
-
-  /* SampleTimeMath: '<S3>/TSamp'
-   *
-   * About '<S3>/TSamp':
-   *  y = u * K where K = 1 / ( w * Ts )
-   */
-  rtb_TSamp = rtb_TmpSignalConversionAtSFun_p[2] * 500.0;
-
-  /* Sum: '<S3>/Diff' incorporates:
-   *  UnitDelay: '<S3>/UD'
-   */
-  RateControl_DW.UD_DSTATE[2] = rtb_TSamp - RateControl_DW.UD_DSTATE[2];
-
-  /* SampleTimeMath: '<S5>/TSamp'
-   *
-   * About '<S5>/TSamp':
-   *  y = u * K where K = 1 / ( w * Ts )
-   */
-  rtb_TSamp_n = RateControl_DW.UD_DSTATE[2] * 500.0;
-
-  /* Sum: '<S5>/Diff' incorporates:
-   *  UnitDelay: '<S5>/UD'
-   */
-  RateControl_DW.UD_DSTATE_k[2] = rtb_TSamp_n - RateControl_DW.UD_DSTATE_k[2];
-
-  /* SampleTimeMath: '<S3>/TSamp'
-   *
-   * About '<S3>/TSamp':
-   *  y = u * K where K = 1 / ( w * Ts )
-   */
-  rtb_TSamp_idx_2 = rtb_TSamp;
-
-  /* SampleTimeMath: '<S5>/TSamp'
-   *
-   * About '<S5>/TSamp':
-   *  y = u * K where K = 1 / ( w * Ts )
-   */
-  rtb_TSamp_b_idx_2 = rtb_TSamp_n;
-
-  /* SampleTimeMath: '<S3>/TSamp'
-   *
-   * About '<S3>/TSamp':
-   *  y = u * K where K = 1 / ( w * Ts )
-   */
-  rtb_TSamp = rtb_TmpSignalConversionAtSFun_p[3] * 500.0;
-
-  /* Sum: '<S3>/Diff' incorporates:
-   *  UnitDelay: '<S3>/UD'
-   */
-  RateControl_DW.UD_DSTATE[3] = rtb_TSamp - RateControl_DW.UD_DSTATE[3];
-
-  /* SampleTimeMath: '<S5>/TSamp'
-   *
-   * About '<S5>/TSamp':
-   *  y = u * K where K = 1 / ( w * Ts )
-   */
-  rtb_TSamp_n = RateControl_DW.UD_DSTATE[3] * 500.0;
-
-  /* Sum: '<S5>/Diff' incorporates:
-   *  UnitDelay: '<S5>/UD'
-   */
-  RateControl_DW.UD_DSTATE_k[3] = rtb_TSamp_n - RateControl_DW.UD_DSTATE_k[3];
-
-  /* DiscreteStateSpace: '<Root>/H_est_rates' */
-  {
-    rtb_Minus[0] = (0.012706224409800739)*RateControl_DW.H_est_rates_DSTATE[0] +
-      (0.012613385351727553)*RateControl_DW.H_est_rates_DSTATE[1];
-    rtb_Minus[1] = (0.012706224409800739)*RateControl_DW.H_est_rates_DSTATE[2] +
-      (0.012613385351727553)*RateControl_DW.H_est_rates_DSTATE[3];
-    rtb_Minus[2] = (0.012706224409800739)*RateControl_DW.H_est_rates_DSTATE[4] +
-      (0.012613385351727553)*RateControl_DW.H_est_rates_DSTATE[5];
-  }
-
-  /* SampleTimeMath: '<S4>/TSamp'
-   *
-   * About '<S4>/TSamp':
-   *  y = u * K where K = 1 / ( w * Ts )
-   */
-  rtb_TSamp_e = rtb_Minus[0] * 500.0;
-
-  /* Sum: '<S4>/Diff' incorporates:
-   *  UnitDelay: '<S4>/UD'
-   */
-  rtb_Minus[0] = rtb_TSamp_e - RateControl_DW.UD_DSTATE_b[0];
-
-  /* SampleTimeMath: '<S2>/TSamp'
-   *
-   * About '<S2>/TSamp':
-   *  y = u * K where K = 1 / ( w * Ts )
-   */
-  rtb_TSamp_o_tmp = rtb_Minus[0] * 500.0;
-
-  /* Sum: '<S2>/Diff' incorporates:
-   *  UnitDelay: '<S2>/UD'
-   */
-  RateControl_B.Diff[0] = rtb_TSamp_o_tmp - RateControl_DW.UD_DSTATE_n[0];
-
-  /* SampleTimeMath: '<S4>/TSamp'
-   *
-   * About '<S4>/TSamp':
-   *  y = u * K where K = 1 / ( w * Ts )
-   */
-  rtb_TSamp_k_idx_0 = rtb_TSamp_e;
-
-  /* SampleTimeMath: '<S2>/TSamp'
-   *
-   * About '<S2>/TSamp':
-   *  y = u * K where K = 1 / ( w * Ts )
-   */
-  rtb_TSamp_o_tmp_idx_0 = rtb_TSamp_o_tmp;
-
-  /* SampleTimeMath: '<S4>/TSamp'
-   *
-   * About '<S4>/TSamp':
-   *  y = u * K where K = 1 / ( w * Ts )
-   */
-  rtb_TSamp_e = rtb_Minus[1] * 500.0;
-
-  /* Sum: '<S4>/Diff' incorporates:
-   *  UnitDelay: '<S4>/UD'
-   */
-  rtb_Minus[1] = rtb_TSamp_e - RateControl_DW.UD_DSTATE_b[1];
-
-  /* SampleTimeMath: '<S2>/TSamp'
-   *
-   * About '<S2>/TSamp':
-   *  y = u * K where K = 1 / ( w * Ts )
-   */
-  rtb_TSamp_o_tmp = rtb_Minus[1] * 500.0;
-
-  /* Sum: '<S2>/Diff' incorporates:
-   *  UnitDelay: '<S2>/UD'
-   */
-  RateControl_B.Diff[1] = rtb_TSamp_o_tmp - RateControl_DW.UD_DSTATE_n[1];
-
-  /* SampleTimeMath: '<S4>/TSamp'
-   *
-   * About '<S4>/TSamp':
-   *  y = u * K where K = 1 / ( w * Ts )
-   */
-  rtb_TSamp_k_idx_1 = rtb_TSamp_e;
-
-  /* SampleTimeMath: '<S2>/TSamp'
-   *
-   * About '<S2>/TSamp':
-   *  y = u * K where K = 1 / ( w * Ts )
-   */
-  rtb_TSamp_o_tmp_idx_1 = rtb_TSamp_o_tmp;
-
-  /* SampleTimeMath: '<S4>/TSamp'
-   *
-   * About '<S4>/TSamp':
-   *  y = u * K where K = 1 / ( w * Ts )
-   */
-  rtb_TSamp_e = rtb_Minus[2] * 500.0;
-
-  /* Sum: '<S4>/Diff' incorporates:
-   *  UnitDelay: '<S4>/UD'
-   */
-  rtb_Minus[2] = rtb_TSamp_e - RateControl_DW.UD_DSTATE_b[2];
-
-  /* SampleTimeMath: '<S2>/TSamp'
-   *
-   * About '<S2>/TSamp':
-   *  y = u * K where K = 1 / ( w * Ts )
-   */
-  rtb_TSamp_o_tmp = rtb_Minus[2] * 500.0;
-
-  /* Sum: '<S2>/Diff' incorporates:
-   *  UnitDelay: '<S2>/UD'
-   */
-  RateControl_B.Diff[2] = rtb_TSamp_o_tmp - RateControl_DW.UD_DSTATE_n[2];
-
-  /* DiscreteStateSpace: '<Root>/H_est_accel' */
-  {
-    rtb_Integrator_j = (0.012706224409800739)*RateControl_DW.H_est_accel_DSTATE
-      [0] + (0.012613385351727553)*RateControl_DW.H_est_accel_DSTATE[1];
-  }
-
-  /* SampleTimeMath: '<S6>/TSamp'
-   *
-   * About '<S6>/TSamp':
-   *  y = u * K where K = 1 / ( w * Ts )
-   */
-  rtb_TSamp_j = rtb_Integrator_j * 500.0;
-
-  /* SignalConversion: '<S16>/TmpSignal ConversionAt SFunction Inport4' incorporates:
-   *  MATLAB Function: '<Root>/lms'
-   *  Sum: '<S6>/Diff'
-   *  UnitDelay: '<S6>/UD'
-   */
-  rtb_TmpSignalConversionAtSFun_p[0] = RateControl_B.Diff[0];
-  rtb_TmpSignalConversionAtSFun_p[1] = RateControl_B.Diff[1];
-  rtb_TmpSignalConversionAtSFun_p[2] = RateControl_B.Diff[2];
-  rtb_TmpSignalConversionAtSFun_p[3] = rtb_TSamp_j - RateControl_DW.UD_DSTATE_d;
-
-  /* MATLAB Function: '<Root>/lms' incorporates:
-   *  Memory: '<Root>/Memory3'
-   */
-  /* :  G_limit = 1; */
-  /* :  G0 = G0/1000; */
-  for (j = 0; j < 32; j++) {
-    RateControl_DW.Memory3_PreviousInput[j] /= 1000.0;
-  }
-
-  /* :  mu_1 = diag([1 1 1 1 ones(1, 4)*0.002]); */
-  /* :  mu_2 = diag([10 10 0.3 10])*1e-9; */
-  /* :  Omega_ddot_prediction = G0*[du_f; du_f_dot]; */
-  /* :  Omega_ddot_measurement = Omega_ddot_f_Vz; */
-  /* :  adaptation_per_input = [du_f; du_f_dot]'*mu_1; */
-  /* :  G1 = G0 - mu_2*( Omega_ddot_prediction - Omega_ddot_measurement)*adaptation_per_input; */
-  v[0] = RateControl_DW.UD_DSTATE[0];
-  v[4] = RateControl_DW.UD_DSTATE_k[0];
-  v[1] = RateControl_DW.UD_DSTATE[1];
-  v[5] = RateControl_DW.UD_DSTATE_k[1];
-  v[2] = RateControl_DW.UD_DSTATE[2];
-  v[6] = RateControl_DW.UD_DSTATE_k[2];
-  v[3] = RateControl_DW.UD_DSTATE[3];
-  v[7] = RateControl_DW.UD_DSTATE_k[3];
-  for (j = 0; j < 4; j++) {
-    a_1 = 0.0;
-    for (idx = 0; idx < 8; idx++) {
-      a_1 += RateControl_DW.Memory3_PreviousInput[(idx << 2) + j] * v[idx];
-    }
-
-    rtb_w[j] = a_1 - rtb_TmpSignalConversionAtSFun_p[j];
-    tmp[j] = RateControl_DW.UD_DSTATE[j];
-    tmp[j + 4] = RateControl_DW.UD_DSTATE_k[j];
-  }
-
-  for (j = 0; j < 4; j++) {
-    a_1 = a[j + 12] * rtb_w[3] + (a[j + 8] * rtb_w[2] + (a[j + 4] * rtb_w[1] +
-      a[j] * rtb_w[0]));
-    a_0[j] = a_1;
-  }
-
-  for (j = 0; j < 8; j++) {
-    v[j] = 0.0;
-    for (idx = 0; idx < 8; idx++) {
-      v[j] += b[(j << 3) + idx] * tmp[idx];
-    }
-  }
-
-  for (j = 0; j < 4; j++) {
-    for (idx = 0; idx < 8; idx++) {
-      b_idx = idx << 2;
-      RateControl_Y.G[j + b_idx] = RateControl_DW.Memory3_PreviousInput[b_idx +
-        j] - a_0[j] * v[idx];
-    }
-  }
-
-  /* :  G1(G1>G_limit) = G_limit; */
-  /* :  G1(G1<-G_limit) = -G_limit; */
-  /* :  G1 = G1*1000; */
-  for (j = 0; j < 32; j++) {
-    if (RateControl_Y.G[j] > 1.0) {
-      RateControl_Y.G[j] = 1.0;
-    }
-
-    if (RateControl_Y.G[j] < -1.0) {
-      RateControl_Y.G[j] = -1.0;
-    }
-
-    RateControl_Y.G[j] *= 1000.0;
-  }
-
-  /* MATLAB Function: '<Root>/MATLAB Function1' */
-  /* :  mu = [1 1 1e-2 1e-1]; */
-  /* :  sum = mu*abs(G); */
-  /* :  est_Omega_ddot_pred = G*[est_w_dot; est_w_ddot]/1000; */
-  v[0] = RateControl_DW.UD_DSTATE[0];
-  v[4] = RateControl_DW.UD_DSTATE_k[0];
-  v[1] = RateControl_DW.UD_DSTATE[1];
-  v[5] = RateControl_DW.UD_DSTATE_k[1];
-  v[2] = RateControl_DW.UD_DSTATE[2];
-  v[6] = RateControl_DW.UD_DSTATE_k[2];
-  v[3] = RateControl_DW.UD_DSTATE[3];
-  v[7] = RateControl_DW.UD_DSTATE_k[3];
-  for (j = 0; j < 4; j++) {
-    a_1 = 0.0;
-    for (idx = 0; idx < 8; idx++) {
-      a_1 += rtb_matrix[(idx << 2) + j] * v[idx];
-    }
-
-    RateControl_B.est_Omega_ddot_pred[j] = a_1 / 1000.0;
-  }
-
-  /* End of MATLAB Function: '<Root>/MATLAB Function1' */
-
-  /* Buffer: '<S8>/Buffer1' */
-  idx = 400;
-  b_idx = RateControl_DW.Buffer1_inBufPtrIdx;
-  if (400 - RateControl_DW.Buffer1_inBufPtrIdx <= 1) {
-    for (j = 0; j < 400 - RateControl_DW.Buffer1_inBufPtrIdx; j++) {
-      RateControl_DW.Buffer1_CircBuf[RateControl_DW.Buffer1_inBufPtrIdx + j] =
-        RateControl_B.est_Omega_ddot_pred[0];
-    }
-
-    b_idx = 0;
-    idx = RateControl_DW.Buffer1_inBufPtrIdx;
-  }
-
-  for (j = 0; j < idx - 399; j++) {
-    RateControl_DW.Buffer1_CircBuf[b_idx + j] =
-      RateControl_B.est_Omega_ddot_pred[0];
-  }
-
-  RateControl_DW.Buffer1_inBufPtrIdx++;
-  if (RateControl_DW.Buffer1_inBufPtrIdx >= 400) {
-    RateControl_DW.Buffer1_inBufPtrIdx -= 400;
-  }
-
-  /* End of Buffer: '<S8>/Buffer1' */
-
-  /* DiscreteStateSpace: '<Root>/H_rates' */
   {
     rtb_Minus[0] = (0.038540899779240162)*RateControl_DW.H_rates_DSTATE[0] +
       (0.037152995666791561)*RateControl_DW.H_rates_DSTATE[1];
@@ -1569,9 +1121,9 @@ void RateControlModelClass::step0()    /* Sample time: [0.002s, 0.0s] */
    * About '<S1>/TSamp':
    *  y = u * K where K = 1 / ( w * Ts )
    */
-  a_1 = rtb_Minus[0] * 500.0;
-  rtb_TSamp_ne_idx_1 = rtb_Minus[1] * 500.0;
-  rtb_TSamp_ne_idx_2 = rtb_Minus[2] * 500.0;
+  rtb_TSamp_tmp_idx_0 = rtb_Minus[0] * 500.0;
+  rtb_TSamp_tmp_idx_1 = rtb_Minus[1] * 500.0;
+  rtb_TSamp_tmp_idx_2 = rtb_Minus[2] * 500.0;
 
   /* DiscreteStateSpace: '<Root>/H_accel' */
   {
@@ -1579,86 +1131,23 @@ void RateControlModelClass::step0()    /* Sample time: [0.002s, 0.0s] */
       (0.037152995666791561)*RateControl_DW.H_accel_DSTATE[1];
   }
 
-  /* DataTypeConversion: '<Root>/Cast To Double2' incorporates:
-   *  Inport: '<Root>/rates'
-   */
-  rtb_CastToDouble2[0] = RateControl_U.rates[0];
-
-  /* DataTypeConversion: '<Root>/Cast To Double' incorporates:
-   *  Inport: '<Root>/rates_sp'
-   */
-  rtb_Minus[0] = RateControl_U.rates_sp[0];
-
-  /* Sum: '<Root>/Minus' */
-  rtb_Minus[0] -= rtb_CastToDouble2[0];
-
-  /* DataTypeConversion: '<Root>/Cast To Double2' incorporates:
-   *  Inport: '<Root>/rates'
-   */
-  rtb_CastToDouble2[1] = RateControl_U.rates[1];
-
-  /* DataTypeConversion: '<Root>/Cast To Double' incorporates:
-   *  Inport: '<Root>/rates_sp'
-   */
-  rtb_Minus[1] = RateControl_U.rates_sp[1];
-
-  /* Sum: '<Root>/Minus' */
-  rtb_Minus[1] -= rtb_CastToDouble2[1];
-
-  /* DataTypeConversion: '<Root>/Cast To Double2' incorporates:
-   *  Inport: '<Root>/rates'
-   */
-  rtb_CastToDouble2[2] = RateControl_U.rates[2];
-
-  /* DataTypeConversion: '<Root>/Cast To Double' incorporates:
-   *  Inport: '<Root>/rates_sp'
-   */
-  rtb_Minus[2] = RateControl_U.rates_sp[2];
-
-  /* Sum: '<Root>/Minus' */
-  rtb_Minus[2] -= rtb_CastToDouble2[2];
-
-  /* Gain: '<S187>/Proportional Gain' */
-  rtb_Integrator_j = RateControlParams.roll_gain * rtb_Minus[0];
-
-  /* SampleTimeMath: '<S149>/TSamp' incorporates:
-   *  Gain: '<S147>/Derivative Gain'
-   *
-   * About '<S149>/TSamp':
-   *  y = u * K where K = 1 / ( w * Ts )
-   */
-  rtb_TSamp_d = 0.0 * rtb_Minus[0] * 500.0;
-
-  /* Sum: '<S200>/Sum' incorporates:
-   *  Delay: '<S149>/UD'
-   *  DiscreteIntegrator: '<S170>/Integrator'
-   *  Sum: '<S149>/Diff'
-   */
-  rtb_Sum = (rtb_Integrator_j + RateControl_DW.Integrator_DSTATE) + (rtb_TSamp_d
-    - RateControl_DW.UD_DSTATE_b2);
-
-  /* DiscreteIntegrator: '<S74>/Integrator' */
-  rtb_Integrator_j = RateControl_DW.Integrator_DSTATE_f;
-
-  /* SampleTimeMath: '<S53>/TSamp' incorporates:
-   *  Gain: '<S51>/Derivative Gain'
-   *
-   * About '<S53>/TSamp':
-   *  y = u * K where K = 1 / ( w * Ts )
-   */
-  rtb_TSamp_gc = 0.0 * rtb_Minus[1] * 500.0;
-
-  /* SampleTimeMath: '<S245>/TSamp' incorporates:
-   *  Gain: '<S243>/Derivative Gain'
-   *
-   * About '<S245>/TSamp':
-   *  y = u * K where K = 1 / ( w * Ts )
-   */
-  rtb_TSamp_p = 0.0 * rtb_Minus[2] * 500.0;
+  /* DiscreteStateSpace: '<Root>/H_virtual_control_input' */
+  {
+    rtb_virtual_control_input_filte[0] = (0.13711666757328289)*
+      RateControl_DW.H_virtual_control_input_DSTATE[0]
+      + (0.1183435266054762)*RateControl_DW.H_virtual_control_input_DSTATE[1];
+    rtb_virtual_control_input_filte[1] = (0.13711666757328289)*
+      RateControl_DW.H_virtual_control_input_DSTATE[2]
+      + (0.1183435266054762)*RateControl_DW.H_virtual_control_input_DSTATE[3];
+    rtb_virtual_control_input_filte[2] = (0.13711666757328289)*
+      RateControl_DW.H_virtual_control_input_DSTATE[4]
+      + (0.1183435266054762)*RateControl_DW.H_virtual_control_input_DSTATE[5];
+    rtb_virtual_control_input_filte[3] = (0.13711666757328289)*
+      RateControl_DW.H_virtual_control_input_DSTATE[6]
+      + (0.1183435266054762)*RateControl_DW.H_virtual_control_input_DSTATE[7];
+  }
 
   /* DiscreteStateSpace: '<Root>/H_actuators' */
-  /* :  g = 9.81; */
-  /* :  accel_z_sp = -2*g*thrust_sp; */
   {
     rtb_w_filtered[0] = (0.038540899779240162)*
       RateControl_DW.H_actuators_DSTATE[0] + (0.037152995666791561)*
@@ -1674,56 +1163,10 @@ void RateControlModelClass::step0()    /* Sample time: [0.002s, 0.0s] */
       RateControl_DW.H_actuators_DSTATE[7];
   }
 
-  /* MATLAB Function: '<Root>/INDI_allocator' */
-  /* :  [actuator_controls, w_cmd] = INDI_allocator(fail_id, Omega_f_dot, accel_z_f, v, G, w_f, par); */
-  /* 'INDI_allocator:2:23' if isempty(du_last) */
-  /* 'INDI_allocator:2:28' G = G*1e-3; */
-  for (j = 0; j < 32; j++) {
-    rtb_matrix[j] *= 0.001;
-  }
-
-  /* 'INDI_allocator:2:31' G(3,:) = G(3,:); */
-  /* 'INDI_allocator:2:34' G1 = G(:, 1:4); */
-  /* 'INDI_allocator:2:35' G2 = G(:, 5:8); */
-  /* 'INDI_allocator:2:37' if fail_id~=0 */
-  /* 'INDI_allocator:2:44' else */
-  /* 'INDI_allocator:2:47' dv = v - [Omega_f_dot; accel_z_f]; */
-  /* 'INDI_allocator:2:48' du = double(pinv(G1 + G2)*(dv + G2*du_last)); */
-  for (j = 0; j < 4; j++) {
-    idx = j << 2;
-    b_idx = (4 + j) << 2;
-    rtb_matrix_0[idx] = rtb_matrix[b_idx] + rtb_matrix[idx];
-    rtb_matrix_0[1 + idx] = rtb_matrix[b_idx + 1] + rtb_matrix[idx + 1];
-    rtb_matrix_0[2 + idx] = rtb_matrix[b_idx + 2] + rtb_matrix[idx + 2];
-    rtb_matrix_0[3 + idx] = rtb_matrix[b_idx + 3] + rtb_matrix[idx + 3];
-  }
-
-  RateControl_pinv(rtb_matrix_0, G2);
-
-  /* SignalConversion: '<S9>/TmpSignal ConversionAt SFunction Inport4' incorporates:
-   *  DataTypeConversion: '<Root>/Cast To Double1'
-   *  Delay: '<S245>/UD'
-   *  Delay: '<S53>/UD'
-   *  DiscreteIntegrator: '<S266>/Integrator'
-   *  Gain: '<S283>/Proportional Gain'
-   *  Gain: '<S91>/Proportional Gain'
-   *  Inport: '<Root>/thrust_sp'
-   *  MATLAB Function: '<Root>/INDI_allocator'
-   *  MATLAB Function: '<Root>/MATLAB Function'
-   *  Sum: '<S104>/Sum'
-   *  Sum: '<S245>/Diff'
-   *  Sum: '<S296>/Sum'
-   *  Sum: '<S53>/Diff'
-   */
-  rtb_w[0] = rtb_Sum;
-  rtb_w[1] = (RateControlParams.pitch_gain * rtb_Minus[1] + rtb_Integrator_j) +
-    (rtb_TSamp_gc - RateControl_DW.UD_DSTATE_l);
-  rtb_w[2] = (RateControlParams.yaw_gain * rtb_Minus[2] +
-              RateControl_DW.Integrator_DSTATE_b) + (rtb_TSamp_p -
-    RateControl_DW.UD_DSTATE_bg);
-  rtb_w[3] = -19.62 * RateControl_U.thrust_sp;
-
   /* MATLAB Function: '<Root>/INDI_allocator' incorporates:
+   *  Inport: '<Root>/fail_id'
+   *  MATLAB Function: '<Root>/controlEffMatrix'
+   *  Outport: '<Root>/w_cmd'
    *  SampleTimeMath: '<S1>/TSamp'
    *  Sum: '<S1>/Diff'
    *  UnitDelay: '<S1>/UD'
@@ -1731,67 +1174,151 @@ void RateControlModelClass::step0()    /* Sample time: [0.002s, 0.0s] */
    * About '<S1>/TSamp':
    *  y = u * K where K = 1 / ( w * Ts )
    */
-  a_0[0] = a_1 - RateControl_DW.UD_DSTATE_m[0];
-  a_0[1] = rtb_TSamp_ne_idx_1 - RateControl_DW.UD_DSTATE_m[1];
-  a_0[2] = rtb_TSamp_ne_idx_2 - RateControl_DW.UD_DSTATE_m[2];
-  a_0[3] = rtb_accel_z_f;
+  /* :  [actuator_controls, w_cmd] = INDI_allocator(fail_id, Omega_f_dot, accel_z_f, v, G, w_f, par); */
+  /* 'INDI_allocator:2:23' if isempty(du_last) */
+  /* 'INDI_allocator:2:28' G = G*1e-3; */
+  /* 'INDI_allocator:2:31' G1 = G(:, 1:4); */
   for (j = 0; j < 4; j++) {
-    rtb_Sum_0[j] = (((rtb_matrix[j + 16] * RateControl_DW.du_last[0] +
-                      rtb_matrix[j + 20] * RateControl_DW.du_last[1]) +
-                     rtb_matrix[j + 24] * RateControl_DW.du_last[2]) +
-                    rtb_matrix[j + 28] * RateControl_DW.du_last[3]) + (rtb_w[j]
-      - a_0[j]);
+    /* MATLAB Function: '<Root>/controlEffMatrix' */
+    b_idx = j << 3;
+    idx = j << 2;
+    G[idx] = control_eff_matrix[b_idx] * 0.001;
+    control_eff_matrix_tmp = (j + 4) << 2;
+    G[control_eff_matrix_tmp] = control_eff_matrix[b_idx + 4] * 0.001;
+    G1[idx] = G[idx];
+    G_tmp = 1 + idx;
+    G[G_tmp] = control_eff_matrix[b_idx + 1] * 0.001;
+    G[1 + control_eff_matrix_tmp] = control_eff_matrix[b_idx + 5] * 0.001;
+    G1[G_tmp] = G[idx + 1];
+    G_tmp = 2 + idx;
+    G[G_tmp] = control_eff_matrix[b_idx + 2] * 0.001;
+    G[2 + control_eff_matrix_tmp] = control_eff_matrix[b_idx + 6] * 0.001;
+    G1[G_tmp] = G[idx + 2];
+    G_tmp = 3 + idx;
+    G[G_tmp] = control_eff_matrix[b_idx + 3] * 0.001;
+    G[3 + control_eff_matrix_tmp] = control_eff_matrix[b_idx + 7] * 0.001;
+    G1[G_tmp] = G[idx + 3];
   }
 
-  for (j = 0; j < 4; j++) {
-    RateControl_DW.du_last[j] = 0.0;
-    RateControl_DW.du_last[j] += G2[j] * rtb_Sum_0[0];
-    RateControl_DW.du_last[j] += G2[j + 4] * rtb_Sum_0[1];
-    RateControl_DW.du_last[j] += G2[j + 8] * rtb_Sum_0[2];
-    RateControl_DW.du_last[j] += G2[j + 12] * rtb_Sum_0[3];
+  /* 'INDI_allocator:2:32' G2 = G(:, 5:8); */
+  /* 'INDI_allocator:2:34' dv = v - [Omega_f_dot; accel_z_f]; */
+  /* 'INDI_allocator:2:36' if fail_id~=0 */
+  if (RateControl_U.fail_id != 0.0) {
+    /* 'INDI_allocator:2:37' G1_shrink = G1; */
+    /* 'INDI_allocator:2:38' G1_shrink(:,fail_id) = 0; */
+    j = ((int32_T)RateControl_U.fail_id - 1) << 2;
+    G1[j] = 0.0;
+    G1[1 + j] = 0.0;
+    G1[2 + j] = 0.0;
+    G1[3 + j] = 0.0;
+
+    /* 'INDI_allocator:2:39' G1_shrink(3,:) = 0; */
+    G1[2] = 0.0;
+    G1[6] = 0.0;
+    G1[10] = 0.0;
+    G1[14] = 0.0;
+
+    /* 'INDI_allocator:2:40' G_pinv = pinv(G1_shrink); */
+    RateControl_pinv(G1, G_pinv);
+
+    /* 'INDI_allocator:2:41' du = G_pinv*(dv); */
+    rtb_TSamp_j = rtb_virtual_control_input_filte[0] - (rtb_TSamp_tmp_idx_0 -
+      RateControl_DW.UD_DSTATE[0]);
+    rtb_IntegralGain = rtb_virtual_control_input_filte[1] - (rtb_TSamp_tmp_idx_1
+      - RateControl_DW.UD_DSTATE[1]);
+    rtb_TSamp_a1 = rtb_virtual_control_input_filte[2] - (rtb_TSamp_tmp_idx_2 -
+      RateControl_DW.UD_DSTATE[2]);
+    rtb_IntegralGain_i = rtb_virtual_control_input_filte[3] - rtb_accel_z_f;
+    for (j = 0; j < 4; j++) {
+      RateControl_Y.w_cmd[j] = 0.0;
+      RateControl_Y.w_cmd[j] += G_pinv[j] * rtb_TSamp_j;
+      RateControl_Y.w_cmd[j] += G_pinv[j + 4] * rtb_IntegralGain;
+      RateControl_Y.w_cmd[j] += G_pinv[j + 8] * rtb_TSamp_a1;
+      RateControl_Y.w_cmd[j] += G_pinv[j + 12] * rtb_IntegralGain_i;
+    }
+  } else {
+    /* 'INDI_allocator:2:42' else */
+    /* 'INDI_allocator:2:45' G_pinv = pinv(G1 + G2); */
+    for (j = 0; j < 4; j++) {
+      b_idx = j << 2;
+      idx = (4 + j) << 2;
+      G1[b_idx] = G[idx] + G[b_idx];
+      G1[1 + b_idx] = G[idx + 1] + G[b_idx + 1];
+      G1[2 + b_idx] = G[idx + 2] + G[b_idx + 2];
+      G1[3 + b_idx] = G[idx + 3] + G[b_idx + 3];
+    }
+
+    RateControl_pinv(G1, G_pinv);
+
+    /* 'INDI_allocator:2:46' du = G_pinv*(dv + G2*du_last); */
+    rtb_TSamp_tmp[0] = rtb_TSamp_tmp_idx_0 - RateControl_DW.UD_DSTATE[0];
+    rtb_TSamp_tmp[1] = rtb_TSamp_tmp_idx_1 - RateControl_DW.UD_DSTATE[1];
+    rtb_TSamp_tmp[2] = rtb_TSamp_tmp_idx_2 - RateControl_DW.UD_DSTATE[2];
+    rtb_TSamp_tmp[3] = rtb_accel_z_f;
+    for (j = 0; j < 4; j++) {
+      xnew[j] = (((G[j + 16] * RateControl_DW.du_last[0] + G[j + 20] *
+                   RateControl_DW.du_last[1]) + G[j + 24] *
+                  RateControl_DW.du_last[2]) + G[j + 28] *
+                 RateControl_DW.du_last[3]) + (rtb_virtual_control_input_filte[j]
+        - rtb_TSamp_tmp[j]);
+    }
+
+    for (j = 0; j < 4; j++) {
+      RateControl_Y.w_cmd[j] = 0.0;
+      RateControl_Y.w_cmd[j] += G_pinv[j] * xnew[0];
+      RateControl_Y.w_cmd[j] += G_pinv[j + 4] * xnew[1];
+      RateControl_Y.w_cmd[j] += G_pinv[j + 8] * xnew[2];
+      RateControl_Y.w_cmd[j] += G_pinv[j + 12] * xnew[3];
+    }
   }
+
+  /* 'INDI_allocator:2:49' du_last = du; */
+  /* 'INDI_allocator:2:51' w_cmd = w_f + du; */
+  /* 'INDI_allocator:2:53' w_max = par.w_max; */
+  /* 'INDI_allocator:2:54' w_min = par.w_min; */
+  /* 'INDI_allocator:2:56' i_up = find(w_cmd>=w_max); */
+  RateControl_DW.du_last[0] = RateControl_Y.w_cmd[0];
 
   /* Outport: '<Root>/w_cmd' incorporates:
    *  MATLAB Function: '<Root>/INDI_allocator'
    */
-  /* 'INDI_allocator:2:51' du_last = du; */
-  /* 'INDI_allocator:2:55' w_cmd = w_f + du; */
-  /* 'INDI_allocator:2:57' w_max = par.w_max; */
-  /* 'INDI_allocator:2:58' w_min = par.w_min; */
-  /* 'INDI_allocator:2:60' i_up = find(w_cmd>=w_max); */
-  RateControl_Y.w_cmd[0] = rtb_w_filtered[0] + RateControl_DW.du_last[0];
+  RateControl_Y.w_cmd[0] += rtb_w_filtered[0];
 
   /* MATLAB Function: '<Root>/INDI_allocator' incorporates:
    *  Outport: '<Root>/w_cmd'
    */
   x[0] = (RateControl_Y.w_cmd[0] >= 1256.0);
+  RateControl_DW.du_last[1] = RateControl_Y.w_cmd[1];
 
   /* Outport: '<Root>/w_cmd' incorporates:
    *  MATLAB Function: '<Root>/INDI_allocator'
    */
-  RateControl_Y.w_cmd[1] = rtb_w_filtered[1] + RateControl_DW.du_last[1];
+  RateControl_Y.w_cmd[1] += rtb_w_filtered[1];
 
   /* MATLAB Function: '<Root>/INDI_allocator' incorporates:
    *  Outport: '<Root>/w_cmd'
    */
   x[1] = (RateControl_Y.w_cmd[1] >= 1256.0);
+  RateControl_DW.du_last[2] = RateControl_Y.w_cmd[2];
 
   /* Outport: '<Root>/w_cmd' incorporates:
    *  MATLAB Function: '<Root>/INDI_allocator'
    */
-  RateControl_Y.w_cmd[2] = rtb_w_filtered[2] + RateControl_DW.du_last[2];
+  RateControl_Y.w_cmd[2] += rtb_w_filtered[2];
 
   /* MATLAB Function: '<Root>/INDI_allocator' incorporates:
    *  Outport: '<Root>/w_cmd'
    */
   x[2] = (RateControl_Y.w_cmd[2] >= 1256.0);
+  RateControl_DW.du_last[3] = RateControl_Y.w_cmd[3];
 
   /* Outport: '<Root>/w_cmd' incorporates:
    *  MATLAB Function: '<Root>/INDI_allocator'
    */
-  RateControl_Y.w_cmd[3] = rtb_w_filtered[3] + RateControl_DW.du_last[3];
+  RateControl_Y.w_cmd[3] += rtb_w_filtered[3];
 
   /* MATLAB Function: '<Root>/INDI_allocator' incorporates:
+   *  Inport: '<Root>/fail_id'
    *  Outport: '<Root>/w_cmd'
    */
   x[3] = (RateControl_Y.w_cmd[3] >= 1256.0);
@@ -1816,7 +1343,7 @@ void RateControlModelClass::step0()    /* Sample time: [0.002s, 0.0s] */
     idx = 0;
   }
 
-  /* 'INDI_allocator:2:61' i_down = find(w_cmd<w_min); */
+  /* 'INDI_allocator:2:57' i_down = find(w_cmd<w_min); */
   x[0] = (RateControl_Y.w_cmd[0] < 300.0);
   x[1] = (RateControl_Y.w_cmd[1] < 300.0);
   x[2] = (RateControl_Y.w_cmd[2] < 300.0);
@@ -1842,16 +1369,22 @@ void RateControlModelClass::step0()    /* Sample time: [0.002s, 0.0s] */
     b_idx = 0;
   }
 
-  /* 'INDI_allocator:2:63' du(i_up) = w_max - w_f(i_up); */
-  /* 'INDI_allocator:2:64' du(i_down) =  w_min - w_f(i_down); */
-  /* 'INDI_allocator:2:66' w_cmd(i_up) = w_max; */
+  /* 'INDI_allocator:2:59' du(i_up) = w_max - w_f(i_up); */
+  /* 'INDI_allocator:2:60' du(i_down) =  w_min - w_f(i_down); */
+  /* 'INDI_allocator:2:62' w_cmd(i_up) = w_max; */
   for (j = 0; j < idx; j++) {
     RateControl_Y.w_cmd[ii_data[j] - 1] = 1256.0;
   }
 
-  /* 'INDI_allocator:2:67' w_cmd(i_down) = w_min; */
+  /* 'INDI_allocator:2:63' w_cmd(i_down) = w_min; */
   for (j = 0; j < b_idx; j++) {
     RateControl_Y.w_cmd[c_ii_data[j] - 1] = 300.0;
+  }
+
+  /* 'INDI_allocator:2:66' if fail_id~=0 */
+  if (RateControl_U.fail_id != 0.0) {
+    /* 'INDI_allocator:2:67' w_cmd(fail_id) = 0.0; */
+    RateControl_Y.w_cmd[(int32_T)RateControl_U.fail_id - 1] = 0.0;
   }
 
   /* Outport: '<Root>/actuators_control' incorporates:
@@ -1859,8 +1392,10 @@ void RateControlModelClass::step0()    /* Sample time: [0.002s, 0.0s] */
    *  MATLAB Function: '<Root>/INDI_allocator'
    *  Outport: '<Root>/w_cmd'
    */
-  /* 'INDI_allocator:2:70' if fail_id~=0 */
-  /* 'INDI_allocator:2:75' actuator_controls = -1 + 2*(w_cmd - w_min)./(w_max - w_min); */
+  /* 'INDI_allocator:2:71' actuator_controls = w_sp_to_px4_actuator_controls(w_cmd, par); */
+  /* 'w_sp_to_px4_actuator_controls:4' w_min = par.w_min; */
+  /* 'w_sp_to_px4_actuator_controls:5' w_max = par.w_max; */
+  /* 'w_sp_to_px4_actuator_controls:8' actuator_controls = -1 + 2*(w_sp - w_min)./(w_max - w_min); */
   RateControl_Y.actuators_control[0] = (real32_T)((RateControl_Y.w_cmd[0] -
     300.0) * 2.0 / 956.0 + -1.0);
   RateControl_Y.actuators_control[1] = (real32_T)((RateControl_Y.w_cmd[1] -
@@ -1870,170 +1405,465 @@ void RateControlModelClass::step0()    /* Sample time: [0.002s, 0.0s] */
   RateControl_Y.actuators_control[3] = (real32_T)((RateControl_Y.w_cmd[3] -
     300.0) * 2.0 / 956.0 + -1.0);
 
-  /* Buffer: '<S8>/Buffer2' */
-  idx = 400;
-  b_idx = RateControl_DW.Buffer2_inBufPtrIdx;
-  if (400 - RateControl_DW.Buffer2_inBufPtrIdx <= 1) {
-    for (j = 0; j < 400 - RateControl_DW.Buffer2_inBufPtrIdx; j++) {
-      RateControl_DW.Buffer2_CircBuf[RateControl_DW.Buffer2_inBufPtrIdx + j] =
-        RateControl_B.Diff[0];
+  /* DiscreteStateSpace: '<Root>/H_est_actuators' */
+  {
+    rtb_TmpSignalConversionAtSFunct[0] = (0.012706224409800739)*
+      RateControl_DW.H_est_actuators_DSTATE[0]
+      + (0.012613385351727553)*RateControl_DW.H_est_actuators_DSTATE[1];
+    rtb_TmpSignalConversionAtSFunct[1] = (0.012706224409800739)*
+      RateControl_DW.H_est_actuators_DSTATE[2]
+      + (0.012613385351727553)*RateControl_DW.H_est_actuators_DSTATE[3];
+    rtb_TmpSignalConversionAtSFunct[2] = (0.012706224409800739)*
+      RateControl_DW.H_est_actuators_DSTATE[4]
+      + (0.012613385351727553)*RateControl_DW.H_est_actuators_DSTATE[5];
+    rtb_TmpSignalConversionAtSFunct[3] = (0.012706224409800739)*
+      RateControl_DW.H_est_actuators_DSTATE[6]
+      + (0.012613385351727553)*RateControl_DW.H_est_actuators_DSTATE[7];
+  }
+
+  /* SampleTimeMath: '<S3>/TSamp'
+   *
+   * About '<S3>/TSamp':
+   *  y = u * K where K = 1 / ( w * Ts )
+   */
+  rtb_TSamp_l = rtb_TmpSignalConversionAtSFunct[0] * 500.0;
+
+  /* Sum: '<S3>/Diff' incorporates:
+   *  UnitDelay: '<S3>/UD'
+   */
+  RateControl_DW.UD_DSTATE_p[0] = rtb_TSamp_l - RateControl_DW.UD_DSTATE_p[0];
+
+  /* SampleTimeMath: '<S5>/TSamp'
+   *
+   * About '<S5>/TSamp':
+   *  y = u * K where K = 1 / ( w * Ts )
+   */
+  rtb_TSamp_o = RateControl_DW.UD_DSTATE_p[0] * 500.0;
+
+  /* Sum: '<S5>/Diff' incorporates:
+   *  UnitDelay: '<S5>/UD'
+   */
+  RateControl_DW.UD_DSTATE_e[0] = rtb_TSamp_o - RateControl_DW.UD_DSTATE_e[0];
+
+  /* SampleTimeMath: '<S3>/TSamp'
+   *
+   * About '<S3>/TSamp':
+   *  y = u * K where K = 1 / ( w * Ts )
+   */
+  rtb_TSamp_b_idx_0 = rtb_TSamp_l;
+
+  /* SampleTimeMath: '<S5>/TSamp'
+   *
+   * About '<S5>/TSamp':
+   *  y = u * K where K = 1 / ( w * Ts )
+   */
+  rtb_TSamp_o_idx_0 = rtb_TSamp_o;
+
+  /* SampleTimeMath: '<S3>/TSamp'
+   *
+   * About '<S3>/TSamp':
+   *  y = u * K where K = 1 / ( w * Ts )
+   */
+  rtb_TSamp_l = rtb_TmpSignalConversionAtSFunct[1] * 500.0;
+
+  /* Sum: '<S3>/Diff' incorporates:
+   *  UnitDelay: '<S3>/UD'
+   */
+  RateControl_DW.UD_DSTATE_p[1] = rtb_TSamp_l - RateControl_DW.UD_DSTATE_p[1];
+
+  /* SampleTimeMath: '<S5>/TSamp'
+   *
+   * About '<S5>/TSamp':
+   *  y = u * K where K = 1 / ( w * Ts )
+   */
+  rtb_TSamp_o = RateControl_DW.UD_DSTATE_p[1] * 500.0;
+
+  /* Sum: '<S5>/Diff' incorporates:
+   *  UnitDelay: '<S5>/UD'
+   */
+  RateControl_DW.UD_DSTATE_e[1] = rtb_TSamp_o - RateControl_DW.UD_DSTATE_e[1];
+
+  /* SampleTimeMath: '<S3>/TSamp'
+   *
+   * About '<S3>/TSamp':
+   *  y = u * K where K = 1 / ( w * Ts )
+   */
+  rtb_TSamp_b_idx_1 = rtb_TSamp_l;
+
+  /* SampleTimeMath: '<S5>/TSamp'
+   *
+   * About '<S5>/TSamp':
+   *  y = u * K where K = 1 / ( w * Ts )
+   */
+  rtb_TSamp_o_idx_1 = rtb_TSamp_o;
+
+  /* SampleTimeMath: '<S3>/TSamp'
+   *
+   * About '<S3>/TSamp':
+   *  y = u * K where K = 1 / ( w * Ts )
+   */
+  rtb_TSamp_l = rtb_TmpSignalConversionAtSFunct[2] * 500.0;
+
+  /* Sum: '<S3>/Diff' incorporates:
+   *  UnitDelay: '<S3>/UD'
+   */
+  RateControl_DW.UD_DSTATE_p[2] = rtb_TSamp_l - RateControl_DW.UD_DSTATE_p[2];
+
+  /* SampleTimeMath: '<S5>/TSamp'
+   *
+   * About '<S5>/TSamp':
+   *  y = u * K where K = 1 / ( w * Ts )
+   */
+  rtb_TSamp_o = RateControl_DW.UD_DSTATE_p[2] * 500.0;
+
+  /* Sum: '<S5>/Diff' incorporates:
+   *  UnitDelay: '<S5>/UD'
+   */
+  RateControl_DW.UD_DSTATE_e[2] = rtb_TSamp_o - RateControl_DW.UD_DSTATE_e[2];
+
+  /* SampleTimeMath: '<S3>/TSamp'
+   *
+   * About '<S3>/TSamp':
+   *  y = u * K where K = 1 / ( w * Ts )
+   */
+  rtb_TSamp_b_idx_2 = rtb_TSamp_l;
+
+  /* SampleTimeMath: '<S5>/TSamp'
+   *
+   * About '<S5>/TSamp':
+   *  y = u * K where K = 1 / ( w * Ts )
+   */
+  rtb_TSamp_o_idx_2 = rtb_TSamp_o;
+
+  /* SampleTimeMath: '<S3>/TSamp'
+   *
+   * About '<S3>/TSamp':
+   *  y = u * K where K = 1 / ( w * Ts )
+   */
+  rtb_TSamp_l = rtb_TmpSignalConversionAtSFunct[3] * 500.0;
+
+  /* Sum: '<S3>/Diff' incorporates:
+   *  UnitDelay: '<S3>/UD'
+   */
+  RateControl_DW.UD_DSTATE_p[3] = rtb_TSamp_l - RateControl_DW.UD_DSTATE_p[3];
+
+  /* SampleTimeMath: '<S5>/TSamp'
+   *
+   * About '<S5>/TSamp':
+   *  y = u * K where K = 1 / ( w * Ts )
+   */
+  rtb_TSamp_o = RateControl_DW.UD_DSTATE_p[3] * 500.0;
+
+  /* Sum: '<S5>/Diff' incorporates:
+   *  UnitDelay: '<S5>/UD'
+   */
+  RateControl_DW.UD_DSTATE_e[3] = rtb_TSamp_o - RateControl_DW.UD_DSTATE_e[3];
+
+  /* DiscreteStateSpace: '<Root>/H_est_rates' */
+  {
+    rtb_Minus[0] = (0.012706224409800739)*RateControl_DW.H_est_rates_DSTATE[0] +
+      (0.012613385351727553)*RateControl_DW.H_est_rates_DSTATE[1];
+    rtb_Minus[1] = (0.012706224409800739)*RateControl_DW.H_est_rates_DSTATE[2] +
+      (0.012613385351727553)*RateControl_DW.H_est_rates_DSTATE[3];
+    rtb_Minus[2] = (0.012706224409800739)*RateControl_DW.H_est_rates_DSTATE[4] +
+      (0.012613385351727553)*RateControl_DW.H_est_rates_DSTATE[5];
+  }
+
+  /* SampleTimeMath: '<S4>/TSamp'
+   *
+   * About '<S4>/TSamp':
+   *  y = u * K where K = 1 / ( w * Ts )
+   */
+  rtb_TSamp_oo_0 = rtb_Minus[0] * 500.0;
+
+  /* Sum: '<S4>/Diff' incorporates:
+   *  UnitDelay: '<S4>/UD'
+   */
+  rtb_Minus[0] = rtb_TSamp_oo_0 - RateControl_DW.UD_DSTATE_d[0];
+
+  /* SampleTimeMath: '<S2>/TSamp'
+   *
+   * About '<S2>/TSamp':
+   *  y = u * K where K = 1 / ( w * Ts )
+   */
+  rtb_TSamp_c_idx_0 = rtb_Minus[0] * 500.0;
+
+  /* SampleTimeMath: '<S4>/TSamp'
+   *
+   * About '<S4>/TSamp':
+   *  y = u * K where K = 1 / ( w * Ts )
+   */
+  rtb_TSamp_oo_idx_0 = rtb_TSamp_oo_0;
+  rtb_TSamp_oo_0 = rtb_Minus[1] * 500.0;
+
+  /* Sum: '<S4>/Diff' incorporates:
+   *  UnitDelay: '<S4>/UD'
+   */
+  rtb_Minus[1] = rtb_TSamp_oo_0 - RateControl_DW.UD_DSTATE_d[1];
+
+  /* SampleTimeMath: '<S2>/TSamp'
+   *
+   * About '<S2>/TSamp':
+   *  y = u * K where K = 1 / ( w * Ts )
+   */
+  rtb_TSamp_c_idx_1 = rtb_Minus[1] * 500.0;
+
+  /* SampleTimeMath: '<S4>/TSamp'
+   *
+   * About '<S4>/TSamp':
+   *  y = u * K where K = 1 / ( w * Ts )
+   */
+  rtb_TSamp_oo_idx_1 = rtb_TSamp_oo_0;
+  rtb_TSamp_oo_0 = rtb_Minus[2] * 500.0;
+
+  /* Sum: '<S4>/Diff' incorporates:
+   *  UnitDelay: '<S4>/UD'
+   */
+  rtb_Minus[2] = rtb_TSamp_oo_0 - RateControl_DW.UD_DSTATE_d[2];
+
+  /* SampleTimeMath: '<S2>/TSamp'
+   *
+   * About '<S2>/TSamp':
+   *  y = u * K where K = 1 / ( w * Ts )
+   */
+  rtb_TSamp_c_idx_2 = rtb_Minus[2] * 500.0;
+
+  /* DiscreteStateSpace: '<Root>/H_est_accel' */
+  {
+    rtb_Integrator = (0.012706224409800739)*RateControl_DW.H_est_accel_DSTATE[0]
+      + (0.012613385351727553)*RateControl_DW.H_est_accel_DSTATE[1];
+  }
+
+  /* SampleTimeMath: '<S6>/TSamp'
+   *
+   * About '<S6>/TSamp':
+   *  y = u * K where K = 1 / ( w * Ts )
+   */
+  rtb_TSamp_p2 = rtb_Integrator * 500.0;
+
+  /* SignalConversion: '<S14>/TmpSignal ConversionAt SFunction Inport4' incorporates:
+   *  MATLAB Function: '<Root>/lms'
+   *  Sum: '<S2>/Diff'
+   *  Sum: '<S6>/Diff'
+   *  UnitDelay: '<S2>/UD'
+   *  UnitDelay: '<S6>/UD'
+   */
+  rtb_TmpSignalConversionAtSFunct[0] = rtb_TSamp_c_idx_0 -
+    RateControl_DW.UD_DSTATE_g[0];
+  rtb_TmpSignalConversionAtSFunct[1] = rtb_TSamp_c_idx_1 -
+    RateControl_DW.UD_DSTATE_g[1];
+  rtb_TmpSignalConversionAtSFunct[2] = rtb_TSamp_c_idx_2 -
+    RateControl_DW.UD_DSTATE_g[2];
+  rtb_TmpSignalConversionAtSFunct[3] = rtb_TSamp_p2 - RateControl_DW.UD_DSTATE_j;
+
+  /* MATLAB Function: '<Root>/lms' incorporates:
+   *  Memory: '<Root>/Memory3'
+   */
+  /* :  G1 = lms_control_eff_est(G0, du_f, du_f_dot, Omega_ddot_f_Vz); */
+  /* 'lms_control_eff_est:5' G_limit = 1; */
+  /* 'lms_control_eff_est:6' G0 = G0/1000; */
+  for (j = 0; j < 32; j++) {
+    RateControl_DW.Memory3_PreviousInput[j] /= 1000.0F;
+  }
+
+  /* 'lms_control_eff_est:10' mu_1 = diag([1 1 1 1 ones(1, 4)*0.002]); */
+  /* 'lms_control_eff_est:14' mu_2 = diag([10 10 0.3 10])*1e-9; */
+  /* 'lms_control_eff_est:16' Omega_ddot_prediction = G0*[du_f; du_f_dot]; */
+  /* 'lms_control_eff_est:17' Omega_ddot_measurement = Omega_ddot_f_Vz; */
+  /* 'lms_control_eff_est:19' adaptation_per_input = [du_f; du_f_dot]'*mu_1; */
+  /* 'lms_control_eff_est:21' G1 = G0 - mu_2*( Omega_ddot_prediction - Omega_ddot_measurement)*adaptation_per_input; */
+  tmp[0] = (real32_T)RateControl_DW.UD_DSTATE_p[0];
+  tmp[4] = (real32_T)RateControl_DW.UD_DSTATE_e[0];
+  tmp[1] = (real32_T)RateControl_DW.UD_DSTATE_p[1];
+  tmp[5] = (real32_T)RateControl_DW.UD_DSTATE_e[1];
+  tmp[2] = (real32_T)RateControl_DW.UD_DSTATE_p[2];
+  tmp[6] = (real32_T)RateControl_DW.UD_DSTATE_e[2];
+  tmp[3] = (real32_T)RateControl_DW.UD_DSTATE_p[3];
+  tmp[7] = (real32_T)RateControl_DW.UD_DSTATE_e[3];
+  for (j = 0; j < 4; j++) {
+    b_1 = 0.0F;
+    for (idx = 0; idx < 8; idx++) {
+      b_1 += RateControl_DW.Memory3_PreviousInput[(idx << 2) + j] * tmp[idx];
     }
 
-    b_idx = 0;
-    idx = RateControl_DW.Buffer2_inBufPtrIdx;
+    tmp_0[j] = b_1 - (real32_T)rtb_TmpSignalConversionAtSFunct[j];
+    v[j] = RateControl_DW.UD_DSTATE_p[j];
+    v[j + 4] = RateControl_DW.UD_DSTATE_e[j];
   }
 
-  for (j = 0; j < idx - 399; j++) {
-    RateControl_DW.Buffer2_CircBuf[b_idx + j] = RateControl_B.Diff[0];
+  for (j = 0; j < 4; j++) {
+    b_1 = b[j + 12] * tmp_0[3] + (b[j + 8] * tmp_0[2] + (b[j + 4] * tmp_0[1] +
+      b[j] * tmp_0[0]));
+    b_0[j] = b_1;
   }
 
-  RateControl_DW.Buffer2_inBufPtrIdx++;
-  if (RateControl_DW.Buffer2_inBufPtrIdx >= 400) {
-    RateControl_DW.Buffer2_inBufPtrIdx -= 400;
+  for (j = 0; j < 8; j++) {
+    rtb_TSamp_j = 0.0;
+    for (idx = 0; idx < 8; idx++) {
+      rtb_TSamp_j += b_b[(j << 3) + idx] * v[idx];
+    }
+
+    tmp[j] = (real32_T)rtb_TSamp_j;
   }
 
-  /* End of Buffer: '<S8>/Buffer2' */
+  for (j = 0; j < 4; j++) {
+    for (idx = 0; idx < 8; idx++) {
+      b_idx = idx << 2;
+      RateControl_Y.G[j + b_idx] = RateControl_DW.Memory3_PreviousInput[b_idx +
+        j] - b_0[j] * tmp[idx];
+    }
+  }
 
-  /* Gain: '<S64>/Integral Gain' */
-  rtb_IntegralGain = 0.0 * rtb_Minus[1];
+  /* 'lms_control_eff_est:23' G1(G1>G_limit) = G_limit; */
+  /* 'lms_control_eff_est:24' G1(G1<-G_limit) = -G_limit; */
+  /* 'lms_control_eff_est:26' G1 = G1*1000; */
+  for (j = 0; j < 32; j++) {
+    if (RateControl_Y.G[j] > 1.0F) {
+      RateControl_Y.G[j] = 1.0F;
+    }
 
-  /* Gain: '<S160>/Integral Gain' */
-  rtb_IntegralGain_i = 0.0 * rtb_Minus[0];
+    if (RateControl_Y.G[j] < -1.0F) {
+      RateControl_Y.G[j] = -1.0F;
+    }
 
-  /* Gain: '<S256>/Integral Gain' */
-  rtb_Sum = 0.0 * rtb_Minus[2];
+    RateControl_Y.G[j] *= 1000.0F;
+  }
+
+  /* :  mu = [1 1 1e-2 1e-1]; */
+  /* :  sum = mu*abs(G); */
   for (j = 0; j < 4; j++) {
     /* Delay: '<Root>/Delay' */
-    rtb_Delay[j] = RateControl_DW.Delay_DSTATE[j];
+    rtb_w[j] = RateControl_DW.Delay_DSTATE[j];
 
-    /* DiscreteStateSpace: '<Root>/actuator dynamics' */
-    rtb_w_c = RateControl_ConstP.actuatordynamics_C[j + 12] *
-      RateControl_DW.actuatordynamics_DSTATE[3] +
-      (RateControl_ConstP.actuatordynamics_C[j + 8] *
-       RateControl_DW.actuatordynamics_DSTATE[2] +
-       (RateControl_ConstP.actuatordynamics_C[j + 4] *
-        RateControl_DW.actuatordynamics_DSTATE[1] +
-        RateControl_ConstP.actuatordynamics_C[j] *
-        RateControl_DW.actuatordynamics_DSTATE[0]));
-    rtb_w[j] = rtb_w_c;
+    /* DiscreteStateSpace: '<Root>/ActuatorDynamics' */
+    rtb_w_l[j] = 0.0;
+    rtb_w_l[j] += RateControl_ConstP.ActuatorDynamics_C[j] *
+      RateControl_DW.ActuatorDynamics_DSTATE[0];
+    rtb_w_l[j] += RateControl_ConstP.ActuatorDynamics_C[j + 4] *
+      RateControl_DW.ActuatorDynamics_DSTATE[1];
+    rtb_w_l[j] += RateControl_ConstP.ActuatorDynamics_C[j + 8] *
+      RateControl_DW.ActuatorDynamics_DSTATE[2];
+    rtb_w_l[j] += RateControl_ConstP.ActuatorDynamics_C[j + 12] *
+      RateControl_DW.ActuatorDynamics_DSTATE[3];
   }
+
+  /* DataTypeConversion: '<Root>/Cast To Double' incorporates:
+   *  Inport: '<Root>/rates_sp'
+   */
+  rtb_Minus[0] = RateControl_U.rates_sp[0];
+
+  /* DataTypeConversion: '<Root>/Cast To Double2' incorporates:
+   *  Inport: '<Root>/rates'
+   */
+  rtb_CastToDouble2[0] = RateControl_U.rates[0];
+
+  /* Sum: '<Root>/Minus' */
+  rtb_Minus[0] -= rtb_CastToDouble2[0];
+
+  /* DataTypeConversion: '<Root>/Cast To Double' incorporates:
+   *  Inport: '<Root>/rates_sp'
+   */
+  rtb_Minus[1] = RateControl_U.rates_sp[1];
+
+  /* DataTypeConversion: '<Root>/Cast To Double2' incorporates:
+   *  Inport: '<Root>/rates'
+   */
+  rtb_CastToDouble2[1] = RateControl_U.rates[1];
+
+  /* Sum: '<Root>/Minus' */
+  rtb_Minus[1] -= rtb_CastToDouble2[1];
+
+  /* DataTypeConversion: '<Root>/Cast To Double' incorporates:
+   *  Inport: '<Root>/rates_sp'
+   */
+  rtb_Minus[2] = RateControl_U.rates_sp[2];
+
+  /* DataTypeConversion: '<Root>/Cast To Double2' incorporates:
+   *  Inport: '<Root>/rates'
+   */
+  rtb_CastToDouble2[2] = RateControl_U.rates[2];
+
+  /* Sum: '<Root>/Minus' */
+  rtb_Minus[2] -= rtb_CastToDouble2[2];
+
+  /* Gain: '<S46>/Derivative Gain' */
+  rtb_Integrator = 0.0 * rtb_Minus[1];
+
+  /* SampleTimeMath: '<S48>/TSamp'
+   *
+   * About '<S48>/TSamp':
+   *  y = u * K where K = 1 / ( w * Ts )
+   */
+  rtb_TSamp_j = rtb_Integrator * 500.0;
+
+  /* DiscreteIntegrator: '<S69>/Integrator' */
+  rtb_Integrator = RateControl_DW.Integrator_DSTATE;
+
+  /* Sum: '<S99>/Sum' incorporates:
+   *  Delay: '<S48>/UD'
+   *  Gain: '<S86>/Proportional Gain'
+   *  Sum: '<S48>/Diff'
+   */
+  rtb_Sum = (RateControlParams.pitch_gain * rtb_Minus[1] + rtb_Integrator) +
+    (rtb_TSamp_j - RateControl_DW.UD_DSTATE_l);
+
+  /* Gain: '<S59>/Integral Gain' */
+  rtb_IntegralGain = 0.0 * rtb_Minus[1];
+
+  /* SampleTimeMath: '<S144>/TSamp' incorporates:
+   *  Gain: '<S142>/Derivative Gain'
+   *
+   * About '<S144>/TSamp':
+   *  y = u * K where K = 1 / ( w * Ts )
+   */
+  rtb_TSamp_a1 = 0.0 * rtb_Minus[0] * 500.0;
+
+  /* Sum: '<S195>/Sum' incorporates:
+   *  Delay: '<S144>/UD'
+   *  DiscreteIntegrator: '<S165>/Integrator'
+   *  Gain: '<S182>/Proportional Gain'
+   *  Sum: '<S144>/Diff'
+   */
+  rtb_Sum_g = (RateControlParams.roll_gain * rtb_Minus[0] +
+               RateControl_DW.Integrator_DSTATE_k) + (rtb_TSamp_a1 -
+    RateControl_DW.UD_DSTATE_b);
+
+  /* Gain: '<S155>/Integral Gain' */
+  rtb_IntegralGain_i = 0.0 * rtb_Minus[0];
+
+  /* SampleTimeMath: '<S240>/TSamp' incorporates:
+   *  Gain: '<S238>/Derivative Gain'
+   *
+   * About '<S240>/TSamp':
+   *  y = u * K where K = 1 / ( w * Ts )
+   */
+  rtb_TSamp_g = 0.0 * rtb_Minus[2] * 500.0;
+
+  /* Sum: '<S291>/Sum' incorporates:
+   *  Delay: '<S240>/UD'
+   *  DiscreteIntegrator: '<S261>/Integrator'
+   *  Gain: '<S278>/Proportional Gain'
+   *  Sum: '<S240>/Diff'
+   */
+  rtb_Sum_e = (RateControlParams.yaw_gain * rtb_Minus[2] +
+               RateControl_DW.Integrator_DSTATE_b) + (rtb_TSamp_g -
+    RateControl_DW.UD_DSTATE_bg);
+
+  /* Gain: '<S251>/Integral Gain' */
+  rtb_IntegralGain_p = 0.0 * rtb_Minus[2];
+
+  /* MATLAB Function: '<Root>/MATLAB Function' incorporates:
+   *  DataTypeConversion: '<Root>/Cast To Double1'
+   *  Inport: '<Root>/thrust_sp'
+   */
+  /* :  g = 9.81; */
+  /* :  accel_z_sp = -2*g*thrust_sp; */
+  rtb_accel_z_sp = -19.62 * RateControl_U.thrust_sp;
 
   /* DataTypeConversion: '<Root>/Cast To Double4' incorporates:
    *  Inport: '<Root>/accel_z'
    */
   rtb_CastToDouble4 = RateControl_U.accel_z;
-
-  /* Update for Memory: '<Root>/Memory3' */
-  memcpy(&RateControl_DW.Memory3_PreviousInput[0], &RateControl_Y.G[0], sizeof
-         (real_T) << 5U);
-
-  /* Update for DiscreteStateSpace: '<Root>/H_est_actuators' */
-  {
-    real_T xnew[8];
-    xnew[0] = (1.9778446161486858)*RateControl_DW.H_est_actuators_DSTATE[0]
-      + (-0.97824023505120972)*RateControl_DW.H_est_actuators_DSTATE[1];
-    xnew[0] += (0.015625)*rtb_Delay[0];
-    xnew[1] = (1.0)*RateControl_DW.H_est_actuators_DSTATE[0];
-    xnew[2] = (1.9778446161486858)*RateControl_DW.H_est_actuators_DSTATE[2]
-      + (-0.97824023505120972)*RateControl_DW.H_est_actuators_DSTATE[3];
-    xnew[2] += (0.015625)*rtb_Delay[1];
-    xnew[3] = (1.0)*RateControl_DW.H_est_actuators_DSTATE[2];
-    xnew[4] = (1.9778446161486858)*RateControl_DW.H_est_actuators_DSTATE[4]
-      + (-0.97824023505120972)*RateControl_DW.H_est_actuators_DSTATE[5];
-    xnew[4] += (0.015625)*rtb_Delay[2];
-    xnew[5] = (1.0)*RateControl_DW.H_est_actuators_DSTATE[4];
-    xnew[6] = (1.9778446161486858)*RateControl_DW.H_est_actuators_DSTATE[6]
-      + (-0.97824023505120972)*RateControl_DW.H_est_actuators_DSTATE[7];
-    xnew[6] += (0.015625)*rtb_Delay[3];
-    xnew[7] = (1.0)*RateControl_DW.H_est_actuators_DSTATE[6];
-    (void) memcpy(&RateControl_DW.H_est_actuators_DSTATE[0], xnew,
-                  sizeof(real_T)*8);
-  }
-
-  /* Update for UnitDelay: '<S3>/UD' */
-  RateControl_DW.UD_DSTATE[0] = rtb_TSamp_idx_0;
-
-  /* Update for UnitDelay: '<S5>/UD' */
-  RateControl_DW.UD_DSTATE_k[0] = rtb_TSamp_b_idx_0;
-
-  /* Update for UnitDelay: '<S3>/UD' */
-  RateControl_DW.UD_DSTATE[1] = rtb_TSamp_idx_1;
-
-  /* Update for UnitDelay: '<S5>/UD' */
-  RateControl_DW.UD_DSTATE_k[1] = rtb_TSamp_b_idx_1;
-
-  /* Update for UnitDelay: '<S3>/UD' */
-  RateControl_DW.UD_DSTATE[2] = rtb_TSamp_idx_2;
-
-  /* Update for UnitDelay: '<S5>/UD' */
-  RateControl_DW.UD_DSTATE_k[2] = rtb_TSamp_b_idx_2;
-
-  /* Update for UnitDelay: '<S3>/UD' */
-  RateControl_DW.UD_DSTATE[3] = rtb_TSamp;
-
-  /* Update for UnitDelay: '<S5>/UD' */
-  RateControl_DW.UD_DSTATE_k[3] = rtb_TSamp_n;
-
-  /* Update for DiscreteStateSpace: '<Root>/H_est_rates' */
-  {
-    real_T xnew[6];
-    xnew[0] = (1.9778446161486858)*RateControl_DW.H_est_rates_DSTATE[0] +
-      (-0.97824023505120972)*RateControl_DW.H_est_rates_DSTATE[1];
-    xnew[0] += (0.015625)*rtb_CastToDouble2[0];
-    xnew[1] = (1.0)*RateControl_DW.H_est_rates_DSTATE[0];
-    xnew[2] = (1.9778446161486858)*RateControl_DW.H_est_rates_DSTATE[2] +
-      (-0.97824023505120972)*RateControl_DW.H_est_rates_DSTATE[3];
-    xnew[2] += (0.015625)*rtb_CastToDouble2[1];
-    xnew[3] = (1.0)*RateControl_DW.H_est_rates_DSTATE[2];
-    xnew[4] = (1.9778446161486858)*RateControl_DW.H_est_rates_DSTATE[4] +
-      (-0.97824023505120972)*RateControl_DW.H_est_rates_DSTATE[5];
-    xnew[4] += (0.015625)*rtb_CastToDouble2[2];
-    xnew[5] = (1.0)*RateControl_DW.H_est_rates_DSTATE[4];
-    (void) memcpy(&RateControl_DW.H_est_rates_DSTATE[0], xnew,
-                  sizeof(real_T)*6);
-  }
-
-  /* Update for UnitDelay: '<S4>/UD' */
-  RateControl_DW.UD_DSTATE_b[0] = rtb_TSamp_k_idx_0;
-
-  /* Update for UnitDelay: '<S2>/UD' incorporates:
-   *  SampleTimeMath: '<S2>/TSamp'
-   *
-   * About '<S2>/TSamp':
-   *  y = u * K where K = 1 / ( w * Ts )
-   */
-  RateControl_DW.UD_DSTATE_n[0] = rtb_TSamp_o_tmp_idx_0;
-
-  /* Update for UnitDelay: '<S4>/UD' */
-  RateControl_DW.UD_DSTATE_b[1] = rtb_TSamp_k_idx_1;
-
-  /* Update for UnitDelay: '<S2>/UD' incorporates:
-   *  SampleTimeMath: '<S2>/TSamp'
-   *
-   * About '<S2>/TSamp':
-   *  y = u * K where K = 1 / ( w * Ts )
-   */
-  RateControl_DW.UD_DSTATE_n[1] = rtb_TSamp_o_tmp_idx_1;
-
-  /* Update for UnitDelay: '<S4>/UD' */
-  RateControl_DW.UD_DSTATE_b[2] = rtb_TSamp_e;
-
-  /* Update for UnitDelay: '<S2>/UD' */
-  RateControl_DW.UD_DSTATE_n[2] = rtb_TSamp_o_tmp;
-
-  /* Update for DiscreteStateSpace: '<Root>/H_est_accel' */
-  {
-    real_T xnew[2];
-    xnew[0] = (1.9778446161486858)*RateControl_DW.H_est_accel_DSTATE[0] +
-      (-0.97824023505120972)*RateControl_DW.H_est_accel_DSTATE[1];
-    xnew[0] += 0.015625*rtb_CastToDouble4;
-    xnew[1] = (1.0)*RateControl_DW.H_est_accel_DSTATE[0];
-    (void) memcpy(&RateControl_DW.H_est_accel_DSTATE[0], xnew,
-                  sizeof(real_T)*2);
-  }
-
-  /* Update for UnitDelay: '<S6>/UD' */
-  RateControl_DW.UD_DSTATE_d = rtb_TSamp_j;
 
   /* Update for DiscreteStateSpace: '<Root>/H_rates' */
   {
@@ -2060,9 +1890,9 @@ void RateControlModelClass::step0()    /* Sample time: [0.002s, 0.0s] */
    * About '<S1>/TSamp':
    *  y = u * K where K = 1 / ( w * Ts )
    */
-  RateControl_DW.UD_DSTATE_m[0] = a_1;
-  RateControl_DW.UD_DSTATE_m[1] = rtb_TSamp_ne_idx_1;
-  RateControl_DW.UD_DSTATE_m[2] = rtb_TSamp_ne_idx_2;
+  RateControl_DW.UD_DSTATE[0] = rtb_TSamp_tmp_idx_0;
+  RateControl_DW.UD_DSTATE[1] = rtb_TSamp_tmp_idx_1;
+  RateControl_DW.UD_DSTATE[2] = rtb_TSamp_tmp_idx_2;
 
   /* Update for DiscreteStateSpace: '<Root>/H_accel' */
   {
@@ -2075,49 +1905,170 @@ void RateControlModelClass::step0()    /* Sample time: [0.002s, 0.0s] */
                   sizeof(real_T)*2);
   }
 
-  /* Update for DiscreteIntegrator: '<S170>/Integrator' */
-  RateControl_DW.Integrator_DSTATE += 0.002 * rtb_IntegralGain_i;
-
-  /* Update for Delay: '<S149>/UD' */
-  RateControl_DW.UD_DSTATE_b2 = rtb_TSamp_d;
-
-  /* Update for DiscreteIntegrator: '<S74>/Integrator' */
-  RateControl_DW.Integrator_DSTATE_f += 0.002 * rtb_IntegralGain;
-
-  /* Update for Delay: '<S53>/UD' */
-  RateControl_DW.UD_DSTATE_l = rtb_TSamp_gc;
-
-  /* Update for DiscreteIntegrator: '<S266>/Integrator' */
-  RateControl_DW.Integrator_DSTATE_b += 0.002 * rtb_Sum;
-
-  /* Update for Delay: '<S245>/UD' */
-  RateControl_DW.UD_DSTATE_bg = rtb_TSamp_p;
+  /* Update for DiscreteStateSpace: '<Root>/H_virtual_control_input' */
+  {
+    real_T xnew[8];
+    xnew[0] = (1.5163063239937618)*
+      RateControl_DW.H_virtual_control_input_DSTATE[0]
+      + (-0.6440364210831413)*RateControl_DW.H_virtual_control_input_DSTATE[1];
+    xnew[0] += (0.5)*rtb_Sum_g;
+    xnew[1] = (1.0)*RateControl_DW.H_virtual_control_input_DSTATE[0];
+    xnew[2] = (1.5163063239937618)*
+      RateControl_DW.H_virtual_control_input_DSTATE[2]
+      + (-0.6440364210831413)*RateControl_DW.H_virtual_control_input_DSTATE[3];
+    xnew[2] += (0.5)*rtb_Sum;
+    xnew[3] = (1.0)*RateControl_DW.H_virtual_control_input_DSTATE[2];
+    xnew[4] = (1.5163063239937618)*
+      RateControl_DW.H_virtual_control_input_DSTATE[4]
+      + (-0.6440364210831413)*RateControl_DW.H_virtual_control_input_DSTATE[5];
+    xnew[4] += (0.5)*rtb_Sum_e;
+    xnew[5] = (1.0)*RateControl_DW.H_virtual_control_input_DSTATE[4];
+    xnew[6] = (1.5163063239937618)*
+      RateControl_DW.H_virtual_control_input_DSTATE[6]
+      + (-0.6440364210831413)*RateControl_DW.H_virtual_control_input_DSTATE[7];
+    xnew[6] += (0.5)*rtb_accel_z_sp;
+    xnew[7] = (1.0)*RateControl_DW.H_virtual_control_input_DSTATE[6];
+    (void) memcpy(&RateControl_DW.H_virtual_control_input_DSTATE[0], xnew,
+                  sizeof(real_T)*8);
+  }
 
   /* Update for DiscreteStateSpace: '<Root>/H_actuators' */
   {
     real_T xnew[8];
     xnew[0] = (1.8863723983657743)*RateControl_DW.H_actuators_DSTATE[0] +
       (-0.89583413529652833)*RateControl_DW.H_actuators_DSTATE[1];
-    xnew[0] += (0.125)*rtb_Delay[0];
+    xnew[0] += (0.125)*rtb_w[0];
     xnew[1] = (1.0)*RateControl_DW.H_actuators_DSTATE[0];
     xnew[2] = (1.8863723983657743)*RateControl_DW.H_actuators_DSTATE[2] +
       (-0.89583413529652833)*RateControl_DW.H_actuators_DSTATE[3];
-    xnew[2] += (0.125)*rtb_Delay[1];
+    xnew[2] += (0.125)*rtb_w[1];
     xnew[3] = (1.0)*RateControl_DW.H_actuators_DSTATE[2];
     xnew[4] = (1.8863723983657743)*RateControl_DW.H_actuators_DSTATE[4] +
       (-0.89583413529652833)*RateControl_DW.H_actuators_DSTATE[5];
-    xnew[4] += (0.125)*rtb_Delay[2];
+    xnew[4] += (0.125)*rtb_w[2];
     xnew[5] = (1.0)*RateControl_DW.H_actuators_DSTATE[4];
     xnew[6] = (1.8863723983657743)*RateControl_DW.H_actuators_DSTATE[6] +
       (-0.89583413529652833)*RateControl_DW.H_actuators_DSTATE[7];
-    xnew[6] += (0.125)*rtb_Delay[3];
+    xnew[6] += (0.125)*rtb_w[3];
     xnew[7] = (1.0)*RateControl_DW.H_actuators_DSTATE[6];
     (void) memcpy(&RateControl_DW.H_actuators_DSTATE[0], xnew,
                   sizeof(real_T)*8);
   }
 
+  /* Update for Memory: '<Root>/Memory3' */
+  memcpy(&RateControl_DW.Memory3_PreviousInput[0], &RateControl_Y.G[0], sizeof
+         (real32_T) << 5U);
+
+  /* Update for DiscreteStateSpace: '<Root>/H_est_actuators' */
+  {
+    real_T xnew[8];
+    xnew[0] = (1.9778446161486858)*RateControl_DW.H_est_actuators_DSTATE[0]
+      + (-0.97824023505120972)*RateControl_DW.H_est_actuators_DSTATE[1];
+    xnew[0] += (0.015625)*rtb_w_l[0];
+    xnew[1] = (1.0)*RateControl_DW.H_est_actuators_DSTATE[0];
+    xnew[2] = (1.9778446161486858)*RateControl_DW.H_est_actuators_DSTATE[2]
+      + (-0.97824023505120972)*RateControl_DW.H_est_actuators_DSTATE[3];
+    xnew[2] += (0.015625)*rtb_w_l[1];
+    xnew[3] = (1.0)*RateControl_DW.H_est_actuators_DSTATE[2];
+    xnew[4] = (1.9778446161486858)*RateControl_DW.H_est_actuators_DSTATE[4]
+      + (-0.97824023505120972)*RateControl_DW.H_est_actuators_DSTATE[5];
+    xnew[4] += (0.015625)*rtb_w_l[2];
+    xnew[5] = (1.0)*RateControl_DW.H_est_actuators_DSTATE[4];
+    xnew[6] = (1.9778446161486858)*RateControl_DW.H_est_actuators_DSTATE[6]
+      + (-0.97824023505120972)*RateControl_DW.H_est_actuators_DSTATE[7];
+    xnew[6] += (0.015625)*rtb_w_l[3];
+    xnew[7] = (1.0)*RateControl_DW.H_est_actuators_DSTATE[6];
+    (void) memcpy(&RateControl_DW.H_est_actuators_DSTATE[0], xnew,
+                  sizeof(real_T)*8);
+  }
+
+  /* Update for UnitDelay: '<S3>/UD' */
+  RateControl_DW.UD_DSTATE_p[0] = rtb_TSamp_b_idx_0;
+
+  /* Update for UnitDelay: '<S5>/UD' */
+  RateControl_DW.UD_DSTATE_e[0] = rtb_TSamp_o_idx_0;
+
+  /* Update for UnitDelay: '<S3>/UD' */
+  RateControl_DW.UD_DSTATE_p[1] = rtb_TSamp_b_idx_1;
+
+  /* Update for UnitDelay: '<S5>/UD' */
+  RateControl_DW.UD_DSTATE_e[1] = rtb_TSamp_o_idx_1;
+
+  /* Update for UnitDelay: '<S3>/UD' */
+  RateControl_DW.UD_DSTATE_p[2] = rtb_TSamp_b_idx_2;
+
+  /* Update for UnitDelay: '<S5>/UD' */
+  RateControl_DW.UD_DSTATE_e[2] = rtb_TSamp_o_idx_2;
+
+  /* Update for UnitDelay: '<S3>/UD' */
+  RateControl_DW.UD_DSTATE_p[3] = rtb_TSamp_l;
+
+  /* Update for UnitDelay: '<S5>/UD' */
+  RateControl_DW.UD_DSTATE_e[3] = rtb_TSamp_o;
+
+  /* Update for DiscreteStateSpace: '<Root>/H_est_rates' */
+  {
+    real_T xnew[6];
+    xnew[0] = (1.9778446161486858)*RateControl_DW.H_est_rates_DSTATE[0] +
+      (-0.97824023505120972)*RateControl_DW.H_est_rates_DSTATE[1];
+    xnew[0] += (0.015625)*rtb_CastToDouble2[0];
+    xnew[1] = (1.0)*RateControl_DW.H_est_rates_DSTATE[0];
+    xnew[2] = (1.9778446161486858)*RateControl_DW.H_est_rates_DSTATE[2] +
+      (-0.97824023505120972)*RateControl_DW.H_est_rates_DSTATE[3];
+    xnew[2] += (0.015625)*rtb_CastToDouble2[1];
+    xnew[3] = (1.0)*RateControl_DW.H_est_rates_DSTATE[2];
+    xnew[4] = (1.9778446161486858)*RateControl_DW.H_est_rates_DSTATE[4] +
+      (-0.97824023505120972)*RateControl_DW.H_est_rates_DSTATE[5];
+    xnew[4] += (0.015625)*rtb_CastToDouble2[2];
+    xnew[5] = (1.0)*RateControl_DW.H_est_rates_DSTATE[4];
+    (void) memcpy(&RateControl_DW.H_est_rates_DSTATE[0], xnew,
+                  sizeof(real_T)*6);
+  }
+
+  /* Update for UnitDelay: '<S4>/UD' incorporates:
+   *  SampleTimeMath: '<S4>/TSamp'
+   *
+   * About '<S4>/TSamp':
+   *  y = u * K where K = 1 / ( w * Ts )
+   */
+  RateControl_DW.UD_DSTATE_d[0] = rtb_TSamp_oo_idx_0;
+
+  /* Update for UnitDelay: '<S2>/UD' */
+  RateControl_DW.UD_DSTATE_g[0] = rtb_TSamp_c_idx_0;
+
+  /* Update for UnitDelay: '<S4>/UD' incorporates:
+   *  SampleTimeMath: '<S4>/TSamp'
+   *
+   * About '<S4>/TSamp':
+   *  y = u * K where K = 1 / ( w * Ts )
+   */
+  RateControl_DW.UD_DSTATE_d[1] = rtb_TSamp_oo_idx_1;
+
+  /* Update for UnitDelay: '<S2>/UD' */
+  RateControl_DW.UD_DSTATE_g[1] = rtb_TSamp_c_idx_1;
+
+  /* Update for UnitDelay: '<S4>/UD' */
+  RateControl_DW.UD_DSTATE_d[2] = rtb_TSamp_oo_0;
+
+  /* Update for UnitDelay: '<S2>/UD' */
+  RateControl_DW.UD_DSTATE_g[2] = rtb_TSamp_c_idx_2;
+
+  /* Update for DiscreteStateSpace: '<Root>/H_est_accel' */
+  {
+    real_T xnew[2];
+    xnew[0] = (1.9778446161486858)*RateControl_DW.H_est_accel_DSTATE[0] +
+      (-0.97824023505120972)*RateControl_DW.H_est_accel_DSTATE[1];
+    xnew[0] += 0.015625*rtb_CastToDouble4;
+    xnew[1] = (1.0)*RateControl_DW.H_est_accel_DSTATE[0];
+    (void) memcpy(&RateControl_DW.H_est_accel_DSTATE[0], xnew,
+                  sizeof(real_T)*2);
+  }
+
+  /* Update for UnitDelay: '<S6>/UD' */
+  RateControl_DW.UD_DSTATE_j = rtb_TSamp_p2;
+
   /* Update for Delay: '<Root>/Delay' incorporates:
-   *  DiscreteStateSpace: '<Root>/actuator dynamics'
+   *  DiscreteStateSpace: '<Root>/ActuatorDynamics'
    *  Outport: '<Root>/w_cmd'
    */
   RateControl_DW.Delay_DSTATE[0] = RateControl_DW.Delay_DSTATE[4];
@@ -2125,211 +2076,54 @@ void RateControlModelClass::step0()    /* Sample time: [0.002s, 0.0s] */
   RateControl_DW.Delay_DSTATE[2] = RateControl_DW.Delay_DSTATE[6];
   RateControl_DW.Delay_DSTATE[3] = RateControl_DW.Delay_DSTATE[7];
   for (j = 0; j < 4; j++) {
-    RateControl_DW.Delay_DSTATE[j + 4] = rtb_w[j];
+    RateControl_DW.Delay_DSTATE[j + 4] = rtb_w_l[j];
 
-    /* Update for DiscreteStateSpace: '<Root>/actuator dynamics' */
-    rtb_TSamp = 1.0 / RateControlParams.t_act / 500.0;
-    rtb_TSamp_n = RateControl_ConstP.pooled1[j + 4];
-    rtb_TSamp_idx_0 = RateControl_ConstP.pooled1[j + 8];
-    rtb_TSamp_b_idx_0 = RateControl_ConstP.pooled1[j + 12];
-    rtb_TSamp_idx_1 = (1.0 - rtb_TSamp) * rtb_TSamp_b_idx_0 *
-      RateControl_DW.actuatordynamics_DSTATE[3] + ((1.0 - rtb_TSamp) *
-      rtb_TSamp_idx_0 * RateControl_DW.actuatordynamics_DSTATE[2] + ((1.0 -
-      rtb_TSamp) * rtb_TSamp_n * RateControl_DW.actuatordynamics_DSTATE[1] +
-      (1.0 - rtb_TSamp) * RateControl_ConstP.pooled1[j] *
-      RateControl_DW.actuatordynamics_DSTATE[0]));
-    rtb_TSamp_idx_1 += rtb_TSamp * RateControl_ConstP.pooled1[j] *
+    /* Update for DiscreteStateSpace: '<Root>/ActuatorDynamics' */
+    rtb_TSamp_tmp_idx_0 = 1.0 / RateControlParams.t_act / 500.0;
+    rtb_TSamp_tmp_idx_1 = RateControl_ConstP.pooled1[j + 4];
+    rtb_TSamp_tmp_idx_2 = RateControl_ConstP.pooled1[j + 8];
+    rtb_TSamp_l = RateControl_ConstP.pooled1[j + 12];
+    rtb_TSamp_o = (1.0 - rtb_TSamp_tmp_idx_0) * rtb_TSamp_l *
+      RateControl_DW.ActuatorDynamics_DSTATE[3] + ((1.0 - rtb_TSamp_tmp_idx_0) *
+      rtb_TSamp_tmp_idx_2 * RateControl_DW.ActuatorDynamics_DSTATE[2] + ((1.0 -
+      rtb_TSamp_tmp_idx_0) * rtb_TSamp_tmp_idx_1 *
+      RateControl_DW.ActuatorDynamics_DSTATE[1] + (1.0 - rtb_TSamp_tmp_idx_0) *
+      RateControl_ConstP.pooled1[j] * RateControl_DW.ActuatorDynamics_DSTATE[0]));
+    rtb_TSamp_o += rtb_TSamp_tmp_idx_0 * RateControl_ConstP.pooled1[j] *
       RateControl_Y.w_cmd[0];
-    rtb_TSamp_idx_1 += rtb_TSamp * rtb_TSamp_n * RateControl_Y.w_cmd[1];
-    rtb_TSamp_idx_1 += rtb_TSamp * rtb_TSamp_idx_0 * RateControl_Y.w_cmd[2];
-    rtb_TSamp_idx_1 += rtb_TSamp * rtb_TSamp_b_idx_0 * RateControl_Y.w_cmd[3];
-    a_0[j] = rtb_TSamp_idx_1;
+    rtb_TSamp_o += rtb_TSamp_tmp_idx_0 * rtb_TSamp_tmp_idx_1 *
+      RateControl_Y.w_cmd[1];
+    rtb_TSamp_o += rtb_TSamp_tmp_idx_0 * rtb_TSamp_tmp_idx_2 *
+      RateControl_Y.w_cmd[2];
+    rtb_TSamp_o += rtb_TSamp_tmp_idx_0 * rtb_TSamp_l * RateControl_Y.w_cmd[3];
+    xnew[j] = rtb_TSamp_o;
   }
 
   /* End of Update for Delay: '<Root>/Delay' */
 
-  /* Update for DiscreteStateSpace: '<Root>/actuator dynamics' */
-  RateControl_DW.actuatordynamics_DSTATE[0] = a_0[0];
-  RateControl_DW.actuatordynamics_DSTATE[1] = a_0[1];
-  RateControl_DW.actuatordynamics_DSTATE[2] = a_0[2];
-  RateControl_DW.actuatordynamics_DSTATE[3] = a_0[3];
-}
+  /* Update for DiscreteStateSpace: '<Root>/ActuatorDynamics' */
+  RateControl_DW.ActuatorDynamics_DSTATE[0] = xnew[0];
+  RateControl_DW.ActuatorDynamics_DSTATE[1] = xnew[1];
+  RateControl_DW.ActuatorDynamics_DSTATE[2] = xnew[2];
+  RateControl_DW.ActuatorDynamics_DSTATE[3] = xnew[3];
 
-/* Model step function for TID1 */
-void RateControlModelClass::step1()    /* Sample time: [0.4s, 0.0s] */
-{
-  int32_T nSampsAtBot;
-  int32_T nSamps;
-  real_T rtb_Sum;
-  real_T rtb_Correlation[399];
-  real_T rtb_Buffer2[200];
-  real_T rtb_Buffer1[200];
-  real_T rtb_DelayLine[3];
-  int32_T idx1;
-  int32_T k;
+  /* Update for Delay: '<S48>/UD' */
+  RateControl_DW.UD_DSTATE_l = rtb_TSamp_j;
 
-  /* Buffer: '<S8>/Buffer1' */
-  idx1 = 0;
-  if (RateControl_DW.Buffer1_outBufPtrIdx < 0) {
-    RateControl_DW.Buffer1_outBufPtrIdx += 400;
-  }
+  /* Update for DiscreteIntegrator: '<S69>/Integrator' */
+  RateControl_DW.Integrator_DSTATE += 0.002 * rtb_IntegralGain;
 
-  nSampsAtBot = 400 - RateControl_DW.Buffer1_outBufPtrIdx;
-  nSamps = 200;
-  if (400 - RateControl_DW.Buffer1_outBufPtrIdx <= 200) {
-    for (k = 0; k < 400 - RateControl_DW.Buffer1_outBufPtrIdx; k++) {
-      rtb_Buffer1[k] =
-        RateControl_DW.Buffer1_CircBuf[RateControl_DW.Buffer1_outBufPtrIdx + k];
-    }
+  /* Update for Delay: '<S144>/UD' */
+  RateControl_DW.UD_DSTATE_b = rtb_TSamp_a1;
 
-    idx1 = 400 - RateControl_DW.Buffer1_outBufPtrIdx;
-    RateControl_DW.Buffer1_outBufPtrIdx = 0;
-    nSamps = 200 - nSampsAtBot;
-  }
+  /* Update for DiscreteIntegrator: '<S165>/Integrator' */
+  RateControl_DW.Integrator_DSTATE_k += 0.002 * rtb_IntegralGain_i;
 
-  for (k = 0; k < nSamps; k++) {
-    rtb_Buffer1[idx1 + k] =
-      RateControl_DW.Buffer1_CircBuf[RateControl_DW.Buffer1_outBufPtrIdx + k];
-  }
+  /* Update for Delay: '<S240>/UD' */
+  RateControl_DW.UD_DSTATE_bg = rtb_TSamp_g;
 
-  RateControl_DW.Buffer1_outBufPtrIdx += nSamps;
-
-  /* End of Buffer: '<S8>/Buffer1' */
-
-  /* Buffer: '<S8>/Buffer2' */
-  idx1 = 0;
-  if (RateControl_DW.Buffer2_outBufPtrIdx < 0) {
-    RateControl_DW.Buffer2_outBufPtrIdx += 400;
-  }
-
-  nSampsAtBot = 400 - RateControl_DW.Buffer2_outBufPtrIdx;
-  nSamps = 200;
-  if (400 - RateControl_DW.Buffer2_outBufPtrIdx <= 200) {
-    for (k = 0; k < 400 - RateControl_DW.Buffer2_outBufPtrIdx; k++) {
-      rtb_Buffer2[k] =
-        RateControl_DW.Buffer2_CircBuf[RateControl_DW.Buffer2_outBufPtrIdx + k];
-    }
-
-    idx1 = 400 - RateControl_DW.Buffer2_outBufPtrIdx;
-    RateControl_DW.Buffer2_outBufPtrIdx = 0;
-    nSamps = 200 - nSampsAtBot;
-  }
-
-  for (k = 0; k < nSamps; k++) {
-    rtb_Buffer2[idx1 + k] =
-      RateControl_DW.Buffer2_CircBuf[RateControl_DW.Buffer2_outBufPtrIdx + k];
-  }
-
-  RateControl_DW.Buffer2_outBufPtrIdx += nSamps;
-
-  /* End of Buffer: '<S8>/Buffer2' */
-
-  /* S-Function (sdspsreg2): '<S19>/Delay Line' */
-  for (k = 0; k < 3 - RateControl_DW.DelayLine_BUFF_OFFSET; k++) {
-    rtb_DelayLine[k] =
-      RateControl_DW.DelayLine_Buff[RateControl_DW.DelayLine_BUFF_OFFSET + k];
-  }
-
-  idx1 = -RateControl_DW.DelayLine_BUFF_OFFSET;
-  for (k = 0; k < RateControl_DW.DelayLine_BUFF_OFFSET; k++) {
-    rtb_DelayLine[(idx1 + k) + 3] = RateControl_DW.DelayLine_Buff[k];
-  }
-
-  /* End of S-Function (sdspsreg2): '<S19>/Delay Line' */
-
-  /* S-Function (sdspoverwrite): '<S19>/Overwrite Values' incorporates:
-   *  Selector: '<S19>/Selector3'
-   */
-  RateControl_B.OverwriteValues[0] = rtb_DelayLine[0];
-  RateControl_B.OverwriteValues[1] = rtb_DelayLine[1];
-  RateControl_B.OverwriteValues[2] = rtb_DelayLine[2];
-  RateControl_B.OverwriteValues[0] = 1.0;
-  RateControl_B.OverwriteValues[1] = 1.0;
-  RateControl_B.OverwriteValues[2] = 1.0;
-
-  /* Outputs for Enabled SubSystem: '<S8>/Compute Delay' incorporates:
-   *  EnablePort: '<S18>/Enable'
-   */
-  /* S-Function (sdspconvcorr): '<S18>/Correlation' */
-  idx1 = 0;
-  for (k = 0; k < 399; k++) {
-    nSampsAtBot = k - 199;
-    if (nSampsAtBot <= 0) {
-      nSampsAtBot = 0;
-    }
-
-    if (k < 199) {
-      nSamps = k;
-    } else {
-      nSamps = 199;
-    }
-
-    rtb_Sum = rtb_Buffer2[(nSampsAtBot - k) + 199] * rtb_Buffer1[nSampsAtBot];
-    for (nSampsAtBot++; nSampsAtBot <= nSamps; nSampsAtBot++) {
-      rtb_Sum += rtb_Buffer2[(nSampsAtBot - k) + 199] * rtb_Buffer1[nSampsAtBot];
-    }
-
-    rtb_Correlation[idx1] = rtb_Sum;
-    idx1++;
-  }
-
-  /* End of S-Function (sdspconvcorr): '<S18>/Correlation' */
-
-  /* S-Function (sdspstatminmax): '<S18>/Maximum' */
-  k = 1;
-  RateControl_DW.Maximum_Valdata = rtb_Correlation[0];
-  rtb_Sum = 1.0;
-  for (idx1 = 0; idx1 < 398; idx1++) {
-    if (rtb_Correlation[k] > RateControl_DW.Maximum_Valdata) {
-      RateControl_DW.Maximum_Valdata = rtb_Correlation[k];
-      rtb_Sum = (real_T)idx1 + 2.0;
-    }
-
-    k++;
-  }
-
-  /* End of S-Function (sdspstatminmax): '<S18>/Maximum' */
-
-  /* Sum: '<S18>/Sum' incorporates:
-   *  Constant: '<S18>/Constant'
-   */
-  rtb_Sum = 200.0 - rtb_Sum;
-
-  /* Math: '<S18>/Math Function' incorporates:
-   *  Constant: '<S18>/Constant'
-   *  Constant: '<S18>/Constant1'
-   *  Sum: '<S18>/Sum1'
-   */
-  RateControl_B.MathFunction = rt_modd_snf(rtb_Sum, 199.0);
-
-  /* End of Outputs for SubSystem: '<S8>/Compute Delay' */
-
-  /* Update for S-Function (sdspsreg2): '<S19>/Delay Line' */
-  RateControl_DW.DelayLine_Buff[RateControl_DW.DelayLine_BUFF_OFFSET] =
-    RateControl_B.MathFunction;
-  RateControl_DW.DelayLine_BUFF_OFFSET++;
-  while (RateControl_DW.DelayLine_BUFF_OFFSET >= 3) {
-    RateControl_DW.DelayLine_BUFF_OFFSET -= 3;
-  }
-
-  /* End of Update for S-Function (sdspsreg2): '<S19>/Delay Line' */
-}
-
-/* Model step wrapper function for compatibility with a static main program */
-void RateControl_step(RateControlModelClass & RateControl_Obj, int_T tid)
-{
-  switch (tid) {
-   case 0 :
-    RateControl_Obj.step0();
-    break;
-
-   case 1 :
-    RateControl_Obj.step1();
-    break;
-
-   default :
-    break;
-  }
+  /* Update for DiscreteIntegrator: '<S261>/Integrator' */
+  RateControl_DW.Integrator_DSTATE_b += 0.002 * rtb_IntegralGain_p;
 }
 
 /* Model initialize function */
@@ -2343,10 +2137,6 @@ void RateControlModelClass::initialize()
   /* initialize error status */
   rtmSetErrorStatus(getRTM(), (NULL));
 
-  /* block I/O */
-  (void) memset(((void *) &RateControl_B), 0,
-                sizeof(B_RateControl_T));
-
   /* states (dwork) */
   (void) memset((void *)&RateControl_DW, 0,
                 sizeof(DW_RateControl_T));
@@ -2358,9 +2148,45 @@ void RateControlModelClass::initialize()
   (void) memset((void *)&RateControl_Y, 0,
                 sizeof(ExtY_RateControl_T));
 
+  /* InitializeConditions for DiscreteStateSpace: '<Root>/H_rates' */
+  {
+    int_T i1;
+    real_T *dw_DSTATE = &RateControl_DW.H_rates_DSTATE[0];
+    for (i1=0; i1 < 6; i1++) {
+      dw_DSTATE[i1] = 0.0;
+    }
+  }
+
+  /* InitializeConditions for UnitDelay: '<S1>/UD' */
+  RateControl_DW.UD_DSTATE[0] = 0.0;
+  RateControl_DW.UD_DSTATE[1] = 0.0;
+  RateControl_DW.UD_DSTATE[2] = 0.0;
+
+  /* InitializeConditions for DiscreteStateSpace: '<Root>/H_accel' */
+  RateControl_DW.H_accel_DSTATE[0] = 0.0;
+  RateControl_DW.H_accel_DSTATE[1] = 0.0;
+
+  /* InitializeConditions for DiscreteStateSpace: '<Root>/H_virtual_control_input' */
+  {
+    int_T i1;
+    real_T *dw_DSTATE = &RateControl_DW.H_virtual_control_input_DSTATE[0];
+    for (i1=0; i1 < 8; i1++) {
+      dw_DSTATE[i1] = 0.0;
+    }
+  }
+
+  /* InitializeConditions for DiscreteStateSpace: '<Root>/H_actuators' */
+  {
+    int_T i1;
+    real_T *dw_DSTATE = &RateControl_DW.H_actuators_DSTATE[0];
+    for (i1=0; i1 < 8; i1++) {
+      dw_DSTATE[i1] = 0.0;
+    }
+  }
+
   /* InitializeConditions for Memory: '<Root>/Memory3' */
   memcpy(&RateControl_DW.Memory3_PreviousInput[0],
-         &RateControl_ConstP.Memory3_InitialCondition[0], sizeof(real_T) << 5U);
+         &RateControl_ConstP.Memory3_InitialCondition[0], sizeof(real32_T) << 5U);
 
   /* InitializeConditions for DiscreteStateSpace: '<Root>/H_est_actuators' */
   {
@@ -2372,28 +2198,28 @@ void RateControlModelClass::initialize()
   }
 
   /* InitializeConditions for UnitDelay: '<S3>/UD' */
-  RateControl_DW.UD_DSTATE[0] = 0.0;
+  RateControl_DW.UD_DSTATE_p[0] = 0.0;
 
   /* InitializeConditions for UnitDelay: '<S5>/UD' */
-  RateControl_DW.UD_DSTATE_k[0] = 0.0;
+  RateControl_DW.UD_DSTATE_e[0] = 0.0;
 
   /* InitializeConditions for UnitDelay: '<S3>/UD' */
-  RateControl_DW.UD_DSTATE[1] = 0.0;
+  RateControl_DW.UD_DSTATE_p[1] = 0.0;
 
   /* InitializeConditions for UnitDelay: '<S5>/UD' */
-  RateControl_DW.UD_DSTATE_k[1] = 0.0;
+  RateControl_DW.UD_DSTATE_e[1] = 0.0;
 
   /* InitializeConditions for UnitDelay: '<S3>/UD' */
-  RateControl_DW.UD_DSTATE[2] = 0.0;
+  RateControl_DW.UD_DSTATE_p[2] = 0.0;
 
   /* InitializeConditions for UnitDelay: '<S5>/UD' */
-  RateControl_DW.UD_DSTATE_k[2] = 0.0;
+  RateControl_DW.UD_DSTATE_e[2] = 0.0;
 
   /* InitializeConditions for UnitDelay: '<S3>/UD' */
-  RateControl_DW.UD_DSTATE[3] = 0.0;
+  RateControl_DW.UD_DSTATE_p[3] = 0.0;
 
   /* InitializeConditions for UnitDelay: '<S5>/UD' */
-  RateControl_DW.UD_DSTATE_k[3] = 0.0;
+  RateControl_DW.UD_DSTATE_e[3] = 0.0;
 
   /* InitializeConditions for DiscreteStateSpace: '<Root>/H_est_rates' */
   {
@@ -2405,126 +2231,75 @@ void RateControlModelClass::initialize()
   }
 
   /* InitializeConditions for UnitDelay: '<S4>/UD' */
-  RateControl_DW.UD_DSTATE_b[0] = 0.0;
+  RateControl_DW.UD_DSTATE_d[0] = 0.0;
 
   /* InitializeConditions for UnitDelay: '<S2>/UD' */
-  RateControl_DW.UD_DSTATE_n[0] = 0.0;
+  RateControl_DW.UD_DSTATE_g[0] = 0.0;
 
   /* InitializeConditions for UnitDelay: '<S4>/UD' */
-  RateControl_DW.UD_DSTATE_b[1] = 0.0;
+  RateControl_DW.UD_DSTATE_d[1] = 0.0;
 
   /* InitializeConditions for UnitDelay: '<S2>/UD' */
-  RateControl_DW.UD_DSTATE_n[1] = 0.0;
+  RateControl_DW.UD_DSTATE_g[1] = 0.0;
 
   /* InitializeConditions for UnitDelay: '<S4>/UD' */
-  RateControl_DW.UD_DSTATE_b[2] = 0.0;
+  RateControl_DW.UD_DSTATE_d[2] = 0.0;
 
   /* InitializeConditions for UnitDelay: '<S2>/UD' */
-  RateControl_DW.UD_DSTATE_n[2] = 0.0;
+  RateControl_DW.UD_DSTATE_g[2] = 0.0;
 
   /* InitializeConditions for DiscreteStateSpace: '<Root>/H_est_accel' */
   RateControl_DW.H_est_accel_DSTATE[0] = 0.0;
   RateControl_DW.H_est_accel_DSTATE[1] = 0.0;
 
   /* InitializeConditions for UnitDelay: '<S6>/UD' */
-  RateControl_DW.UD_DSTATE_d = 0.0;
-
-  /* InitializeConditions for Buffer: '<S8>/Buffer1' */
-  memset(&RateControl_DW.Buffer1_CircBuf[0], 0, 400U * sizeof(real_T));
-  RateControl_DW.Buffer1_inBufPtrIdx = 200;
-  RateControl_DW.Buffer1_bufferLength = 200;
-  RateControl_DW.Buffer1_outBufPtrIdx = 0;
-
-  /* InitializeConditions for DiscreteStateSpace: '<Root>/H_rates' */
-  {
-    int_T i1;
-    real_T *dw_DSTATE = &RateControl_DW.H_rates_DSTATE[0];
-    for (i1=0; i1 < 6; i1++) {
-      dw_DSTATE[i1] = 0.0;
-    }
-  }
-
-  /* InitializeConditions for UnitDelay: '<S1>/UD' */
-  RateControl_DW.UD_DSTATE_m[0] = 0.0;
-  RateControl_DW.UD_DSTATE_m[1] = 0.0;
-  RateControl_DW.UD_DSTATE_m[2] = 0.0;
-
-  /* InitializeConditions for DiscreteStateSpace: '<Root>/H_accel' */
-  RateControl_DW.H_accel_DSTATE[0] = 0.0;
-  RateControl_DW.H_accel_DSTATE[1] = 0.0;
-
-  /* InitializeConditions for DiscreteIntegrator: '<S170>/Integrator' */
-  RateControl_DW.Integrator_DSTATE = 0.0;
-
-  /* InitializeConditions for Delay: '<S149>/UD' */
-  RateControl_DW.UD_DSTATE_b2 = 0.0;
-
-  /* InitializeConditions for DiscreteIntegrator: '<S74>/Integrator' */
-  RateControl_DW.Integrator_DSTATE_f = 0.0;
-
-  /* InitializeConditions for Delay: '<S53>/UD' */
-  RateControl_DW.UD_DSTATE_l = 0.0;
-
-  /* InitializeConditions for DiscreteIntegrator: '<S266>/Integrator' */
-  RateControl_DW.Integrator_DSTATE_b = 0.0;
-
-  /* InitializeConditions for Delay: '<S245>/UD' */
-  RateControl_DW.UD_DSTATE_bg = 0.0;
-
-  /* InitializeConditions for DiscreteStateSpace: '<Root>/H_actuators' */
-  {
-    int_T i1;
-    real_T *dw_DSTATE = &RateControl_DW.H_actuators_DSTATE[0];
-    for (i1=0; i1 < 8; i1++) {
-      dw_DSTATE[i1] = 0.0;
-    }
-  }
-
-  /* InitializeConditions for Buffer: '<S8>/Buffer2' */
-  memset(&RateControl_DW.Buffer2_CircBuf[0], 0, 400U * sizeof(real_T));
-  RateControl_DW.Buffer2_inBufPtrIdx = 200;
-  RateControl_DW.Buffer2_bufferLength = 200;
-  RateControl_DW.Buffer2_outBufPtrIdx = 0;
-
-  /* InitializeConditions for S-Function (sdspsreg2): '<S19>/Delay Line' */
-  RateControl_DW.DelayLine_Buff[0] = 0.0;
-  RateControl_DW.DelayLine_Buff[1] = 0.0;
-  RateControl_DW.DelayLine_Buff[2] = 0.0;
-  RateControl_DW.DelayLine_BUFF_OFFSET = 0;
+  RateControl_DW.UD_DSTATE_j = 0.0;
 
   /* InitializeConditions for Delay: '<Root>/Delay' */
   memset(&RateControl_DW.Delay_DSTATE[0], 0, sizeof(real_T) << 3U);
 
-  /* InitializeConditions for DiscreteStateSpace: '<Root>/actuator dynamics' */
+  /* InitializeConditions for Delay: '<S48>/UD' */
+  RateControl_DW.UD_DSTATE_l = 0.0;
+
+  /* InitializeConditions for DiscreteIntegrator: '<S69>/Integrator' */
+  RateControl_DW.Integrator_DSTATE = 0.0;
+
+  /* InitializeConditions for Delay: '<S144>/UD' */
+  RateControl_DW.UD_DSTATE_b = 0.0;
+
+  /* InitializeConditions for DiscreteIntegrator: '<S165>/Integrator' */
+  RateControl_DW.Integrator_DSTATE_k = 0.0;
+
+  /* InitializeConditions for Delay: '<S240>/UD' */
+  RateControl_DW.UD_DSTATE_bg = 0.0;
+
+  /* InitializeConditions for DiscreteIntegrator: '<S261>/Integrator' */
+  RateControl_DW.Integrator_DSTATE_b = 0.0;
+
+  /* InitializeConditions for DiscreteStateSpace: '<Root>/ActuatorDynamics' */
   /* 'INDI_allocator:2:24' du_last = [0 0 0 0]'; */
-  RateControl_DW.actuatordynamics_DSTATE[0] = 0.0;
+  RateControl_DW.ActuatorDynamics_DSTATE[0] = 0.0;
 
   /* SystemInitialize for MATLAB Function: '<Root>/INDI_allocator' */
   RateControl_DW.du_last[0] = 0.0;
 
-  /* InitializeConditions for DiscreteStateSpace: '<Root>/actuator dynamics' */
-  RateControl_DW.actuatordynamics_DSTATE[1] = 0.0;
+  /* InitializeConditions for DiscreteStateSpace: '<Root>/ActuatorDynamics' */
+  RateControl_DW.ActuatorDynamics_DSTATE[1] = 0.0;
 
   /* SystemInitialize for MATLAB Function: '<Root>/INDI_allocator' */
   RateControl_DW.du_last[1] = 0.0;
 
-  /* InitializeConditions for DiscreteStateSpace: '<Root>/actuator dynamics' */
-  RateControl_DW.actuatordynamics_DSTATE[2] = 0.0;
+  /* InitializeConditions for DiscreteStateSpace: '<Root>/ActuatorDynamics' */
+  RateControl_DW.ActuatorDynamics_DSTATE[2] = 0.0;
 
   /* SystemInitialize for MATLAB Function: '<Root>/INDI_allocator' */
   RateControl_DW.du_last[2] = 0.0;
 
-  /* InitializeConditions for DiscreteStateSpace: '<Root>/actuator dynamics' */
-  RateControl_DW.actuatordynamics_DSTATE[3] = 0.0;
+  /* InitializeConditions for DiscreteStateSpace: '<Root>/ActuatorDynamics' */
+  RateControl_DW.ActuatorDynamics_DSTATE[3] = 0.0;
 
   /* SystemInitialize for MATLAB Function: '<Root>/INDI_allocator' */
   RateControl_DW.du_last[3] = 0.0;
-
-  /* SystemInitialize for Enabled SubSystem: '<S8>/Compute Delay' */
-  /* SystemInitialize for Outport: '<S18>/Delay' */
-  RateControl_B.MathFunction = 0.0;
-
-  /* End of SystemInitialize for SubSystem: '<S8>/Compute Delay' */
 }
 
 /* Model terminate function */
