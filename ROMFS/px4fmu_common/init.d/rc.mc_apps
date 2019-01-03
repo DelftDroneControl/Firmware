@@ -49,15 +49,24 @@ fi
 #                        End Estimator Group Selection                        #
 ###############################################################################
 
-#
-# Start Multicopter Attitude Controller.
-#
-mc_att_control start
+if param compare SYS_MC_CTRL_GRP 1
+then
+	#
+	# Start Multicopter Attitude Controller.
+	#
+	mc_att_control start
 
-#
-# Start Multicopter Position Controller.
-#
-mc_pos_control start
+	#
+	# Start Multicopter Position Controller.
+	#
+	mc_pos_control start
+fi
+
+if param compare SYS_MC_CTRL_GRP 3
+then
+	sl_pos_direct_control start
+fi
+
 
 #
 # Start Multicopter Land Detector.

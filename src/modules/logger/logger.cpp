@@ -614,6 +614,9 @@ bool Logger::try_to_subscribe_topic(LoggerSubscription &sub, int multi_instance)
 
 void Logger::add_default_topics()
 {
+	// For replaying Simulink system
+	add_topic("pos_direct_control_input");
+
 	// Note: try to avoid setting the interval where possible, as it increases RAM usage
 	add_topic("actuator_controls_0", 100);
 	add_topic("actuator_controls_1", 100);

@@ -72,6 +72,17 @@ elif [ "$PX4_ESTIMATOR" = "inav" ]; then
 	param set SYS_MC_EST_GROUP 0
 fi
 
+echo "[startup] PX4_CONTROL=$PX4_CONTROL"
+
+# Use environment variable PX4_CONTROL to choose controller.
+if [ "$PX4_CONTROL" = "sl_pos_direct" ]; then
+	echo "[startup] Setting 'SYS_MC_CTRL_GRP' param to 3"
+	param set SYS_MC_CTRL_GRP 3
+else
+	echo "[startup] Setting 'SYS_MC_CTRL_GRP' param to 1"
+	param set SYS_MC_CTRL_GRP 1
+fi
+
 if param compare SYS_AUTOSTART $REQUESTED_AUTOSTART
 then
 	set AUTOCNF no

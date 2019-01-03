@@ -109,6 +109,22 @@ PARAM_DEFINE_INT32(SYS_RESTART_TYPE, 2);
 PARAM_DEFINE_INT32(SYS_MC_EST_GROUP, 2);
 
 /**
+ * Set multicopter controller group
+ *
+ * Set the group of controller used for multicopters
+ *
+ * @value 1 mc_att_control, mc_pos_control
+ * @value 2 sl_control
+ * @value 3 sl_pos_direct_control
+ *
+ * @min 1
+ * @max 3
+ * @reboot_required true
+ * @group System
+ */
+PARAM_DEFINE_INT32(SYS_MC_CTRL_GRP, 1);
+
+/**
  * TELEM2 as companion computer link (deprecated)
  *
  * This parameter is deprecated. Do not change it, use the more generic serial
