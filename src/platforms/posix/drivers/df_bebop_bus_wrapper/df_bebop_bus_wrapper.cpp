@@ -251,7 +251,7 @@ static bool _is_running = false;         // flag indicating if bebop esc  app is
 static bool _motors_running = false;     // flag indicating if the motors are running
 static px4_task_t _task_handle = -1;     // handle to the task main thread
 
-static const char *MIXER_FILENAME = "/home/root/bebop.main.mix";
+static const char *MIXER_FILENAME = "/home/root/pass.main.mix"; // bebop.main.mix
 
 // subscriptions
 int     _controls_sub;

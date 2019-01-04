@@ -1,0 +1,41 @@
+##
+# Passthrough mixer for flight control outputs 0-3,
+# For the Bebop, the mixer file location is set in 'df_bebop_bus_wrapper.cpp'.
+#
+# Maps from:
+#   Bebop Simulink model actuators, 
+#   which publishes to the 'actuator_controls'-topic via the 'simulink_wrapper'-module.
+#
+# To:
+#   Quadrotor-x motors by PX4 convention:
+#   https://dev.px4.io/en/airframes/airframe_reference.html#quadrotor-x
+#   
+#  ^3       1^
+#     \   /
+#       ^
+#     /   \
+#  2^       ^4  * ^x indicates CW-rotation, x^ CCW
+#
+# The target actuator is set *implicitly* by the order of the mixers below.
+#
+# Syntax: https://dev.px4.io/en/concept/mixing.html#simple-mixer
+#
+# TODO: pick a convention and stick to it.
+# TODO: double check assignment comments
+##
+
+# actuator 1 = control[1]
+M: 1
+S: 0 1  10000  10000  0 -10000  10000
+
+# actuator 2 = control[3]
+M: 1
+S: 0 3  10000  10000  0 -10000  10000
+
+# actuator 3 = control[0]
+M: 1
+S: 0 0  10000  10000  0 -10000  10000
+
+# actuator 4 = control[2]
+M: 1
+S: 0 2  10000  10000  0 -10000  10000

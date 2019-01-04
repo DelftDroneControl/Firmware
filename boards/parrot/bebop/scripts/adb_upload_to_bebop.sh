@@ -51,6 +51,8 @@ $BASEDIR/adb_upload.sh $@
 # upload mixer and config files
 echo "Uploading mixer and config files to /home/root"
 adb push $SRC_DIR/ROMFS/px4fmu_common/mixers/bebop.main.mix /home/root
+adb push $SRC_DIR/ROMFS/px4fmu_common/mixers/pass.main.mix /home/root # passthrough mixer
+
 adb push $SRC_DIR/posix-configs/bebop/px4.config /home/root
 
 # restart the process after uploading

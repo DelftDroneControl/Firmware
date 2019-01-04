@@ -9,5 +9,5 @@
 
 sh /etc/init.d/rc.mc_defaults
 
-set MIXER quad_w
-
+# set MIXER quad_w
+set MIXER pass # set passthrough mixer
