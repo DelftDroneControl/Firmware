@@ -80,7 +80,7 @@ function(px4_add_common_flags)
 		-Wunused-variable
 
 		# disabled warnings
-		-Wno-implicit-fallthrough # set appropriate level and update
+		# -Wno-implicit-fallthrough # set appropriate level and update
 		-Wno-missing-field-initializers
 		-Wno-missing-include-dirs # TODO: fix and enable
 		-Wno-unused-parameter
@@ -118,7 +118,7 @@ function(px4_add_common_flags)
 			-Wformat=1
 			-Wunused-but-set-variable
 
-			-Wno-format-truncation # TODO: fix
+			# -Wno-format-truncation # TODO: fix
 		)
 
 		# -fcheck-new is a no-op for Clang in general
