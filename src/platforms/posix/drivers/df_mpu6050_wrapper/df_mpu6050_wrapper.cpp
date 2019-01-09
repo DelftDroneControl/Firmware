@@ -470,13 +470,15 @@ int DfMPU6050Wrapper::_publish(struct imu_sensor_data &data)
 
 	// The driver empties the FIFO buffer at 1kHz, however we only need to publish at 250Hz.
 	// Therefore, only publish every forth time.
-	++_publish_count;
 
-	if (_publish_count < 4) {
-		return 0;
-	}
+	// Don't limit rate.
+	// ++_publish_count;
 
-	_publish_count = 0;
+	// if (_publish_count < 4) {
+	// 	return 0;
+	// }
+
+	// _publish_count = 0;
 
 	// Update all the counters.
 	perf_set_count(_read_counter, data.read_counter);
