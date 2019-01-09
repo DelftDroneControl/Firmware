@@ -4,7 +4,7 @@
 #
 # Maps from:
 #   Bebop Simulink model actuators, 
-#   which publishes to the 'actuator_controls'-topic via the 'simulink_wrapper'-module.
+#   which publishes to the 'actuator_controls'-topic via the 'sl_control'-module.
 #
 # To:
 #   Quadrotor-x motors by PX4 convention:
@@ -24,18 +24,18 @@
 # TODO: double check assignment comments
 ##
 
-# actuator 1 = control[1]
+# actuator 1 (esc 0) = control[1]
 M: 1
 S: 0 1  10000  10000  0 -10000  10000
 
-# actuator 2 = control[3]
+# actuator 2 (esc 1) = control[3]
 M: 1
 S: 0 3  10000  10000  0 -10000  10000
 
-# actuator 3 = control[0]
+# actuator 3 (esc 2) = control[0]
 M: 1
 S: 0 0  10000  10000  0 -10000  10000
 
-# actuator 4 = control[2]
+# actuator 4 (esc 3) = control[2]
 M: 1
 S: 0 2  10000  10000  0 -10000  10000
