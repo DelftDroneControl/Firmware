@@ -7,9 +7,9 @@
  *
  * Code generation for model "PosDirectControl".
  *
- * Model version              : 1.247
+ * Model version              : 1.454
  * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C++ source code generated on : Fri Dec 28 16:51:21 2018
+ * C++ source code generated on : Wed Jan  9 18:04:42 2019
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -46,6 +46,10 @@ typedef struct {
   real_T t;
   real_T t_act;
   real_T freq;
+  real_T g;
+  real_T K_lqr_norm[8];
+  real_T K_lqr_srf[8];
+  real_T K_lqr_drf[4];
 } PosDirectControlParamsType;
 
 #endif
