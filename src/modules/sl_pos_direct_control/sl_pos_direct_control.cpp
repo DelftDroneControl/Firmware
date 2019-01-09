@@ -491,7 +491,7 @@ SlPosDirectControl::run()
 			if (dt_log_accumulator > 0.1f) {
 				dbg.value = 1/dt;
 				orb_publish(ORB_ID(debug_key_value), pub_dbg, &dbg);
-				// PX4_INFO("ATT_DT: %f", dbg.value);
+				// PX4_INFO("ATT_DT: %f", static_cast<double>(dbg.value));
 				dt_log_accumulator = 0;
 			}
 
