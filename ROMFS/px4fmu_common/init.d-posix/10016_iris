@@ -9,5 +9,22 @@
 
 sh /etc/init.d/rc.mc_defaults
 
+if param compare SYS_MC_CTRL_GRP 2
+then
+    param set SL_ATT_RATE_MAX 250
+	param set SL_ATT_ROLL_GAIN 16
+	param set SL_ATT_PITCH_GN 16
+	param set SL_ATT_YAW_GAIN 1
+	param set SL_ATT_ROLL_EFF 170
+	param set SL_ATT_PITCH_EFF 170
+
+	param set SL_ATT_YAW_EFF 60
+	param set SL_ATT_YAW_D_EFF 3
+
+	param set SL_ATT_AZ_EFF 8
+	param set SL_ATT_T_ACT 0.025
+fi
+
+
 # set MIXER quad_w
 set MIXER pass # set passthrough mixer

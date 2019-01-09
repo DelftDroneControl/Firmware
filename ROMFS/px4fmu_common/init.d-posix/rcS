@@ -76,12 +76,15 @@ echo "[startup] PX4_CONTROL=$PX4_CONTROL"
 
 # Use environment variable PX4_CONTROL to choose controller.
 if [ "$PX4_CONTROL" = "sl_pos_direct" ]; then
-	echo "[startup] Setting 'SYS_MC_CTRL_GRP' param to 3"
-	param set SYS_MC_CTRL_GRP 3
+	CONTROL_GROUP=3
+elif [ "$PX4_CONTROL" = "sl_control" ]; then
+	CONTROL_GROUP=2
 else
-	echo "[startup] Setting 'SYS_MC_CTRL_GRP' param to 1"
-	param set SYS_MC_CTRL_GRP 1
+	CONTROL_GROUP=1
 fi
+
+echo "[startup] Setting 'SYS_MC_CTRL_GRP' param to $CONTROL_GROUP"
+param set SYS_MC_CTRL_GRP $CONTROL_GROUP
 
 if param compare SYS_AUTOSTART $REQUESTED_AUTOSTART
 then

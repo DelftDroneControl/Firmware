@@ -43,6 +43,7 @@ px4_add_board(
 		position_estimator_inav
 		replay
 		sensors
+		sl_control
 		sl_pos_direct_control
 		simulator
 		vmount
