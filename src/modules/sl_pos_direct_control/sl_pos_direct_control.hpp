@@ -58,6 +58,9 @@
 #include <uORB/topics/debug_key_value.h>
 #include <uORB/topics/pos_direct_control_input.h>
 
+#include <uORB/topics/esc_status.h>
+
+
 /**
  * Multicopter attitude control app start / stop handling function
  */
@@ -110,6 +113,8 @@ private:
 	void		vehicle_local_position_poll();
 	void 		vehicle_local_pos_sp_poll();
 
+	void		esc_status_poll();
+
 	/**
 	 * Attitude controller.
 	 */
@@ -137,6 +142,8 @@ private:
 	int		_vehicle_local_position_sub{-1};	/**< vehicle land detected subscription */
 	int     _local_pos_sp_sub{-1};	/**< vehicle position setpoint subscription */
 
+	int		_esc_status_sub{-1};
+
 	unsigned _gyro_count{1};
 	int _selected_gyro{0};
 
@@ -156,6 +163,8 @@ private:
 	struct sensor_combined_s		_sensor_combined {};
 	struct vehicle_local_position_s		_vehicle_local_position {};
 	struct vehicle_local_position_setpoint_s	_local_pos_sp {};
+
+	struct esc_status_s				_esc_status {};
 
 	perf_counter_t	_loop_perf;			/**< loop performance counter */
 

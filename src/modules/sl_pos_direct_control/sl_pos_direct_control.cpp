@@ -288,6 +288,18 @@ SlPosDirectControl::vehicle_local_pos_sp_poll()
 	}
 }
 
+void
+SlPosDirectControl::esc_status_poll()
+{
+	/* check if there is a new message */
+	bool updated;
+	orb_check(_esc_status_sub, &updated);
+
+	if (updated) {
+		orb_copy(ORB_ID(esc_status), _esc_status_sub, &_esc_status);
+	}
+
+}
 
 /*
  * Position controller.
@@ -350,6 +362,12 @@ SlPosDirectControl::control_pos_direct(float dt)
 	PosDirectControl_input.rates[1] = rates(1);
 	PosDirectControl_input.rates[2] = rates(2);
 
+	// See pass.main.mix for esc mapping.
+	PosDirectControl_input.esc_rpm[0] = _esc_status.esc[2].esc_rpm;
+	PosDirectControl_input.esc_rpm[1] = _esc_status.esc[0].esc_rpm;
+	PosDirectControl_input.esc_rpm[2] = _esc_status.esc[3].esc_rpm;
+	PosDirectControl_input.esc_rpm[3] = _esc_status.esc[1].esc_rpm;
+
 	Eulerf euler_angles(q);
 
 	PosDirectControl_input.att[0] = euler_angles.phi(); 
@@ -388,11 +406,10 @@ SlPosDirectControl::control_pos_direct(float dt)
 	_pos_direct_control_input.att[1] = euler_angles.theta();
 	_pos_direct_control_input.att[2] = euler_angles.psi();
 
-	// TODO
-	_pos_direct_control_input.w_rotor_meas[0] = 0;
-	_pos_direct_control_input.w_rotor_meas[1] = 0;
-	_pos_direct_control_input.w_rotor_meas[2] = 0;
-	_pos_direct_control_input.w_rotor_meas[3] = 0;
+	_pos_direct_control_input.esc_rpm[0] = PosDirectControl_input.esc_rpm[0];
+	_pos_direct_control_input.esc_rpm[1] = PosDirectControl_input.esc_rpm[1];
+	_pos_direct_control_input.esc_rpm[2] = PosDirectControl_input.esc_rpm[2];
+	_pos_direct_control_input.esc_rpm[3] = PosDirectControl_input.esc_rpm[3];
 
 	// Set in params for now..
 	// _pos_direct_control_input.pos_sp[0] = _local_pos_sp.x;
@@ -419,7 +436,9 @@ SlPosDirectControl::run()
 	_v_control_mode_sub = orb_subscribe(ORB_ID(vehicle_control_mode));
 	_params_sub = orb_subscribe(ORB_ID(parameter_update));
 	_vehicle_status_sub = orb_subscribe(ORB_ID(vehicle_status));
-	_local_pos_sp_sub         = orb_subscribe(ORB_ID(vehicle_local_position_setpoint));
+	_local_pos_sp_sub = orb_subscribe(ORB_ID(vehicle_local_position_setpoint));
+
+	_esc_status_sub = orb_subscribe(ORB_ID(esc_status));
 
 	_gyro_count = math::min(orb_group_count(ORB_ID(sensor_gyro)), MAX_GYRO_COUNT);
 
@@ -511,6 +530,8 @@ SlPosDirectControl::run()
 			vehicle_local_position_poll();
 			vehicle_local_pos_sp_poll();
 
+			esc_status_poll();
+
 			control_pos_direct(dt);
 
 			_actuators.timestamp = hrt_absolute_time();
@@ -545,6 +566,8 @@ SlPosDirectControl::run()
 	orb_unsubscribe(_sensor_combined_sub);
 	orb_unsubscribe(_vehicle_local_position_sub);
 	orb_unsubscribe(_local_pos_sp_sub);
+
+	orb_unsubscribe(_esc_status_sub);
 
 	PosDirectControl.terminate();
 }
