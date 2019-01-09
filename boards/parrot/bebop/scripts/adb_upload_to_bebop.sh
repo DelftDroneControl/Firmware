@@ -1,7 +1,7 @@
 #!/bin/bash
 
-BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-SRC_DIR="$BASEDIR/../"
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+SRC_DIR="$SCRIPT_DIR/../../../.."
 
 if [ -z ${BEBOP_IP+x} ]; then 
   ip=192.168.42.1
@@ -46,7 +46,7 @@ if [[ $adb_return == "" ]]; then
 fi
 
 # upload PX4
-$BASEDIR/adb_upload.sh $@
+$SCRIPT_DIR/adb_upload.sh $@
 
 # upload mixer and config files
 echo "Uploading mixer and config files to /home/root"
