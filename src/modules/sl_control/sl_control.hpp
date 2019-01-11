@@ -122,6 +122,8 @@ private:
 	void		sensor_combined_poll();
 	void		esc_status_poll();
 
+	// void		has_upset_condition();
+
 	void		publish_actuator_controls();
 	void		publish_rates_setpoint();
 	void		publish_rate_controller_status();
@@ -291,6 +293,17 @@ private:
 
 		(ParamFloat<px4::params::SL_ATT_RATE_MAX>) _att_rate_sample_rate_max,
 
+		// Actuator failures
+		(ParamFloat<px4::params::SL_ACT_LIMIT>) _act_limit,
+		(ParamInt<px4::params::SL_FAIL_FLAG>) _sl_fail_flag,
+
+
+		// Attitude/primary axis control
+		(ParamFloat<px4::params::SL_PRIM_AXIS_X>) _prim_axis_x,
+		(ParamFloat<px4::params::SL_PRIM_AXIS_Y>) _prim_axis_y,
+		(ParamFloat<px4::params::SL_ATT_XY_GAIN>) _att_xy_gain,
+
+		// Rate control
 		(ParamFloat<px4::params::SL_ATT_ROLL_GAIN>) _att_roll_gain,
 		(ParamFloat<px4::params::SL_ATT_PITCH_GN>) _att_pitch_gain,
 		(ParamFloat<px4::params::SL_ATT_YAW_GAIN>) _att_yaw_gain,
@@ -302,6 +315,7 @@ private:
 		(ParamFloat<px4::params::SL_ATT_AZ_EFF>) _att_az_eff,
 
 		(ParamFloat<px4::params::SL_ATT_T_ACT>) _att_t_act
+
 	)
 
 	matrix::Vector3f _attitude_p;		/**< P gain for attitude control */

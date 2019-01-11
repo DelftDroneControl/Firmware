@@ -18,6 +18,56 @@
  */
 PARAM_DEFINE_FLOAT(SL_ATT_RATE_MAX, 500.0f);
 
+
+/**
+ * Actuator output limiter.
+ * TODO: should be int32
+ *
+ * @unit rpm
+ * @min 3000
+ * @max 12200
+ * @decimal 0
+ * @increment 1
+ * @group Multicopter Attitude Control
+ */
+PARAM_DEFINE_FLOAT(SL_ACT_LIMIT, 12200f);
+
+/**
+ * Primary axis X offset.
+ *
+ * @unit m
+ * @min 0
+ * @max 10
+ * @decimal 0.1
+ * @increment 0.1
+ * @group Multicopter Attitude Control
+ */
+PARAM_DEFINE_FLOAT(SL_PRIM_AXIS_X, 0.0f);
+
+/**
+ * Primary axis Y offset.
+ *
+ * @unit m
+ * @min 0
+ * @max 10
+ * @decimal 0.1
+ * @increment 0.1
+ * @group Multicopter Attitude Control
+ */
+PARAM_DEFINE_FLOAT(SL_PRIM_AXIS_Y, 0.0f);
+
+/**
+ * Primary axis attitude controller XY gain.
+ *
+ * @unit
+ * @min 0
+ * @max 10
+ * @decimal 0.1
+ * @increment 0.1
+ * @group Multicopter Attitude Control
+ */
+PARAM_DEFINE_FLOAT(SL_ATT_XY_GAIN, 5.0f);
+
 /**
  * INDI control actuator roll control gain.
  *

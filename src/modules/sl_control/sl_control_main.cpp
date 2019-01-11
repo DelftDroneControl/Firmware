@@ -212,6 +212,12 @@ SimulinkControl::parameters_updated()
 
 	_sample_rate_max = _att_rate_sample_rate_max.get();
 
+	// AttitudeControl
+	AttitudeControlParams.prim_axis_x = _prim_axis_x.get();
+	AttitudeControlParams.prim_axis_y = _prim_axis_y.get();
+	AttitudeControlParams.xy_gain = _att_xy_gain.get();
+
+	// RateControl
 	RateControlParams.roll_gain = _att_roll_gain.get();
 	RateControlParams.pitch_gain = _att_pitch_gain.get();
 	RateControlParams.yaw_gain = _att_yaw_gain.get();
@@ -224,8 +230,13 @@ SimulinkControl::parameters_updated()
 
 	RateControlParams.t_act = _att_t_act.get();
 
+	// Actuator failure
+	RateControl.RateControl_U.fail_flag = _sl_fail_flag.get();
+	RateControl.RateControl_U.act_limit = _act_limit.get();
+
 	PX4_INFO("Parameters updated");
-	PX4_INFO("Max sample rate: %f", static_cast<double>(_sample_rate_max));
+	PX4_INFO("Actuator limit: %f", static_cast<double>(RateControl.RateControl_U.act_limit));
+
 }
 
 void
@@ -449,6 +460,16 @@ SimulinkControl::esc_status_poll()
 	}
 
 }
+
+
+// void
+// SimulinkControl::has_upset_condition(float[3] att, float )
+// {
+
+
+// }
+
+
 
 float
 SimulinkControl::throttle_curve(float throttle_stick_input)
@@ -688,7 +709,6 @@ SimulinkControl::control_attitude()
 
 	AttitudeControl.step();
 
-
 	// For now, use _rates_sp from PX4 (TODO)
 	_rates_sp(0) = AttitudeControl.AttitudeControl_Y.rates_sp[0];
 	_rates_sp(1) = AttitudeControl.AttitudeControl_Y.rates_sp[1];
@@ -713,16 +733,16 @@ SimulinkControl::control_attitude()
 
 	orb_publish(ORB_ID(attitude_control_input), pub_attitude_control_input, &_attitude_control_input);
 
-	/* limit rates */
-	for (int i = 0; i < 3; i++) {
-		if ((_v_control_mode.flag_control_velocity_enabled || _v_control_mode.flag_control_auto_enabled) &&
-		    !_v_control_mode.flag_control_manual_enabled) {
-			_rates_sp(i) = math::constrain(_rates_sp(i), -_auto_rate_max(i), _auto_rate_max(i));
+	// /* limit rates */
+	// for (int i = 0; i < 3; i++) {
+	// 	if ((_v_control_mode.flag_control_velocity_enabled || _v_control_mode.flag_control_auto_enabled) &&
+	// 	    !_v_control_mode.flag_control_manual_enabled) {
+	// 		_rates_sp(i) = math::constrain(_rates_sp(i), -_auto_rate_max(i), _auto_rate_max(i));
 
-		} else {
-			_rates_sp(i) = math::constrain(_rates_sp(i), -_mc_rate_max(i), _mc_rate_max(i));
-		}
-	}
+	// 	} else {
+	// 		_rates_sp(i) = math::constrain(_rates_sp(i), -_mc_rate_max(i), _mc_rate_max(i));
+	// 	}
+	// }
 }
 
 /*
