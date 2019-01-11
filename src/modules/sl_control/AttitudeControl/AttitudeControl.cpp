@@ -7,9 +7,9 @@
  *
  * Code generation for model "AttitudeControl".
  *
- * Model version              : 1.73
+ * Model version              : 1.88
  * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C++ source code generated on : Tue Jan  8 17:31:52 2019
+ * C++ source code generated on : Fri Jan 11 12:24:48 2019
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -20,6 +20,15 @@
 
 #include "AttitudeControl.h"
 #include "AttitudeControl_private.h"
+
+/* Exported block parameters */
+AttitudeControlParamsType AttitudeControlParams = {
+  0.0,
+  0.0,
+  5.0
+} ;                                    /* Variable: AttitudeControlParams
+                                        * Referenced by: '<Root>/Attitude Controller'
+                                        */
 
 /* Model step function */
 void AttitudeControlModelClass::step()
@@ -64,14 +73,14 @@ void AttitudeControlModelClass::step()
    *  DataTypeConversion: '<Root>/Cast To Double'
    *  Inport: '<Root>/att'
    */
-  /* :  [h, pq_sp] = AttitudeControl.attitude_control(n, att, rates, nd_i, ndi_dot); */
-  /* 'attitude_control:4' phi = att(1); */
-  /* 'attitude_control:5' theta = att(2); */
-  /* 'attitude_control:6' psi = att(3); */
-  /* 'attitude_control:8' r = rates(3); */
-  /* 'attitude_control:10' R_BI = [cos(theta)*cos(psi) cos(theta)*sin(psi) -sin(theta); */
-  /* 'attitude_control:11'         sin(phi)*sin(theta)*cos(psi)-cos(phi)*sin(psi) sin(phi)*sin(theta)*sin(psi)+cos(phi)*cos(psi) sin(phi)*cos(theta); */
-  /* 'attitude_control:12'         cos(phi)*sin(theta)*cos(psi)+sin(phi)*sin(psi) cos(phi)*sin(theta)*sin(psi)-sin(phi)*cos(psi) cos(phi)*cos(theta)]; */
+  /* :  [h, pq_sp] = attitude_control(att, rates, nd_i, ndi_dot, AttitudeControlParams); */
+  /* 'attitude_control:3' phi = att(1); */
+  /* 'attitude_control:4' theta = att(2); */
+  /* 'attitude_control:5' psi = att(3); */
+  /* 'attitude_control:7' r = rates(3); */
+  /* 'attitude_control:9' R_BI = [cos(theta)*cos(psi) cos(theta)*sin(psi) -sin(theta); */
+  /* 'attitude_control:10'         sin(phi)*sin(theta)*cos(psi)-cos(phi)*sin(psi) sin(phi)*sin(theta)*sin(psi)+cos(phi)*cos(psi) sin(phi)*cos(theta); */
+  /* 'attitude_control:11'         cos(phi)*sin(theta)*cos(psi)+sin(phi)*sin(psi) cos(phi)*sin(theta)*sin(psi)-sin(phi)*cos(psi) cos(phi)*cos(theta)]; */
   a21 = std::cos((real_T)AttitudeControl_U.att[1]);
   R_BI_tmp = std::cos((real_T)AttitudeControl_U.att[2]);
   R_BI[0] = a21 * R_BI_tmp;
@@ -90,7 +99,7 @@ void AttitudeControlModelClass::step()
   R_BI[5] = rtb_FilterCoefficient * rtb_pq_sp_idx_1 - R_BI_tmp_tmp * R_BI_tmp;
   R_BI[8] = R_BI_tmp_1 * a21;
 
-  /* 'attitude_control:15' h = R_BI*nd_i; */
+  /* 'attitude_control:14' h = R_BI*nd_i; */
   for (i = 0; i < 3; i++) {
     /* SampleTimeMath: '<S2>/TSamp'
      *
@@ -105,14 +114,14 @@ void AttitudeControlModelClass::step()
   }
 
   /* MATLAB Function: '<Root>/Attitude Controller' */
-  /* 'attitude_control:18' nxd = n(1); */
-  /* 'attitude_control:19' nyd = n(2); */
-  /* 'attitude_control:21' ndi_dot_b = R_BI*(ndi_dot); */
-  /* 'attitude_control:23' kx = -5; */
-  /* 'attitude_control:24' ky = -5; */
-  /* 'attitude_control:26' nxdot_cmd = kx*(h(1)-nxd); */
-  /* 'attitude_control:27' nydot_cmd = ky*(h(2)-nyd); */
-  /* 'attitude_control:29' pq_sp = [0 -h(3);h(3) 0]\([nxdot_cmd nydot_cmd]'-[h(2) -h(1)]'*r + ndi_dot_b(1:2)); */
+  /* 'attitude_control:17' nxd = AttitudeControlParams.prim_axis_x; */
+  /* 'attitude_control:18' nyd = AttitudeControlParams.prim_axis_y; */
+  /* 'attitude_control:20' ndi_dot_b = R_BI*(ndi_dot); */
+  /* 'attitude_control:22' kx = AttitudeControlParams.xy_gain; */
+  /* 'attitude_control:23' ky = AttitudeControlParams.xy_gain; */
+  /* 'attitude_control:25' nxdot_cmd = -kx*(h(1)-nxd); */
+  /* 'attitude_control:26' nydot_cmd = -ky*(h(2)-nyd); */
+  /* 'attitude_control:28' pq_sp = [0 -h(3);h(3) 0]\([nxdot_cmd nydot_cmd]'-[h(2) -h(1)]'*r + ndi_dot_b(1:2)); */
   A[0] = 0.0;
   A[2] = -rtb_h[2];
   A[1] = rtb_h[2];
@@ -134,8 +143,12 @@ void AttitudeControlModelClass::step()
       * a21);
   }
 
-  B[0] = (-5.0 * rtb_h[0] - rtb_h[1] * AttitudeControl_U.rates[2]) + R_BI_0[0];
-  B[1] = (-5.0 * rtb_h[1] - -rtb_h[0] * AttitudeControl_U.rates[2]) + R_BI_0[1];
+  B[0] = ((rtb_h[0] - AttitudeControlParams.prim_axis_x) *
+          -AttitudeControlParams.xy_gain - rtb_h[1] * AttitudeControl_U.rates[2])
+    + R_BI_0[0];
+  B[1] = ((rtb_h[1] - AttitudeControlParams.prim_axis_y) *
+          -AttitudeControlParams.xy_gain - -rtb_h[0] * AttitudeControl_U.rates[2])
+    + R_BI_0[1];
   if (std::abs(rtb_h[2]) > 0.0) {
     i = 1;
     r2 = 0;
