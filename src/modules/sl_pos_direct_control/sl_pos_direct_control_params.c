@@ -42,7 +42,6 @@ PARAM_DEFINE_FLOAT(SL_ROT_DIRECTION, 1);
 PARAM_DEFINE_FLOAT(SL_THRUST_COEFF, 1.9035e-6);
 
 /**
- * INDI control actuator roll control gain.
  *
  * @unit
  * @min 0
@@ -54,7 +53,6 @@ PARAM_DEFINE_FLOAT(SL_THRUST_COEFF, 1.9035e-6);
 PARAM_DEFINE_FLOAT(SL_GEOM_L, 0.0875);
 
 /**
- * INDI control actuator roll control gain.
  *
  * @unit
  * @min 0
@@ -66,7 +64,6 @@ PARAM_DEFINE_FLOAT(SL_GEOM_L, 0.0875);
 PARAM_DEFINE_FLOAT(SL_GEOM_B, 0.1150);
 
 /**
- * INDI control actuator roll control gain.
  *
  * @unit
  * @min 0
@@ -78,7 +75,6 @@ PARAM_DEFINE_FLOAT(SL_GEOM_B, 0.1150);
 PARAM_DEFINE_FLOAT(SL_MASS, 0.3740);
 
 /**
- * INDI control actuator roll control gain.
  *
  * @unit
  * @min 0
@@ -90,7 +86,6 @@ PARAM_DEFINE_FLOAT(SL_MASS, 0.3740);
 PARAM_DEFINE_FLOAT(SL_INERTIA_X, 0.0014);
 
 /**
- * INDI control actuator roll control gain.
  *
  * @unit
  * @min 0
@@ -102,7 +97,6 @@ PARAM_DEFINE_FLOAT(SL_INERTIA_X, 0.0014);
 PARAM_DEFINE_FLOAT(SL_INERTIA_Y, 0.0013);
 
 /**
- * INDI control actuator roll control gain.
  *
  * @unit
  * @min 0
@@ -126,7 +120,6 @@ PARAM_DEFINE_FLOAT(SL_INERTIA_Z, 0.0025);
 PARAM_DEFINE_FLOAT(SL_INERTIA_PROP, 8.00e-6);
 
 /**
- * INDI control actuator roll control gain.
  *
  * @unit
  * @min 0
@@ -139,7 +132,7 @@ PARAM_DEFINE_FLOAT(SL_TORQUE_COEFF, 1.9203e-8);
 
 
 /**
- * INDI control actuator roll control gain.
+ * Position control gain
  *
  * @unit
  * @min 0
@@ -148,10 +141,22 @@ PARAM_DEFINE_FLOAT(SL_TORQUE_COEFF, 1.9203e-8);
  * @increment .1
  * @group Multicopter Attitude Control
  */
-PARAM_DEFINE_FLOAT(SL_POS_X_P_GAIN, 1.5);
+		(ParamFloat<px4::params::SL_POS_X_P_GAIN>) _sl_pos_x_p_gain,
+PARAM_DEFINE_FLOAT(SL_POS_P_GAIN, 1.5);
+
+// /**
+//  *
+//  * @unit
+//  * @min 0
+//  * @max 100
+//  * @decimal 0
+//  * @increment .1
+//  * @group Multicopter Attitude Control
+//  */
+// PARAM_DEFINE_FLOAT(SL_POS_Y_P_GAIN, 1.5);
 
 /**
- * INDI control actuator roll control gain.
+ * Altitude P gain.
  *
  * @unit
  * @min 0
@@ -160,10 +165,10 @@ PARAM_DEFINE_FLOAT(SL_POS_X_P_GAIN, 1.5);
  * @increment .1
  * @group Multicopter Attitude Control
  */
-PARAM_DEFINE_FLOAT(SL_POS_Y_P_GAIN, 1.5);
+PARAM_DEFINE_FLOAT(SL_ALT_P_GAIN, 10);
 
 /**
- * INDI control actuator roll control gain.
+ * Velocity control gain.
  *
  * @unit
  * @min 0
@@ -172,10 +177,21 @@ PARAM_DEFINE_FLOAT(SL_POS_Y_P_GAIN, 1.5);
  * @increment .1
  * @group Multicopter Attitude Control
  */
-PARAM_DEFINE_FLOAT(SL_POS_Z_P_GAIN, 10);
+PARAM_DEFINE_FLOAT(SL_POS_D_GAIN, 10);
+
+// /**
+//  *
+//  * @unit
+//  * @min 0
+//  * @max 100
+//  * @decimal 0
+//  * @increment .1
+//  * @group Multicopter Attitude Control
+//  */
+// PARAM_DEFINE_FLOAT(SL_POS_Y_D_GAIN, 1.5);
 
 /**
- * INDI control actuator roll control gain.
+ * Altitude D gain
  *
  * @unit
  * @min 0
@@ -184,31 +200,7 @@ PARAM_DEFINE_FLOAT(SL_POS_Z_P_GAIN, 10);
  * @increment .1
  * @group Multicopter Attitude Control
  */
-PARAM_DEFINE_FLOAT(SL_POS_X_D_GAIN, 10);
-
-/**
- * INDI control actuator roll control gain.
- *
- * @unit
- * @min 0
- * @max 100
- * @decimal 0
- * @increment .1
- * @group Multicopter Attitude Control
- */
-PARAM_DEFINE_FLOAT(SL_POS_Y_D_GAIN, 1.5);
-
-/**
- * INDI control actuator roll control gain.
- *
- * @unit
- * @min 0
- * @max 100
- * @decimal 0
- * @increment .1
- * @group Multicopter Attitude Control
- */
-PARAM_DEFINE_FLOAT(SL_POS_Z_D_GAIN, 1.5);
+PARAM_DEFINE_FLOAT(SL_ALT_D_GAIN, 1.5);
 
 /**
  * INDI control actuator roll control gain.
@@ -285,11 +277,18 @@ PARAM_DEFINE_FLOAT(SL_Z_POS_SP, 0.f);
 /**
  * Fail flag pseudo parameter
  *
- * @unit
- * @min 0
- * @max 1
- * @decimal 0
- * @increment 1
+ * @value 0 norminal case
+ * @value 1 single rotor failure 
+ * @value 2 double rotor failure
  * @group Multicopter Attitude Control
  */
 PARAM_DEFINE_INT32(SL_FAIL_FLAG, 0);
+
+/**
+ * RPM Feedback Flag
+ *
+ * @value 0 No RPM feedback
+ * @value 1 RPM feedback
+ * @group Multicopter Attitude Control
+ */
+PARAM_DEFINE_INT32(SL_RPM_FEEDBACK,1);
