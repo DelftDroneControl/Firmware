@@ -184,13 +184,11 @@ private:
 
 		(ParamFloat<px4::params::SL_ROT_DIRECTION>) _sl_rot_direction,
 
-		(ParamFloat<px4::params::SL_POS_X_P_GAIN>) _sl_pos_x_p_gain,
-		(ParamFloat<px4::params::SL_POS_Y_P_GAIN>) _sl_pos_y_p_gain,
-		(ParamFloat<px4::params::SL_POS_Z_P_GAIN>) _sl_pos_z_p_gain,
+		(ParamFloat<px4::params::SL_POS_P_GAIN>) _sl_pos_p_gain,
+		(ParamFloat<px4::params::SL_ALT_P_GAIN>) _sl_alt_p_gain,
 
-		(ParamFloat<px4::params::SL_POS_X_D_GAIN>) _sl_pos_x_d_gain,
-		(ParamFloat<px4::params::SL_POS_Y_D_GAIN>) _sl_pos_y_d_gain,
-		(ParamFloat<px4::params::SL_POS_Z_D_GAIN>) _sl_pos_z_d_gain,
+		(ParamFloat<px4::params::SL_POS_D_GAIN>) _sl_pos_d_gain,
+		(ParamFloat<px4::params::SL_ALT_D_GAIN>) _sl_alt_d_gain,
 
 		(ParamFloat<px4::params::SL_ATT_P_GAIN>) _sl_att_p_gain,
 		(ParamFloat<px4::params::SL_ATT_D_GAIN>) _sl_att_d_gain,
@@ -210,7 +208,9 @@ private:
 		(ParamFloat<px4::params::SL_Y_POS_SP>) _sl_y_pos_sp,
 		(ParamFloat<px4::params::SL_Z_POS_SP>) _sl_z_pos_sp,
 
-		(ParamInt<px4::params::SL_FAIL_FLAG>) _sl_fail_flag
+		(ParamInt<px4::params::SL_FAIL_FLAG>) _sl_fail_flag,
+		(ParamInt<px4::params::SL_RPM_FEEDBACK>) _sl_rpm_feedback
+		
 	)
 
     struct debug_key_value_s dbg {};

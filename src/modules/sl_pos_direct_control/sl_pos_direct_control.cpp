@@ -134,13 +134,11 @@ SlPosDirectControl::parameters_updated()
 
 	PosDirectControlParams.rot_direction = _sl_rot_direction.get();
 
-	PosDirectControlParams.pos_x_p_gain = _sl_pos_x_p_gain.get();
-	PosDirectControlParams.pos_y_p_gain = _sl_pos_y_p_gain.get();
-	PosDirectControlParams.pos_z_p_gain = _sl_pos_z_p_gain.get();
+	PosDirectControlParams.pos_x_p_gain = _sl_pos_p_gain.get();
+	PosDirectControlParams.pos_z_p_gain = _sl_alt_p_gain.get();
 
-	PosDirectControlParams.pos_x_d_gain = _sl_pos_x_d_gain.get();
-	PosDirectControlParams.pos_y_d_gain = _sl_pos_y_d_gain.get();
-	PosDirectControlParams.pos_z_d_gain = _sl_pos_z_d_gain.get();
+	PosDirectControlParams.pos_x_d_gain = _sl_pos_d_gain.get();
+	PosDirectControlParams.pos_z_d_gain = _sl_alt_d_gain.get();
 
 	PosDirectControlParams.att_p_gain = _sl_att_p_gain.get();
 	PosDirectControlParams.att_d_gain = _sl_att_d_gain.get();
@@ -155,16 +153,18 @@ SlPosDirectControl::parameters_updated()
 	PosDirectControlParams.Iz = _sl_inertia_z.get();
 	PosDirectControlParams.Ip = _sl_inertia_prop.get();
 	PosDirectControlParams.t = _sl_torque_coeff.get();
-
+	PosDirectControlParams.rpm_feedback = _sl_rpm_feedback.get();
+	
 	PosDirectControl.PosDirectControl_U.pos_sp[0] = _sl_x_pos_sp.get();
 	PosDirectControl.PosDirectControl_U.pos_sp[1] = _sl_y_pos_sp.get();
 	PosDirectControl.PosDirectControl_U.pos_sp[2] = _sl_z_pos_sp.get();
 	PosDirectControl.PosDirectControl_U.fail_flag = _sl_fail_flag.get();
-
+	
 	_pos_direct_control_input.pos_sp[0] = _sl_x_pos_sp.get();
 	_pos_direct_control_input.pos_sp[1] = _sl_y_pos_sp.get();
 	_pos_direct_control_input.pos_sp[2] = _sl_z_pos_sp.get();
 	_pos_direct_control_input.fail_flag = _sl_fail_flag.get();
+	
 }
 
 void
