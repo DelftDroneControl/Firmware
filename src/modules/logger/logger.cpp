@@ -620,6 +620,9 @@ void Logger::add_default_topics()
 	add_topic("rate_control_input");
 	add_topic("attitude_control_input");
 
+	// From external pose estimation (Optitrack)
+	add_topic("vehicle_visual_odometry");
+
 	// Note: try to avoid setting the interval where possible, as it increases RAM usage
 	add_topic("actuator_controls_0", 100);
 	add_topic("actuator_controls_1", 100);
@@ -640,13 +643,13 @@ void Logger::add_default_topics()
 	add_topic("mission");
 	add_topic("mission_result");
 	add_topic("optical_flow", 50);
-	add_topic("position_setpoint_triplet", 200);
+	// add_topic("position_setpoint_triplet", 200); // very large topic
 	add_topic("radio_status");
 	add_topic("rate_ctrl_status", 30);
 	add_topic("sensor_combined", 100);
 	add_topic("sensor_preflight", 200);
 	add_topic("system_power", 500);
-	add_topic("tecs_status", 200);
+	add_topic("ecs_status", 200);
 	add_topic("trajectory_setpoint", 200);
 	add_topic("telemetry_status");
 	add_topic("vehicle_air_data", 200);
