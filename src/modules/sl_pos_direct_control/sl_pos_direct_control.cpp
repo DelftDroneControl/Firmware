@@ -50,6 +50,7 @@
 
 #include "PosDirectControl/PosDirectControl.h"
 #include <px4_log.h>
+#include <stdio.h>
 
 #define TPA_RATE_LOWER_LIMIT 0.05f
 
@@ -143,6 +144,7 @@ SlPosDirectControl::parameters_updated()
 	PosDirectControlParams.att_p_gain = _sl_att_p_gain.get();
 	PosDirectControlParams.att_d_gain = _sl_att_d_gain.get();
 	PosDirectControlParams.yaw_p_gain = _sl_yaw_p_gain.get();
+	PosDirectControlParams.yaw_d_gain = _sl_yaw_d_gain.get();
 	
 	PosDirectControlParams.k = _sl_thrust_coeff.get();
 	PosDirectControlParams.l = _sl_geom_l.get();
@@ -158,13 +160,14 @@ SlPosDirectControl::parameters_updated()
 	PosDirectControl.PosDirectControl_U.pos_sp[0] = _sl_x_pos_sp.get();
 	PosDirectControl.PosDirectControl_U.pos_sp[1] = _sl_y_pos_sp.get();
 	PosDirectControl.PosDirectControl_U.pos_sp[2] = _sl_z_pos_sp.get();
+	PosDirectControl.PosDirectControl_U.yaw_sp    = _sl_yaw_sp.get();
 	PosDirectControl.PosDirectControl_U.fail_flag = _sl_fail_flag.get();
 	
 	_pos_direct_control_input.pos_sp[0] = _sl_x_pos_sp.get();
 	_pos_direct_control_input.pos_sp[1] = _sl_y_pos_sp.get();
 	_pos_direct_control_input.pos_sp[2] = _sl_z_pos_sp.get();
 	_pos_direct_control_input.fail_flag = _sl_fail_flag.get();
-	
+	_pos_direct_control_input.yaw_sp 	= _sl_yaw_sp.get();
 }
 
 void
@@ -370,16 +373,25 @@ SlPosDirectControl::control_pos_direct(float dt)
 
 	Eulerf euler_angles(q);
 
-	PosDirectControl_input.att[0] = euler_angles.phi(); 
-	PosDirectControl_input.att[1] = euler_angles.theta();
-	PosDirectControl_input.att[2] = euler_angles.psi();
-
+	if(isnan(euler_angles.phi())) 
+		PosDirectControl_input.att[0] = 0; 
+	else 
+		PosDirectControl_input.att[0] = euler_angles.phi(); 
+	if(isnan(euler_angles.theta())) 
+		PosDirectControl_input.att[1] = 0; 
+	else 
+		PosDirectControl_input.att[1] = euler_angles.theta(); 
+	if(isnan(euler_angles.psi())) 
+		PosDirectControl_input.att[2] = 0; 
+	else 
+		PosDirectControl_input.att[2] = euler_angles.psi(); 
+	
 	// Set in params for now..
 	// PosDirectControl_input.pos_sp[0] = _local_pos_sp.x;
 	// PosDirectControl_input.pos_sp[1] = _local_pos_sp.y;
 	// PosDirectControl_input.pos_sp[2] = _local_pos_sp.z;
 
-	PosDirectControl_input.yaw_sp = 0.f;
+	// PosDirectControl_input.yaw_sp = 0.f;
 
 	PosDirectControl.PosDirectControl_U = PosDirectControl_input;
 

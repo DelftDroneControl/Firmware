@@ -193,6 +193,7 @@ private:
 		(ParamFloat<px4::params::SL_ATT_P_GAIN>) _sl_att_p_gain,
 		(ParamFloat<px4::params::SL_ATT_D_GAIN>) _sl_att_d_gain,
 		(ParamFloat<px4::params::SL_YAW_P_GAIN>) _sl_yaw_p_gain,
+		(ParamFloat<px4::params::SL_YAW_D_GAIN>) _sl_yaw_d_gain,
 
 		(ParamFloat<px4::params::SL_THRUST_COEFF>) _sl_thrust_coeff,
 		(ParamFloat<px4::params::SL_GEOM_L>) _sl_geom_l,
@@ -207,7 +208,8 @@ private:
 		(ParamFloat<px4::params::SL_X_POS_SP>) _sl_x_pos_sp,
 		(ParamFloat<px4::params::SL_Y_POS_SP>) _sl_y_pos_sp,
 		(ParamFloat<px4::params::SL_Z_POS_SP>) _sl_z_pos_sp,
-
+		(ParamFloat<px4::params::SL_YAW_SP>) _sl_yaw_sp,
+		
 		(ParamInt<px4::params::SL_FAIL_FLAG>) _sl_fail_flag,
 		(ParamInt<px4::params::SL_RPM_FEEDBACK>) _sl_rpm_feedback
 		
