@@ -313,6 +313,7 @@ SlPosDirectControl::odometry_status_poll()
 
 	if (updated) {
 		orb_copy(ORB_ID(vehicle_visual_odometry), _ev_odom_sub, &_ev_odom);
+		//PX4_INFO("Odometry data updated!\n");		
 	}	
 }
 
@@ -358,11 +359,12 @@ SlPosDirectControl::control_pos_direct(float dt)
 
 
 	/* get estimated attitude */
-	//Quatf q(_v_att.q);
+	Quatf q_v_att(_v_att.q);
 	Quatf q(_ev_odom.q);
 	
 	/* ensure input quaternions are exactly normalized because acosf(1.00001) == NaN */
-	q.normalize();
+	q.normalize();	
+	q_v_att.normalize();
 
 	ExtU_PosDirectControl_T PosDirectControl_input;
 
@@ -374,9 +376,18 @@ SlPosDirectControl::control_pos_direct(float dt)
 	// PosDirectControl_input.pos[1] = _vehicle_local_position.y;
 	// PosDirectControl_input.pos[2] = _vehicle_local_position.z;
 
-	PosDirectControl_input.pos[0] = _ev_odom.x;
-	PosDirectControl_input.pos[1] = _ev_odom.y;
-	PosDirectControl_input.pos[2] = _ev_odom.z;
+	if(isnan(_ev_odom.x)) 
+		PosDirectControl_input.pos[0] = 0;
+	else
+		PosDirectControl_input.pos[0] = _ev_odom.x;
+	if(isnan(_ev_odom.y)) 
+		PosDirectControl_input.pos[1] = 0;
+	else
+		PosDirectControl_input.pos[1] = _ev_odom.y;
+	if(isnan(_ev_odom.z))
+		PosDirectControl_input.pos[2] = 0;
+	else 
+		PosDirectControl_input.pos[2] = _ev_odom.z;
 
 	PosDirectControl_input.rates[0] = rates(0);
 	PosDirectControl_input.rates[1] = rates(1);
@@ -389,6 +400,8 @@ SlPosDirectControl::control_pos_direct(float dt)
 	PosDirectControl_input.esc_rpm[3] = _esc_status.esc[1].esc_rpm;
 
 	Eulerf euler_angles(q);
+	Eulerf euler_angles_v_att(q_v_att);
+	euler_angles(2) = euler_angles_v_att(2);
 
 	if(isnan(euler_angles.phi())) 
 		PosDirectControl_input.att[0] = 0; 
@@ -403,7 +416,6 @@ SlPosDirectControl::control_pos_direct(float dt)
 	else 
 		PosDirectControl_input.att[2] = euler_angles.psi(); 
 	
-
 	// Set in params for now..
 	// PosDirectControl_input.pos_sp[0] = _local_pos_sp.x;
 	// PosDirectControl_input.pos_sp[1] = _local_pos_sp.y;
@@ -424,18 +436,24 @@ SlPosDirectControl::control_pos_direct(float dt)
 	_pos_direct_control_input.vel[1] = _vehicle_local_position.vy;
 	_pos_direct_control_input.vel[2] = _vehicle_local_position.vz;
 
-	_pos_direct_control_input.pos[0] = _vehicle_local_position.x;
-	_pos_direct_control_input.pos[1] = _vehicle_local_position.y;
-	_pos_direct_control_input.pos[2] = _vehicle_local_position.z;
+	// _pos_direct_control_input.pos[0] = _vehicle_local_position.x;
+	// _pos_direct_control_input.pos[1] = _vehicle_local_position.y;
+	// _pos_direct_control_input.pos[2] = _vehicle_local_position.z;
+	_pos_direct_control_input.pos[0] = PosDirectControl_input.pos[0];
+	_pos_direct_control_input.pos[1] = PosDirectControl_input.pos[1];
+	_pos_direct_control_input.pos[2] = PosDirectControl_input.pos[2];
 
 	_pos_direct_control_input.rates[0] = rates(0);
 	_pos_direct_control_input.rates[1] = rates(1);
 	_pos_direct_control_input.rates[2] = rates(2);
 
-	_pos_direct_control_input.att[0] = euler_angles.phi();
-	_pos_direct_control_input.att[1] = euler_angles.theta();
-	_pos_direct_control_input.att[2] = euler_angles.psi();
-
+	// _pos_direct_control_input.att[0] = euler_angles.phi();
+	// _pos_direct_control_input.att[1] = euler_angles.theta();
+	// _pos_direct_control_input.att[2] = euler_angles.psi();
+	_pos_direct_control_input.att[0] = PosDirectControl_input.att[0];
+	_pos_direct_control_input.att[1] = PosDirectControl_input.att[1];
+	_pos_direct_control_input.att[2] = PosDirectControl_input.att[2];
+	
 	_pos_direct_control_input.esc_rpm[0] = PosDirectControl_input.esc_rpm[0];
 	_pos_direct_control_input.esc_rpm[1] = PosDirectControl_input.esc_rpm[1];
 	_pos_direct_control_input.esc_rpm[2] = PosDirectControl_input.esc_rpm[2];
