@@ -304,6 +304,18 @@ SlPosDirectControl::esc_status_poll()
 
 }
 
+void
+SlPosDirectControl::odometry_status_poll()
+{
+	/* check if there is a new message */
+	bool updated;
+	orb_check(_ev_odom_sub, &updated);
+
+	if (updated) {
+		orb_copy(ORB_ID(vehicle_visual_odometry), _ev_odom_sub, &_ev_odom);
+	}	
+}
+
 /*
  * Position controller.
  * Input: 
@@ -346,8 +358,9 @@ SlPosDirectControl::control_pos_direct(float dt)
 
 
 	/* get estimated attitude */
-	Quatf q(_v_att.q);
-
+	//Quatf q(_v_att.q);
+	Quatf q(_ev_odom.q);
+	
 	/* ensure input quaternions are exactly normalized because acosf(1.00001) == NaN */
 	q.normalize();
 
@@ -357,9 +370,13 @@ SlPosDirectControl::control_pos_direct(float dt)
 	PosDirectControl_input.vel[1] = _vehicle_local_position.vy;
 	PosDirectControl_input.vel[2] = _vehicle_local_position.vz;
 
-	PosDirectControl_input.pos[0] = _vehicle_local_position.x;
-	PosDirectControl_input.pos[1] = _vehicle_local_position.y;
-	PosDirectControl_input.pos[2] = _vehicle_local_position.z;
+	// PosDirectControl_input.pos[0] = _vehicle_local_position.x;
+	// PosDirectControl_input.pos[1] = _vehicle_local_position.y;
+	// PosDirectControl_input.pos[2] = _vehicle_local_position.z;
+
+	PosDirectControl_input.pos[0] = _ev_odom.x;
+	PosDirectControl_input.pos[1] = _ev_odom.y;
+	PosDirectControl_input.pos[2] = _ev_odom.z;
 
 	PosDirectControl_input.rates[0] = rates(0);
 	PosDirectControl_input.rates[1] = rates(1);
@@ -386,6 +403,7 @@ SlPosDirectControl::control_pos_direct(float dt)
 	else 
 		PosDirectControl_input.att[2] = euler_angles.psi(); 
 	
+
 	// Set in params for now..
 	// PosDirectControl_input.pos_sp[0] = _local_pos_sp.x;
 	// PosDirectControl_input.pos_sp[1] = _local_pos_sp.y;
@@ -451,7 +469,7 @@ SlPosDirectControl::run()
 	_local_pos_sp_sub = orb_subscribe(ORB_ID(vehicle_local_position_setpoint));
 
 	_esc_status_sub = orb_subscribe(ORB_ID(esc_status));
-
+	_ev_odom_sub	= orb_subscribe(ORB_ID(vehicle_visual_odometry));
 	_gyro_count = math::min(orb_group_count(ORB_ID(sensor_gyro)), MAX_GYRO_COUNT);
 
 	if (_gyro_count == 0) {
@@ -543,6 +561,7 @@ SlPosDirectControl::run()
 			vehicle_local_pos_sp_poll();
 
 			esc_status_poll();
+			odometry_status_poll();
 
 			control_pos_direct(dt);
 
@@ -580,7 +599,8 @@ SlPosDirectControl::run()
 	orb_unsubscribe(_local_pos_sp_sub);
 
 	orb_unsubscribe(_esc_status_sub);
-
+	orb_unsubscribe(_ev_odom_sub);
+	
 	PosDirectControl.terminate();
 }
 
