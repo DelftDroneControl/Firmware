@@ -141,8 +141,7 @@ PARAM_DEFINE_FLOAT(SL_TORQUE_COEFF, 1.9203e-8);
  * @increment .1
  * @group Multicopter Attitude Control
  */
-		(ParamFloat<px4::params::SL_POS_X_P_GAIN>) _sl_pos_x_p_gain,
-PARAM_DEFINE_FLOAT(SL_POS_P_GAIN, 1.5);
+PARAM_DEFINE_FLOAT(SL_POS_P_GAIN, 1.0);
 
 // /**
 //  *
@@ -165,7 +164,7 @@ PARAM_DEFINE_FLOAT(SL_POS_P_GAIN, 1.5);
  * @increment .1
  * @group Multicopter Attitude Control
  */
-PARAM_DEFINE_FLOAT(SL_ALT_P_GAIN, 10);
+PARAM_DEFINE_FLOAT(SL_ALT_P_GAIN, 5.0);
 
 /**
  * Velocity control gain.
@@ -177,7 +176,7 @@ PARAM_DEFINE_FLOAT(SL_ALT_P_GAIN, 10);
  * @increment .1
  * @group Multicopter Attitude Control
  */
-PARAM_DEFINE_FLOAT(SL_POS_D_GAIN, 10);
+PARAM_DEFINE_FLOAT(SL_POS_D_GAIN, 1.0);
 
 // /**
 //  *
@@ -200,7 +199,7 @@ PARAM_DEFINE_FLOAT(SL_POS_D_GAIN, 10);
  * @increment .1
  * @group Multicopter Attitude Control
  */
-PARAM_DEFINE_FLOAT(SL_ALT_D_GAIN, 1.5);
+PARAM_DEFINE_FLOAT(SL_ALT_D_GAIN, 3.0);
 
 /**
  * INDI control actuator roll control gain.
@@ -239,6 +238,18 @@ PARAM_DEFINE_FLOAT(SL_ATT_D_GAIN, 20);
 PARAM_DEFINE_FLOAT(SL_YAW_P_GAIN, 5.0);
 
 /**
+ * INDI control actuator roll control gain.
+ *
+ * @unit
+ * @min 0
+ * @max 100
+ * @decimal 0
+ * @increment .1
+ * @group Multicopter Attitude Control
+ */
+PARAM_DEFINE_FLOAT(SL_YAW_D_GAIN, 2.0);
+
+/**
  * Position setpoint psuedo-parameter
  *
  * @unit
@@ -275,6 +286,18 @@ PARAM_DEFINE_FLOAT(SL_Y_POS_SP, 0.f);
 PARAM_DEFINE_FLOAT(SL_Z_POS_SP, 0.f);
 
 /**
+ * Yaw setpoint psuedo-parameter
+ *
+ * @unit
+ * @min 0
+ * @max 100
+ * @decimal 0
+ * @increment .1
+ * @group Multicopter Attitude Control
+ */
+PARAM_DEFINE_FLOAT(SL_YAW_SP, 0.f);
+
+/**
  * Fail flag pseudo parameter
  *
  * @value 0 norminal case
@@ -291,4 +314,4 @@ PARAM_DEFINE_INT32(SL_FAIL_FLAG_POS, 0);
  * @value 1 RPM feedback
  * @group Multicopter Attitude Control
  */
-PARAM_DEFINE_INT32(SL_RPM_FEEDBACK,1);
+PARAM_DEFINE_INT32(SL_RPM_FEEDBACK, 0);
