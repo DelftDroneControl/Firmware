@@ -18,6 +18,28 @@
  */
 PARAM_DEFINE_FLOAT(SL_ATT_RATE_MAX, 500.0f);
 
+/**
+ * Fail flag pseudo parameter
+ *
+ * @value 0 norminal case
+ * @value 1 single rotor failure 
+ * @value 2 double rotor failure
+ * @group Multicopter Attitude Control
+ */
+PARAM_DEFINE_INT32(SL_FAIL_FLAG, 0);
+
+
+/**
+ * Failed rotor
+ *
+ * @value 0 norminal case
+ * @value 1 Front left failure
+ * @value 2 Front right failure
+ * @value 3 Back right failure
+ * @value 4 Back left failure
+ * @group Multicopter Attitude Control
+ */
+PARAM_DEFINE_INT32(SL_FAIL_ID, 0);
 
 /**
  * Actuator output limiter.
@@ -31,6 +53,18 @@ PARAM_DEFINE_FLOAT(SL_ATT_RATE_MAX, 500.0f);
  * @group Multicopter Attitude Control
  */
 PARAM_DEFINE_FLOAT(SL_ACT_LIMIT, 12200f);
+
+/**
+ * Yaw rate set point
+ *
+ * @unit rad/s
+ * @min -25
+ * @max 25
+ * @decimal 0
+ * @increment 1
+ * @group Multicopter Attitude Control
+ */
+PARAM_DEFINE_FLOAT(SL_YAW_RATE_SP, 0.0f);
 
 /**
  * Primary axis X offset.
