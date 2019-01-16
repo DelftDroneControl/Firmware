@@ -7,9 +7,9 @@
  *
  * Code generation for model "AttitudeControl".
  *
- * Model version              : 1.88
+ * Model version              : 1.107
  * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C++ source code generated on : Fri Jan 11 12:24:48 2019
+ * C++ source code generated on : Tue Jan 15 16:04:44 2019
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -34,17 +34,18 @@ AttitudeControlParamsType AttitudeControlParams = {
 void AttitudeControlModelClass::step()
 {
   /* local block i/o variables */
-  real_T rtb_CastToDouble2[3];
-  real_T rtb_DiscreteStateSpace[3];
+  real_T rtb_H_att[2];
+  real_T rtb_CastToDouble[3];
+  real_T rtb_rates_filtered[3];
+  real_T rtb_CastToDouble1[3];
   real_T R_BI[9];
   real_T A[4];
   real_T B[2];
+  int32_T r1;
   int32_T r2;
   real_T a21;
-  real_T rtb_TSamp[3];
   real_T rtb_FilterCoefficient;
-  real_T rtb_h[3];
-  int32_T i;
+  real_T rtb_TmpSignalConversionAtSFunct[3];
   real_T R_BI_0[3];
   real_T rtb_pq_sp_idx_1;
   real_T R_BI_tmp;
@@ -52,26 +53,38 @@ void AttitudeControlModelClass::step()
   real_T R_BI_tmp_1;
   real_T R_BI_tmp_tmp;
 
-  /* DataTypeConversion: '<Root>/Cast To Double2' incorporates:
-   *  Inport: '<Root>/thrust_vec_sp'
-   */
-  rtb_CastToDouble2[0] = AttitudeControl_U.thrust_vec_sp[0];
-  rtb_CastToDouble2[1] = AttitudeControl_U.thrust_vec_sp[1];
-  rtb_CastToDouble2[2] = AttitudeControl_U.thrust_vec_sp[2];
-
-  /* DiscreteStateSpace: '<Root>/Discrete State-Space' */
+  /* DiscreteStateSpace: '<Root>/H_att' */
   {
-    rtb_DiscreteStateSpace[0] = (1.0)*
-      AttitudeControl_DW.DiscreteStateSpace_DSTATE[0];
-    rtb_DiscreteStateSpace[1] = (1.0)*
-      AttitudeControl_DW.DiscreteStateSpace_DSTATE[1];
-    rtb_DiscreteStateSpace[2] = (1.0)*
-      AttitudeControl_DW.DiscreteStateSpace_DSTATE[2];
+    rtb_H_att[0] = (0.1605492432479019)*AttitudeControl_DW.H_att_DSTATE[0] +
+      (0.14379072973249016)*AttitudeControl_DW.H_att_DSTATE[1];
+    rtb_H_att[1] = (0.1605492432479019)*AttitudeControl_DW.H_att_DSTATE[2] +
+      (0.14379072973249016)*AttitudeControl_DW.H_att_DSTATE[3];
+  }
+
+  /* DataTypeConversion: '<Root>/Cast To Double' incorporates:
+   *  Inport: '<Root>/att'
+   */
+  rtb_CastToDouble[0] = AttitudeControl_U.att[0];
+  rtb_CastToDouble[1] = AttitudeControl_U.att[1];
+  rtb_CastToDouble[2] = AttitudeControl_U.att[2];
+
+  /* DiscreteStateSpace: '<Root>/H_rates' */
+  {
+    rtb_rates_filtered[0] = (0.1605492432479019)*
+      AttitudeControl_DW.H_rates_DSTATE[0] + (0.14379072973249016)*
+      AttitudeControl_DW.H_rates_DSTATE[1];
+    rtb_rates_filtered[1] = (0.1605492432479019)*
+      AttitudeControl_DW.H_rates_DSTATE[2] + (0.14379072973249016)*
+      AttitudeControl_DW.H_rates_DSTATE[3];
+    rtb_rates_filtered[2] = (0.1605492432479019)*
+      AttitudeControl_DW.H_rates_DSTATE[4] + (0.14379072973249016)*
+      AttitudeControl_DW.H_rates_DSTATE[5];
   }
 
   /* MATLAB Function: '<Root>/Attitude Controller' incorporates:
-   *  DataTypeConversion: '<Root>/Cast To Double'
-   *  Inport: '<Root>/att'
+   *  DataTypeConversion: '<Root>/Cast To Double2'
+   *  Inport: '<Root>/thrust_vec_sp'
+   *  SignalConversion: '<S1>/TmpSignal ConversionAt SFunction Inport1'
    */
   /* :  [h, pq_sp] = attitude_control(att, rates, nd_i, ndi_dot, AttitudeControlParams); */
   /* 'attitude_control:3' phi = att(1); */
@@ -81,16 +94,16 @@ void AttitudeControlModelClass::step()
   /* 'attitude_control:9' R_BI = [cos(theta)*cos(psi) cos(theta)*sin(psi) -sin(theta); */
   /* 'attitude_control:10'         sin(phi)*sin(theta)*cos(psi)-cos(phi)*sin(psi) sin(phi)*sin(theta)*sin(psi)+cos(phi)*cos(psi) sin(phi)*cos(theta); */
   /* 'attitude_control:11'         cos(phi)*sin(theta)*cos(psi)+sin(phi)*sin(psi) cos(phi)*sin(theta)*sin(psi)-sin(phi)*cos(psi) cos(phi)*cos(theta)]; */
-  a21 = std::cos((real_T)AttitudeControl_U.att[1]);
-  R_BI_tmp = std::cos((real_T)AttitudeControl_U.att[2]);
+  a21 = std::cos(rtb_H_att[1]);
+  R_BI_tmp = std::cos(rtb_CastToDouble[2]);
   R_BI[0] = a21 * R_BI_tmp;
-  rtb_pq_sp_idx_1 = std::sin((real_T)AttitudeControl_U.att[2]);
+  rtb_pq_sp_idx_1 = std::sin(rtb_CastToDouble[2]);
   R_BI[3] = a21 * rtb_pq_sp_idx_1;
-  rtb_FilterCoefficient = std::sin((real_T)AttitudeControl_U.att[1]);
+  rtb_FilterCoefficient = std::sin(rtb_H_att[1]);
   R_BI[6] = -rtb_FilterCoefficient;
-  R_BI_tmp_tmp = std::sin((real_T)AttitudeControl_U.att[0]);
+  R_BI_tmp_tmp = std::sin(rtb_H_att[0]);
   R_BI_tmp_0 = R_BI_tmp_tmp * rtb_FilterCoefficient;
-  R_BI_tmp_1 = std::cos((real_T)AttitudeControl_U.att[0]);
+  R_BI_tmp_1 = std::cos(rtb_H_att[0]);
   R_BI[1] = R_BI_tmp_0 * R_BI_tmp - R_BI_tmp_1 * rtb_pq_sp_idx_1;
   R_BI[4] = R_BI_tmp_0 * rtb_pq_sp_idx_1 + R_BI_tmp_1 * R_BI_tmp;
   R_BI[7] = R_BI_tmp_tmp * a21;
@@ -100,20 +113,13 @@ void AttitudeControlModelClass::step()
   R_BI[8] = R_BI_tmp_1 * a21;
 
   /* 'attitude_control:14' h = R_BI*nd_i; */
-  for (i = 0; i < 3; i++) {
-    /* SampleTimeMath: '<S2>/TSamp'
-     *
-     * About '<S2>/TSamp':
-     *  y = u * K where K = 1 / ( w * Ts )
-     */
-    rtb_TSamp[i] = rtb_DiscreteStateSpace[i] * 500.0;
-
-    /* MATLAB Function: '<Root>/Attitude Controller' */
-    rtb_h[i] = R_BI[i + 6] * rtb_CastToDouble2[2] + (R_BI[i + 3] *
-      rtb_CastToDouble2[1] + R_BI[i] * rtb_CastToDouble2[0]);
+  for (r1 = 0; r1 < 3; r1++) {
+    rtb_TmpSignalConversionAtSFunct[r1] = R_BI[r1 + 6] *
+      AttitudeControl_U.thrust_vec_sp[2] + (R_BI[r1 + 3] *
+      AttitudeControl_U.thrust_vec_sp[1] + R_BI[r1] *
+      AttitudeControl_U.thrust_vec_sp[0]);
   }
 
-  /* MATLAB Function: '<Root>/Attitude Controller' */
   /* 'attitude_control:17' nxd = AttitudeControlParams.prim_axis_x; */
   /* 'attitude_control:18' nyd = AttitudeControlParams.prim_axis_y; */
   /* 'attitude_control:20' ndi_dot_b = R_BI*(ndi_dot); */
@@ -123,51 +129,37 @@ void AttitudeControlModelClass::step()
   /* 'attitude_control:26' nydot_cmd = -ky*(h(2)-nyd); */
   /* 'attitude_control:28' pq_sp = [0 -h(3);h(3) 0]\([nxdot_cmd nydot_cmd]'-[h(2) -h(1)]'*r + ndi_dot_b(1:2)); */
   A[0] = 0.0;
-  A[2] = -rtb_h[2];
-  A[1] = rtb_h[2];
+  A[2] = -rtb_TmpSignalConversionAtSFunct[2];
+  A[1] = rtb_TmpSignalConversionAtSFunct[2];
   A[3] = 0.0;
-
-  /* Sum: '<S2>/Diff' incorporates:
-   *  UnitDelay: '<S2>/UD'
-   */
-  a21 = rtb_TSamp[0] - AttitudeControl_DW.UD_DSTATE[0];
-  R_BI_tmp = rtb_TSamp[1] - AttitudeControl_DW.UD_DSTATE[1];
-  rtb_pq_sp_idx_1 = rtb_TSamp[2] - AttitudeControl_DW.UD_DSTATE[2];
-
-  /* MATLAB Function: '<Root>/Attitude Controller' incorporates:
-   *  DataTypeConversion: '<Root>/Cast To Double1'
-   *  Inport: '<Root>/rates'
-   */
-  for (i = 0; i < 3; i++) {
-    R_BI_0[i] = R_BI[i + 6] * rtb_pq_sp_idx_1 + (R_BI[i + 3] * R_BI_tmp + R_BI[i]
-      * a21);
+  for (r1 = 0; r1 < 3; r1++) {
+    R_BI_0[r1] = R_BI[r1 + 6] * 0.0 + (R_BI[r1 + 3] * 0.0 + R_BI[r1] * 0.0);
   }
 
-  B[0] = ((rtb_h[0] - AttitudeControlParams.prim_axis_x) *
-          -AttitudeControlParams.xy_gain - rtb_h[1] * AttitudeControl_U.rates[2])
-    + R_BI_0[0];
-  B[1] = ((rtb_h[1] - AttitudeControlParams.prim_axis_y) *
-          -AttitudeControlParams.xy_gain - -rtb_h[0] * AttitudeControl_U.rates[2])
-    + R_BI_0[1];
-  if (std::abs(rtb_h[2]) > 0.0) {
-    i = 1;
+  B[0] = ((rtb_TmpSignalConversionAtSFunct[0] -
+           AttitudeControlParams.prim_axis_x) * -AttitudeControlParams.xy_gain -
+          rtb_TmpSignalConversionAtSFunct[1] * rtb_rates_filtered[2]) + R_BI_0[0];
+  B[1] = ((rtb_TmpSignalConversionAtSFunct[1] -
+           AttitudeControlParams.prim_axis_y) * -AttitudeControlParams.xy_gain -
+          -rtb_TmpSignalConversionAtSFunct[0] * rtb_rates_filtered[2]) + R_BI_0
+    [1];
+  if (std::abs(rtb_TmpSignalConversionAtSFunct[2]) > 0.0) {
+    r1 = 1;
     r2 = 0;
   } else {
-    i = 0;
+    r1 = 0;
     r2 = 1;
   }
 
-  a21 = A[r2] / A[i];
-  R_BI_tmp = A[2 + i];
-  rtb_pq_sp_idx_1 = (B[r2] - B[i] * a21) / (A[2 + r2] - R_BI_tmp * a21);
+  a21 = A[r2] / A[r1];
+  R_BI_tmp = A[2 + r1];
+  rtb_pq_sp_idx_1 = (B[r2] - B[r1] * a21) / (A[2 + r2] - R_BI_tmp * a21);
 
   /* Sum: '<S3>/Sum2' incorporates:
-   *  DataTypeConversion: '<Root>/Cast To Double'
    *  DataTypeConversion: '<Root>/Cast To Double3'
-   *  Inport: '<Root>/att'
    *  Inport: '<Root>/yaw_angle_sp'
    */
-  a21 = (real_T)AttitudeControl_U.yaw_angle_sp - AttitudeControl_U.att[2];
+  a21 = AttitudeControl_U.yaw_angle_sp - rtb_CastToDouble[2];
 
   /* Gain: '<S69>/Filter Coefficient' incorporates:
    *  DiscreteIntegrator: '<S41>/Filter'
@@ -182,29 +174,52 @@ void AttitudeControlModelClass::step()
    *  MATLAB Function: '<Root>/Attitude Controller'
    *  Sum: '<S89>/Sum'
    */
-  AttitudeControl_Y.rates_sp[0] = (real32_T)((B[i] - R_BI_tmp * rtb_pq_sp_idx_1)
-    / A[i]);
+  AttitudeControl_Y.rates_sp[0] = (real32_T)((B[r1] - R_BI_tmp * rtb_pq_sp_idx_1)
+    / A[r1]);
   AttitudeControl_Y.rates_sp[1] = (real32_T)rtb_pq_sp_idx_1;
   AttitudeControl_Y.rates_sp[2] = (real32_T)((a21 +
     AttitudeControl_DW.Integrator_DSTATE) + rtb_FilterCoefficient);
 
-  /* Update for DiscreteStateSpace: '<Root>/Discrete State-Space' */
+  /* DataTypeConversion: '<Root>/Cast To Double1' incorporates:
+   *  Inport: '<Root>/rates'
+   */
+  rtb_CastToDouble1[0] = AttitudeControl_U.rates[0];
+  rtb_CastToDouble1[1] = AttitudeControl_U.rates[1];
+  rtb_CastToDouble1[2] = AttitudeControl_U.rates[2];
+
+  /* Update for DiscreteStateSpace: '<Root>/H_att' */
   {
-    real_T xnew[3];
-    xnew[0] = (0.96)*AttitudeControl_DW.DiscreteStateSpace_DSTATE[0];
-    xnew[0] += (0.04)*rtb_CastToDouble2[0];
-    xnew[1] = (0.96)*AttitudeControl_DW.DiscreteStateSpace_DSTATE[1];
-    xnew[1] += (0.04)*rtb_CastToDouble2[1];
-    xnew[2] = (0.96)*AttitudeControl_DW.DiscreteStateSpace_DSTATE[2];
-    xnew[2] += (0.04)*rtb_CastToDouble2[2];
-    (void) memcpy(&AttitudeControl_DW.DiscreteStateSpace_DSTATE[0], xnew,
-                  sizeof(real_T)*3);
+    real_T xnew[4];
+    xnew[0] = (1.6428387401868281)*AttitudeControl_DW.H_att_DSTATE[0] +
+      (-0.71892373343192606)*AttitudeControl_DW.H_att_DSTATE[1];
+    xnew[0] += (0.25)*rtb_CastToDouble[0];
+    xnew[1] = (1.0)*AttitudeControl_DW.H_att_DSTATE[0];
+    xnew[2] = (1.6428387401868281)*AttitudeControl_DW.H_att_DSTATE[2] +
+      (-0.71892373343192606)*AttitudeControl_DW.H_att_DSTATE[3];
+    xnew[2] += (0.25)*rtb_CastToDouble[1];
+    xnew[3] = (1.0)*AttitudeControl_DW.H_att_DSTATE[2];
+    (void) memcpy(&AttitudeControl_DW.H_att_DSTATE[0], xnew,
+                  sizeof(real_T)*4);
   }
 
-  /* Update for UnitDelay: '<S2>/UD' */
-  AttitudeControl_DW.UD_DSTATE[0] = rtb_TSamp[0];
-  AttitudeControl_DW.UD_DSTATE[1] = rtb_TSamp[1];
-  AttitudeControl_DW.UD_DSTATE[2] = rtb_TSamp[2];
+  /* Update for DiscreteStateSpace: '<Root>/H_rates' */
+  {
+    real_T xnew[6];
+    xnew[0] = (1.6428387401868281)*AttitudeControl_DW.H_rates_DSTATE[0] +
+      (-0.71892373343192606)*AttitudeControl_DW.H_rates_DSTATE[1];
+    xnew[0] += (0.25)*rtb_CastToDouble1[0];
+    xnew[1] = (1.0)*AttitudeControl_DW.H_rates_DSTATE[0];
+    xnew[2] = (1.6428387401868281)*AttitudeControl_DW.H_rates_DSTATE[2] +
+      (-0.71892373343192606)*AttitudeControl_DW.H_rates_DSTATE[3];
+    xnew[2] += (0.25)*rtb_CastToDouble1[1];
+    xnew[3] = (1.0)*AttitudeControl_DW.H_rates_DSTATE[2];
+    xnew[4] = (1.6428387401868281)*AttitudeControl_DW.H_rates_DSTATE[4] +
+      (-0.71892373343192606)*AttitudeControl_DW.H_rates_DSTATE[5];
+    xnew[4] += (0.25)*rtb_CastToDouble1[2];
+    xnew[5] = (1.0)*AttitudeControl_DW.H_rates_DSTATE[4];
+    (void) memcpy(&AttitudeControl_DW.H_rates_DSTATE[0], xnew,
+                  sizeof(real_T)*6);
+  }
 
   /* Update for DiscreteIntegrator: '<S59>/Integrator' incorporates:
    *  Gain: '<S49>/Integral Gain'
@@ -234,15 +249,20 @@ void AttitudeControlModelClass::initialize()
   (void) memset(&AttitudeControl_Y.rates_sp[0], 0,
                 3U*sizeof(real32_T));
 
-  /* InitializeConditions for DiscreteStateSpace: '<Root>/Discrete State-Space' */
-  AttitudeControl_DW.DiscreteStateSpace_DSTATE[0] = (0.0);
-  AttitudeControl_DW.DiscreteStateSpace_DSTATE[1] = (0.0);
-  AttitudeControl_DW.DiscreteStateSpace_DSTATE[2] = (0.0);
+  /* InitializeConditions for DiscreteStateSpace: '<Root>/H_att' */
+  AttitudeControl_DW.H_att_DSTATE[0] = 0.0;
+  AttitudeControl_DW.H_att_DSTATE[1] = 0.0;
+  AttitudeControl_DW.H_att_DSTATE[2] = 0.0;
+  AttitudeControl_DW.H_att_DSTATE[3] = 0.0;
 
-  /* InitializeConditions for UnitDelay: '<S2>/UD' */
-  AttitudeControl_DW.UD_DSTATE[0] = 0.0;
-  AttitudeControl_DW.UD_DSTATE[1] = 0.0;
-  AttitudeControl_DW.UD_DSTATE[2] = 0.0;
+  /* InitializeConditions for DiscreteStateSpace: '<Root>/H_rates' */
+  {
+    int_T i1;
+    real_T *dw_DSTATE = &AttitudeControl_DW.H_rates_DSTATE[0];
+    for (i1=0; i1 < 6; i1++) {
+      dw_DSTATE[i1] = 0.0;
+    }
+  }
 
   /* InitializeConditions for DiscreteIntegrator: '<S59>/Integrator' */
   AttitudeControl_DW.Integrator_DSTATE = 0.0;
