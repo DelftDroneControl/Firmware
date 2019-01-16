@@ -208,7 +208,7 @@ private:
 		(ParamFloat<px4::params::SL_Y_POS_SP>) _sl_y_pos_sp,
 		(ParamFloat<px4::params::SL_Z_POS_SP>) _sl_z_pos_sp,
 
-		(ParamInt<px4::params::SL_FAIL_FLAG>) _sl_fail_flag,
+		(ParamInt<px4::params::SL_FAIL_FLAG_POS>) _sl_fail_flag,
 		(ParamInt<px4::params::SL_RPM_FEEDBACK>) _sl_rpm_feedback
 		
 	)

@@ -282,7 +282,7 @@ PARAM_DEFINE_FLOAT(SL_Z_POS_SP, 0.f);
  * @value 2 double rotor failure
  * @group Multicopter Attitude Control
  */
-PARAM_DEFINE_INT32(SL_FAIL_FLAG, 0);
+PARAM_DEFINE_INT32(SL_FAIL_FLAG_POS, 0);
 
 /**
  * RPM Feedback Flag
