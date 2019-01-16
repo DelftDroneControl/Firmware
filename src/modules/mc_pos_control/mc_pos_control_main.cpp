@@ -53,6 +53,7 @@
 #include <uORB/topics/vehicle_land_detected.h>
 #include <uORB/topics/vehicle_local_position.h>
 #include <uORB/topics/vehicle_local_position_setpoint.h>
+#include <uORB/topics/vehicle_odometry.h>
 #include <uORB/topics/vehicle_status.h>
 #include <uORB/topics/vehicle_trajectory_waypoint.h>
 #include <uORB/topics/landing_gear.h>
@@ -118,6 +119,9 @@ private:
 	int		_control_mode_sub{-1};		/**< vehicle control mode subscription */
 	int		_params_sub{-1};			/**< notification of parameter updates */
 	int		_local_pos_sub{-1};			/**< vehicle local position */
+
+	int		_vision_pos_sub{-1};			/**< vehicle vision position */
+
 	int		_att_sub{-1};				/**< vehicle attitude */
 	int		_home_pos_sub{-1}; 			/**< home position */
 	int		_traj_wp_avoidance_sub{-1};	/**< trajectory waypoint */
@@ -129,11 +133,16 @@ private:
 	bool _smooth_velocity_takeoff =
 		false; /**< Smooth velocity takeoff can be initiated either through position or velocity setpoint */
 
+	float _z_prev = 0.f;
+
 	vehicle_status_s 			_vehicle_status{};		/**< vehicle status */
 	vehicle_land_detected_s 		_vehicle_land_detected{};	/**< vehicle land detected */
 	vehicle_attitude_setpoint_s		_att_sp{};			/**< vehicle attitude setpoint */
 	vehicle_control_mode_s			_control_mode{};		/**< vehicle control mode */
 	vehicle_local_position_s		_local_pos{};			/**< vehicle local position */
+
+	vehicle_odometry_s		_vision_pos{};			/**< vehicle local position */
+
 	home_position_s				_home_pos{};			/**< home position */
 	vehicle_trajectory_waypoint_s		_traj_wp_avoidance{};		/**< trajectory waypoint */
 	vehicle_trajectory_waypoint_s		_traj_wp_avoidance_desired{};	/**< desired waypoints, inputs to an obstacle avoidance module */
@@ -155,6 +164,10 @@ private:
 		(ParamInt<px4::params::MPC_OBS_AVOID>) MPC_OBS_AVOID, /**< enable obstacle avoidance */
 		(ParamFloat<px4::params::MPC_TILTMAX_LND>) MPC_TILTMAX_LND /**< maximum tilt for landing and smooth takeoff */
 	);
+
+	control::BlockDerivative _x_deriv; /**< derivative in x */
+	control::BlockDerivative _y_deriv; /**< derivative in y */
+	control::BlockDerivative _z_deriv; /**< derivative in z */
 
 	control::BlockDerivative _vel_x_deriv; /**< velocity derivative in x */
 	control::BlockDerivative _vel_y_deriv; /**< velocity derivative in y */
@@ -347,6 +360,9 @@ logging.
 MulticopterPositionControl::MulticopterPositionControl() :
 	SuperBlock(nullptr, "MPC"),
 	ModuleParams(nullptr),
+	_x_deriv(this, "POSD"),
+	_y_deriv(this, "POSD"),
+	_z_deriv(this, "POSD"),
 	_vel_x_deriv(this, "VELD"),
 	_vel_y_deriv(this, "VELD"),
 	_vel_z_deriv(this, "VELD"),
@@ -413,9 +429,21 @@ void
 MulticopterPositionControl::poll_subscriptions()
 {
 	// This is polled for, so all we need to do is a copy now.
-	orb_copy(ORB_ID(vehicle_local_position), _local_pos_sub, &_local_pos);
+	orb_copy(ORB_ID(vehicle_visual_odometry), _vision_pos_sub, &_vision_pos);
+
 
 	bool updated;
+	orb_check(_local_pos_sub, &updated);
+
+	if (updated) {
+		orb_copy(ORB_ID(vehicle_local_position), _local_pos_sub, &_local_pos);
+	}
+
+	// TODO
+	// orb_check(_vision_pos_sub, &updated);
+	// if (updated) {
+	// 	orb_copy(ORB_ID(vehicle_visual_odometry), _vision_pos_sub, &_vision_pos);
+	// }
 
 	orb_check(_vehicle_status_sub, &updated);
 
@@ -506,6 +534,22 @@ MulticopterPositionControl::set_vehicle_states(const float &vel_sp_z)
 		return;
 	}
 
+
+	if (PX4_ISFINITE(_vision_pos.x) && PX4_ISFINITE(_vision_pos.y) && PX4_ISFINITE(_vision_pos.z)) {
+		_states.position(0) = _vision_pos.x;
+		_states.position(1) = _vision_pos.y;
+		_states.position(2) = _vision_pos.z;
+
+		_states.velocity(0) = _x_deriv.update(_states.position(0));
+		_states.velocity(1) = _y_deriv.update(_states.position(1));
+		_states.velocity(2) = _z_deriv.update(_states.position(2));
+
+		_states.acceleration(0) = _vel_x_deriv.update(-_states.velocity(0));
+		_states.acceleration(1) = _vel_y_deriv.update(-_states.velocity(1));
+		_states.acceleration(2) = _vel_z_deriv.update(-_states.velocity(2));
+		return;
+	}
+
 	// only set position states if valid and finite
 	if (PX4_ISFINITE(_local_pos.x) && PX4_ISFINITE(_local_pos.y) && _local_pos.xy_valid) {
 		_states.position(0) = _local_pos.x;
@@ -586,6 +630,7 @@ MulticopterPositionControl::run()
 	_control_mode_sub = orb_subscribe(ORB_ID(vehicle_control_mode));
 	_params_sub = orb_subscribe(ORB_ID(parameter_update));
 	_local_pos_sub = orb_subscribe(ORB_ID(vehicle_local_position));
+	_vision_pos_sub = orb_subscribe(ORB_ID(vehicle_visual_odometry));
 	_att_sub = orb_subscribe(ORB_ID(vehicle_attitude));
 	_home_pos_sub = orb_subscribe(ORB_ID(home_position));
 	_traj_wp_avoidance_sub = orb_subscribe(ORB_ID(vehicle_trajectory_waypoint));
@@ -594,8 +639,12 @@ MulticopterPositionControl::run()
 	parameters_update(true);
 	poll_subscriptions();
 
+
+	// Should poll on vision or local_position
+	// TODO: make configurable
+
 	// setup file descriptor to poll the local position as loop wakeup source
-	px4_pollfd_struct_t poll_fd = {.fd = _local_pos_sub};
+	px4_pollfd_struct_t poll_fd = {.fd = _vision_pos_sub};
 	poll_fd.events = POLLIN;
 
 	while (!should_exit()) {
@@ -834,6 +883,7 @@ MulticopterPositionControl::run()
 	orb_unsubscribe(_control_mode_sub);
 	orb_unsubscribe(_params_sub);
 	orb_unsubscribe(_local_pos_sub);
+	orb_unsubscribe(_vision_pos_sub);
 	orb_unsubscribe(_att_sub);
 	orb_unsubscribe(_home_pos_sub);
 	orb_unsubscribe(_traj_wp_avoidance_sub);

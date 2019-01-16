@@ -114,6 +114,8 @@ SimulinkControl::SimulinkControl() :
 
 	/* initialize quaternions in messages to be valid */
 	_v_att.q[0] = 1.f;
+	_vision.q[0] = 1.f;
+
 	_v_att_sp.q_d[0] = 1.f;
 
 	_rates_prev.zero();
@@ -212,6 +214,8 @@ SimulinkControl::parameters_updated()
 
 	_sample_rate_max = _att_rate_sample_rate_max.get();
 
+	_yaw_rate_sp = _sl_yaw_rate_sp.get();
+
 	// AttitudeControl
 	AttitudeControlParams.prim_axis_x = _prim_axis_x.get();
 	AttitudeControlParams.prim_axis_y = _prim_axis_y.get();
@@ -233,6 +237,7 @@ SimulinkControl::parameters_updated()
 	// Actuator failure
 	RateControl.RateControl_U.fail_flag = _sl_fail_flag.get();
 	RateControl.RateControl_U.act_limit = _act_limit.get();
+	RateControlParams.fail_id = _sl_fail_id.get();
 
 	PX4_INFO("Parameters updated");
 	PX4_INFO("Actuator limit: %f", static_cast<double>(RateControl.RateControl_U.act_limit));
@@ -462,6 +467,22 @@ SimulinkControl::esc_status_poll()
 }
 
 
+bool
+SimulinkControl::vision_poll()
+{
+	/* check if there is a new message */
+	bool updated;
+	orb_check(_vision_sub, &updated);
+
+	if (updated) {
+		orb_copy(ORB_ID(vehicle_visual_odometry), _vision_sub, &_vision);
+		// PX4_INFO("%f, %f, %f, %f", static_cast<double>(_vision.q[0]), static_cast<double>(_vision.q[1]), static_cast<double>(_vision.q[2]), static_cast<double>(_vision.q[3]));
+		return true;
+	}
+	return false;
+}
+
+
 // void
 // SimulinkControl::has_upset_condition(float[3] att, float )
 // {
@@ -631,7 +652,9 @@ SimulinkControl::control_attitude()
 	attitude_gain(2) = roll_pitch_gain;
 
 	// /* get estimated and desired vehicle attitude */
-	Quatf q(_v_att.q);
+	Quatf q_v_att(_v_att.q);
+	Quatf q(_vision.q);
+
 	Quatf qd(_v_att_sp.q_d);
 
 	/* ensure input quaternions are exactly normalized because acosf(1.00001) == NaN */
@@ -682,14 +705,13 @@ SimulinkControl::control_attitude()
 	//  */
 	_rates_sp += q.inversed().dcm_z() * _v_att_sp.yaw_sp_move_rate;
 
-
-	// PX4_INFO("thrus %f, %f, %f", static_cast<double>(_v_att_sp.thrust_vec_sp[0]), static_cast<double>(_v_att_sp.thrust_vec_sp[1]), static_cast<double>(_v_att_sp.thrust_vec_sp[2]));
-
-	// PX4_INFO("e_z_d %f, %f, %f", static_cast<double>(e_z_d(0)), static_cast<double>(e_z_d(1)), static_cast<double>(e_z_d(2)));
-
 	ExtU_AttitudeControl_T attitudeControl_input;
 
-	Eulerf att(q);
+	Eulerf eul_v_att(q_v_att); // from ekf2
+	Eulerf att(q); // from external vision
+
+	// Use ekf2 yaw output
+	att(2) = eul_v_att(2);
 
 	attitudeControl_input.att[0] = att(0);
 	attitudeControl_input.att[1] = att(1);
@@ -709,11 +731,13 @@ SimulinkControl::control_attitude()
 
 	AttitudeControl.step();
 
-	// For now, use _rates_sp from PX4 (TODO)
 	_rates_sp(0) = AttitudeControl.AttitudeControl_Y.rates_sp[0];
 	_rates_sp(1) = AttitudeControl.AttitudeControl_Y.rates_sp[1];
-	// _rates_sp(2) = AttitudeControl.AttitudeControl_Y.rates_sp[2];
-	// _rates_sp(2) = _v_att_sp.yaw_sp_move_rate;
+	// _rates_sp(2) = AttitudeControl.AttitudeControl_Y.rates_sp[2]; // use AttitudeControl yaw_rate_sp
+	// _rates_sp(2) = _v_att_sp.yaw_sp_move_rate; // use PX4 yaw_rate_sp
+
+	// TODO: make configurable
+	_rates_sp(2) = _yaw_rate_sp; // use yaw_rate_sp from param
 
 	_attitude_control_input.timestamp = hrt_absolute_time();
 
@@ -943,6 +967,8 @@ SimulinkControl::run()
 
 	_sensor_combined_sub = orb_subscribe(ORB_ID(sensor_combined));
 	_esc_status_sub = orb_subscribe(ORB_ID(esc_status));
+	_vision_sub = orb_subscribe(ORB_ID(vehicle_visual_odometry));
+
 
 	/* wakeup source: gyro data from sensor selected by the sensor app */
 	px4_pollfd_struct_t poll_fds = {};
@@ -1008,6 +1034,7 @@ SimulinkControl::run()
 			orb_copy(ORB_ID(sensor_gyro), _sensor_gyro_sub[_selected_gyro], &_sensor_gyro);
 
 			esc_status_poll();
+			const bool vision_updated = vision_poll();
 
 			/* run the rate controller immediately after a gyro update */
 			if (_v_control_mode.flag_control_rates_enabled) {
@@ -1045,7 +1072,7 @@ SimulinkControl::run()
 			bool attitude_setpoint_generated = false;
 
 			if (_v_control_mode.flag_control_attitude_enabled && _vehicle_status.is_rotary_wing) {
-				if (attitude_updated) {
+				if (attitude_updated || vision_updated || true) {
 					// Generate the attitude setpoint from stick inputs if we are in Manual/Stabilized mode
 					if (_v_control_mode.flag_control_manual_enabled &&
 							!_v_control_mode.flag_control_altitude_enabled &&
@@ -1142,6 +1169,8 @@ SimulinkControl::run()
 
 	orb_unsubscribe(_sensor_combined_sub);
 	orb_unsubscribe(_esc_status_sub);
+	orb_unsubscribe(_vision_sub);
+
 
 	RateControl.terminate();
 	AttitudeControl.terminate();

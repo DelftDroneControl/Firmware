@@ -63,6 +63,7 @@
 #include <uORB/topics/rate_control_input.h>
 #include <uORB/topics/attitude_control_input.h>
 #include <uORB/topics/esc_status.h>
+#include <uORB/topics/vehicle_odometry.h>
 
 
 /**
@@ -121,6 +122,7 @@ private:
 
 	void		sensor_combined_poll();
 	void		esc_status_poll();
+	bool		vision_poll();
 
 	// void		has_upset_condition();
 
@@ -175,6 +177,7 @@ private:
 
 	int		_sensor_combined_sub{-1};
 	int		_esc_status_sub{-1};
+	int		_vision_sub{-1};
 
 	unsigned _gyro_count{1};
 	int _selected_gyro{0};
@@ -205,6 +208,7 @@ private:
 
 	struct sensor_combined_s		_sensor_combined {};
 	struct esc_status_s				_esc_status {};
+	struct vehicle_odometry_s		_vision {};
 
 	MultirotorMixer::saturation_status _saturation_status{};
 
@@ -295,8 +299,10 @@ private:
 
 		// Actuator failures
 		(ParamFloat<px4::params::SL_ACT_LIMIT>) _act_limit,
+		(ParamInt<px4::params::SL_FAIL_ID>) _sl_fail_id,
 		(ParamInt<px4::params::SL_FAIL_FLAG>) _sl_fail_flag,
 
+		(ParamFloat<px4::params::SL_YAW_RATE_SP>) _sl_yaw_rate_sp,
 
 		// Attitude/primary axis control
 		(ParamFloat<px4::params::SL_PRIM_AXIS_X>) _prim_axis_x,
@@ -331,6 +337,8 @@ private:
 	float _man_tilt_max;			/**< maximum tilt allowed for manual flight [rad] */
 
 	float _sample_rate_max;
+
+	float _yaw_rate_sp;
 
     struct debug_key_value_s dbg {};
 	orb_advert_t pub_dbg {nullptr};

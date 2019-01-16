@@ -7,9 +7,9 @@
  *
  * Code generation for model "AttitudeControl".
  *
- * Model version              : 1.88
+ * Model version              : 1.107
  * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C++ source code generated on : Fri Jan 11 12:24:48 2019
+ * C++ source code generated on : Tue Jan 15 16:04:44 2019
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -46,8 +46,8 @@
 
 /* Block states (default storage) for system '<Root>' */
 typedef struct {
-  real_T DiscreteStateSpace_DSTATE[3]; /* '<Root>/Discrete State-Space' */
-  real_T UD_DSTATE[3];                 /* '<S2>/UD' */
+  real_T H_att_DSTATE[4];              /* '<Root>/H_att' */
+  real_T H_rates_DSTATE[6];            /* '<Root>/H_rates' */
   real_T Integrator_DSTATE;            /* '<S59>/Integrator' */
   real_T Filter_DSTATE;                /* '<S41>/Filter' */
 } DW_AttitudeControl_T;

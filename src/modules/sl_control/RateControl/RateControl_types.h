@@ -7,9 +7,9 @@
  *
  * Code generation for model "RateControl".
  *
- * Model version              : 1.619
+ * Model version              : 1.656
  * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C++ source code generated on : Fri Jan 11 16:16:09 2019
+ * C++ source code generated on : Tue Jan 15 14:35:28 2019
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -29,6 +29,7 @@ typedef struct {
   real_T roll_gain;
   real_T pitch_gain;
   real_T yaw_gain;
+  real_T fail_id;
   real_T roll_eff;
   real_T pitch_eff;
   real_T yaw_eff;
