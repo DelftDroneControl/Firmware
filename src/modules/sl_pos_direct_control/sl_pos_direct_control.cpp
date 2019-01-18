@@ -327,11 +327,13 @@ SlPosDirectControl::control_pos_direct(float dt)
 {
 	// get the raw gyro data and correct for thermal errors
 	Vector3f rates;
+	Vector3f accs;
 
 	if (_selected_gyro == 0) {
 		rates(0) = (_sensor_gyro.x - _sensor_correction.gyro_offset_0[0]) * _sensor_correction.gyro_scale_0[0];
 		rates(1) = (_sensor_gyro.y - _sensor_correction.gyro_offset_0[1]) * _sensor_correction.gyro_scale_0[1];
 		rates(2) = (_sensor_gyro.z - _sensor_correction.gyro_offset_0[2]) * _sensor_correction.gyro_scale_0[2];
+
 
 	} else if (_selected_gyro == 1) {
 		rates(0) = (_sensor_gyro.x - _sensor_correction.gyro_offset_1[0]) * _sensor_correction.gyro_scale_1[0];
@@ -357,7 +359,22 @@ SlPosDirectControl::control_pos_direct(float dt)
 	rates(1) -= _sensor_bias.gyro_y_bias;
 	rates(2) -= _sensor_bias.gyro_z_bias;
 
+	accs(0)    = _sensor_combined.accelerometer_m_s2[0]-_sensor_bias.accel_x_bias;
+	accs(1)    = _sensor_combined.accelerometer_m_s2[1]-_sensor_bias.accel_y_bias;
+	accs(2)    = _sensor_combined.accelerometer_m_s2[2]-_sensor_bias.accel_z_bias;
+	
+	// PX4_INFO("%f\t%f\n",static_cast<double>(_sensor_bias.accel_x_bias),static_cast<double>(_sensor_bias.accel_z_bias));
 
+	// // gyro measurements
+	// rates(0) = _sensor_combined.gyro_rad[0];
+	// rates(1) = _sensor_combined.gyro_rad[1];
+	// rates(2) = _sensor_combined.gyro_rad[2];
+
+	// // accelerometer measurements
+	// accs(0) = _sensor_combined.accelerometer_m_s2[0];
+	// accs(1) = _sensor_combined.accelerometer_m_s2[1];
+	// accs(2) = _sensor_combined.accelerometer_m_s2[2];
+	
 	/* get estimated attitude */
 	Quatf q_v_att(_v_att.q);
 	Quatf q(_ev_odom.q);
@@ -392,6 +409,10 @@ SlPosDirectControl::control_pos_direct(float dt)
 	PosDirectControl_input.rates[0] = rates(0);
 	PosDirectControl_input.rates[1] = rates(1);
 	PosDirectControl_input.rates[2] = rates(2);
+
+	PosDirectControl_input.accs[0] = accs(0);
+	PosDirectControl_input.accs[1] = accs(1);
+	PosDirectControl_input.accs[2] = accs(2);
 
 	// See pass.main.mix for esc mapping.
 	PosDirectControl_input.esc_rpm[0] = _esc_status.esc[2].esc_rpm;
@@ -459,6 +480,10 @@ SlPosDirectControl::control_pos_direct(float dt)
 	_pos_direct_control_input.esc_rpm[2] = PosDirectControl_input.esc_rpm[2];
 	_pos_direct_control_input.esc_rpm[3] = PosDirectControl_input.esc_rpm[3];
 
+	_pos_direct_control_input.accs[0] = PosDirectControl_input.accs[0];
+	_pos_direct_control_input.accs[1] = PosDirectControl_input.accs[1];
+	_pos_direct_control_input.accs[2] = PosDirectControl_input.accs[2];
+	
 	// Set in params for now..
 	// _pos_direct_control_input.pos_sp[0] = _local_pos_sp.x;
 	// _pos_direct_control_input.pos_sp[1] = _local_pos_sp.y;

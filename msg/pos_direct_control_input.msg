@@ -10,3 +10,5 @@ float32[3] pos_sp
 float32 yaw_sp
 
 uint32 fail_flag
+
+float32[3] accs
