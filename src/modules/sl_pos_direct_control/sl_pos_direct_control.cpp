@@ -359,12 +359,17 @@ SlPosDirectControl::control_pos_direct(float dt)
 	rates(1) -= _sensor_bias.gyro_y_bias;
 	rates(2) -= _sensor_bias.gyro_z_bias;
 
-	accs(0)    = _sensor_combined.accelerometer_m_s2[0]-_sensor_bias.accel_x_bias;
-	accs(1)    = _sensor_combined.accelerometer_m_s2[1]-_sensor_bias.accel_y_bias;
-	accs(2)    = _sensor_combined.accelerometer_m_s2[2]-_sensor_bias.accel_z_bias;
+	accs(0)    = _sensor_combined.accelerometer_m_s2[0];
+	accs(1)    = _sensor_combined.accelerometer_m_s2[1];
+	accs(2)    = _sensor_combined.accelerometer_m_s2[2];
 	
-	// PX4_INFO("%f\t%f\n",static_cast<double>(_sensor_bias.accel_x_bias),static_cast<double>(_sensor_bias.accel_z_bias));
+	// PX4_INFO("%f\t%f\t%f\n",static_cast<double>(accs(0)),static_cast<double>(accs(1)),static_cast<double>(accs(2)));
+	// PX4_INFO("%f\t%f\t%f",static_cast<double>(_sensor_correction.accel_offset_0[0]),static_cast<double>(_sensor_correction.accel_offset_0[1]),static_cast<double>(_sensor_correction.accel_offset_0[2]));
+	// PX4_INFO("%f\t%f\t%f",static_cast<double>(_sensor_correction.accel_offset_1[0]),static_cast<double>(_sensor_correction.accel_offset_1[1]),static_cast<double>(_sensor_correction.accel_offset_1[2]));
+	// PX4_INFO("%f\t%f\t%f\n",static_cast<double>(_sensor_correction.accel_offset_2[0]),static_cast<double>(_sensor_correction.accel_offset_2[1]),static_cast<double>(_sensor_correction.accel_offset_2[2]));
 
+
+	
 	// // gyro measurements
 	// rates(0) = _sensor_combined.gyro_rad[0];
 	// rates(1) = _sensor_combined.gyro_rad[1];
@@ -422,7 +427,10 @@ SlPosDirectControl::control_pos_direct(float dt)
 
 	Eulerf euler_angles(q);
 	Eulerf euler_angles_v_att(q_v_att);
-	euler_angles(2) = euler_angles_v_att(2);
+
+	// euler_angles(0) = euler_angles_v_att(0);
+	// euler_angles(1) = euler_angles_v_att(1);
+	// euler_angles(2) = euler_angles_v_att(2);
 
 	if(isnan(euler_angles.phi())) 
 		PosDirectControl_input.att[0] = 0; 
@@ -431,7 +439,7 @@ SlPosDirectControl::control_pos_direct(float dt)
 	if(isnan(euler_angles.theta())) 
 		PosDirectControl_input.att[1] = 0; 
 	else 
-		PosDirectControl_input.att[1] = euler_angles.theta(); 
+		PosDirectControl_input.att[1] = euler_angles.theta(); // - static_cast<float>(0.03); 
 	if(isnan(euler_angles.psi())) 
 		PosDirectControl_input.att[2] = 0; 
 	else 
