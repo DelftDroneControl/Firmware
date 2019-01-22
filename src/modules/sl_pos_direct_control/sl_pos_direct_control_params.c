@@ -164,7 +164,7 @@ PARAM_DEFINE_FLOAT(SL_POS_P_GAIN, 1.0);
  * @increment .1
  * @group Multicopter Attitude Control
  */
-PARAM_DEFINE_FLOAT(SL_ALT_P_GAIN, 5.0);
+PARAM_DEFINE_FLOAT(SL_ALT_P_GAIN, 1.0);
 
 /**
  * Velocity control gain.
