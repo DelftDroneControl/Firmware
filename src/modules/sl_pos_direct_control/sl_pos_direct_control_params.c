@@ -298,6 +298,30 @@ PARAM_DEFINE_FLOAT(SL_Z_POS_SP, 0.f);
 PARAM_DEFINE_FLOAT(SL_YAW_SP, 0.f);
 
 /**
+ * parameter defining the output y2 (chi)
+ *
+ * @unit
+ * @min 0
+ * @max 200
+ * @decimal 0
+ * @increment .1
+ * @group Multicopter Attitude Control
+ */
+PARAM_DEFINE_FLOAT(SL_CHI, 90.f);
+
+/**
+ * INDI filter time constant
+ *
+ * @unit
+ * @min 0
+ * @max 1
+ * @decimal 0
+ * @increment .01
+ * @group Multicopter Attitude Control
+ */
+PARAM_DEFINE_FLOAT(SL_INDI_FILTER_T,0.04);
+
+/**
  * Fail flag pseudo parameter
  *
  * @value 0 norminal case

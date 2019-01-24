@@ -156,6 +156,8 @@ SlPosDirectControl::parameters_updated()
 	PosDirectControlParams.Ip = _sl_inertia_prop.get();
 	PosDirectControlParams.t = _sl_torque_coeff.get();
 	PosDirectControlParams.rpm_feedback = _sl_rpm_feedback.get();
+	PosDirectControlParams.chi = _sl_chi.get();
+	//PosDirectControlParams.indi_t = _sl_indi_filter_t.get();
 	
 	PosDirectControl.PosDirectControl_U.pos_sp[0] = _sl_x_pos_sp.get();
 	PosDirectControl.PosDirectControl_U.pos_sp[1] = _sl_y_pos_sp.get();
@@ -455,7 +457,7 @@ SlPosDirectControl::control_pos_direct(float dt)
 	PosDirectControl.PosDirectControl_U = PosDirectControl_input;
 
 	// float t_step_start = hrt_absolute_time();
-	
+
 	PosDirectControl.step();
 
 	// `pos_direct_control_input` logger
@@ -498,6 +500,8 @@ SlPosDirectControl::control_pos_direct(float dt)
 	// _pos_direct_control_input.pos_sp[2] = _local_pos_sp.z;
 
 	_pos_direct_control_input.yaw_sp = 0;
+
+	//_pos_direct_control_input.dt_step = hrt_absolute_time() - t_step_start;
 
 	// See mixer file `pass.main.mix` for exact control allocation.
 	_actuators.control[0] = PosDirectControl.PosDirectControl_Y.actuators_control[0];

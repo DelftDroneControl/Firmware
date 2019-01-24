@@ -215,7 +215,9 @@ private:
 		(ParamInt<px4::params::SL_FAIL_FLAG_POS>) _sl_fail_flag,
 		(ParamFloat<px4::params::SL_YAW_SP>) _sl_yaw_sp,
 		
-		(ParamInt<px4::params::SL_RPM_FEEDBACK>) _sl_rpm_feedback
+		(ParamInt<px4::params::SL_RPM_FEEDBACK>) _sl_rpm_feedback,
+		(ParamFloat<px4::params::SL_CHI>) _sl_chi,
+		(ParamFloat<px4::params::SL_INDI_FILTER_T>) _sl_indi_filter_t
 		
 	)
 
