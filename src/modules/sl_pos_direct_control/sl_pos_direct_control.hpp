@@ -60,6 +60,7 @@
 
 #include <uORB/topics/esc_status.h>
 #include <uORB/topics/vehicle_odometry.h>
+#include <uORB/topics/position_setpoint_triplet.h>
 
 /**
  * Multicopter attitude control app start / stop handling function
@@ -115,6 +116,7 @@ private:
 
 	void		esc_status_poll();
 	void	    odometry_status_poll();
+	void		position_setpoint_triplet_poll();
 
 	/**
 	 * Attitude controller.
@@ -145,6 +147,7 @@ private:
 
 	int		_esc_status_sub{-1};
 	int 	_ev_odom_sub{-1};
+	int     _position_sp_triplet_sub{-1};
 
 	unsigned _gyro_count{1};
 	int _selected_gyro{0};
@@ -168,6 +171,7 @@ private:
 
 	struct esc_status_s				_esc_status {};
 	struct vehicle_odometry_s		_ev_odom {};
+	struct position_setpoint_triplet_s _position_sp_triplet{};
 
 	perf_counter_t	_loop_perf;			/**< loop performance counter */
 
@@ -192,6 +196,8 @@ private:
 
 		(ParamFloat<px4::params::SL_POS_D_GAIN>) _sl_pos_d_gain,
 		(ParamFloat<px4::params::SL_ALT_D_GAIN>) _sl_alt_d_gain,
+
+		(ParamFloat<px4::params::SL_POS_I_GAIN>) _sl_pos_i_gain,
 
 		(ParamFloat<px4::params::SL_ATT_P_GAIN>) _sl_att_p_gain,
 		(ParamFloat<px4::params::SL_ATT_D_GAIN>) _sl_att_d_gain,
@@ -227,5 +233,6 @@ private:
 	// orb_advert_t pub_debug_vect {nullptr};
 	struct pos_direct_control_input_s _pos_direct_control_input {};
 	orb_advert_t pub_pos_direct_control_input {nullptr};
+
 };
 

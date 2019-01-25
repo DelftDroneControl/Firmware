@@ -141,6 +141,8 @@ SlPosDirectControl::parameters_updated()
 	PosDirectControlParams.pos_x_d_gain = _sl_pos_d_gain.get();
 	PosDirectControlParams.pos_z_d_gain = _sl_alt_d_gain.get();
 
+	PosDirectControlParams.pos_x_i_gain = _sl_pos_i_gain.get();
+
 	PosDirectControlParams.att_p_gain = _sl_att_p_gain.get();
 	PosDirectControlParams.att_d_gain = _sl_att_d_gain.get();
 	PosDirectControlParams.yaw_p_gain = _sl_yaw_p_gain.get();
@@ -159,15 +161,15 @@ SlPosDirectControl::parameters_updated()
 	PosDirectControlParams.chi = _sl_chi.get();
 	//PosDirectControlParams.indi_t = _sl_indi_filter_t.get();
 	
-	PosDirectControl.PosDirectControl_U.pos_sp[0] = _sl_x_pos_sp.get();
-	PosDirectControl.PosDirectControl_U.pos_sp[1] = _sl_y_pos_sp.get();
-	PosDirectControl.PosDirectControl_U.pos_sp[2] = _sl_z_pos_sp.get();
+	// PosDirectControl.PosDirectControl_U.pos_sp[0] = _sl_x_pos_sp.get();
+	// PosDirectControl.PosDirectControl_U.pos_sp[1] = _sl_y_pos_sp.get();
+	// PosDirectControl.PosDirectControl_U.pos_sp[2] = _sl_z_pos_sp.get();
 	PosDirectControl.PosDirectControl_U.yaw_sp    = _sl_yaw_sp.get();
 	PosDirectControl.PosDirectControl_U.fail_flag = _sl_fail_flag.get();
 	
-	_pos_direct_control_input.pos_sp[0] = _sl_x_pos_sp.get();
-	_pos_direct_control_input.pos_sp[1] = _sl_y_pos_sp.get();
-	_pos_direct_control_input.pos_sp[2] = _sl_z_pos_sp.get();
+	//_pos_direct_control_input.pos_sp[0] = _sl_x_pos_sp.get();
+	//_pos_direct_control_input.pos_sp[1] = _sl_y_pos_sp.get();
+	//_pos_direct_control_input.pos_sp[2] = _sl_z_pos_sp.get();
 	_pos_direct_control_input.fail_flag = _sl_fail_flag.get();
 	_pos_direct_control_input.yaw_sp 	= _sl_yaw_sp.get();
 }
@@ -319,6 +321,18 @@ SlPosDirectControl::odometry_status_poll()
 	}	
 }
 
+void
+SlPosDirectControl::position_setpoint_triplet_poll()
+{
+	/* check if there is a new message */
+	bool updated;
+	orb_check(_position_sp_triplet_sub, &updated);
+
+	if (updated) {
+		orb_copy(ORB_ID(position_setpoint_triplet), _position_sp_triplet_sub, &_position_sp_triplet);	
+	}	
+}
+
 /*
  * Position controller.
  * Input: 
@@ -448,9 +462,9 @@ SlPosDirectControl::control_pos_direct(float dt)
 		PosDirectControl_input.att[2] = euler_angles.psi(); 
 	
 	// Set in params for now..
-	// PosDirectControl_input.pos_sp[0] = _local_pos_sp.x;
-	// PosDirectControl_input.pos_sp[1] = _local_pos_sp.y;
-	// PosDirectControl_input.pos_sp[2] = _local_pos_sp.z;
+	PosDirectControl_input.pos_sp[0] = _position_sp_triplet.current.y;
+	PosDirectControl_input.pos_sp[1] = _position_sp_triplet.current.x;
+	PosDirectControl_input.pos_sp[2] = _position_sp_triplet.current.z;
 
 	// PosDirectControl_input.yaw_sp = 0.f;
 
@@ -494,10 +508,9 @@ SlPosDirectControl::control_pos_direct(float dt)
 	_pos_direct_control_input.accs[1] = PosDirectControl_input.accs[1];
 	_pos_direct_control_input.accs[2] = PosDirectControl_input.accs[2];
 	
-	// Set in params for now..
-	// _pos_direct_control_input.pos_sp[0] = _local_pos_sp.x;
-	// _pos_direct_control_input.pos_sp[1] = _local_pos_sp.y;
-	// _pos_direct_control_input.pos_sp[2] = _local_pos_sp.z;
+	_pos_direct_control_input.pos_sp[0] = PosDirectControl_input.pos_sp[0];
+	_pos_direct_control_input.pos_sp[1] = PosDirectControl_input.pos_sp[1];
+	_pos_direct_control_input.pos_sp[2] = -PosDirectControl_input.pos_sp[2];
 
 	_pos_direct_control_input.yaw_sp = 0;
 
@@ -539,6 +552,7 @@ SlPosDirectControl::run()
 	_sensor_bias_sub = orb_subscribe(ORB_ID(sensor_bias));
 	_sensor_combined_sub = orb_subscribe(ORB_ID(sensor_combined));
 	_vehicle_local_position_sub = orb_subscribe(ORB_ID(vehicle_local_position));
+	_position_sp_triplet_sub = orb_subscribe(ORB_ID(position_setpoint_triplet));
 
 	/* wakeup source: gyro data from sensor selected by the sensor app */
 	px4_pollfd_struct_t poll_fds = {};
@@ -617,6 +631,7 @@ SlPosDirectControl::run()
 
 			esc_status_poll();
 			odometry_status_poll();
+			position_setpoint_triplet_poll();
 
 			control_pos_direct(dt);
 
@@ -655,6 +670,7 @@ SlPosDirectControl::run()
 
 	orb_unsubscribe(_esc_status_sub);
 	orb_unsubscribe(_ev_odom_sub);
+	orb_unsubscribe(_position_sp_triplet_sub);
 	
 	PosDirectControl.terminate();
 }

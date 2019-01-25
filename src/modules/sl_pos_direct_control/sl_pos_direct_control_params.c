@@ -178,6 +178,18 @@ PARAM_DEFINE_FLOAT(SL_ALT_P_GAIN, 1.0);
  */
 PARAM_DEFINE_FLOAT(SL_POS_D_GAIN, 1.0);
 
+/**
+ * Position control integration gain.
+ *
+ * @unit
+ * @min 0
+ * @max 100
+ * @decimal 0
+ * @increment .1
+ * @group Multicopter Attitude Control
+ */
+PARAM_DEFINE_FLOAT(SL_POS_I_GAIN, 0.1);
+
 // /**
 //  *
 //  * @unit
