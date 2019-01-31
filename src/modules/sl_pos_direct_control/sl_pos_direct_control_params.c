@@ -39,6 +39,72 @@ PARAM_DEFINE_FLOAT(SL_ROT_DIRECTION, 1);
  * @increment .1
  * @group Multicopter Attitude Control
  */
+PARAM_DEFINE_FLOAT(SL_GG1, 5.0);
+
+/**
+ *
+ * @unit
+ * @min 0
+ * @max 100
+ * @decimal 0
+ * @increment .1
+ * @group Multicopter Attitude Control
+ */
+PARAM_DEFINE_FLOAT(SL_GG2, 5.0);
+
+/**
+ *
+ * @unit
+ * @min 0
+ * @max 100
+ * @decimal 0
+ * @increment .1
+ * @group Multicopter Attitude Control
+ */
+PARAM_DEFINE_FLOAT(SL_GP1, 15.6);
+
+/**
+ *
+ * @unit
+ * @min 0
+ * @max 100
+ * @decimal 0
+ * @increment .1
+ * @group Multicopter Attitude Control
+ */
+PARAM_DEFINE_FLOAT(SL_GP2, 15.6);
+
+/**
+ *
+ * @unit
+ * @min 0
+ * @max 100
+ * @decimal 0
+ * @increment .1
+ * @group Multicopter Attitude Control
+ */
+PARAM_DEFINE_FLOAT(SL_GQ1, 12.8);
+
+/**
+ *
+ * @unit
+ * @min 0
+ * @max 100
+ * @decimal 0
+ * @increment .1
+ * @group Multicopter Attitude Control
+ */
+PARAM_DEFINE_FLOAT(SL_GQ2, 12.8);
+
+/**
+ *
+ * @unit
+ * @min 0
+ * @max 100
+ * @decimal 0
+ * @increment .1
+ * @group Multicopter Attitude Control
+ */
 PARAM_DEFINE_FLOAT(SL_THRUST_COEFF, 1.9035e-6);
 
 /**
@@ -206,7 +272,7 @@ PARAM_DEFINE_FLOAT(SL_POS_I_GAIN, 0.1);
  *
  * @unit
  * @min 0
- * @max 100
+ * @max 1000
  * @decimal 0
  * @increment .1
  * @group Multicopter Attitude Control
@@ -218,7 +284,7 @@ PARAM_DEFINE_FLOAT(SL_ALT_D_GAIN, 3.0);
  *
  * @unit
  * @min 0
- * @max 100
+ * @max 1000
  * @decimal 0
  * @increment .1
  * @group Multicopter Attitude Control
@@ -230,12 +296,24 @@ PARAM_DEFINE_FLOAT(SL_ATT_P_GAIN, 30);
  *
  * @unit
  * @min 0
- * @max 100
+ * @max 1000
  * @decimal 0
  * @increment .1
  * @group Multicopter Attitude Control
  */
 PARAM_DEFINE_FLOAT(SL_ATT_D_GAIN, 20);
+
+/**
+ * INDI control actuator roll control gain.
+ *
+ * @unit
+ * @min 0
+ * @max 100
+ * @decimal 0
+ * @increment .1
+ * @group Multicopter Attitude Control
+ */
+PARAM_DEFINE_FLOAT(SL_ATT_I_GAIN, 5.0);
 
 /**
  * INDI control actuator roll control gain.

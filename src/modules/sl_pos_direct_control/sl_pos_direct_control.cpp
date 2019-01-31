@@ -145,6 +145,7 @@ SlPosDirectControl::parameters_updated()
 
 	PosDirectControlParams.att_p_gain = _sl_att_p_gain.get();
 	PosDirectControlParams.att_d_gain = _sl_att_d_gain.get();
+	PosDirectControlParams.att_i_gain = _sl_att_i_gain.get();
 	PosDirectControlParams.yaw_p_gain = _sl_yaw_p_gain.get();
 	PosDirectControlParams.yaw_d_gain = _sl_yaw_d_gain.get();
 	
@@ -159,11 +160,18 @@ SlPosDirectControl::parameters_updated()
 	PosDirectControlParams.t = _sl_torque_coeff.get();
 	PosDirectControlParams.rpm_feedback = _sl_rpm_feedback.get();
 	PosDirectControlParams.chi = _sl_chi.get();
+	PosDirectControlParams.Gg1 = _sl_gg1.get() / static_cast<float>(1000000.0);
+	PosDirectControlParams.Gg2 = _sl_gg2.get() / static_cast<float>(1000000.0);
+	PosDirectControlParams.Gp1 = _sl_gp1.get() / static_cast<float>(100000.0);
+	PosDirectControlParams.Gp2 = _sl_gp2.get() / static_cast<float>(100000.0);
+	PosDirectControlParams.Gq1 = _sl_gq1.get() / static_cast<float>(100000.0);
+	PosDirectControlParams.Gq2 = _sl_gq2.get() / static_cast<float>(100000.0);
+	
 	//PosDirectControlParams.indi_t = _sl_indi_filter_t.get();
 	
-	// PosDirectControl.PosDirectControl_U.pos_sp[0] = _sl_x_pos_sp.get();
-	// PosDirectControl.PosDirectControl_U.pos_sp[1] = _sl_y_pos_sp.get();
-	// PosDirectControl.PosDirectControl_U.pos_sp[2] = _sl_z_pos_sp.get();
+	PosDirectControl.PosDirectControl_U.pos_sp[0] = _sl_x_pos_sp.get();
+	PosDirectControl.PosDirectControl_U.pos_sp[1] = _sl_y_pos_sp.get();
+	PosDirectControl.PosDirectControl_U.pos_sp[2] = _sl_z_pos_sp.get();
 	PosDirectControl.PosDirectControl_U.yaw_sp    = _sl_yaw_sp.get();
 	PosDirectControl.PosDirectControl_U.fail_flag = _sl_fail_flag.get();
 	
@@ -459,12 +467,12 @@ SlPosDirectControl::control_pos_direct(float dt)
 	if(isnan(euler_angles.psi())) 
 		PosDirectControl_input.att[2] = 0; 
 	else 
-		PosDirectControl_input.att[2] = euler_angles.psi(); 
+		PosDirectControl_input.att[2] = euler_angles.psi() + static_cast<float>(0.0); 
 	
 	// Set in params for now..
-	PosDirectControl_input.pos_sp[0] = _position_sp_triplet.current.y;
-	PosDirectControl_input.pos_sp[1] = _position_sp_triplet.current.x;
-	PosDirectControl_input.pos_sp[2] = _position_sp_triplet.current.z;
+	//PosDirectControl_input.pos_sp[0] = _position_sp_triplet.current.y;
+	//PosDirectControl_input.pos_sp[1] = _position_sp_triplet.current.x;
+	//PosDirectControl_input.pos_sp[2] = _position_sp_triplet.current.z;
 
 	// PosDirectControl_input.yaw_sp = 0.f;
 
@@ -508,9 +516,13 @@ SlPosDirectControl::control_pos_direct(float dt)
 	_pos_direct_control_input.accs[1] = PosDirectControl_input.accs[1];
 	_pos_direct_control_input.accs[2] = PosDirectControl_input.accs[2];
 	
-	_pos_direct_control_input.pos_sp[0] = PosDirectControl_input.pos_sp[0];
-	_pos_direct_control_input.pos_sp[1] = PosDirectControl_input.pos_sp[1];
-	_pos_direct_control_input.pos_sp[2] = -PosDirectControl_input.pos_sp[2];
+	//_pos_direct_control_input.pos_sp[0] = PosDirectControl_input.pos_sp[0];
+	//_pos_direct_control_input.pos_sp[1] = PosDirectControl_input.pos_sp[1];
+	//_pos_direct_control_input.pos_sp[2] = -PosDirectControl_input.pos_sp[2];
+
+	_pos_direct_control_input.pos_sp[0] = PosDirectControl.PosDirectControl_U.pos_sp[0];
+	_pos_direct_control_input.pos_sp[1] = PosDirectControl.PosDirectControl_U.pos_sp[1];
+	_pos_direct_control_input.pos_sp[2] = PosDirectControl.PosDirectControl_U.pos_sp[2];
 
 	_pos_direct_control_input.yaw_sp = 0;
 
