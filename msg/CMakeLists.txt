@@ -124,6 +124,7 @@ set(msg_files
 	uavcan_parameter_value.msg
 	ulog_stream.msg
 	ulog_stream_ack.msg
+	urcontrol_input.msg
 	vehicle_air_data.msg
 	vehicle_attitude.msg
 	vehicle_attitude_setpoint.msg
