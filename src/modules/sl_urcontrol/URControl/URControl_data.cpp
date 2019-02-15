@@ -7,9 +7,9 @@
  *
  * Code generation for model "URControl".
  *
- * Model version              : 1.737
+ * Model version              : 1.745
  * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C++ source code generated on : Wed Feb 13 21:31:30 2019
+ * C++ source code generated on : Fri Feb 15 00:52:00 2019
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -26,14 +26,14 @@ const ConstP_URControl_T URControl_ConstP = {
   /* Pooled Parameter (Expression: par)
    * Referenced by:
    *   '<Root>/conversion to px4'
-   *   '<S2>/altitude control'
-   *   '<S2>/position control'
-   *   '<S2>/yaw rate control'
-   *   '<S3>/Precession'
-   *   '<S3>/attitude controller'
-   *   '<S3>/yawRateControl'
-   *   '<S5>/basic estimators'
-   *   '<S6>/control allocator'
+   *   '<S1>/altitude control'
+   *   '<S1>/position control'
+   *   '<S1>/yaw rate control'
+   *   '<S2>/Precession'
+   *   '<S2>/attitude controller'
+   *   '<S2>/yawRateControl'
+   *   '<S4>/basic estimators'
+   *   '<S5>/control allocator'
    */
   {
     500.0,
@@ -43,10 +43,6 @@ const ConstP_URControl_T URControl_ConstP = {
     0.374,
     1.0,
     0.5,
-
-    {
-      0.1
-    },
     0.0,
 
     {
@@ -109,6 +105,7 @@ const ConstP_URControl_T URControl_ConstP = {
       0.14450346016618426,
       0.374,
       9.81,
+      0.0,
       1.0,
       0.52631578947368418,
       0.35087719298245612,
@@ -179,7 +176,6 @@ const ConstP_URControl_T URControl_ConstP = {
     {
       1277.5810124598493,
       314.15926535897933
-    },
-    0.1
+    }
   }
 };

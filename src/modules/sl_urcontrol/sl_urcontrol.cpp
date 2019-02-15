@@ -131,55 +131,34 @@ SlURControl::parameters_updated()
 			M_DEG_TO_RAD_F * _board_offset_z.get()));
 	_board_rotation = board_rotation_offset * _board_rotation;
 
-	_sample_rate_max = _sl_pos_ctrl_rate.get();
+	// _sample_rate_max = _sl_pos_ctrl_rate.get();
 
-	// URControlParams.rot_direction = _sl_rot_direction.get();
-
-	// URControlParams.pos_x_p_gain = _sl_pos_p_gain.get();
-	// URControlParams.pos_z_p_gain = _sl_alt_p_gain.get();
-
-	// URControlParams.pos_x_d_gain = _sl_pos_d_gain.get();
-	// URControlParams.pos_z_d_gain = _sl_alt_d_gain.get();
-
-	// URControlParams.pos_x_i_gain = _sl_pos_i_gain.get();
-
-	// URControlParams.att_p_gain = _sl_att_p_gain.get();
-	// URControlParams.att_d_gain = _sl_att_d_gain.get();
-	// URControlParams.att_i_gain = _sl_att_i_gain.get();
-	// URControlParams.yaw_p_gain = _sl_yaw_p_gain.get();
-	// URControlParams.yaw_d_gain = _sl_yaw_d_gain.get();
-	
-	// URControlParams.k = _sl_thrust_coeff.get();
-	// URControlParams.l = _sl_geom_l.get();
-	// URControlParams.b = _sl_geom_b.get();
-	// URControlParams.m = _sl_mass.get();
-	// URControlParams.Ix = _sl_inertia_x.get();
-	// URControlParams.Iy = _sl_inertia_y.get();
-	// URControlParams.Iz = _sl_inertia_z.get();
-	// URControlParams.Ip = _sl_inertia_prop.get();
-	// URControlParams.t = _sl_torque_coeff.get();
-	// URControlParams.rpm_feedback = _sl_rpm_feedback.get();
-	// URControlParams.chi = _sl_chi.get();
-	// URControlParams.Gg1 = _sl_gg1.get() / static_cast<float>(1000000.0);
-	// URControlParams.Gg2 = _sl_gg2.get() / static_cast<float>(1000000.0);
-	// URControlParams.Gp1 = _sl_gp1.get() / static_cast<float>(100000.0);
-	// URControlParams.Gp2 = _sl_gp2.get() / static_cast<float>(100000.0);
-	// URControlParams.Gq1 = _sl_gq1.get() / static_cast<float>(100000.0);
-	// URControlParams.Gq2 = _sl_gq2.get() / static_cast<float>(100000.0);
-	
-	// //URControlParams.indi_t = _sl_indi_filter_t.get();
-	
+	// Inputs
 	URControl.URControl_U.pos_sp[0] = _sl_x_pos_sp.get();
 	URControl.URControl_U.pos_sp[1] = _sl_y_pos_sp.get();
 	URControl.URControl_U.pos_sp[2] = _sl_z_pos_sp.get();
-	// URControl.URControl_U.yaw_sp    = _sl_yaw_sp.get();
-	// URControl.URControl_U.fail_flag = _sl_fail_flag.get();
+	URControl.URControl_U.yaw_sp    = _sl_yaw_sp.get();
+	URControl.URControl_U.fail_flag = _sl_fail_flag.get();
+
+	// Params
+
+	// Position
+	URControlParams.position_enable = _sl_pos_enable.get();
+
+	// YRC
+	URControlParams.YRC_enable = _sl_yrc_enable.get();
+
+	// Rate
+	URControlParams.rate_rateDotKp[0] = _sl_ratedot_kpu.get();
+	URControlParams.rate_rateDotKp[1] = _sl_ratedot_kpv.get();
+	URControlParams.rate_rateDotKp[2] = _sl_ratedot_kpr.get();
+	URControlParams.rate_rateDotKi[0] = _sl_ratedot_kiu.get();
+	URControlParams.rate_rateDotKi[1] = _sl_ratedot_kiv.get();
+	URControlParams.rate_rateDotKi[2] = _sl_ratedot_kir.get();
+	URControlParams.rate_rateDotKd[0] = _sl_ratedot_kdu.get();
+	URControlParams.rate_rateDotKd[1] = _sl_ratedot_kdv.get();
+	URControlParams.rate_rateDotKd[2] = _sl_ratedot_kdr.get();
 	
-	//_urcontrol_input.pos_sp[0] = _sl_x_pos_sp.get();
-	//_urcontrol_input.pos_sp[1] = _sl_y_pos_sp.get();
-	//_urcontrol_input.pos_sp[2] = _sl_z_pos_sp.get();
-	_urcontrol_input.fail_flag = _sl_fail_flag.get();
-	_urcontrol_input.yaw_sp 	= _sl_yaw_sp.get();
 }
 
 void

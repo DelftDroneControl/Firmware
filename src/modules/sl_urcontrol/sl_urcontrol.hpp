@@ -186,6 +186,33 @@ private:
 		(ParamFloat<px4::params::SENS_BOARD_X_OFF>) _board_offset_x,
 		(ParamFloat<px4::params::SENS_BOARD_Y_OFF>) _board_offset_y,
 		(ParamFloat<px4::params::SENS_BOARD_Z_OFF>) _board_offset_z,
+
+		// Inputs
+		(ParamFloat<px4::params::SL_X_POS_SP>) _sl_x_pos_sp,
+		(ParamFloat<px4::params::SL_Y_POS_SP>) _sl_y_pos_sp,
+		(ParamFloat<px4::params::SL_Z_POS_SP>) _sl_z_pos_sp,
+
+		(ParamInt<px4::params::SL_FAIL_FLAG_POS>) _sl_fail_flag,
+		(ParamFloat<px4::params::SL_YAW_SP>) _sl_yaw_sp,
+
+		// Params
+
+		// Pos
+		(ParamInt<px4::params::SL_POS_ENABLE>) _sl_pos_enable,
+
+		// YRC
+		(ParamInt<px4::params::SL_YRC_ENABLE>) _sl_yrc_enable,
+
+		// Rate
+		(ParamFloat<px4::params::SL_RATEDOT_KPU>) _sl_ratedot_kpu,
+		(ParamFloat<px4::params::SL_RATEDOT_KPV>) _sl_ratedot_kpv,
+		(ParamFloat<px4::params::SL_RATEDOT_KPR>) _sl_ratedot_kpr,
+		(ParamFloat<px4::params::SL_RATEDOT_KIU>) _sl_ratedot_kiu,
+		(ParamFloat<px4::params::SL_RATEDOT_KIV>) _sl_ratedot_kiv,
+		(ParamFloat<px4::params::SL_RATEDOT_KIR>) _sl_ratedot_kir,
+		(ParamFloat<px4::params::SL_RATEDOT_KDU>) _sl_ratedot_kdu,
+		(ParamFloat<px4::params::SL_RATEDOT_KDV>) _sl_ratedot_kdv,
+		(ParamFloat<px4::params::SL_RATEDOT_KDR>) _sl_ratedot_kdr
 		
 	)
 

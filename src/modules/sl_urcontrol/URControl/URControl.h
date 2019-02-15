@@ -7,9 +7,9 @@
  *
  * Code generation for model "URControl".
  *
- * Model version              : 1.737
+ * Model version              : 1.745
  * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C++ source code generated on : Wed Feb 13 21:31:30 2019
+ * C++ source code generated on : Fri Feb 15 00:52:00 2019
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -53,14 +53,13 @@
 typedef struct {
   daqBus DAQ;                          /* '<Root>/Data Store Memory' */
   stateBus State;                      /* '<Root>/Data Store Memory1' */
-  real_T DiscreteStateSpace_DSTATE[3]; /* '<S3>/Discrete State-Space' */
-  real_T Memory_PreviousInput;         /* '<S7>/Memory' */
-  real_T errorInt[3];                  /* '<S6>/control allocator' */
-  real_T error_prev[3];                /* '<S6>/control allocator' */
-  real_T y_state_prev[4];              /* '<S6>/control allocator' */
-  real_T Fset_prev[4];                 /* '<S6>/control allocator' */
-  real_T errorInt_p[3];                /* '<S2>/position control' */
-  real_T errorInt_b;                   /* '<S2>/altitude control' */
+  real_T DiscreteStateSpace_DSTATE[3]; /* '<S2>/Discrete State-Space' */
+  real_T errorInt[3];                  /* '<S5>/control allocator' */
+  real_T error_prev[3];                /* '<S5>/control allocator' */
+  real_T y_state_prev[4];              /* '<S5>/control allocator' */
+  real_T Fset_prev[4];                 /* '<S5>/control allocator' */
+  real_T errorInt_p[3];                /* '<S1>/position control' */
+  real_T errorInt_b;                   /* '<S1>/altitude control' */
 } DW_URControl_T;
 
 /* Constant parameters (default storage) */
@@ -68,16 +67,16 @@ typedef struct {
   /* Pooled Parameter (Expression: par)
    * Referenced by:
    *   '<Root>/conversion to px4'
-   *   '<S2>/altitude control'
-   *   '<S2>/position control'
-   *   '<S2>/yaw rate control'
-   *   '<S3>/Precession'
-   *   '<S3>/attitude controller'
-   *   '<S3>/yawRateControl'
-   *   '<S5>/basic estimators'
-   *   '<S6>/control allocator'
+   *   '<S1>/altitude control'
+   *   '<S1>/position control'
+   *   '<S1>/yaw rate control'
+   *   '<S2>/Precession'
+   *   '<S2>/attitude controller'
+   *   '<S2>/yawRateControl'
+   *   '<S4>/basic estimators'
+   *   '<S5>/control allocator'
    */
-  struct_O8YfWlp7Z2EzTqISxUY2GH pooled1;
+  struct_mMxZUgiacmSPStEMWH3dnG pooled1;
 } ConstP_URControl_T;
 
 /* External inputs (root inport signals with default storage) */
@@ -122,14 +121,14 @@ extern const ConstP_URControl_T URControl_ConstP;
  */
 extern URControlParamsType URControlParams;/* Variable: URControlParams
                                             * Referenced by:
-                                            *   '<S2>/altitude control'
-                                            *   '<S2>/position control'
-                                            *   '<S2>/yaw rate control'
-                                            *   '<S3>/Precession'
-                                            *   '<S3>/attitude controller'
-                                            *   '<S3>/yawRateControl'
-                                            *   '<S5>/basic estimators'
-                                            *   '<S6>/control allocator'
+                                            *   '<S1>/altitude control'
+                                            *   '<S1>/position control'
+                                            *   '<S1>/yaw rate control'
+                                            *   '<S2>/Precession'
+                                            *   '<S2>/attitude controller'
+                                            *   '<S2>/yawRateControl'
+                                            *   '<S4>/basic estimators'
+                                            *   '<S5>/control allocator'
                                             */
 
 /* Class declaration for model URControl */
@@ -186,7 +185,7 @@ class URControlModelClass {
     real_T FMax[4], const real_T FMin[4], real_T gainStruct_MuGain, real_T
     gainStruct_MvGain, real_T gainStruct_FtotGain, real_T gainStruct_FGain,
     real_T gainStruct_MzGain, real_T y_state_init[4], const
-    struct_O8YfWlp7Z2EzTqISxUY2GH *b_par, const URControlParamsType *URpar,
+    struct_mMxZUgiacmSPStEMWH3dnG *b_par, const URControlParamsType *URpar,
     real_T x[4], real_T *iter, boolean_T *optimal);
 };
 
@@ -205,21 +204,19 @@ class URControlModelClass {
  * Here is the system hierarchy for this model
  *
  * '<Root>' : 'URControl'
- * '<S1>'   : 'URControl/Damage trigger'
- * '<S2>'   : 'URControl/Targets system'
- * '<S3>'   : 'URControl/attitude controlller'
- * '<S4>'   : 'URControl/conversion to px4'
- * '<S5>'   : 'URControl/estimators'
- * '<S6>'   : 'URControl/rate controller'
- * '<S7>'   : 'URControl/Damage trigger/clock'
- * '<S8>'   : 'URControl/Targets system/altitude control'
- * '<S9>'   : 'URControl/Targets system/position control'
- * '<S10>'  : 'URControl/Targets system/yaw rate control'
- * '<S11>'  : 'URControl/attitude controlller/Discrete Derivative'
- * '<S12>'  : 'URControl/attitude controlller/Precession'
- * '<S13>'  : 'URControl/attitude controlller/attitude controller'
- * '<S14>'  : 'URControl/attitude controlller/yawRateControl'
- * '<S15>'  : 'URControl/estimators/basic estimators'
- * '<S16>'  : 'URControl/rate controller/control allocator'
+ * '<S1>'   : 'URControl/Targets system'
+ * '<S2>'   : 'URControl/attitude controlller'
+ * '<S3>'   : 'URControl/conversion to px4'
+ * '<S4>'   : 'URControl/estimators'
+ * '<S5>'   : 'URControl/rate controller'
+ * '<S6>'   : 'URControl/Targets system/altitude control'
+ * '<S7>'   : 'URControl/Targets system/position control'
+ * '<S8>'   : 'URControl/Targets system/yaw rate control'
+ * '<S9>'   : 'URControl/attitude controlller/Discrete Derivative'
+ * '<S10>'  : 'URControl/attitude controlller/Precession'
+ * '<S11>'  : 'URControl/attitude controlller/attitude controller'
+ * '<S12>'  : 'URControl/attitude controlller/yawRateControl'
+ * '<S13>'  : 'URControl/estimators/basic estimators'
+ * '<S14>'  : 'URControl/rate controller/control allocator'
  */
 #endif                                 /* RTW_HEADER_URControl_h_ */

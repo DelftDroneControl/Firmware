@@ -7,9 +7,9 @@
  *
  * Code generation for model "URControl".
  *
- * Model version              : 1.737
+ * Model version              : 1.745
  * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C++ source code generated on : Wed Feb 13 21:31:30 2019
+ * C++ source code generated on : Fri Feb 15 00:52:00 2019
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -122,6 +122,7 @@ typedef struct {
   real_T s;
   real_T mass;
   real_T g;
+  real_T fail_delay;
   real_T position_enable;
   real_T position_maxAngle;
   real_T position_maxAngleFailure;
@@ -178,15 +179,6 @@ typedef struct {
   real_T rate_FGain;
   real_T rate_maxIter;
 } URControlParamsType;
-
-#endif
-
-#ifndef DEFINED_TYPEDEF_FOR_struct_HZB3v82GgLkM13V7hULSLD_
-#define DEFINED_TYPEDEF_FOR_struct_HZB3v82GgLkM13V7hULSLD_
-
-typedef struct {
-  real_T delay;
-} struct_HZB3v82GgLkM13V7hULSLD;
 
 #endif
 
@@ -263,8 +255,8 @@ typedef struct {
 
 #endif
 
-#ifndef DEFINED_TYPEDEF_FOR_struct_O8YfWlp7Z2EzTqISxUY2GH_
-#define DEFINED_TYPEDEF_FOR_struct_O8YfWlp7Z2EzTqISxUY2GH_
+#ifndef DEFINED_TYPEDEF_FOR_struct_mMxZUgiacmSPStEMWH3dnG_
+#define DEFINED_TYPEDEF_FOR_struct_mMxZUgiacmSPStEMWH3dnG_
 
 typedef struct {
   real_T freq;
@@ -274,13 +266,11 @@ typedef struct {
   real_T mass;
   real_T fail_id;
   real_T fail_time;
-  struct_HZB3v82GgLkM13V7hULSLD fail;
   real_T fail_wRot;
   struct_AHd68odqz51NWDIFKWnLKG sihao;
   URControlParamsType URC;
   struct_KZWRH8wmRo8gScyf5zlwCH px4;
-  real_T fail_delay;
-} struct_O8YfWlp7Z2EzTqISxUY2GH;
+} struct_mMxZUgiacmSPStEMWH3dnG;
 
 #endif
 

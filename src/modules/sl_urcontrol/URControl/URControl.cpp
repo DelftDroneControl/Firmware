@@ -7,9 +7,9 @@
  *
  * Code generation for model "URControl".
  *
- * Model version              : 1.737
+ * Model version              : 1.745
  * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C++ source code generated on : Wed Feb 13 21:31:30 2019
+ * C++ source code generated on : Fri Feb 15 00:52:00 2019
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -189,6 +189,7 @@ URControlParamsType URControlParams = {
   0.14450346016618426,
   0.374,
   9.81,
+  0.0,
   1.0,
   0.52631578947368418,
   0.35087719298245612,
@@ -256,14 +257,14 @@ URControlParamsType URControlParams = {
   5.0
 } ;                                    /* Variable: URControlParams
                                         * Referenced by:
-                                        *   '<S2>/altitude control'
-                                        *   '<S2>/position control'
-                                        *   '<S2>/yaw rate control'
-                                        *   '<S3>/Precession'
-                                        *   '<S3>/attitude controller'
-                                        *   '<S3>/yawRateControl'
-                                        *   '<S5>/basic estimators'
-                                        *   '<S6>/control allocator'
+                                        *   '<S1>/altitude control'
+                                        *   '<S1>/position control'
+                                        *   '<S1>/yaw rate control'
+                                        *   '<S2>/Precession'
+                                        *   '<S2>/attitude controller'
+                                        *   '<S2>/yawRateControl'
+                                        *   '<S4>/basic estimators'
+                                        *   '<S5>/control allocator'
                                         */
 
 real_T rt_powd_snf(real_T u0, real_T u1)
@@ -312,7 +313,7 @@ real_T rt_powd_snf(real_T u0, real_T u1)
   return y;
 }
 
-/* Function for MATLAB Function: '<S3>/attitude controller' */
+/* Function for MATLAB Function: '<S2>/attitude controller' */
 real_T URControlModelClass::URControl_norm(const real_T x[3])
 {
   real_T y;
@@ -388,7 +389,7 @@ real_T rt_atan2d_snf(real_T u0, real_T u1)
   return y;
 }
 
-/* Function for MATLAB Function: '<S6>/control allocator' */
+/* Function for MATLAB Function: '<S5>/control allocator' */
 void URControlModelClass::URControl_xswap(int32_T n, real_T x_data[], int32_T
   ix0, int32_T iy0)
 {
@@ -407,7 +408,7 @@ void URControlModelClass::URControl_xswap(int32_T n, real_T x_data[], int32_T
   }
 }
 
-/* Function for MATLAB Function: '<S6>/control allocator' */
+/* Function for MATLAB Function: '<S5>/control allocator' */
 real_T URControlModelClass::URControl_xnrm2(int32_T n, const real_T x_data[],
   int32_T ix0)
 {
@@ -464,7 +465,7 @@ real_T rt_hypotd_snf(real_T u0, real_T u1)
   return y;
 }
 
-/* Function for MATLAB Function: '<S6>/control allocator' */
+/* Function for MATLAB Function: '<S5>/control allocator' */
 void URControlModelClass::URControl_xzlarf(int32_T m, int32_T n, int32_T iv0,
   real_T tau, real_T C_data[], int32_T ic0, int32_T ldc, real_T work_data[])
 {
@@ -560,7 +561,7 @@ void URControlModelClass::URControl_xzlarf(int32_T m, int32_T n, int32_T iv0,
   }
 }
 
-/* Function for MATLAB Function: '<S6>/control allocator' */
+/* Function for MATLAB Function: '<S5>/control allocator' */
 void URControlModelClass::URControl_xgeqp3(real_T A_data[], int32_T A_size[2],
   real_T tau_data[], int32_T *tau_size, int32_T jpvt_data[], int32_T jpvt_size[2])
 {
@@ -746,7 +747,7 @@ void URControlModelClass::URControl_xgeqp3(real_T A_data[], int32_T A_size[2],
   }
 }
 
-/* Function for MATLAB Function: '<S6>/control allocator' */
+/* Function for MATLAB Function: '<S5>/control allocator' */
 void URControlModelClass::URControl_lusolve(const real_T A_data[], const int32_T
   A_size[2], real_T B_data[])
 {
@@ -879,7 +880,7 @@ void URControlModelClass::URControl_lusolve(const real_T A_data[], const int32_T
   }
 }
 
-/* Function for MATLAB Function: '<S6>/control allocator' */
+/* Function for MATLAB Function: '<S5>/control allocator' */
 void URControlModelClass::URControl_mldivide(const real_T A_data[], const
   int32_T A_size[2], const real_T B_data[], const int32_T *B_size, real_T
   Y_data[], int32_T *Y_size)
@@ -983,14 +984,14 @@ void URControlModelClass::URControl_mldivide(const real_T A_data[], const
 }
 
 /*
- * Function for MATLAB Function: '<S6>/control allocator'
+ * Function for MATLAB Function: '<S5>/control allocator'
  * function [x,y_state,iter,optimal] = controlAllocQPQuick(refStruct, FMax, FMin, gainStruct, y_state_init, par, URpar)
  */
 void URControlModelClass::URControl_controlAllocQPQuick(real_T refStruct_MuRef,
   real_T refStruct_MvRef, real_T refStruct_MzRef, real_T refStruct_FtotRef,
   const real_T FMax[4], const real_T FMin[4], real_T gainStruct_MuGain, real_T
   gainStruct_MvGain, real_T gainStruct_FtotGain, real_T gainStruct_FGain, real_T
-  gainStruct_MzGain, real_T y_state_init[4], const struct_O8YfWlp7Z2EzTqISxUY2GH
+  gainStruct_MzGain, real_T y_state_init[4], const struct_mMxZUgiacmSPStEMWH3dnG
   *b_par, const URControlParamsType *URpar, real_T x[4], real_T *iter, boolean_T
   *optimal)
 {
@@ -1674,6 +1675,7 @@ void URControlModelClass::step()
   int32_T rtemp;
   real_T Iu;
   real_T Iv;
+  real_T MuPrec;
   real_T uDot_max;
   static const int8_T b[3] = { 0, 0, -1 };
 
@@ -1681,7 +1683,6 @@ void URControlModelClass::step()
   real_T rotVec3[3];
   real_T x[4];
   boolean_T optimal;
-  real_T rtb_slow;
   real_T velTarget[3];
   real_T dummy_idx_0;
   real_T dummy_idx_1;
@@ -1691,13 +1692,6 @@ void URControlModelClass::step()
   real_T wRotorSet_data_idx_2;
   real_T wRotorSet_data_idx_3;
   boolean_T tmp;
-
-  /* Switch: '<S1>/slow' incorporates:
-   *  Constant: '<S7>/Constant'
-   *  Memory: '<S7>/Memory'
-   *  Sum: '<S7>/Sum'
-   */
-  rtb_slow = (0.002 + URControl_DW.Memory_PreviousInput > 0.6);
 
   /* DataTypeConversion: '<Root>/Data Type Conversion5' incorporates:
    *  Inport: '<Root>/rates'
@@ -1711,7 +1705,7 @@ void URControlModelClass::step()
   /* 'UREstimators:8' state.att = sensors.att; */
   rtb_DiscreteStateSpace[0] = URControl_U.rates[0];
 
-  /* MATLAB Function: '<S5>/basic estimators' incorporates:
+  /* MATLAB Function: '<S4>/basic estimators' incorporates:
    *  DataTypeConversion: '<Root>/Data Type Conversion1'
    *  DataTypeConversion: '<Root>/Data Type Conversion2'
    *  DataTypeConversion: '<Root>/Data Type Conversion4'
@@ -1720,7 +1714,7 @@ void URControlModelClass::step()
    *  Inport: '<Root>/att'
    *  Inport: '<Root>/pos'
    *  Inport: '<Root>/vel'
-   *  SignalConversion: '<S5>/BusConversion_InsertedFor_basic estimators_at_inport_0'
+   *  SignalConversion: '<S4>/BusConversion_InsertedFor_basic estimators_at_inport_0'
    */
   URControl_DW.State.acc[0] = URControl_U.accs[0];
   URControl_DW.State.vel[0] = URControl_U.vel[0];
@@ -1734,7 +1728,7 @@ void URControlModelClass::step()
    */
   rtb_DiscreteStateSpace[1] = URControl_U.rates[1];
 
-  /* MATLAB Function: '<S5>/basic estimators' incorporates:
+  /* MATLAB Function: '<S4>/basic estimators' incorporates:
    *  DataTypeConversion: '<Root>/Data Type Conversion1'
    *  DataTypeConversion: '<Root>/Data Type Conversion2'
    *  DataTypeConversion: '<Root>/Data Type Conversion4'
@@ -1743,7 +1737,7 @@ void URControlModelClass::step()
    *  Inport: '<Root>/att'
    *  Inport: '<Root>/pos'
    *  Inport: '<Root>/vel'
-   *  SignalConversion: '<S5>/BusConversion_InsertedFor_basic estimators_at_inport_0'
+   *  SignalConversion: '<S4>/BusConversion_InsertedFor_basic estimators_at_inport_0'
    */
   URControl_DW.State.acc[1] = URControl_U.accs[1];
   URControl_DW.State.vel[1] = URControl_U.vel[1];
@@ -1757,8 +1751,9 @@ void URControlModelClass::step()
    */
   rtb_DiscreteStateSpace[2] = URControl_U.rates[2];
 
-  /* MATLAB Function: '<S5>/basic estimators' incorporates:
+  /* MATLAB Function: '<S4>/basic estimators' incorporates:
    *  DataTypeConversion: '<Root>/Data Type Conversion1'
+   *  DataTypeConversion: '<Root>/Data Type Conversion10'
    *  DataTypeConversion: '<Root>/Data Type Conversion2'
    *  DataTypeConversion: '<Root>/Data Type Conversion4'
    *  DataTypeConversion: '<Root>/Data Type Conversion6'
@@ -1766,10 +1761,11 @@ void URControlModelClass::step()
    *  Inport: '<Root>/accs'
    *  Inport: '<Root>/att'
    *  Inport: '<Root>/esc_rpm'
+   *  Inport: '<Root>/fail_flag'
    *  Inport: '<Root>/pos'
    *  Inport: '<Root>/vel'
-   *  MATLAB Function: '<S3>/Precession'
-   *  SignalConversion: '<S5>/BusConversion_InsertedFor_basic estimators_at_inport_0'
+   *  MATLAB Function: '<S2>/Precession'
+   *  SignalConversion: '<S4>/BusConversion_InsertedFor_basic estimators_at_inport_0'
    */
   URControl_DW.State.acc[2] = URControl_U.accs[2];
   URControl_DW.State.vel[2] = URControl_U.vel[2];
@@ -1794,23 +1790,23 @@ void URControlModelClass::step()
   /* 'UREstimators:16' R_IB = [cos(theta)*cos(psi)                             , cos(theta)*sin(psi)                               , -sin(theta); */
   /* 'UREstimators:17'         sin(phi)*sin(theta)*cos(psi)-cos(phi)*sin(psi)  , sin(phi)*sin(theta)*sin(psi)+cos(phi)*cos(psi)    , sin(phi)*cos(theta); */
   /* 'UREstimators:18'         cos(phi)*sin(theta)*cos(psi)+sin(phi)*sin(psi)  , cos(phi)*sin(theta)*sin(psi)-sin(phi)*cos(psi)    , cos(phi)*cos(theta)]; */
-  a21 = std::cos((real_T)URControl_U.att[1]);
-  dummy_idx_0 = std::cos((real_T)URControl_U.att[2]);
-  R_IB[0] = a21 * dummy_idx_0;
-  Iu = std::sin((real_T)URControl_U.att[2]);
-  R_IB[3] = a21 * Iu;
-  dummy_idx_1 = std::sin((real_T)URControl_U.att[1]);
-  R_IB[6] = -dummy_idx_1;
-  maxval = std::sin((real_T)URControl_U.att[0]);
-  errorVel_idx_0 = maxval * dummy_idx_1;
-  uv_des_idx_0 = std::cos((real_T)URControl_U.att[0]);
-  R_IB[1] = errorVel_idx_0 * dummy_idx_0 - uv_des_idx_0 * Iu;
-  R_IB[4] = errorVel_idx_0 * Iu + uv_des_idx_0 * dummy_idx_0;
-  R_IB[7] = maxval * a21;
-  dummy_idx_1 *= uv_des_idx_0;
-  R_IB[2] = dummy_idx_1 * dummy_idx_0 + maxval * Iu;
-  R_IB[5] = dummy_idx_1 * Iu - maxval * dummy_idx_0;
-  R_IB[8] = uv_des_idx_0 * a21;
+  MuPrec = std::cos((real_T)URControl_U.att[1]);
+  a21 = std::cos((real_T)URControl_U.att[2]);
+  R_IB[0] = MuPrec * a21;
+  dummy_idx_0 = std::sin((real_T)URControl_U.att[2]);
+  R_IB[3] = MuPrec * dummy_idx_0;
+  Iu = std::sin((real_T)URControl_U.att[1]);
+  R_IB[6] = -Iu;
+  dummy_idx_1 = std::sin((real_T)URControl_U.att[0]);
+  maxval = dummy_idx_1 * Iu;
+  errorVel_idx_0 = std::cos((real_T)URControl_U.att[0]);
+  R_IB[1] = maxval * a21 - errorVel_idx_0 * dummy_idx_0;
+  R_IB[4] = maxval * dummy_idx_0 + errorVel_idx_0 * a21;
+  R_IB[7] = dummy_idx_1 * MuPrec;
+  Iu *= errorVel_idx_0;
+  R_IB[2] = Iu * a21 + dummy_idx_1 * dummy_idx_0;
+  R_IB[5] = Iu * dummy_idx_0 - dummy_idx_1 * a21;
+  R_IB[8] = errorVel_idx_0 * MuPrec;
 
   /* 'UREstimators:20' state.n = (R_IB\[0;0;-1])'; */
   r1 = 0;
@@ -1871,30 +1867,36 @@ void URControlModelClass::step()
   /* 'UREstimators:36' FMin = URpar.envp_FMin; */
   FMax[0] = URControlParams.envp_FMax[0];
   FMin[0] = URControlParams.envp_FMin[0];
+  FMax[1] = URControlParams.envp_FMax[1];
+  FMin[1] = URControlParams.envp_FMin[1];
+  FMax[2] = URControlParams.envp_FMax[2];
+  FMin[2] = URControlParams.envp_FMin[2];
+  FMax[3] = URControlParams.envp_FMax[3];
+  FMin[3] = URControlParams.envp_FMin[3];
 
   /* 'UREstimators:37' if fail_id > 0 */
-  if (rtb_slow > 0.0) {
+  if (URControl_U.fail_flag > 0) {
     /* 'UREstimators:38' FMax(fail_id) = par.fail_wRot^2*URpar.k0; */
-    a21 = 0.0 * URControlParams.k0;
-    FMax[0] = a21;
+    MuPrec = 0.0 * URControlParams.k0;
+    FMax[URControl_U.fail_flag - 1] = MuPrec;
 
     /* 'UREstimators:39' FMin(fail_id) = par.fail_wRot^2*URpar.k0; */
-    FMin[0] = a21;
+    FMin[URControl_U.fail_flag - 1] = MuPrec;
   }
 
   /* 'UREstimators:41' state.FMax = FMax; */
   /* 'UREstimators:42' state.FMin = FMin; */
   URControl_DW.State.FMax[0] = FMax[0];
   URControl_DW.State.FMin[0] = FMin[0];
-  URControl_DW.State.FMax[1] = URControlParams.envp_FMax[1];
-  URControl_DW.State.FMin[1] = URControlParams.envp_FMin[1];
-  URControl_DW.State.FMax[2] = URControlParams.envp_FMax[2];
-  URControl_DW.State.FMin[2] = URControlParams.envp_FMin[2];
-  URControl_DW.State.FMax[3] = URControlParams.envp_FMax[3];
-  URControl_DW.State.FMin[3] = URControlParams.envp_FMin[3];
+  URControl_DW.State.FMax[1] = FMax[1];
+  URControl_DW.State.FMin[1] = FMin[1];
+  URControl_DW.State.FMax[2] = FMax[2];
+  URControl_DW.State.FMin[2] = FMin[2];
+  URControl_DW.State.FMax[3] = FMax[3];
+  URControl_DW.State.FMin[3] = FMin[3];
 
   /* 'UREstimators:44' state.fail_id = fail_id; */
-  URControl_DW.State.fail_id = rtb_slow;
+  URControl_DW.State.fail_id = URControl_U.fail_flag;
 
   /* 'UREstimators:47' [uvDot_max, uvDot_min, uv_max, uv_min] = UREnvelopCalc(state, URpar); */
   /* 'UREnvelopCalc:3' s = sqrt(URpar.l^2 + URpar.b^2); */
@@ -1907,33 +1909,29 @@ void URControlModelClass::step()
   /* 'UREnvelopCalc:9' Mv_max = (state.FMax(1) - state.FMin(3))*s; */
   /* 'UREnvelopCalc:10' Mv_min = (state.FMin(1) - state.FMax(3))*s; */
   /* 'UREnvelopCalc:13' Iu = sqrt(URpar.Ix^2 + URpar.Iy^2); */
-  rtb_slow = std::sqrt(URControlParams.Ix * URControlParams.Ix +
-                       URControlParams.Iy * URControlParams.Iy);
+  a21 = std::sqrt(URControlParams.Ix * URControlParams.Ix + URControlParams.Iy *
+                  URControlParams.Iy);
 
   /* 'UREnvelopCalc:14' Iv = sqrt(URpar.Ix^2 + URpar.Iy^2); */
   /* 'UREnvelopCalc:17' MuPrec = state.omegaUV(2)*r*(Iv - URpar.Iz); */
-  a21 = URControl_DW.State.omegaUV[1] * rtb_DiscreteStateSpace[2] * (rtb_slow -
+  MuPrec = URControl_DW.State.omegaUV[1] * rtb_DiscreteStateSpace[2] * (a21 -
     URControlParams.Iz);
 
   /* 'UREnvelopCalc:18' MvPrec = state.omegaUV(1)*r*(URpar.Iz - Iu); */
   maxval = URControl_DW.State.omegaUV[0] * rtb_DiscreteStateSpace[2] *
-    (URControlParams.Iz - rtb_slow);
+    (URControlParams.Iz - a21);
 
   /* 'UREnvelopCalc:21' uDot_max = (MuPrec + Mu_max)/Iu; */
-  uDot_max = ((-URControlParams.envp_FMin[1] + URControlParams.envp_FMax[3]) *
-              dummy_idx_0 + a21) / rtb_slow;
+  uDot_max = ((-FMin[1] + FMax[3]) * dummy_idx_0 + MuPrec) / a21;
 
   /* 'UREnvelopCalc:22' uDot_min = (MuPrec + Mu_min)/Iu; */
-  a21 = ((-URControlParams.envp_FMax[1] + URControlParams.envp_FMin[3]) *
-         dummy_idx_0 + a21) / rtb_slow;
+  MuPrec = ((-FMax[1] + FMin[3]) * dummy_idx_0 + MuPrec) / a21;
 
   /* 'UREnvelopCalc:24' vDot_max = (MvPrec + Mv_max)/Iv; */
-  Iu = ((FMax[0] - URControlParams.envp_FMin[2]) * dummy_idx_0 + maxval) /
-    rtb_slow;
+  Iu = ((FMax[0] - FMin[2]) * dummy_idx_0 + maxval) / a21;
 
   /* 'UREnvelopCalc:25' vDot_min = (MvPrec + Mv_min)/Iv; */
-  rtb_slow = ((FMin[0] - URControlParams.envp_FMax[2]) * dummy_idx_0 + maxval) /
-    rtb_slow;
+  a21 = ((FMin[0] - FMax[2]) * dummy_idx_0 + maxval) / a21;
 
   /* 'UREnvelopCalc:28' dt = URpar.envp_timeHorz; */
   /* 'UREnvelopCalc:30' u_max = state.omegaUV(1) + max(uDot_max,URpar.envp_minDeviation)*dt; */
@@ -1949,8 +1947,8 @@ void URControlModelClass::step()
   URControl_DW.State.uvDot_max[1] = Iu;
 
   /* 'UREstimators:49' state.uvDot_min = uvDot_min; */
-  URControl_DW.State.uvDot_min[0] = a21;
-  URControl_DW.State.uvDot_min[1] = rtb_slow;
+  URControl_DW.State.uvDot_min[0] = MuPrec;
+  URControl_DW.State.uvDot_min[1] = a21;
 
   /* 'UREstimators:50' state.uv_max = uv_max; */
   optimal = rtIsNaN(URControlParams.envp_minDeviation);
@@ -1973,16 +1971,16 @@ void URControlModelClass::step()
 
   /* 'UREstimators:51' state.uv_min = uv_min; */
   tmp = rtIsNaN(-URControlParams.envp_minDeviation);
-  if ((a21 < -URControlParams.envp_minDeviation) || tmp) {
-    maxval = a21;
+  if ((MuPrec < -URControlParams.envp_minDeviation) || tmp) {
+    maxval = MuPrec;
   } else {
     maxval = -URControlParams.envp_minDeviation;
   }
 
   URControl_DW.State.uv_min[0] = maxval * URControlParams.envp_timeHorz +
     URControl_DW.State.omegaUV[0];
-  if ((rtb_slow < -URControlParams.envp_minDeviation) || tmp) {
-    dummy_idx_1 = rtb_slow;
+  if ((a21 < -URControlParams.envp_minDeviation) || tmp) {
+    dummy_idx_1 = a21;
   } else {
     dummy_idx_1 = -URControlParams.envp_minDeviation;
   }
@@ -1999,20 +1997,20 @@ void URControlModelClass::step()
   /* 'UREstimators:56' daq.FMin = state.FMin; */
   URControl_DW.DAQ.FMax[0] = FMax[0];
   URControl_DW.DAQ.FMin[0] = FMin[0];
-  URControl_DW.DAQ.FMax[1] = URControlParams.envp_FMax[1];
-  URControl_DW.DAQ.FMin[1] = URControlParams.envp_FMin[1];
-  URControl_DW.DAQ.FMax[2] = URControlParams.envp_FMax[2];
-  URControl_DW.DAQ.FMin[2] = URControlParams.envp_FMin[2];
-  URControl_DW.DAQ.FMax[3] = URControlParams.envp_FMax[3];
-  URControl_DW.DAQ.FMin[3] = URControlParams.envp_FMin[3];
+  URControl_DW.DAQ.FMax[1] = FMax[1];
+  URControl_DW.DAQ.FMin[1] = FMin[1];
+  URControl_DW.DAQ.FMax[2] = FMax[2];
+  URControl_DW.DAQ.FMin[2] = FMin[2];
+  URControl_DW.DAQ.FMax[3] = FMax[3];
+  URControl_DW.DAQ.FMin[3] = FMin[3];
 
   /* 'UREstimators:57' daq.uvDot_max = state.uvDot_max; */
   URControl_DW.DAQ.uvDot_max[0] = uDot_max;
   URControl_DW.DAQ.uvDot_max[1] = Iu;
 
   /* 'UREstimators:58' daq.uvDot_min = state.uvDot_min; */
-  URControl_DW.DAQ.uvDot_min[0] = a21;
-  URControl_DW.DAQ.uvDot_min[1] = rtb_slow;
+  URControl_DW.DAQ.uvDot_min[0] = MuPrec;
+  URControl_DW.DAQ.uvDot_min[1] = a21;
 
   /* 'UREstimators:59' daq.uv_max = state.uv_max; */
   if ((!(uDot_max > URControlParams.envp_minDeviation)) && (!optimal)) {
@@ -2029,28 +2027,29 @@ void URControlModelClass::step()
     URControl_DW.State.omegaUV[1];
 
   /* 'UREstimators:60' daq.uv_min = state.uv_min; */
+  if ((!(MuPrec < -URControlParams.envp_minDeviation)) && (!tmp)) {
+    MuPrec = -URControlParams.envp_minDeviation;
+  }
+
+  URControl_DW.DAQ.uv_min[0] = MuPrec * URControlParams.envp_timeHorz +
+    URControl_DW.State.omegaUV[0];
   if ((!(a21 < -URControlParams.envp_minDeviation)) && (!tmp)) {
     a21 = -URControlParams.envp_minDeviation;
   }
 
-  URControl_DW.DAQ.uv_min[0] = a21 * URControlParams.envp_timeHorz +
-    URControl_DW.State.omegaUV[0];
-  if ((!(rtb_slow < -URControlParams.envp_minDeviation)) && (!tmp)) {
-    rtb_slow = -URControlParams.envp_minDeviation;
-  }
-
-  URControl_DW.DAQ.uv_min[1] = rtb_slow * URControlParams.envp_timeHorz +
+  URControl_DW.DAQ.uv_min[1] = a21 * URControlParams.envp_timeHorz +
     URControl_DW.State.omegaUV[1];
 
-  /* MATLAB Function: '<S3>/Precession' incorporates:
-   *  MATLAB Function: '<S5>/basic estimators'
+  /* MATLAB Function: '<S2>/Precession' incorporates:
+   *  MATLAB Function: '<S4>/basic estimators'
    */
   /* :  stateOut = State; */
   /* :  [uv_prec, DAQ] = URGenPrecession(state, DAQ, par, URControlParams); */
   /* 'URGenPrecession:3' s = sqrt(URpar.l^2 + URpar.b^2); */
   /* 'URGenPrecession:4' r = state.omega(3); */
   /* 'URGenPrecession:7' Mu_max = (-state.FMin(2) + state.FMax(4))*s; */
-  a21 = (-URControl_DW.State.FMin[1] + URControl_DW.State.FMax[3]) * dummy_idx_0;
+  MuPrec = (-URControl_DW.State.FMin[1] + URControl_DW.State.FMax[3]) *
+    dummy_idx_0;
 
   /* 'URGenPrecession:8' Mu_min = (-state.FMax(2) + state.FMin(4))*s; */
   maxval = (-URControl_DW.State.FMax[1] + URControl_DW.State.FMin[3]) *
@@ -2063,17 +2062,17 @@ void URControlModelClass::step()
   /* 'URGenPrecession:10' Mv_min = (state.FMin(1) - state.FMax(3))*s; */
   /* 'URGenPrecession:12' MMargin = URpar.attitude_MMargin; */
   /* 'URGenPrecession:15' if Mu_max < MMargin */
-  if (a21 < URControlParams.attitude_MMargin) {
+  if (MuPrec < URControlParams.attitude_MMargin) {
     /* 'URGenPrecession:16' MuPrec = MMargin - Mu_max; */
-    a21 = URControlParams.attitude_MMargin - a21;
+    MuPrec = URControlParams.attitude_MMargin - MuPrec;
   } else if (maxval > -URControlParams.attitude_MMargin) {
     /* 'URGenPrecession:17' elseif Mu_min > -MMargin */
     /* 'URGenPrecession:18' MuPrec = -MMargin - Mu_min; */
-    a21 = -URControlParams.attitude_MMargin - maxval;
+    MuPrec = -URControlParams.attitude_MMargin - maxval;
   } else {
     /* 'URGenPrecession:19' else */
     /* 'URGenPrecession:20' MuPrec = 0; */
-    a21 = 0.0;
+    MuPrec = 0.0;
   }
 
   /* 'URGenPrecession:24' if Mv_max < MMargin */
@@ -2122,48 +2121,48 @@ void URControlModelClass::step()
     }
 
     /* 'URGenPrecession:42' u_prec = (MvPrec/(rTemp*(URpar.Iz - Iu)))*gain; */
-    rtb_slow = maxval / ((URControlParams.Iz - std::sqrt(URControlParams.Ix *
+    a21 = maxval / ((URControlParams.Iz - std::sqrt(URControlParams.Ix *
       URControlParams.Ix + URControlParams.Iy * URControlParams.Iy)) * uDot_max)
       * Iv;
 
     /* 'URGenPrecession:43' v_prec = (MuPrec/(rTemp*(Iv - URpar.Iz)))*gain; */
-    a21 = a21 / ((std::sqrt(URControlParams.Ix * URControlParams.Ix +
+    MuPrec = MuPrec / ((std::sqrt(URControlParams.Ix * URControlParams.Ix +
       URControlParams.Iy * URControlParams.Iy) - URControlParams.Iz) * uDot_max)
       * Iv;
   } else {
     /* 'URGenPrecession:44' else */
     /* 'URGenPrecession:45' u_prec = MvPrec/(r*(URpar.Iz - Iu)); */
-    rtb_slow = maxval / ((URControlParams.Iz - std::sqrt(URControlParams.Ix *
+    a21 = maxval / ((URControlParams.Iz - std::sqrt(URControlParams.Ix *
       URControlParams.Ix + URControlParams.Iy * URControlParams.Iy)) *
-                         URControl_DW.State.omega[2]);
+                    URControl_DW.State.omega[2]);
 
     /* 'URGenPrecession:46' v_prec = MuPrec/(r*(Iv - URpar.Iz)); */
-    a21 /= (std::sqrt(URControlParams.Ix * URControlParams.Ix +
-                      URControlParams.Iy * URControlParams.Iy) -
-            URControlParams.Iz) * URControl_DW.State.omega[2];
+    MuPrec /= (std::sqrt(URControlParams.Ix * URControlParams.Ix +
+                         URControlParams.Iy * URControlParams.Iy) -
+               URControlParams.Iz) * URControl_DW.State.omega[2];
   }
 
   /* 'URGenPrecession:49' u_prec = max(min(u_prec,URpar.attitude_maxPrecSpeed),-URpar.attitude_maxPrecSpeed); */
   /* 'URGenPrecession:50' v_prec = max(min(v_prec,URpar.attitude_maxPrecSpeed),-URpar.attitude_maxPrecSpeed); */
   /* 'URGenPrecession:52' uv_prec = [u_prec; v_prec]; */
   optimal = rtIsNaN(URControlParams.attitude_maxPrecSpeed);
-  if ((!(rtb_slow < URControlParams.attitude_maxPrecSpeed)) && (!optimal)) {
-    rtb_slow = URControlParams.attitude_maxPrecSpeed;
-  }
-
-  tmp = rtIsNaN(-URControlParams.attitude_maxPrecSpeed);
-  if ((rtb_slow > -URControlParams.attitude_maxPrecSpeed) || tmp) {
-    dummy_idx_0 = rtb_slow;
-  } else {
-    dummy_idx_0 = -URControlParams.attitude_maxPrecSpeed;
-  }
-
   if ((!(a21 < URControlParams.attitude_maxPrecSpeed)) && (!optimal)) {
     a21 = URControlParams.attitude_maxPrecSpeed;
   }
 
+  tmp = rtIsNaN(-URControlParams.attitude_maxPrecSpeed);
   if ((a21 > -URControlParams.attitude_maxPrecSpeed) || tmp) {
-    dummy_idx_1 = a21;
+    dummy_idx_0 = a21;
+  } else {
+    dummy_idx_0 = -URControlParams.attitude_maxPrecSpeed;
+  }
+
+  if ((!(MuPrec < URControlParams.attitude_maxPrecSpeed)) && (!optimal)) {
+    MuPrec = URControlParams.attitude_maxPrecSpeed;
+  }
+
+  if ((MuPrec > -URControlParams.attitude_maxPrecSpeed) || tmp) {
+    dummy_idx_1 = MuPrec;
   } else {
     dummy_idx_1 = -URControlParams.attitude_maxPrecSpeed;
   }
@@ -2172,8 +2171,8 @@ void URControlModelClass::step()
   URControl_DW.DAQ.uv_prec[0] = dummy_idx_0;
   URControl_DW.DAQ.uv_prec[1] = dummy_idx_1;
 
-  /* MATLAB Function: '<S3>/yawRateControl' incorporates:
-   *  MATLAB Function: '<S5>/basic estimators'
+  /* MATLAB Function: '<S2>/yawRateControl' incorporates:
+   *  MATLAB Function: '<S4>/basic estimators'
    */
   /* :  [w_min, w_max, MzGain, DAQ] = URFailureYawRateControl(state, DAQ, par, URControlParams); */
   /* 'URFailureYawRateControl:4' w_max = ones(4,1)*par.wRotorMax; */
@@ -2184,7 +2183,7 @@ void URControlModelClass::step()
   FMax[3] = 0.0;
 
   /* 'URFailureYawRateControl:6' MzGain = URpar.rate_MzGain; */
-  rtb_slow = URControlParams.rate_MzGain;
+  a21 = URControlParams.rate_MzGain;
 
   /* 'URFailureYawRateControl:8' if URpar.YRCFail_enable && state.fail_id > 0 */
   if ((URControlParams.YRCFail_enable != 0.0) && (URControl_DW.State.fail_id >
@@ -2204,51 +2203,51 @@ void URControlModelClass::step()
       Iu = 0.0;
     }
 
-    a21 = (URControl_DW.State.omega[2] * rt_powd_snf(-1.0,
-            URControl_DW.State.fail_id) - URControlParams.YRCFail_yawRateTarget)
-      * Iu;
+    MuPrec = (URControl_DW.State.omega[2] * rt_powd_snf(-1.0,
+               URControl_DW.State.fail_id) -
+              URControlParams.YRCFail_yawRateTarget) * Iu;
 
     /* 'URFailureYawRateControl:18' if URpar.YRCFail_mode == 1 */
     if (URControlParams.YRCFail_mode == 1.0) {
       /* 'URFailureYawRateControl:19' dw = -error*URpar.YRCFail_Kp_dw; */
       /* 'URFailureYawRateControl:21' lim = par.wRotorMax - par.wRotorMin; */
       /* 'URFailureYawRateControl:22' dw = max(min(dw, lim), 0); */
-      a21 = -a21 * URControlParams.YRCFail_Kp_dw;
-      if (!(a21 < 1200.0)) {
-        a21 = 1200.0;
+      MuPrec = -MuPrec * URControlParams.YRCFail_Kp_dw;
+      if (!(MuPrec < 1200.0)) {
+        MuPrec = 1200.0;
       }
 
-      if (!(a21 > 0.0)) {
-        a21 = 0.0;
+      if (!(MuPrec > 0.0)) {
+        MuPrec = 0.0;
       }
 
       /* 'URFailureYawRateControl:25' w_max = w_max - [dw; 0; dw; 0]; */
       /* 'URFailureYawRateControl:26' w_min = w_min + [0; dw; 0; dw]; */
-      FMin[0] = 1200.0 - a21;
-      FMax[1] = a21;
-      FMin[2] = 1200.0 - a21;
-      FMax[3] = a21;
+      FMin[0] = 1200.0 - MuPrec;
+      FMax[1] = MuPrec;
+      FMin[2] = 1200.0 - MuPrec;
+      FMax[3] = MuPrec;
     } else {
       if (URControlParams.YRCFail_mode == 2.0) {
         /* 'URFailureYawRateControl:28' elseif URpar.YRCFail_mode == 2 */
         /* 'URFailureYawRateControl:29' dMzGain = -error*URpar.YRCFail_Kp_dMzGain; */
         /* 'URFailureYawRateControl:30' dMzGain = max(dMzGain,0); */
-        rtb_slow = -a21 * URControlParams.YRCFail_Kp_dMzGain;
-        if (!(rtb_slow > 0.0)) {
-          rtb_slow = 0.0;
+        a21 = -MuPrec * URControlParams.YRCFail_Kp_dMzGain;
+        if (!(a21 > 0.0)) {
+          a21 = 0.0;
         }
 
         /* 'URFailureYawRateControl:31' MzGain = MzGain + dMzGain^2; */
-        rtb_slow = rtb_slow * rtb_slow + URControlParams.rate_MzGain;
+        a21 = a21 * a21 + URControlParams.rate_MzGain;
       }
     }
   }
 
-  /* MATLAB Function: '<S2>/position control' incorporates:
+  /* MATLAB Function: '<S1>/position control' incorporates:
    *  DataTypeConversion: '<Root>/Data Type Conversion8'
    *  Inport: '<Root>/pos_sp'
-   *  MATLAB Function: '<S2>/altitude control'
-   *  MATLAB Function: '<S5>/basic estimators'
+   *  MATLAB Function: '<S1>/altitude control'
+   *  MATLAB Function: '<S4>/basic estimators'
    */
   /* :  [n_des, DAQ] = URpositionControl(inputs, state, DAQ, par, URControlParams); */
   /* 'URpositionControl:3' if isempty(errorInt) */
@@ -2378,54 +2377,54 @@ void URControlModelClass::step()
 
   /* 'URpositionControl:29' maxLateral = abs(par.g*tan(maxAngle)); */
   /* 'URpositionControl:30' latRatio = sqrt(a_ref(1)^2 + a_ref(2)^2)/maxLateral; */
-  a21 = std::sqrt(errorVel_idx_0 * errorVel_idx_0 + errorVel_idx_1 *
-                  errorVel_idx_1) / std::abs(9.81 * std::tan(maxval));
+  MuPrec = std::sqrt(errorVel_idx_0 * errorVel_idx_0 + errorVel_idx_1 *
+                     errorVel_idx_1) / std::abs(9.81 * std::tan(maxval));
 
   /* 'URpositionControl:31' a_ref(1) = a_ref(1)/(max(latRatio,1)); */
-  if (a21 > 1.0) {
-    maxval = a21;
+  if (MuPrec > 1.0) {
+    maxval = MuPrec;
   } else {
     maxval = 1.0;
-    a21 = 1.0;
+    MuPrec = 1.0;
   }
 
   errorVel_idx_0 /= maxval;
 
   /* 'URpositionControl:32' a_ref(2) = a_ref(2)/(max(latRatio,1)); */
-  errorVel_idx_1 /= a21;
+  errorVel_idx_1 /= MuPrec;
 
   /* 'URpositionControl:38' n_des = a_ref/norm(a_ref); */
-  a21 = 3.3121686421112381E-170;
+  MuPrec = 3.3121686421112381E-170;
   uDot_max = std::abs(errorVel_idx_0);
   if (uDot_max > 3.3121686421112381E-170) {
     maxval = 1.0;
-    a21 = uDot_max;
+    MuPrec = uDot_max;
   } else {
     Iv = uDot_max / 3.3121686421112381E-170;
     maxval = Iv * Iv;
   }
 
   uDot_max = std::abs(errorVel_idx_1);
-  if (uDot_max > a21) {
-    Iv = a21 / uDot_max;
+  if (uDot_max > MuPrec) {
+    Iv = MuPrec / uDot_max;
     maxval = maxval * Iv * Iv + 1.0;
-    a21 = uDot_max;
+    MuPrec = uDot_max;
   } else {
-    Iv = uDot_max / a21;
+    Iv = uDot_max / MuPrec;
     maxval += Iv * Iv;
   }
 
   uDot_max = std::abs(wRotorSet_data_idx_2 - 9.81);
-  if (uDot_max > a21) {
-    Iv = a21 / uDot_max;
+  if (uDot_max > MuPrec) {
+    Iv = MuPrec / uDot_max;
     maxval = maxval * Iv * Iv + 1.0;
-    a21 = uDot_max;
+    MuPrec = uDot_max;
   } else {
-    Iv = uDot_max / a21;
+    Iv = uDot_max / MuPrec;
     maxval += Iv * Iv;
   }
 
-  maxval = a21 * std::sqrt(maxval);
+  maxval = MuPrec * std::sqrt(maxval);
   rtb_n_des[0] = errorVel_idx_0 / maxval;
   rtb_n_des[1] = errorVel_idx_1 / maxval;
   rtb_n_des[2] = (wRotorSet_data_idx_2 - 9.81) / maxval;
@@ -2449,20 +2448,20 @@ void URControlModelClass::step()
   URControl_DW.DAQ.a_ref[2] = wRotorSet_data_idx_2 - 9.81;
   URControl_DW.DAQ.n_des[2] = rtb_n_des[2];
 
-  /* End of MATLAB Function: '<S2>/position control' */
+  /* End of MATLAB Function: '<S1>/position control' */
 
-  /* DiscreteStateSpace: '<S3>/Discrete State-Space' */
+  /* DiscreteStateSpace: '<S2>/Discrete State-Space' */
   {
     rtb_DiscreteStateSpace[0] = (1.0)*URControl_DW.DiscreteStateSpace_DSTATE[0];
     rtb_DiscreteStateSpace[1] = (1.0)*URControl_DW.DiscreteStateSpace_DSTATE[1];
     rtb_DiscreteStateSpace[2] = (1.0)*URControl_DW.DiscreteStateSpace_DSTATE[2];
   }
 
-  /* MATLAB Function: '<S2>/yaw rate control' incorporates:
+  /* MATLAB Function: '<S1>/yaw rate control' incorporates:
    *  DataTypeConversion: '<Root>/Data Type Conversion9'
    *  Inport: '<Root>/yaw_sp'
-   *  MATLAB Function: '<S3>/attitude controller'
-   *  MATLAB Function: '<S5>/basic estimators'
+   *  MATLAB Function: '<S2>/attitude controller'
+   *  MATLAB Function: '<S4>/basic estimators'
    */
   /* :  [r_cmd, DAQ] = URYawControl(inputs, state, DAQ, par, URControlParams); */
   /* 'URYawControl:3' psiError = inputs.yawTarget - state.att(3); */
@@ -2471,7 +2470,7 @@ void URControlModelClass::step()
   maxval = std::cos(URControl_DW.State.att[1]);
   uDot_max = std::sin(URControl_DW.State.att[0]);
   errorVel_idx_1 = std::cos(URControl_DW.State.att[0]);
-  a21 = (URControl_U.yaw_sp - URControl_DW.State.att[2]) *
+  MuPrec = (URControl_U.yaw_sp - URControl_DW.State.att[2]) *
     URControlParams.YRC_Kp_psi * errorVel_idx_1 * maxval - uDot_max *
     URControl_DW.State.omega[1];
 
@@ -2479,23 +2478,23 @@ void URControlModelClass::step()
   if (URControl_DW.State.fail_id > 0.0) {
     /* 'URYawControl:10' yawDirection = (-1)^(state.fail_id); */
     /* 'URYawControl:11' r_cmd = yawDirection*URpar.YRC_r_cmd_fail; */
-    a21 = rt_powd_snf(-1.0, URControl_DW.State.fail_id) *
+    MuPrec = rt_powd_snf(-1.0, URControl_DW.State.fail_id) *
       URControlParams.YRC_r_cmd_fail;
   }
 
   /* 'URYawControl:14' if URpar.YRC_enable == 0 */
   if (URControlParams.YRC_enable == 0.0) {
     /* 'URYawControl:15' r_cmd = 0; */
-    a21 = 0.0;
+    MuPrec = 0.0;
   }
 
   /* 'URYawControl:19' daq.r_cmd = r_cmd; */
-  URControl_DW.DAQ.r_cmd = a21;
+  URControl_DW.DAQ.r_cmd = MuPrec;
 
-  /* MATLAB Function: '<S3>/attitude controller' incorporates:
-   *  MATLAB Function: '<S2>/yaw rate control'
-   *  MATLAB Function: '<S3>/yawRateControl'
-   *  MATLAB Function: '<S5>/basic estimators'
+  /* MATLAB Function: '<S2>/attitude controller' incorporates:
+   *  MATLAB Function: '<S1>/yaw rate control'
+   *  MATLAB Function: '<S2>/yawRateControl'
+   *  MATLAB Function: '<S4>/basic estimators'
    */
   /* :  [pqr_des, uvr_des, w_max, w_min, MzGain, DAQ] = URAttitudeController(state, DAQ, uv_prec, w_min, w_max, MzGain, nd_i,ndi_dot,r_cmd,par,URControlParams); */
   /* 'URAttitudeController:4' rotAngle = 45/180*pi; */
@@ -2645,10 +2644,10 @@ void URControlModelClass::step()
     0.70710678118654757;
 
   /* 'URAttitudeController:32' pqr_des = [pq_des; r_cmd]; */
-  h[2] = a21;
+  h[2] = MuPrec;
 
   /* 'URAttitudeController:33' uvr_des = [uv_des; r_cmd]; */
-  dummy_idx_1 = a21;
+  dummy_idx_1 = MuPrec;
 
   /* 'URAttitudeController:36' daq.pqr_des = pqr_des; */
   /* 'URAttitudeController:37' daq.uvr_des = uvr_des; */
@@ -2656,8 +2655,8 @@ void URControlModelClass::step()
   URControl_DW.DAQ.uvr_des[0] = uv_des_idx_0;
   URControl_DW.DAQ.pqr_des[1] = errorVel_idx_1;
   URControl_DW.DAQ.uvr_des[1] = errorVel_idx_0;
-  URControl_DW.DAQ.pqr_des[2] = a21;
-  URControl_DW.DAQ.uvr_des[2] = a21;
+  URControl_DW.DAQ.pqr_des[2] = MuPrec;
+  URControl_DW.DAQ.uvr_des[2] = MuPrec;
 
   /* 'URAttitudeController:38' daq.uv_des_raw = uv_des_raw; */
   /* 'URAttitudeController:39' daq.uv_des = uv_des; */
@@ -2681,10 +2680,10 @@ void URControlModelClass::step()
   URControl_DW.DAQ.w_min[3] = FMax[3];
 
   /* 'URAttitudeController:43' daq.MzGain = MzGain; */
-  URControl_DW.DAQ.MzGain = rtb_slow;
+  URControl_DW.DAQ.MzGain = a21;
 
-  /* MATLAB Function: '<S2>/altitude control' incorporates:
-   *  MATLAB Function: '<S5>/basic estimators'
+  /* MATLAB Function: '<S1>/altitude control' incorporates:
+   *  MATLAB Function: '<S4>/basic estimators'
    */
   /* :  [Ftot_ref, DAQ] = URAltitudeControl(inputs, state, DAQ, par, URControlParams); */
   /* 'URAltitudeControl:3' if isempty(errorInt) */
@@ -2704,10 +2703,10 @@ void URControlModelClass::step()
     Iu = -URControlParams.altitude_maxVel;
   }
 
-  a21 = Iu - URControl_DW.State.vel[2];
+  MuPrec = Iu - URControl_DW.State.vel[2];
 
   /* 'URAltitudeControl:14' errorInt = errorInt + errorVel/par.freq; */
-  URControl_DW.errorInt_b += a21 / 500.0;
+  URControl_DW.errorInt_b += MuPrec / 500.0;
 
   /* 'URAltitudeControl:15' intLim = URpar.altitude_intLim; */
   /* 'URAltitudeControl:16' errorInt = max(min(errorInt,intLim),-intLim); */
@@ -2754,11 +2753,11 @@ void URControlModelClass::step()
     uDot_max = -URControlParams.altitude_peakAngle;
   }
 
-  a21 = -((URControlParams.altitude_Kp_vel * a21 +
-           URControlParams.altitude_Ki_vel * URControl_DW.errorInt_b) - 9.81) *
-    0.374 * (1.0 / (std::cos(maxval) * std::cos(uDot_max)));
-  if (!(a21 > 0.0)) {
-    a21 = 0.0;
+  MuPrec = -((URControlParams.altitude_Kp_vel * MuPrec +
+              URControlParams.altitude_Ki_vel * URControl_DW.errorInt_b) - 9.81)
+    * 0.374 * (1.0 / (std::cos(maxval) * std::cos(uDot_max)));
+  if (!(MuPrec > 0.0)) {
+    MuPrec = 0.0;
   }
 
   /* 'URAltitudeControl:27' maxAngle = max(abs(state.att(1)),abs(state.att(2))); */
@@ -2783,7 +2782,7 @@ void URControlModelClass::step()
       Iu = 0.0;
     }
 
-    a21 *= Iu;
+    MuPrec *= Iu;
   }
 
   /* 'URAltitudeControl:38' maxFtot = sum(state.FMax)*URpar.altitude_maxFPerc; */
@@ -2791,28 +2790,25 @@ void URControlModelClass::step()
   dummy_idx_0 = (((URControl_DW.State.FMax[0] + URControl_DW.State.FMax[1]) +
                   URControl_DW.State.FMax[2]) + URControl_DW.State.FMax[3]) *
     URControlParams.altitude_maxFPerc;
-  if ((!(a21 < dummy_idx_0)) && (!rtIsNaN(dummy_idx_0))) {
-    a21 = dummy_idx_0;
+  if ((!(MuPrec < dummy_idx_0)) && (!rtIsNaN(dummy_idx_0))) {
+    MuPrec = dummy_idx_0;
   }
 
   /* 'URAltitudeControl:41' if URpar.altitude_enable == 0 */
   if (URControlParams.altitude_enable == 0.0) {
     /* 'URAltitudeControl:42' Ftot_ref = par.g*par.mass; */
-    a21 = 3.66894;
+    MuPrec = 3.66894;
   }
 
   /* 'URAltitudeControl:46' daq.Ftot_ref = Ftot_ref; */
-  URControl_DW.DAQ.Ftot_ref = a21;
+  URControl_DW.DAQ.Ftot_ref = MuPrec;
 
-  /* MATLAB Function: '<S6>/control allocator' incorporates:
-   *  Constant: '<S7>/Constant'
-   *  MATLAB Function: '<S2>/altitude control'
-   *  MATLAB Function: '<S3>/attitude controller'
-   *  MATLAB Function: '<S3>/yawRateControl'
-   *  MATLAB Function: '<S5>/basic estimators'
-   *  Memory: '<S7>/Memory'
-   *  Sum: '<S7>/Sum'
-   *  Switch: '<S1>/normal'
+  /* MATLAB Function: '<S5>/control allocator' incorporates:
+   *  Inport: '<Root>/fail_flag'
+   *  MATLAB Function: '<S1>/altitude control'
+   *  MATLAB Function: '<S2>/attitude controller'
+   *  MATLAB Function: '<S2>/yawRateControl'
+   *  MATLAB Function: '<S4>/basic estimators'
    */
   /* :  [wRotorSet, DAQ] = URControl_alloc(state, DAQ, pqr_des, uvr_des, w_max, w_min, MzGain, Ftot_ref, fail_id_quick, par, URControlParams); */
   /* 'URControl_alloc:3' if isempty(errorInt) */
@@ -3053,10 +3049,10 @@ void URControlModelClass::step()
       /* 'URControl_alloc:49' gains.MzGain = MzGain; */
       /* 'URControl_alloc:51' y_state_initial = y_state_prev; */
       /* 'URControl_alloc:57' [x,y_state,iter,optimal] = controlAllocQPQuick(refStruct, state.FMax, state.FMin, gains, y_state_initial, par, URpar); */
-      URControl_controlAllocQPQuick(dummy_idx_1, maxval, errorVel_idx_0, a21,
+      URControl_controlAllocQPQuick(dummy_idx_1, maxval, errorVel_idx_0, MuPrec,
         URControl_DW.State.FMax, URControl_DW.State.FMin,
         URControlParams.rate_MuGain, URControlParams.rate_MvGain,
-        URControlParams.rate_FtotGain, URControlParams.rate_FGain, rtb_slow,
+        URControlParams.rate_FtotGain, URControlParams.rate_FGain, a21,
         URControl_DW.y_state_prev, &URControl_ConstP.pooled1, &URControlParams,
         x, &URControl_DW.DAQ.iter, &optimal);
 
@@ -3071,7 +3067,7 @@ void URControlModelClass::step()
         URControl_DW.Fset_prev[1] = x[1];
         a21 = x[2];
         URControl_DW.Fset_prev[2] = x[2];
-        rtb_slow = x[3];
+        MuPrec = x[3];
         URControl_DW.Fset_prev[3] = x[3];
       } else {
         /* 'URControl_alloc:62' else */
@@ -3079,7 +3075,7 @@ void URControlModelClass::step()
         dummy_idx_0 = URControl_DW.Fset_prev[0] * 0.99;
         Iu = URControl_DW.Fset_prev[1] * 0.99;
         a21 = URControl_DW.Fset_prev[2] * 0.99;
-        rtb_slow = URControl_DW.Fset_prev[3] * 0.99;
+        MuPrec = URControl_DW.Fset_prev[3] * 0.99;
       }
 
       /* 'URControl_alloc:66' wRotorSet = sqrt(max(Fset,0)/URpar.k0); */
@@ -3098,11 +3094,11 @@ void URControlModelClass::step()
       }
 
       wRotorSet_data_idx_2 = std::sqrt(a21 / URControlParams.k0);
-      if (!(rtb_slow > 0.0)) {
-        rtb_slow = 0.0;
+      if (!(MuPrec > 0.0)) {
+        MuPrec = 0.0;
       }
 
-      wRotorSet_data_idx_3 = std::sqrt(rtb_slow / URControlParams.k0);
+      wRotorSet_data_idx_3 = std::sqrt(MuPrec / URControlParams.k0);
 
       /* 'URControl_alloc:69' M_uvr_set = zeros(3,1); */
       /* 'URControl_alloc:70' M_uvr_set(1) = (x(4) - x(2))*URpar.s; */
@@ -3150,22 +3146,22 @@ void URControlModelClass::step()
 
   optimal = rtIsNaN(FMax[1]);
   if ((Iu > FMax[1]) || optimal) {
-    maxval = Iu;
+    FMin[1] = Iu;
   } else {
-    maxval = FMax[1];
+    FMin[1] = FMax[1];
   }
 
   if (wRotorSet_data_idx_2 > 0.0) {
-    uDot_max = wRotorSet_data_idx_2;
+    FMin[2] = wRotorSet_data_idx_2;
   } else {
-    uDot_max = 0.0;
+    FMin[2] = 0.0;
   }
 
   tmp = rtIsNaN(FMax[3]);
   if ((wRotorSet_data_idx_3 > FMax[3]) || tmp) {
-    Iv = wRotorSet_data_idx_3;
+    FMin[3] = wRotorSet_data_idx_3;
   } else {
-    Iv = FMax[3];
+    FMin[3] = FMax[3];
   }
 
   /* 'URControl_alloc:85' daq.wRotorSet = wRotorSet; */
@@ -3175,15 +3171,31 @@ void URControlModelClass::step()
     URControl_DW.DAQ.wRotorSet[0] = 0.0;
   }
 
-  URControl_DW.DAQ.wRotorSet[1] = maxval;
-  URControl_DW.DAQ.wRotorSet[2] = uDot_max;
-  URControl_DW.DAQ.wRotorSet[3] = Iv;
+  if ((Iu > FMax[1]) || optimal) {
+    URControl_DW.DAQ.wRotorSet[1] = Iu;
+  } else {
+    URControl_DW.DAQ.wRotorSet[1] = FMax[1];
+  }
+
+  if (wRotorSet_data_idx_2 > 0.0) {
+    URControl_DW.DAQ.wRotorSet[2] = wRotorSet_data_idx_2;
+  } else {
+    URControl_DW.DAQ.wRotorSet[2] = 0.0;
+  }
+
+  if ((wRotorSet_data_idx_3 > FMax[3]) || tmp) {
+    URControl_DW.DAQ.wRotorSet[3] = wRotorSet_data_idx_3;
+  } else {
+    URControl_DW.DAQ.wRotorSet[3] = FMax[3];
+  }
 
   /* 'URControl_alloc:88' if fail_id_quick~=0 */
-  if (0.002 + URControl_DW.Memory_PreviousInput > 0.5) {
+  if (URControl_U.fail_flag != 0) {
     /* 'URControl_alloc:89' wRotorSet(fail_id_quick) = par.fail_wRot; */
-    FMin[0] = 0.0;
+    FMin[URControl_U.fail_flag - 1] = 0.0;
   }
+
+  /* End of MATLAB Function: '<S5>/control allocator' */
 
   /* Outport: '<Root>/w_rotors' incorporates:
    *  DataTypeConversion: '<Root>/Data Type Conversion'
@@ -3202,81 +3214,51 @@ void URControlModelClass::step()
   URControl_Y.actuators_control[0] = (real32_T)((FMin[0] * FMin[0] -
     98696.044010893587) * 2.0 / 1.5335171993870398E+6 + -1.0);
 
-  /* MATLAB Function: '<S6>/control allocator' */
-  if ((Iu > FMax[1]) || optimal) {
-    /* Outport: '<Root>/w_rotors' incorporates:
-     *  DataTypeConversion: '<Root>/Data Type Conversion'
-     */
-    URControl_Y.w_rotors[1] = (real32_T)Iu;
-  } else {
-    /* Outport: '<Root>/w_rotors' incorporates:
-     *  DataTypeConversion: '<Root>/Data Type Conversion'
-     */
-    URControl_Y.w_rotors[1] = (real32_T)FMax[1];
-  }
+  /* Outport: '<Root>/w_rotors' incorporates:
+   *  DataTypeConversion: '<Root>/Data Type Conversion'
+   */
+  URControl_Y.w_rotors[1] = (real32_T)FMin[1];
 
   /* Outport: '<Root>/actuators_control' incorporates:
+   *  DataTypeConversion: '<Root>/Data Type Conversion'
    *  DataTypeConversion: '<Root>/Data Type Conversion11'
    *  MATLAB Function: '<Root>/conversion to px4'
-   *  MATLAB Function: '<S6>/control allocator'
    */
-  URControl_Y.actuators_control[1] = (real32_T)((maxval * maxval -
+  URControl_Y.actuators_control[1] = (real32_T)((FMin[1] * FMin[1] -
     98696.044010893587) * 2.0 / 1.5335171993870398E+6 + -1.0);
 
-  /* MATLAB Function: '<S6>/control allocator' */
-  if (wRotorSet_data_idx_2 > 0.0) {
-    /* Outport: '<Root>/w_rotors' incorporates:
-     *  DataTypeConversion: '<Root>/Data Type Conversion'
-     */
-    URControl_Y.w_rotors[2] = (real32_T)wRotorSet_data_idx_2;
-  } else {
-    /* Outport: '<Root>/w_rotors' incorporates:
-     *  DataTypeConversion: '<Root>/Data Type Conversion'
-     */
-    URControl_Y.w_rotors[2] = 0.0F;
-  }
+  /* Outport: '<Root>/w_rotors' incorporates:
+   *  DataTypeConversion: '<Root>/Data Type Conversion'
+   */
+  URControl_Y.w_rotors[2] = (real32_T)FMin[2];
 
   /* Outport: '<Root>/actuators_control' incorporates:
+   *  DataTypeConversion: '<Root>/Data Type Conversion'
    *  DataTypeConversion: '<Root>/Data Type Conversion11'
    *  MATLAB Function: '<Root>/conversion to px4'
-   *  MATLAB Function: '<S6>/control allocator'
    */
-  URControl_Y.actuators_control[2] = (real32_T)((uDot_max * uDot_max -
+  URControl_Y.actuators_control[2] = (real32_T)((FMin[2] * FMin[2] -
     98696.044010893587) * 2.0 / 1.5335171993870398E+6 + -1.0);
 
-  /* MATLAB Function: '<S6>/control allocator' */
-  if ((wRotorSet_data_idx_3 > FMax[3]) || tmp) {
-    /* Outport: '<Root>/w_rotors' incorporates:
-     *  DataTypeConversion: '<Root>/Data Type Conversion'
-     */
-    URControl_Y.w_rotors[3] = (real32_T)wRotorSet_data_idx_3;
-  } else {
-    /* Outport: '<Root>/w_rotors' incorporates:
-     *  DataTypeConversion: '<Root>/Data Type Conversion'
-     */
-    URControl_Y.w_rotors[3] = (real32_T)FMax[3];
-  }
+  /* Outport: '<Root>/w_rotors' incorporates:
+   *  DataTypeConversion: '<Root>/Data Type Conversion'
+   */
+  URControl_Y.w_rotors[3] = (real32_T)FMin[3];
 
   /* Outport: '<Root>/actuators_control' incorporates:
+   *  DataTypeConversion: '<Root>/Data Type Conversion'
    *  DataTypeConversion: '<Root>/Data Type Conversion11'
    *  MATLAB Function: '<Root>/conversion to px4'
-   *  MATLAB Function: '<S6>/control allocator'
    */
-  URControl_Y.actuators_control[3] = (real32_T)((Iv * Iv - 98696.044010893587) *
-    2.0 / 1.5335171993870398E+6 + -1.0);
+  URControl_Y.actuators_control[3] = (real32_T)((FMin[3] * FMin[3] -
+    98696.044010893587) * 2.0 / 1.5335171993870398E+6 + -1.0);
 
   /* Outport: '<Root>/daq' incorporates:
    *  DataStoreRead: '<Root>/Data Store Read'
    */
   URControl_Y.daq = URControl_DW.DAQ;
 
-  /* Update for Memory: '<S7>/Memory' incorporates:
-   *  Constant: '<S7>/Constant'
-   *  Sum: '<S7>/Sum'
-   */
-  URControl_DW.Memory_PreviousInput += 0.002;
-
-  /* Update for DiscreteStateSpace: '<S3>/Discrete State-Space' */
+  /* Update for DiscreteStateSpace: '<S2>/Discrete State-Space' */
   {
     real_T xnew[3];
     xnew[0] = (0.96)*URControl_DW.DiscreteStateSpace_DSTATE[0];
@@ -3318,39 +3300,36 @@ void URControlModelClass::initialize()
   /* Start for DataStoreMemory: '<Root>/Data Store Memory1' */
   URControl_DW.State = URControl_rtZstateBus;
 
-  /* InitializeConditions for Memory: '<S7>/Memory' */
-  URControl_DW.Memory_PreviousInput = 0.0;
-
-  /* InitializeConditions for DiscreteStateSpace: '<S3>/Discrete State-Space' */
+  /* InitializeConditions for DiscreteStateSpace: '<S2>/Discrete State-Space' */
   URControl_DW.DiscreteStateSpace_DSTATE[0] = (0.0);
   URControl_DW.DiscreteStateSpace_DSTATE[1] = (0.0);
   URControl_DW.DiscreteStateSpace_DSTATE[2] = (-1.0);
 
-  /* SystemInitialize for MATLAB Function: '<S2>/altitude control' */
+  /* SystemInitialize for MATLAB Function: '<S1>/altitude control' */
   /* 'URpositionControl:3' errorInt = [0,0,0]; */
   /* 'URAltitudeControl:3' errorInt = 0; */
   URControl_DW.errorInt_b = 0.0;
 
-  /* SystemInitialize for MATLAB Function: '<S2>/position control' */
+  /* SystemInitialize for MATLAB Function: '<S1>/position control' */
   /* 'URControl_alloc:3' errorInt = [0,0,0]; */
   /* 'URControl_alloc:4' error_prev = [0,0,0]; */
   URControl_DW.errorInt_p[0] = 0.0;
 
-  /* SystemInitialize for MATLAB Function: '<S6>/control allocator' */
+  /* SystemInitialize for MATLAB Function: '<S5>/control allocator' */
   URControl_DW.errorInt[0] = 0.0;
   URControl_DW.error_prev[0] = 0.0;
 
-  /* SystemInitialize for MATLAB Function: '<S2>/position control' */
+  /* SystemInitialize for MATLAB Function: '<S1>/position control' */
   URControl_DW.errorInt_p[1] = 0.0;
 
-  /* SystemInitialize for MATLAB Function: '<S6>/control allocator' */
+  /* SystemInitialize for MATLAB Function: '<S5>/control allocator' */
   URControl_DW.errorInt[1] = 0.0;
   URControl_DW.error_prev[1] = 0.0;
 
-  /* SystemInitialize for MATLAB Function: '<S2>/position control' */
+  /* SystemInitialize for MATLAB Function: '<S1>/position control' */
   URControl_DW.errorInt_p[2] = 0.0;
 
-  /* SystemInitialize for MATLAB Function: '<S6>/control allocator' */
+  /* SystemInitialize for MATLAB Function: '<S5>/control allocator' */
   URControl_DW.errorInt[2] = 0.0;
   URControl_DW.error_prev[2] = 0.0;
 
