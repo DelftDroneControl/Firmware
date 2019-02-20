@@ -142,23 +142,70 @@ SlURControl::parameters_updated()
 
 	// Params
 
+	// Estimation
+	URControlParams.est_useEKF = _sl_est_useekf.get();
+	URControlParams.est_omegaFilterT = _sl_est_omegafiltert.get();
+	URControlParams.est_posFilterT = _sl_est_posfiltert.get();
+	URControlParams.est_velFilterT = _sl_est_velfiltert.get();
+
 	// Position
 	URControlParams.position_enable = _sl_pos_enable.get();
+	URControlParams.position_Kp_pos[0] = _sl_pos_kp_posx.get();
+	URControlParams.position_Kp_pos[1] = _sl_pos_kp_posy.get();
+	URControlParams.position_Kp_pos[2] = _sl_pos_kp_posz.get();
+	URControlParams.position_Kp_vel[0] = _sl_pos_kp_velx.get();
+	URControlParams.position_Kp_vel[1] = _sl_pos_kp_vely.get();
+	URControlParams.position_Kp_vel[2] = _sl_pos_kp_velz.get();
+	URControlParams.position_Ki_vel[0] = _sl_pos_ki_velx.get();
+	URControlParams.position_Ki_vel[1] = _sl_pos_ki_vely.get();
+	URControlParams.position_Ki_vel[2] = _sl_pos_ki_velz.get();
+	URControlParams.position_failGain = _sl_pos_failGain.get();
 
+	// Altitude
+	URControlParams.altitude_Kp_pos = _sl_alt_kp_pos.get();
+	URControlParams.altitude_Kp_vel = _sl_alt_kp_vel.get();
+	URControlParams.altitude_Ki_vel = _sl_alt_ki_vel.get();
+	
 	// YRC
 	URControlParams.YRC_enable = _sl_yrc_enable.get();
+	URControlParams.YRC_mode = _sl_yrc_mode.get();
+	URControlParams.YRC_Kp_psi = _sl_yrc_Kp_psi.get();
+	URControlParams.YRC_rateCmd = _sl_yrc_rateCmd.get();
+	URControlParams.YRCFail_mode = _sl_yrcfail_mode.get();
+
+	// Attitude
+	URControlParams.attitude_rotKp = _sl_attitude_rotKp.get();
+	URControlParams.attitude_enablePrec = _sl_attitude_enablePrec.get();
+	URControlParams.attitude_maxPrecSpeed = _sl_attitude_maxprecspeed.get();
+	URControlParams.attitude_MMargin = _sl_attitude_mmargin.get();
 
 	// Rate
-	URControlParams.rate_rateDotKp[0] = _sl_ratedot_kpu.get();
-	URControlParams.rate_rateDotKp[1] = _sl_ratedot_kpv.get();
-	URControlParams.rate_rateDotKp[2] = _sl_ratedot_kpr.get();
-	URControlParams.rate_rateDotKi[0] = _sl_ratedot_kiu.get();
-	URControlParams.rate_rateDotKi[1] = _sl_ratedot_kiv.get();
-	URControlParams.rate_rateDotKi[2] = _sl_ratedot_kir.get();
-	URControlParams.rate_rateDotKd[0] = _sl_ratedot_kdu.get();
-	URControlParams.rate_rateDotKd[1] = _sl_ratedot_kdv.get();
-	URControlParams.rate_rateDotKd[2] = _sl_ratedot_kdr.get();
+	URControlParams.rate_mode = _sl_rate_mode.get();
+	URControlParams.rate_momentMode = _sl_rate_momentMode.get();
+
+	// Rate - INDI
+	URControlParams.rate_INDI_rateDotKp[0] = _sl_ratedot_indi_kpx.get();
+	URControlParams.rate_INDI_rateDotKp[1] = _sl_ratedot_indi_kpy.get();
+	URControlParams.rate_INDI_rateDotKp[2] = _sl_ratedot_indi_kpz.get();
 	
+	// Rate - MPID
+	URControlParams.rate_MPID_rateDotKp[0] = _sl_ratedot_kpu.get();
+	URControlParams.rate_MPID_rateDotKp[1] = _sl_ratedot_kpv.get();
+	URControlParams.rate_MPID_rateDotKp[2] = _sl_ratedot_kpr.get();
+	URControlParams.rate_MPID_rateDotKi[0] = _sl_ratedot_kiu.get();
+	URControlParams.rate_MPID_rateDotKi[1] = _sl_ratedot_kiv.get();
+	URControlParams.rate_MPID_rateDotKi[2] = _sl_ratedot_kir.get();
+	URControlParams.rate_MPID_rateDotKd[0] = _sl_ratedot_kdu.get();
+	URControlParams.rate_MPID_rateDotKd[1] = _sl_ratedot_kdv.get();
+	URControlParams.rate_MPID_rateDotKd[2] = _sl_ratedot_kdr.get();
+	URControlParams.rate_MPID_derFilterT = _sl_ratedot_derFilterT.get();
+	URControlParams.rate_MPID_uvrdesderFilterT = _sl_ratedot_uvrdesderFilterT.get();
+
+	// Rate - MINDI
+	URControlParams.rate_MINDI_derFilterT = _sl_ratedot_mindi_derFiltT.get();
+	URControlParams.rate_MINDI_MKp[0] = _sl_ratedot_mindi_mkpu.get();
+	URControlParams.rate_MINDI_MKp[1] = _sl_ratedot_mindi_mkpv.get();
+	URControlParams.rate_MINDI_MKp[2] = _sl_ratedot_mindi_mkpr.get();
 }
 
 void

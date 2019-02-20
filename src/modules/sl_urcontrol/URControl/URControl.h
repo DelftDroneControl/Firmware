@@ -7,9 +7,9 @@
  *
  * Code generation for model "URControl".
  *
- * Model version              : 1.745
+ * Model version              : 1.772
  * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C++ source code generated on : Fri Feb 15 00:52:00 2019
+ * C++ source code generated on : Wed Feb 20 14:09:45 2019
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -37,8 +37,8 @@
 #include "multiword_types.h"
 #include "rtGetNaN.h"
 #include "rt_nonfinite.h"
-#include "rt_defines.h"
 #include "rtGetInf.h"
+#include "rt_defines.h"
 
 /* Macros for accessing real-time model data structure */
 #ifndef rtmGetErrorStatus
@@ -53,13 +53,38 @@
 typedef struct {
   daqBus DAQ;                          /* '<Root>/Data Store Memory' */
   stateBus State;                      /* '<Root>/Data Store Memory1' */
-  real_T DiscreteStateSpace_DSTATE[3]; /* '<S2>/Discrete State-Space' */
-  real_T errorInt[3];                  /* '<S5>/control allocator' */
-  real_T error_prev[3];                /* '<S5>/control allocator' */
-  real_T y_state_prev[4];              /* '<S5>/control allocator' */
-  real_T Fset_prev[4];                 /* '<S5>/control allocator' */
-  real_T errorInt_p[3];                /* '<S1>/position control' */
-  real_T errorInt_b;                   /* '<S1>/altitude control' */
+  SimpleDerivative_URControl_T omegaDot;/* '<S6>/control allocator' */
+  SimpleDerivative_URControl_T errorD; /* '<S6>/control allocator' */
+  SimpleDerivative_URControl_T uvrDer; /* '<S6>/control allocator' */
+  SimpleDerivative_URControl_T omegaDot_p;/* '<S6>/control allocator' */
+  LPFilter_URControl_T omegaFilter;    /* '<S5>/basic estimators' */
+  LPFilter_URControl_T posFilter;      /* '<S5>/basic estimators' */
+  LPFilter_URControl_T velFilter;      /* '<S5>/basic estimators' */
+  LPFilter_1_URControl_T accZFilt;     /* '<S6>/control allocator' */
+  real_T UD_DSTATE;                    /* '<S17>/UD' */
+  real_T DiscreteStateSpace_DSTATE[3]; /* '<S3>/Discrete State-Space' */
+  real_T DiscreteStateSpace_DSTATE_a[3];/* '<S15>/Discrete State-Space' */
+  real_T P[81];                        /* '<S18>/DataStoreMemory - P' */
+  real_T x[9];                         /* '<S18>/DataStoreMemory - x' */
+  real_T y_state_prev[4];              /* '<S6>/control allocator' */
+  real_T Fset_prev[4];                 /* '<S6>/control allocator' */
+  real_T M_uvr_set[3];                 /* '<S6>/control allocator' */
+  real_T du_last[4];                   /* '<S6>/control allocator' */
+  real_T errorInt[3];                  /* '<S6>/control allocator' */
+  real_T psi_last;                     /* '<S15>/unwrap2pi' */
+  real_T N;                            /* '<S15>/unwrap2pi' */
+  real_T psi_last_b;                   /* '<S15>/MATLAB Function' */
+  real_T errorInt_p[3];                /* '<S2>/position control' */
+  real_T errorInt_b;                   /* '<S2>/altitude control' */
+  boolean_T omegaDot_not_empty;        /* '<S6>/control allocator' */
+  boolean_T accZFilt_not_empty;        /* '<S6>/control allocator' */
+  boolean_T errorD_not_empty;          /* '<S6>/control allocator' */
+  boolean_T uvrDer_not_empty;          /* '<S6>/control allocator' */
+  boolean_T omegaDot_not_empty_l;      /* '<S6>/control allocator' */
+  boolean_T omegaFilter_not_empty;     /* '<S5>/basic estimators' */
+  boolean_T posFilter_not_empty;       /* '<S5>/basic estimators' */
+  boolean_T velFilter_not_empty;       /* '<S5>/basic estimators' */
+  boolean_T psi_last_not_empty;        /* '<S15>/unwrap2pi' */
 } DW_URControl_T;
 
 /* Constant parameters (default storage) */
@@ -67,16 +92,32 @@ typedef struct {
   /* Pooled Parameter (Expression: par)
    * Referenced by:
    *   '<Root>/conversion to px4'
-   *   '<S1>/altitude control'
-   *   '<S1>/position control'
-   *   '<S1>/yaw rate control'
-   *   '<S2>/Precession'
-   *   '<S2>/attitude controller'
-   *   '<S2>/yawRateControl'
-   *   '<S4>/basic estimators'
-   *   '<S5>/control allocator'
+   *   '<S1>/MATLAB Function'
+   *   '<S2>/altitude control'
+   *   '<S2>/position control'
+   *   '<S2>/yaw rate control'
+   *   '<S3>/Precession'
+   *   '<S3>/attitude controller'
+   *   '<S3>/yawRateControl'
+   *   '<S5>/basic estimators'
+   *   '<S6>/control allocator'
    */
-  struct_mMxZUgiacmSPStEMWH3dnG pooled1;
+  struct_BjJlvF3OtyTGFNKTXKdR2G pooled1;
+
+  /* Expression: p.R{1}
+   * Referenced by: '<S18>/R1'
+   */
+  real_T R1_Value[36];
+
+  /* Expression: p.Q
+   * Referenced by: '<S18>/Q'
+   */
+  real_T Q_Value[81];
+
+  /* Expression: p.InitialCovariance
+   * Referenced by: '<S18>/DataStoreMemory - P'
+   */
+  real_T DataStoreMemoryP_InitialValue[81];
 } ConstP_URControl_T;
 
 /* External inputs (root inport signals with default storage) */
@@ -121,14 +162,15 @@ extern const ConstP_URControl_T URControl_ConstP;
  */
 extern URControlParamsType URControlParams;/* Variable: URControlParams
                                             * Referenced by:
-                                            *   '<S1>/altitude control'
-                                            *   '<S1>/position control'
-                                            *   '<S1>/yaw rate control'
-                                            *   '<S2>/Precession'
-                                            *   '<S2>/attitude controller'
-                                            *   '<S2>/yawRateControl'
-                                            *   '<S4>/basic estimators'
-                                            *   '<S5>/control allocator'
+                                            *   '<S1>/MATLAB Function'
+                                            *   '<S2>/altitude control'
+                                            *   '<S2>/position control'
+                                            *   '<S2>/yaw rate control'
+                                            *   '<S3>/Precession'
+                                            *   '<S3>/attitude controller'
+                                            *   '<S3>/yawRateControl'
+                                            *   '<S5>/basic estimators'
+                                            *   '<S6>/control allocator'
                                             */
 
 /* Class declaration for model URControl */
@@ -168,9 +210,14 @@ class URControlModelClass {
   RT_MODEL_URControl_T URControl_M;
 
   /* private member function(s) for subsystem '<Root>'*/
+  void URControl_mrdivide_helper(real_T A[54], const real_T B[36]);
+  void URControl_LPFilter_update(LPFilter_URControl_T *obj, const real_T
+    newValue[3]);
   real_T URControl_norm(const real_T x[3]);
-  void URControl_xswap(int32_T n, real_T x_data[], int32_T ix0, int32_T iy0);
-  real_T URControl_xnrm2(int32_T n, const real_T x_data[], int32_T ix0);
+  void URContr_SimpleDerivative_update(SimpleDerivative_URControl_T *obj, const
+    real_T newValue[3], real_T dt);
+  void URControl_xswap_l(int32_T n, real_T x_data[], int32_T ix0, int32_T iy0);
+  real_T URControl_xnrm2_fx(int32_T n, const real_T x_data[], int32_T ix0);
   void URControl_xzlarf(int32_T m, int32_T n, int32_T iv0, real_T tau, real_T
                         C_data[], int32_T ic0, int32_T ldc, real_T work_data[]);
   void URControl_xgeqp3(real_T A_data[], int32_T A_size[2], real_T tau_data[],
@@ -185,8 +232,28 @@ class URControlModelClass {
     real_T FMax[4], const real_T FMin[4], real_T gainStruct_MuGain, real_T
     gainStruct_MvGain, real_T gainStruct_FtotGain, real_T gainStruct_FGain,
     real_T gainStruct_MzGain, real_T y_state_init[4], const
-    struct_mMxZUgiacmSPStEMWH3dnG *b_par, const URControlParamsType *URpar,
-    real_T x[4], real_T *iter, boolean_T *optimal);
+    struct_BjJlvF3OtyTGFNKTXKdR2G *b_par, real_T URpar_rate_maxIter, real_T x[4],
+    real_T *iterSteps, real_T *optimal);
+  real_T URControl_eps(real_T x);
+  real_T URControl_xnrm2(int32_T n, const real_T x[16], int32_T ix0);
+  real_T URControl_xnrm2_f(int32_T n, const real_T x[4], int32_T ix0);
+  void URControl_xaxpy_hq(int32_T n, real_T a, const real_T x[4], int32_T ix0,
+    real_T y[16], int32_T iy0);
+  void URControl_xaxpy_h(int32_T n, real_T a, const real_T x[16], int32_T ix0,
+    real_T y[4], int32_T iy0);
+  real_T URControl_xdotc(int32_T n, const real_T x[16], int32_T ix0, const
+    real_T y[16], int32_T iy0);
+  void URControl_xaxpy(int32_T n, real_T a, int32_T ix0, real_T y[16], int32_T
+                       iy0);
+  void URControl_xscal(real_T a, real_T x[16], int32_T ix0);
+  void URControl_xswap(real_T x[16], int32_T ix0, int32_T iy0);
+  void URControl_xrotg(real_T *a, real_T *b, real_T *c, real_T *s);
+  void URControl_xrot(real_T x[16], int32_T ix0, int32_T iy0, real_T c, real_T s);
+  void URControl_svd(const real_T A[16], real_T U[16], real_T s[4], real_T V[16]);
+  void URControl_pinv(const real_T A[16], real_T X[16]);
+  void URControl_URINDI_allocator(real_T act_fail_id, const real_T Omega_f_dot[3],
+    real_T accel_z_f, const real_T v[4], real_T G[32], const real_T w_f[4],
+    const struct_BjJlvF3OtyTGFNKTXKdR2G *b_par, real_T w_cmd[4]);
 };
 
 /*-
@@ -204,19 +271,31 @@ class URControlModelClass {
  * Here is the system hierarchy for this model
  *
  * '<Root>' : 'URControl'
- * '<S1>'   : 'URControl/Targets system'
- * '<S2>'   : 'URControl/attitude controlller'
- * '<S3>'   : 'URControl/conversion to px4'
- * '<S4>'   : 'URControl/estimators'
- * '<S5>'   : 'URControl/rate controller'
- * '<S6>'   : 'URControl/Targets system/altitude control'
- * '<S7>'   : 'URControl/Targets system/position control'
- * '<S8>'   : 'URControl/Targets system/yaw rate control'
- * '<S9>'   : 'URControl/attitude controlller/Discrete Derivative'
- * '<S10>'  : 'URControl/attitude controlller/Precession'
- * '<S11>'  : 'URControl/attitude controlller/attitude controller'
- * '<S12>'  : 'URControl/attitude controlller/yawRateControl'
- * '<S13>'  : 'URControl/estimators/basic estimators'
- * '<S14>'  : 'URControl/rate controller/control allocator'
+ * '<S1>'   : 'URControl/Overrides'
+ * '<S2>'   : 'URControl/Targets system'
+ * '<S3>'   : 'URControl/attitude controlller'
+ * '<S4>'   : 'URControl/conversion to px4'
+ * '<S5>'   : 'URControl/estimators'
+ * '<S6>'   : 'URControl/rate controller'
+ * '<S7>'   : 'URControl/Overrides/MATLAB Function'
+ * '<S8>'   : 'URControl/Targets system/altitude control'
+ * '<S9>'   : 'URControl/Targets system/position control'
+ * '<S10>'  : 'URControl/Targets system/yaw rate control'
+ * '<S11>'  : 'URControl/attitude controlller/Discrete Derivative'
+ * '<S12>'  : 'URControl/attitude controlller/Precession'
+ * '<S13>'  : 'URControl/attitude controlller/attitude controller'
+ * '<S14>'  : 'URControl/attitude controlller/yawRateControl'
+ * '<S15>'  : 'URControl/estimators/EKF_att_pos'
+ * '<S16>'  : 'URControl/estimators/basic estimators'
+ * '<S17>'  : 'URControl/estimators/EKF_att_pos/Difference'
+ * '<S18>'  : 'URControl/estimators/EKF_att_pos/Extended Kalman Filter'
+ * '<S19>'  : 'URControl/estimators/EKF_att_pos/MATLAB Function'
+ * '<S20>'  : 'URControl/estimators/EKF_att_pos/unwrap2pi'
+ * '<S21>'  : 'URControl/estimators/EKF_att_pos/Extended Kalman Filter/Correct1'
+ * '<S22>'  : 'URControl/estimators/EKF_att_pos/Extended Kalman Filter/Output'
+ * '<S23>'  : 'URControl/estimators/EKF_att_pos/Extended Kalman Filter/Predict'
+ * '<S24>'  : 'URControl/estimators/EKF_att_pos/Extended Kalman Filter/Correct1/Correct'
+ * '<S25>'  : 'URControl/estimators/EKF_att_pos/Extended Kalman Filter/Predict/Predict'
+ * '<S26>'  : 'URControl/rate controller/control allocator'
  */
 #endif                                 /* RTW_HEADER_URControl_h_ */

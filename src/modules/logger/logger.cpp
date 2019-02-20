@@ -619,6 +619,7 @@ void Logger::add_default_topics()
 	add_topic("pos_direct_control_input");
 	add_topic("rate_control_input");
 	add_topic("attitude_control_input");
+	add_topic("urcontrol_input");
 
 	// From external pose estimation (Optitrack)
 	add_topic("vehicle_visual_odometry");

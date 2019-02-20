@@ -94,7 +94,7 @@ public:
 private:
 	// int number_errors = 0;
 
-	float _sample_rate_max = 250.0f;
+	float _sample_rate_max = 500.0f;
 
 	/**
 	 * initialize some vectors/matrices from parameters
@@ -188,31 +188,81 @@ private:
 		(ParamFloat<px4::params::SENS_BOARD_Z_OFF>) _board_offset_z,
 
 		// Inputs
-		(ParamFloat<px4::params::SL_X_POS_SP>) _sl_x_pos_sp,
-		(ParamFloat<px4::params::SL_Y_POS_SP>) _sl_y_pos_sp,
-		(ParamFloat<px4::params::SL_Z_POS_SP>) _sl_z_pos_sp,
+		(ParamFloat<px4::params::SL_SP_X_POS>) _sl_x_pos_sp,
+		(ParamFloat<px4::params::SL_SP_Y_POS>) _sl_y_pos_sp,
+		(ParamFloat<px4::params::SL_SP_Z_POS>) _sl_z_pos_sp,
 
 		(ParamInt<px4::params::SL_FAIL_FLAG_POS>) _sl_fail_flag,
-		(ParamFloat<px4::params::SL_YAW_SP>) _sl_yaw_sp,
+		(ParamFloat<px4::params::SL_SP_YAW>) _sl_yaw_sp,
 
 		// Params
+		
+
+		// Estimation
+		(ParamInt<px4::params::SL_EST_USEEKF>) _sl_est_useekf,
+		(ParamFloat<px4::params::SL_EST_OMEGAFILT>) _sl_est_omegafiltert,
+		(ParamFloat<px4::params::SL_EST_POSFILT>) _sl_est_posfiltert,
+		(ParamFloat<px4::params::SL_EST_VELFILT>) _sl_est_velfiltert,
 
 		// Pos
 		(ParamInt<px4::params::SL_POS_ENABLE>) _sl_pos_enable,
+		(ParamFloat<px4::params::SL_POS_KP_POSX>) _sl_pos_kp_posx,
+		(ParamFloat<px4::params::SL_POS_KP_POSY>) _sl_pos_kp_posy,
+		(ParamFloat<px4::params::SL_POS_KP_POSZ>) _sl_pos_kp_posz,
+		(ParamFloat<px4::params::SL_POS_KP_VELX>) _sl_pos_kp_velx,
+		(ParamFloat<px4::params::SL_POS_KP_VELY>) _sl_pos_kp_vely,
+		(ParamFloat<px4::params::SL_POS_KP_VELZ>) _sl_pos_kp_velz,
+		(ParamFloat<px4::params::SL_POS_KI_VELX>) _sl_pos_ki_velx,
+		(ParamFloat<px4::params::SL_POS_KI_VELY>) _sl_pos_ki_vely,
+		(ParamFloat<px4::params::SL_POS_KI_VELZ>) _sl_pos_ki_velz,
+		(ParamFloat<px4::params::SL_POS_FAILGAIN>) _sl_pos_failGain,
+		
+
+		// Altitude
+		(ParamFloat<px4::params::SL_ALT_KP_POS>) _sl_alt_kp_pos,
+		(ParamFloat<px4::params::SL_ALT_KP_VEL>) _sl_alt_kp_vel,
+		(ParamFloat<px4::params::SL_ALT_KI_VEL>) _sl_alt_ki_vel,
 
 		// YRC
 		(ParamInt<px4::params::SL_YRC_ENABLE>) _sl_yrc_enable,
+		(ParamInt<px4::params::SL_YRC_MODE>) _sl_yrc_mode,
+		(ParamFloat<px4::params::SL_YRC_KP_PSI>) _sl_yrc_Kp_psi,
+		(ParamFloat<px4::params::SL_YRC_RATECMD>) _sl_yrc_rateCmd,
+		(ParamInt<px4::params::SL_YRCFAIL_MODE>) _sl_yrcfail_mode,
+		
+		
+		// Attitude
+		(ParamFloat<px4::params::SL_ATT_ROTKP>) _sl_attitude_rotKp,
+		(ParamInt<px4::params::SL_ATT_ENABPREC>) _sl_attitude_enablePrec,
+		(ParamFloat<px4::params::SL_ATT_MAXPREC>) _sl_attitude_maxprecspeed,
+		(ParamFloat<px4::params::SL_ATT_MMARGIN>) _sl_attitude_mmargin,
 
 		// Rate
-		(ParamFloat<px4::params::SL_RATEDOT_KPU>) _sl_ratedot_kpu,
-		(ParamFloat<px4::params::SL_RATEDOT_KPV>) _sl_ratedot_kpv,
-		(ParamFloat<px4::params::SL_RATEDOT_KPR>) _sl_ratedot_kpr,
-		(ParamFloat<px4::params::SL_RATEDOT_KIU>) _sl_ratedot_kiu,
-		(ParamFloat<px4::params::SL_RATEDOT_KIV>) _sl_ratedot_kiv,
-		(ParamFloat<px4::params::SL_RATEDOT_KIR>) _sl_ratedot_kir,
-		(ParamFloat<px4::params::SL_RATEDOT_KDU>) _sl_ratedot_kdu,
-		(ParamFloat<px4::params::SL_RATEDOT_KDV>) _sl_ratedot_kdv,
-		(ParamFloat<px4::params::SL_RATEDOT_KDR>) _sl_ratedot_kdr
+		(ParamInt<px4::params::SL_RDOT_MODE>) _sl_rate_mode,
+		(ParamInt<px4::params::SL_RDOT_MMODE>) _sl_rate_momentMode,
+
+		(ParamFloat<px4::params::SL_INDI_KPX>) _sl_ratedot_indi_kpx,
+		(ParamFloat<px4::params::SL_INDI_KPY>) _sl_ratedot_indi_kpy,
+		(ParamFloat<px4::params::SL_INDI_KPZ>) _sl_ratedot_indi_kpz,
+
+		(ParamFloat<px4::params::SL_RDOT_KPU>) _sl_ratedot_kpu,
+		(ParamFloat<px4::params::SL_RDOT_KPV>) _sl_ratedot_kpv,
+		(ParamFloat<px4::params::SL_RDOT_KPR>) _sl_ratedot_kpr,
+		(ParamFloat<px4::params::SL_RDOT_KIU>) _sl_ratedot_kiu,
+		(ParamFloat<px4::params::SL_RDOT_KIV>) _sl_ratedot_kiv,
+		(ParamFloat<px4::params::SL_RDOT_KIR>) _sl_ratedot_kir,
+		(ParamFloat<px4::params::SL_RDOT_KDU>) _sl_ratedot_kdu,
+		(ParamFloat<px4::params::SL_RDOT_KDV>) _sl_ratedot_kdv,
+		(ParamFloat<px4::params::SL_RDOT_KDR>) _sl_ratedot_kdr,
+		(ParamFloat<px4::params::SL_RDOT_DFILT>)  _sl_ratedot_derFilterT,
+		(ParamFloat<px4::params::SL_RDOT_UVDFILT>)  _sl_ratedot_uvrdesderFilterT,
+
+		(ParamFloat<px4::params::SL_MINDI_DFILT>) _sl_ratedot_mindi_derFiltT,
+		(ParamFloat<px4::params::SL_MINDI_MKPU>) _sl_ratedot_mindi_mkpu,
+		(ParamFloat<px4::params::SL_MINDI_MKPV>) _sl_ratedot_mindi_mkpv,
+		(ParamFloat<px4::params::SL_MINDI_MKPR>) _sl_ratedot_mindi_mkpr
+
+
 		
 	)
 

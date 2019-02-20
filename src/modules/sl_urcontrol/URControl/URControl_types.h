@@ -7,9 +7,9 @@
  *
  * Code generation for model "URControl".
  *
- * Model version              : 1.745
+ * Model version              : 1.772
  * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C++ source code generated on : Fri Feb 15 00:52:00 2019
+ * C++ source code generated on : Wed Feb 20 14:09:45 2019
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -21,11 +21,13 @@
 #ifndef RTW_HEADER_URControl_types_h_
 #define RTW_HEADER_URControl_types_h_
 #include "rtwtypes.h"
+#include "multiword_types.h"
 #ifndef DEFINED_TYPEDEF_FOR_daqBus_
 #define DEFINED_TYPEDEF_FOR_daqBus_
 
 typedef struct {
   real_T omegaUV[3];
+  real_T omegafUV[3];
   real_T FMax[4];
   real_T FMin[4];
   real_T uvDot_max[2];
@@ -47,10 +49,14 @@ typedef struct {
   real_T w_min[4];
   real_T MzGain;
   real_T iter;
+  real_T optimal;
   real_T M_uvr_des[3];
   real_T M_uvr_set[3];
   real_T Ftot_set;
   real_T wRotorSet[4];
+  real_T uvrDot_des[3];
+  real_T pqr_des_dot[3];
+  real_T omegaDot[3];
 } daqBus;
 
 #endif
@@ -61,13 +67,17 @@ typedef struct {
 typedef struct {
   real_T acc[3];
   real_T vel[3];
+  real_T velf[3];
   real_T velB[3];
   real_T pos[3];
+  real_T posf[3];
   real_T omega[3];
+  real_T omegaf[3];
   real_T att[3];
   real_T n[3];
   real_T wRotor[4];
   real_T omegaUV[3];
+  real_T omegafUV[3];
   real_T FMax[4];
   real_T FMin[4];
   real_T fail_id;
@@ -123,6 +133,11 @@ typedef struct {
   real_T mass;
   real_T g;
   real_T fail_delay;
+  real_T signr;
+  real_T est_omegaFilterT;
+  real_T est_posFilterT;
+  real_T est_velFilterT;
+  real_T est_useEKF;
   real_T position_enable;
   real_T position_maxAngle;
   real_T position_maxAngleFailure;
@@ -131,6 +146,8 @@ typedef struct {
   real_T position_Kp_vel[3];
   real_T position_Ki_vel[3];
   real_T position_intLim;
+  real_T position_failGain;
+  real_T position_maxAref;
   real_T altitude_enable;
   real_T altitude_Kp_pos;
   real_T altitude_maxVel;
@@ -141,9 +158,11 @@ typedef struct {
   real_T altitude_LOCAngle;
   real_T altitude_maxFPerc;
   real_T YRC_enable;
+  real_T YRC_mode;
   real_T YRC_Kp_psi;
   real_T YRC_Kp_r;
   real_T YRC_r_cmd_fail;
+  real_T YRC_rateCmd;
   real_T YRCFail_enable;
   real_T YRCFail_mode;
   real_T YRCFail_Kp_dw;
@@ -158,6 +177,7 @@ typedef struct {
   real_T attitude_MMargin;
   real_T attitude_yawThreshold;
   real_T attitude_rotComp;
+  real_T attitude_enablePrec;
   real_T envp_envelopeProt;
   real_T envp_wMax;
   real_T envp_wMin;
@@ -166,11 +186,21 @@ typedef struct {
   real_T envp_timeHorz;
   real_T envp_minDeviation;
   real_T rate_mode;
-  real_T rate_rateDotKp[3];
-  real_T rate_rateDotKi[3];
-  real_T rate_rateDotKd[3];
-  real_T rate_maxInt;
-  real_T rate_maxDer;
+  real_T rate_momentMode;
+  real_T rate_INDI_G[32];
+  real_T rate_INDI_rateDotKp[3];
+  real_T rate_INDI_omegaDotFilterT;
+  real_T rate_INDI_accZFilterT;
+  real_T rate_MPID_rateDotKp[3];
+  real_T rate_MPID_rateDotKi[3];
+  real_T rate_MPID_rateDotKd[3];
+  real_T rate_MPID_derFilterT;
+  real_T rate_MPID_uvrdesderFilterT;
+  real_T rate_MPID_maxInt;
+  real_T rate_MPID_maxDer;
+  real_T rate_MINDI_rateDotKp[3];
+  real_T rate_MINDI_derFilterT;
+  real_T rate_MINDI_MKp[3];
   real_T rate_maxMoments[3];
   real_T rate_MuGain;
   real_T rate_MvGain;
@@ -178,6 +208,11 @@ typedef struct {
   real_T rate_FtotGain;
   real_T rate_FGain;
   real_T rate_maxIter;
+  real_T flip_mode;
+  real_T flip_time;
+  real_T throw_mode;
+  real_T throw_falltime;
+  real_T throw_threshold;
 } URControlParamsType;
 
 #endif
@@ -255,14 +290,16 @@ typedef struct {
 
 #endif
 
-#ifndef DEFINED_TYPEDEF_FOR_struct_mMxZUgiacmSPStEMWH3dnG_
-#define DEFINED_TYPEDEF_FOR_struct_mMxZUgiacmSPStEMWH3dnG_
+#ifndef DEFINED_TYPEDEF_FOR_struct_BjJlvF3OtyTGFNKTXKdR2G_
+#define DEFINED_TYPEDEF_FOR_struct_BjJlvF3OtyTGFNKTXKdR2G_
 
 typedef struct {
   real_T freq;
   real_T g;
   real_T wRotorMax;
   real_T wRotorMin;
+  real_T w_max;
+  real_T w_min;
   real_T mass;
   real_T fail_id;
   real_T fail_time;
@@ -270,9 +307,92 @@ typedef struct {
   struct_AHd68odqz51NWDIFKWnLKG sihao;
   URControlParamsType URC;
   struct_KZWRH8wmRo8gScyf5zlwCH px4;
-} struct_mMxZUgiacmSPStEMWH3dnG;
+} struct_BjJlvF3OtyTGFNKTXKdR2G;
 
 #endif
+
+/* Custom Type definition for MATLAB Function: '<S6>/control allocator' */
+#ifndef typedef_LPFilter_1_URControl_T
+#define typedef_LPFilter_1_URControl_T
+
+typedef struct {
+  real_T value;
+  real_T filterT;
+  real_T maxLim;
+  real_T minLim;
+} LPFilter_1_URControl_T;
+
+#endif                                 /*typedef_LPFilter_1_URControl_T*/
+
+/* Custom Type definition for MATLAB Function: '<S21>/Correct' */
+#ifndef struct_tag_s3jUk3tcna9gJPVvGWgKhoB
+#define struct_tag_s3jUk3tcna9gJPVvGWgKhoB
+
+struct tag_s3jUk3tcna9gJPVvGWgKhoB
+{
+  char_T FcnName[15];
+  boolean_T IsSimulinkFcn;
+  real_T NumberOfExtraArgumentInports;
+  boolean_T HasJacobian;
+  char_T JacobianFcnName[24];
+  boolean_T HasAdditiveNoise;
+};
+
+#endif                                 /*struct_tag_s3jUk3tcna9gJPVvGWgKhoB*/
+
+#ifndef typedef_s3jUk3tcna9gJPVvGWgKhoB_URCon_T
+#define typedef_s3jUk3tcna9gJPVvGWgKhoB_URCon_T
+
+typedef struct tag_s3jUk3tcna9gJPVvGWgKhoB s3jUk3tcna9gJPVvGWgKhoB_URCon_T;
+
+#endif                                 /*typedef_s3jUk3tcna9gJPVvGWgKhoB_URCon_T*/
+
+/* Custom Type definition for MATLAB Function: '<S23>/Predict' */
+#ifndef struct_tag_sNpKm6MWgiM1uTq2HgBSpwD
+#define struct_tag_sNpKm6MWgiM1uTq2HgBSpwD
+
+struct tag_sNpKm6MWgiM1uTq2HgBSpwD
+{
+  char_T FcnName[17];
+  boolean_T IsSimulinkFcn;
+  real_T NumberOfExtraArgumentInports;
+  char_T JacobianFcnName[26];
+  real_T HasJacobian;
+  boolean_T HasAdditiveNoise;
+};
+
+#endif                                 /*struct_tag_sNpKm6MWgiM1uTq2HgBSpwD*/
+
+#ifndef typedef_sNpKm6MWgiM1uTq2HgBSpwD_URCon_T
+#define typedef_sNpKm6MWgiM1uTq2HgBSpwD_URCon_T
+
+typedef struct tag_sNpKm6MWgiM1uTq2HgBSpwD sNpKm6MWgiM1uTq2HgBSpwD_URCon_T;
+
+#endif                                 /*typedef_sNpKm6MWgiM1uTq2HgBSpwD_URCon_T*/
+
+/* Custom Type definition for MATLAB Function: '<S6>/control allocator' */
+#ifndef typedef_LPFilter_URControl_T
+#define typedef_LPFilter_URControl_T
+
+typedef struct {
+  real_T value[3];
+  real_T filterT;
+  real_T maxLim;
+  real_T minLim;
+} LPFilter_URControl_T;
+
+#endif                                 /*typedef_LPFilter_URControl_T*/
+
+#ifndef typedef_SimpleDerivative_URControl_T
+#define typedef_SimpleDerivative_URControl_T
+
+typedef struct {
+  real_T prevValue[3];
+  real_T derValue[3];
+  LPFilter_URControl_T filterHandle;
+} SimpleDerivative_URControl_T;
+
+#endif                                 /*typedef_SimpleDerivative_URControl_T*/
 
 /* Forward declaration for rtModel */
 typedef struct tag_RTM_URControl_T RT_MODEL_URControl_T;
