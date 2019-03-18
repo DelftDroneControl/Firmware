@@ -7,9 +7,9 @@
  *
  * Code generation for model "URControl".
  *
- * Model version              : 1.772
+ * Model version              : 1.847
  * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C++ source code generated on : Wed Feb 20 14:09:45 2019
+ * C++ source code generated on : Wed Mar 13 14:35:40 2019
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -57,6 +57,7 @@ typedef struct {
   real_T uvrDot_des[3];
   real_T pqr_des_dot[3];
   real_T omegaDot[3];
+  real_T dM[3];
 } daqBus;
 
 #endif
@@ -66,6 +67,7 @@ typedef struct {
 
 typedef struct {
   real_T acc[3];
+  real_T accf[3];
   real_T vel[3];
   real_T velf[3];
   real_T velB[3];
@@ -95,7 +97,6 @@ typedef struct {
 typedef struct {
   real_T acc[3];
   real_T vel[3];
-  real_T velB[3];
   real_T pos[3];
   real_T omega[3];
   real_T att[3];
@@ -133,11 +134,16 @@ typedef struct {
   real_T mass;
   real_T g;
   real_T fail_delay;
+  real_T fail_wRot;
   real_T signr;
+  real_T R_xy_uv[4];
   real_T est_omegaFilterT;
   real_T est_posFilterT;
   real_T est_velFilterT;
+  real_T est_accFilterT;
   real_T est_useEKF;
+  real_T EKFQuat_stateCov[10];
+  real_T EKFQuat_measCov[7];
   real_T position_enable;
   real_T position_maxAngle;
   real_T position_maxAngleFailure;
@@ -173,11 +179,14 @@ typedef struct {
   real_T attitude_primary_axis[3];
   real_T attitude_yrcComp;
   real_T attitude_rotKp;
+  real_T attitude_maxuv_des;
   real_T attitude_maxPrecSpeed;
   real_T attitude_MMargin;
   real_T attitude_yawThreshold;
-  real_T attitude_rotComp;
   real_T attitude_enablePrec;
+  real_T attitude_enableTraj;
+  real_T attitude_rotSpeedComp;
+  real_T attitude_trajThreshold;
   real_T envp_envelopeProt;
   real_T envp_wMax;
   real_T envp_wMin;
@@ -197,7 +206,6 @@ typedef struct {
   real_T rate_MPID_derFilterT;
   real_T rate_MPID_uvrdesderFilterT;
   real_T rate_MPID_maxInt;
-  real_T rate_MPID_maxDer;
   real_T rate_MINDI_rateDotKp[3];
   real_T rate_MINDI_derFilterT;
   real_T rate_MINDI_MKp[3];
@@ -210,6 +218,8 @@ typedef struct {
   real_T rate_maxIter;
   real_T flip_mode;
   real_T flip_time;
+  real_T flip_intensityX;
+  real_T flip_intensityY;
   real_T throw_mode;
   real_T throw_falltime;
   real_T throw_threshold;
@@ -290,8 +300,8 @@ typedef struct {
 
 #endif
 
-#ifndef DEFINED_TYPEDEF_FOR_struct_BjJlvF3OtyTGFNKTXKdR2G_
-#define DEFINED_TYPEDEF_FOR_struct_BjJlvF3OtyTGFNKTXKdR2G_
+#ifndef DEFINED_TYPEDEF_FOR_struct_Zb0w9me7uxg4XlR9ZxoSnG_
+#define DEFINED_TYPEDEF_FOR_struct_Zb0w9me7uxg4XlR9ZxoSnG_
 
 typedef struct {
   real_T freq;
@@ -303,11 +313,10 @@ typedef struct {
   real_T mass;
   real_T fail_id;
   real_T fail_time;
-  real_T fail_wRot;
   struct_AHd68odqz51NWDIFKWnLKG sihao;
   URControlParamsType URC;
   struct_KZWRH8wmRo8gScyf5zlwCH px4;
-} struct_BjJlvF3OtyTGFNKTXKdR2G;
+} struct_Zb0w9me7uxg4XlR9ZxoSnG;
 
 #endif
 
@@ -324,7 +333,53 @@ typedef struct {
 
 #endif                                 /*typedef_LPFilter_1_URControl_T*/
 
-/* Custom Type definition for MATLAB Function: '<S21>/Correct' */
+/* Custom Type definition for MATLAB Function: '<S23>/Correct' */
+#ifndef struct_tag_sZozwYUqIoF3KwkqeARQ8OE
+#define struct_tag_sZozwYUqIoF3KwkqeARQ8OE
+
+struct tag_sZozwYUqIoF3KwkqeARQ8OE
+{
+  char_T FcnName[13];
+  boolean_T IsSimulinkFcn;
+  real_T NumberOfExtraArgumentInports;
+  boolean_T HasJacobian;
+  char_T JacobianFcnName[14];
+  boolean_T HasAdditiveNoise;
+};
+
+#endif                                 /*struct_tag_sZozwYUqIoF3KwkqeARQ8OE*/
+
+#ifndef typedef_sZozwYUqIoF3KwkqeARQ8OE_URCon_T
+#define typedef_sZozwYUqIoF3KwkqeARQ8OE_URCon_T
+
+typedef struct tag_sZozwYUqIoF3KwkqeARQ8OE sZozwYUqIoF3KwkqeARQ8OE_URCon_T;
+
+#endif                                 /*typedef_sZozwYUqIoF3KwkqeARQ8OE_URCon_T*/
+
+/* Custom Type definition for MATLAB Function: '<S25>/Predict' */
+#ifndef struct_tag_sBhY6iGnb96DZXSV480ISLB
+#define struct_tag_sBhY6iGnb96DZXSV480ISLB
+
+struct tag_sBhY6iGnb96DZXSV480ISLB
+{
+  char_T FcnName[14];
+  boolean_T IsSimulinkFcn;
+  real_T NumberOfExtraArgumentInports;
+  char_T JacobianFcnName[15];
+  real_T HasJacobian;
+  boolean_T HasAdditiveNoise;
+};
+
+#endif                                 /*struct_tag_sBhY6iGnb96DZXSV480ISLB*/
+
+#ifndef typedef_sBhY6iGnb96DZXSV480ISLB_URCon_T
+#define typedef_sBhY6iGnb96DZXSV480ISLB_URCon_T
+
+typedef struct tag_sBhY6iGnb96DZXSV480ISLB sBhY6iGnb96DZXSV480ISLB_URCon_T;
+
+#endif                                 /*typedef_sBhY6iGnb96DZXSV480ISLB_URCon_T*/
+
+/* Custom Type definition for MATLAB Function: '<S37>/Correct' */
 #ifndef struct_tag_s3jUk3tcna9gJPVvGWgKhoB
 #define struct_tag_s3jUk3tcna9gJPVvGWgKhoB
 
@@ -347,7 +402,7 @@ typedef struct tag_s3jUk3tcna9gJPVvGWgKhoB s3jUk3tcna9gJPVvGWgKhoB_URCon_T;
 
 #endif                                 /*typedef_s3jUk3tcna9gJPVvGWgKhoB_URCon_T*/
 
-/* Custom Type definition for MATLAB Function: '<S23>/Predict' */
+/* Custom Type definition for MATLAB Function: '<S39>/Predict' */
 #ifndef struct_tag_sNpKm6MWgiM1uTq2HgBSpwD
 #define struct_tag_sNpKm6MWgiM1uTq2HgBSpwD
 
@@ -393,6 +448,18 @@ typedef struct {
 } SimpleDerivative_URControl_T;
 
 #endif                                 /*typedef_SimpleDerivative_URControl_T*/
+
+#ifndef typedef_LPFilter_2_URControl_T
+#define typedef_LPFilter_2_URControl_T
+
+typedef struct {
+  real_T value[4];
+  real_T filterT;
+  real_T maxLim;
+  real_T minLim;
+} LPFilter_2_URControl_T;
+
+#endif                                 /*typedef_LPFilter_2_URControl_T*/
 
 /* Forward declaration for rtModel */
 typedef struct tag_RTM_URControl_T RT_MODEL_URControl_T;

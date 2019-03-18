@@ -141,6 +141,8 @@ SlURControl::parameters_updated()
 	URControl.URControl_U.fail_flag = _sl_fail_flag.get();
 
 	// Params
+	URControlParams.fail_delay = _sl_fail_delay.get();
+	URControlParams.fail_wRot =  _sl_fail_wrot.get();
 
 	// Estimation
 	URControlParams.est_useEKF = _sl_est_useekf.get();
@@ -178,15 +180,17 @@ SlURControl::parameters_updated()
 	URControlParams.attitude_enablePrec = _sl_attitude_enablePrec.get();
 	URControlParams.attitude_maxPrecSpeed = _sl_attitude_maxprecspeed.get();
 	URControlParams.attitude_MMargin = _sl_attitude_mmargin.get();
+	URControlParams.attitude_enableTraj = _sl_attitude_enabletraj.get();
+	URControlParams.attitude_rotSpeedComp = _sl_attitude_rotspeedcomp.get();
 
 	// Rate
 	URControlParams.rate_mode = _sl_rate_mode.get();
 	URControlParams.rate_momentMode = _sl_rate_momentMode.get();
 
 	// Rate - INDI
-	URControlParams.rate_INDI_rateDotKp[0] = _sl_ratedot_indi_kpx.get();
-	URControlParams.rate_INDI_rateDotKp[1] = _sl_ratedot_indi_kpy.get();
-	URControlParams.rate_INDI_rateDotKp[2] = _sl_ratedot_indi_kpz.get();
+	// URControlParams.rate_INDI_rateDotKp[0] = _sl_ratedot_indi_kpx.get();
+	// URControlParams.rate_INDI_rateDotKp[1] = _sl_ratedot_indi_kpy.get();
+	// URControlParams.rate_INDI_rateDotKp[2] = _sl_ratedot_indi_kpz.get();
 	
 	// Rate - MPID
 	URControlParams.rate_MPID_rateDotKp[0] = _sl_ratedot_kpu.get();
@@ -200,12 +204,26 @@ SlURControl::parameters_updated()
 	URControlParams.rate_MPID_rateDotKd[2] = _sl_ratedot_kdr.get();
 	URControlParams.rate_MPID_derFilterT = _sl_ratedot_derFilterT.get();
 	URControlParams.rate_MPID_uvrdesderFilterT = _sl_ratedot_uvrdesderFilterT.get();
+	URControlParams.rate_MPID_maxInt = _sl_ratedot_maxInt.get();
+
+	URControlParams.rate_FtotGain = _sl_ratedot_ftot.get();
 
 	// Rate - MINDI
-	URControlParams.rate_MINDI_derFilterT = _sl_ratedot_mindi_derFiltT.get();
-	URControlParams.rate_MINDI_MKp[0] = _sl_ratedot_mindi_mkpu.get();
-	URControlParams.rate_MINDI_MKp[1] = _sl_ratedot_mindi_mkpv.get();
-	URControlParams.rate_MINDI_MKp[2] = _sl_ratedot_mindi_mkpr.get();
+	// URControlParams.rate_MINDI_derFilterT = _sl_ratedot_mindi_derFiltT.get();
+	// URControlParams.rate_MINDI_MKp[0] = _sl_ratedot_mindi_mkpu.get();
+	// URControlParams.rate_MINDI_MKp[1] = _sl_ratedot_mindi_mkpv.get();
+	// URControlParams.rate_MINDI_MKp[2] = _sl_ratedot_mindi_mkpr.get();
+
+	// Overrides
+	URControlParams.flip_mode = _sl_flip_mode.get();
+	URControlParams.flip_time = _sl_flip_time.get();
+	URControlParams.flip_intensityX = _sl_flip_intensityX.get();
+	URControlParams.flip_intensityY = _sl_flip_intensityY.get();
+
+	URControlParams.throw_mode = _sl_throw_mode.get();
+	URControlParams.throw_falltime = _sl_throw_falltime.get();
+	URControlParams.throw_threshold = _sl_throw_threshold.get();
+
 }
 
 void

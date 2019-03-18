@@ -7,9 +7,9 @@
  *
  * Code generation for model "URControl".
  *
- * Model version              : 1.772
+ * Model version              : 1.847
  * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C++ source code generated on : Wed Feb 20 14:09:45 2019
+ * C++ source code generated on : Wed Mar 13 14:35:40 2019
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -126,13 +126,21 @@ const daqBus URControl_rtZdaqBus = {
 
   {
     0.0, 0.0, 0.0 }
-  /* omegaDot */
+  ,                                    /* omegaDot */
+
+  {
+    0.0, 0.0, 0.0 }
+  /* dM */
 } ;                                    /* daqBus ground */
 
 const stateBus URControl_rtZstateBus = {
   {
     0.0, 0.0, 0.0 }
   ,                                    /* acc */
+
+  {
+    0.0, 0.0, 0.0 }
+  ,                                    /* accf */
 
   {
     0.0, 0.0, 0.0 }
@@ -223,11 +231,20 @@ URControlParamsType URControlParams = {
   0.374,
   9.81,
   0.0,
+  300.0,
   -1.0,
+
+  { 0.70710678118654768, 0.70710678118654768, -0.53801602916367752,
+    0.53801602916367752 },
   0.75,
   0.85,
   0.85,
-  0.0,
+  0.85,
+  1.0,
+
+  { 0.01, 0.01, 0.01, 0.1, 0.1, 0.1, 0.001, 0.001, 0.001, 0.001 },
+
+  { 0.1, 0.1, 0.1, 0.2, 0.2, 0.2, 0.2 },
   1.0,
   0.52631578947368418,
   0.35087719298245612,
@@ -235,21 +252,21 @@ URControlParamsType URControlParams = {
   { 1.5, 1.5, 1.5 },
   4.0,
 
-  { 2.0, 2.0, 2.0 },
+  { 5.0, 5.0, 2.0 },
 
-  { 1.0, 1.0, 1.0 },
-  1.0,
+  { 2.0, 2.0, 1.0 },
   0.2,
+  0.5,
   -2.0,
   1.0,
-  1.0,
+  2.0,
   4.0,
-  10.0,
-  20.0,
-  1.0,
+  15.0,
+  15.0,
+  0.5,
   0.52631578947368418,
   1.2280701754385965,
-  0.9,
+  0.95,
   1.0,
   1.0,
   5.0,
@@ -259,19 +276,22 @@ URControlParamsType URControlParams = {
   1.0,
   2.0,
   300.0,
-  100.0,
+  50.0,
   15.0,
   -0.5,
   -0.1,
 
   { 0.0, 0.0, -1.0 },
   2.0,
-  -10.0,
+  -15.0,
+  15.0,
   4.0,
   0.01,
   10.0,
-  0.0,
   1.0,
+  1.0,
+  200.0,
+  1.2217304763960306,
   1.0,
   1200.0,
   300.0,
@@ -292,35 +312,37 @@ URControlParamsType URControlParams = {
   0.85,
   0.85,
 
-  { 30.0, 30.0, 3.0 },
+  { 50.0, 50.0, 5.0 },
 
   { 0.0, 0.0, 0.0 },
 
-  { 2.0, 2.0, 0.01 },
+  { 1.0, 1.0, 0.01 },
   0.8,
   0.8,
-  0.95,
-  50.0,
+  0.5,
 
-  { 20.0, 20.0, 2.0 },
-  0.8,
+  { 40.0, 40.0, 2.0 },
+  0.9,
 
-  { 40.0, 40.0, 1.0 },
+  { 20.0, 20.0, 1.0 },
 
   { 0.4, 0.4, 0.045 },
   10000.0,
   10000.0,
   100.0,
-  2.0,
+  4.0,
   0.0001,
   5.0,
   0.0,
   0.1,
   0.0,
-  0.2,
-  1.0
+  400.0,
+  0.0,
+  0.3,
+  4.0
 } ;                                    /* Variable: URControlParams
                                         * Referenced by:
+                                        *   '<Root>/delay'
                                         *   '<S1>/MATLAB Function'
                                         *   '<S2>/altitude control'
                                         *   '<S2>/position control'
@@ -332,12 +354,106 @@ URControlParamsType URControlParams = {
                                         *   '<S6>/control allocator'
                                         */
 
-/* Function for MATLAB Function: '<S21>/Correct' */
-void URControlModelClass::URControl_mrdivide_helper(real_T A[54], const real_T
-  B[36])
+/*
+ * System initialize for atomic system:
+ *    '<S15>/enableMeas'
+ *    '<S16>/enableMeas'
+ */
+void URControl_enableMeas_Init(DW_enableMeas_URControl_T *localDW)
 {
-  real_T b_A[36];
-  int8_T ipiv[6];
+  /* :  attPrev = [0;0;0]; */
+  localDW->attPrev[0] = 0.0;
+  localDW->attPrev[1] = 0.0;
+  localDW->attPrev[2] = 0.0;
+}
+
+/*
+ * Output and update for atomic system:
+ *    '<S15>/enableMeas'
+ *    '<S16>/enableMeas'
+ */
+void URControl_enableMeas(const real_T rtu_att[3], B_enableMeas_URControl_T
+  *localB, DW_enableMeas_URControl_T *localDW)
+{
+  /* :  if isempty(attPrev) */
+  /* :  enableMeas = 1; */
+  localB->enableMeas = 1.0;
+
+  /* :  tol = 1e-3; */
+  /* :  errorSum = sum(abs((attPrev - att))); */
+  localDW->attPrev[0] -= rtu_att[0];
+  localDW->attPrev[1] -= rtu_att[1];
+  localDW->attPrev[2] -= rtu_att[2];
+
+  /* :  if errorSum < tol */
+  if ((std::abs(localDW->attPrev[0]) + std::abs(localDW->attPrev[1])) + std::abs
+      (localDW->attPrev[2]) < 0.001) {
+    /* :  enableMeas = 0; */
+    localB->enableMeas = 0.0;
+  }
+
+  /* :  attPrev = att; */
+  localDW->attPrev[0] = rtu_att[0];
+  localDW->attPrev[1] = rtu_att[1];
+  localDW->attPrev[2] = rtu_att[2];
+}
+
+/* Function for MATLAB Function: '<S15>/MATLAB Function' */
+real_T URControlModelClass::URControl_norm_d(const real_T x[4])
+{
+  real_T y;
+  real_T scale;
+  real_T absxk;
+  real_T t;
+  scale = 3.3121686421112381E-170;
+  absxk = std::abs(x[0]);
+  if (absxk > 3.3121686421112381E-170) {
+    y = 1.0;
+    scale = absxk;
+  } else {
+    t = absxk / 3.3121686421112381E-170;
+    y = t * t;
+  }
+
+  absxk = std::abs(x[1]);
+  if (absxk > scale) {
+    t = scale / absxk;
+    y = y * t * t + 1.0;
+    scale = absxk;
+  } else {
+    t = absxk / scale;
+    y += t * t;
+  }
+
+  absxk = std::abs(x[2]);
+  if (absxk > scale) {
+    t = scale / absxk;
+    y = y * t * t + 1.0;
+    scale = absxk;
+  } else {
+    t = absxk / scale;
+    y += t * t;
+  }
+
+  absxk = std::abs(x[3]);
+  if (absxk > scale) {
+    t = scale / absxk;
+    y = y * t * t + 1.0;
+    scale = absxk;
+  } else {
+    t = absxk / scale;
+    y += t * t;
+  }
+
+  return scale * std::sqrt(y);
+}
+
+/* Function for MATLAB Function: '<S23>/Correct' */
+void URControlModelClass::URControl_mrdivide_helper(real_T A[70], const real_T
+  B[49])
+{
+  real_T b_A[49];
+  int8_T ipiv[7];
   int32_T j;
   int32_T ix;
   real_T smax;
@@ -348,17 +464,17 @@ void URControlModelClass::URControl_mrdivide_helper(real_T A[54], const real_T
   int32_T ijA;
   int32_T jBcol;
   int32_T kBcol;
-  memcpy(&b_A[0], &B[0], 36U * sizeof(real_T));
-  for (d = 0; d < 6; d++) {
+  memcpy(&b_A[0], &B[0], 49U * sizeof(real_T));
+  for (d = 0; d < 7; d++) {
     ipiv[d] = (int8_T)(1 + d);
   }
 
-  for (j = 0; j < 5; j++) {
-    jBcol = j * 7;
+  for (j = 0; j < 6; j++) {
+    jBcol = j << 3;
     iy = 0;
     ix = jBcol;
     smax = std::abs(b_A[jBcol]);
-    for (kBcol = 2; kBcol <= 6 - j; kBcol++) {
+    for (kBcol = 2; kBcol <= 7 - j; kBcol++) {
       ix++;
       s = std::abs(b_A[ix]);
       if (s > smax) {
@@ -372,47 +488,47 @@ void URControlModelClass::URControl_mrdivide_helper(real_T A[54], const real_T
         iy += j;
         ipiv[j] = (int8_T)(iy + 1);
         ix = j;
-        for (kBcol = 0; kBcol < 6; kBcol++) {
+        for (kBcol = 0; kBcol < 7; kBcol++) {
           smax = b_A[ix];
           b_A[ix] = b_A[iy];
           b_A[iy] = smax;
-          ix += 6;
-          iy += 6;
+          ix += 7;
+          iy += 7;
         }
       }
 
-      iy = (jBcol - j) + 6;
+      iy = (jBcol - j) + 7;
       for (ix = jBcol + 1; ix < iy; ix++) {
         b_A[ix] /= b_A[jBcol];
       }
     }
 
     iy = jBcol;
-    ix = jBcol + 6;
-    for (kBcol = 0; kBcol <= 4 - j; kBcol++) {
+    ix = jBcol + 7;
+    for (kBcol = 0; kBcol <= 5 - j; kBcol++) {
       if (b_A[ix] != 0.0) {
         smax = -b_A[ix];
         c_ix = jBcol + 1;
-        d = (iy - j) + 12;
-        for (ijA = 7 + iy; ijA < d; ijA++) {
+        d = (iy - j) + 14;
+        for (ijA = 8 + iy; ijA < d; ijA++) {
           b_A[ijA] += b_A[c_ix] * smax;
           c_ix++;
         }
       }
 
-      ix += 6;
-      iy += 6;
+      ix += 7;
+      iy += 7;
     }
   }
 
-  for (j = 0; j < 6; j++) {
-    jBcol = 9 * j;
-    iy = 6 * j;
+  for (j = 0; j < 7; j++) {
+    jBcol = 10 * j;
+    iy = 7 * j;
     for (ix = 0; ix < j; ix++) {
-      kBcol = 9 * ix;
+      kBcol = 10 * ix;
       smax = b_A[ix + iy];
       if (smax != 0.0) {
-        for (c_ix = 0; c_ix < 9; c_ix++) {
+        for (c_ix = 0; c_ix < 10; c_ix++) {
           d = c_ix + jBcol;
           A[d] -= smax * A[c_ix + kBcol];
         }
@@ -420,36 +536,72 @@ void URControlModelClass::URControl_mrdivide_helper(real_T A[54], const real_T
     }
 
     smax = 1.0 / b_A[j + iy];
-    for (iy = 0; iy < 9; iy++) {
+    for (iy = 0; iy < 10; iy++) {
       d = iy + jBcol;
       A[d] *= smax;
     }
   }
 
-  for (j = 5; j >= 0; j--) {
-    jBcol = 9 * j;
-    iy = 6 * j - 1;
-    for (ix = j + 2; ix < 7; ix++) {
-      kBcol = (ix - 1) * 9;
+  for (j = 6; j >= 0; j--) {
+    jBcol = 10 * j;
+    iy = 7 * j - 1;
+    for (ix = j + 2; ix < 8; ix++) {
+      kBcol = (ix - 1) * 10;
       smax = b_A[ix + iy];
       if (smax != 0.0) {
-        for (c_ix = 0; c_ix < 9; c_ix++) {
+        for (c_ix = 0; c_ix < 10; c_ix++) {
           A[c_ix + jBcol] -= smax * A[c_ix + kBcol];
         }
       }
     }
   }
 
-  for (j = 4; j >= 0; j--) {
+  for (j = 5; j >= 0; j--) {
     if (j + 1 != ipiv[j]) {
       jBcol = ipiv[j] - 1;
-      for (iy = 0; iy < 9; iy++) {
-        smax = A[9 * j + iy];
-        A[iy + 9 * j] = A[9 * jBcol + iy];
-        A[iy + 9 * jBcol] = smax;
+      for (iy = 0; iy < 10; iy++) {
+        smax = A[10 * j + iy];
+        A[iy + 10 * j] = A[10 * jBcol + iy];
+        A[iy + 10 * jBcol] = smax;
       }
     }
   }
+}
+
+real_T rt_atan2d_snf(real_T u0, real_T u1)
+{
+  real_T y;
+  int32_T u0_0;
+  int32_T u1_0;
+  if (rtIsNaN(u0) || rtIsNaN(u1)) {
+    y = (rtNaN);
+  } else if (rtIsInf(u0) && rtIsInf(u1)) {
+    if (u0 > 0.0) {
+      u0_0 = 1;
+    } else {
+      u0_0 = -1;
+    }
+
+    if (u1 > 0.0) {
+      u1_0 = 1;
+    } else {
+      u1_0 = -1;
+    }
+
+    y = atan2((real_T)u0_0, (real_T)u1_0);
+  } else if (u1 == 0.0) {
+    if (u0 > 0.0) {
+      y = RT_PI / 2.0;
+    } else if (u0 < 0.0) {
+      y = -(RT_PI / 2.0);
+    } else {
+      y = 0.0;
+    }
+  } else {
+    y = atan2(u0, u1);
+  }
+
+  return y;
 }
 
 /*
@@ -593,40 +745,49 @@ real_T URControlModelClass::URControl_norm(const real_T x[3])
   return scale * std::sqrt(y);
 }
 
-real_T rt_atan2d_snf(real_T u0, real_T u1)
+/*
+ * Function for MATLAB Function: '<S3>/attitude controller'
+ * function t = URTrajCalc(theta0, w0, accMax)
+ */
+real_T URControlModelClass::URControl_URTrajCalc(real_T theta0, real_T w0,
+  real_T accMax)
 {
-  real_T y;
-  int32_T u0_0;
-  int32_T u1_0;
-  if (rtIsNaN(u0) || rtIsNaN(u1)) {
-    y = (rtNaN);
-  } else if (rtIsInf(u0) && rtIsInf(u1)) {
-    if (u0 > 0.0) {
-      u0_0 = 1;
-    } else {
-      u0_0 = -1;
-    }
+  real_T t;
+  real_T A;
+  real_T B;
+  real_T D;
+  real_T u0_tmp;
 
-    if (u1 > 0.0) {
-      u1_0 = 1;
-    } else {
-      u1_0 = -1;
-    }
+  /* 'URTrajCalc:3' A = accMax/4; */
+  A = accMax / 4.0;
 
-    y = atan2((real_T)u0_0, (real_T)u1_0);
-  } else if (u1 == 0.0) {
-    if (u0 > 0.0) {
-      y = RT_PI / 2.0;
-    } else if (u0 < 0.0) {
-      y = -(RT_PI / 2.0);
-    } else {
-      y = 0.0;
+  /* 'URTrajCalc:4' B = w0/2; */
+  B = w0 / 2.0;
+
+  /* 'URTrajCalc:5' C = -theta0 - w0^2/(2*accMax) + (w0/(2*accMax))^2; */
+  D = w0 / (2.0 * accMax);
+
+  /* 'URTrajCalc:7' D = B^2 - 4*A*C; */
+  D = B * B - ((-theta0 - w0 * w0 / (2.0 * accMax)) + D * D) * (4.0 * A);
+
+  /* 'URTrajCalc:9' if D > 0 */
+  if (D > 0.0) {
+    /* 'URTrajCalc:10' x1 = (-B - sqrt(D))/(2*A); */
+    /* 'URTrajCalc:11' x2 = (-B + sqrt(D))/(2*A); */
+    /* 'URTrajCalc:13' t = max(x1, x2); */
+    u0_tmp = std::sqrt(D);
+    D = (-B - u0_tmp) / (2.0 * A);
+    t = (-B + u0_tmp) / (2.0 * A);
+    if ((D > t) || rtIsNaN(t)) {
+      t = D;
     }
   } else {
-    y = atan2(u0, u1);
+    /* 'URTrajCalc:15' else */
+    /* 'URTrajCalc:16' t = -1; */
+    t = -1.0;
   }
 
-  return y;
+  return t;
 }
 
 /*
@@ -1312,7 +1473,7 @@ void URControlModelClass::URControl_controlAllocQPQuick(real_T refStruct_MuRef,
   real_T refStruct_MvRef, real_T refStruct_MzRef, real_T refStruct_FtotRef,
   const real_T FMax[4], const real_T FMin[4], real_T gainStruct_MuGain, real_T
   gainStruct_MvGain, real_T gainStruct_FtotGain, real_T gainStruct_FGain, real_T
-  gainStruct_MzGain, real_T y_state_init[4], const struct_BjJlvF3OtyTGFNKTXKdR2G
+  gainStruct_MzGain, real_T y_state_init[4], const struct_Zb0w9me7uxg4XlR9ZxoSnG
   *b_par, real_T URpar_rate_maxIter, real_T x[4], real_T *iterSteps, real_T
   *optimal)
 {
@@ -2953,7 +3114,7 @@ void URControlModelClass::URControl_pinv(const real_T A[16], real_T X[16])
  */
 void URControlModelClass::URControl_URINDI_allocator(real_T act_fail_id, const
   real_T Omega_f_dot[3], real_T accel_z_f, const real_T v[4], real_T G[32],
-  const real_T w_f[4], const struct_BjJlvF3OtyTGFNKTXKdR2G *b_par, real_T w_cmd
+  const real_T w_f[4], const struct_Zb0w9me7uxg4XlR9ZxoSnG *b_par, real_T w_cmd
   [4])
 {
   real_T G1[16];
@@ -3206,43 +3367,382 @@ void URControlModelClass::URControl_URINDI_allocator(real_T act_fail_id, const
   URControl_DW.du_last[3] = du[3];
 }
 
+/*
+ * Function for MATLAB Function: '<S25>/Predict'
+ * function A = ekf_state_jacob(x,u)
+ */
+void URControlModelClass::URControl_ekf_state_jacob(const real_T x[10], const
+  real_T u[6], real_T A[100])
+{
+  static const real_T b[10] = { 1.0, 0.0, 0.0, 0.002, 0.0, 0.0, 0.0, 0.0, 0.0,
+    0.0 };
+
+  static const real_T c[10] = { 0.0, 1.0, 0.0, 0.0, 0.002, 0.0, 0.0, 0.0, 0.0,
+    0.0 };
+
+  static const real_T d[10] = { 0.0, 0.0, 1.0, 0.0, 0.0, 0.002, 0.0, 0.0, 0.0,
+    0.0 };
+
+  int32_T i;
+  real_T a_tmp;
+  real_T b_a_tmp;
+  real_T c_a_tmp;
+  real_T d_a_tmp;
+  real_T A_tmp;
+  real_T A_tmp_0;
+  real_T A_tmp_1;
+  real_T A_tmp_2;
+  real_T A_tmp_3;
+  real_T A_tmp_tmp;
+  real_T d_a_tmp_tmp;
+  real_T a_tmp_tmp;
+  real_T b_a_tmp_tmp;
+  real_T c_a_tmp_tmp;
+
+  /* 'ekf_state_jacob:7' posx = x(1); */
+  /* 'ekf_state_jacob:8' posy = x(2); */
+  /* 'ekf_state_jacob:9' posz = x(3); */
+  /* 'ekf_state_jacob:11' velx = x(4); */
+  /* 'ekf_state_jacob:12' vely = x(5); */
+  /* 'ekf_state_jacob:13' velz = x(6); */
+  /* 'ekf_state_jacob:15' q1 = x(7); */
+  /* 'ekf_state_jacob:16' q2 = x(8); */
+  /* 'ekf_state_jacob:17' q3 = x(9); */
+  /* 'ekf_state_jacob:18' q4 = x(10); */
+  /* 'ekf_state_jacob:20' accBx = u(1); */
+  /* 'ekf_state_jacob:21' accBy = u(2); */
+  /* 'ekf_state_jacob:22' accBz = u(3); */
+  /* 'ekf_state_jacob:24' omegax = u(4); */
+  /* 'ekf_state_jacob:25' omegay = u(5); */
+  /* 'ekf_state_jacob:26' omegaz = u(6); */
+  /* 'ekf_state_jacob:28' dt = 0.002; */
+  /* 'ekf_state_jacob:65' A = ... */
+  /* 'ekf_state_jacob:66' [ 1, 0, 0, dt,  0,  0,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             0,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               0,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               0,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               0; */
+  /* 'ekf_state_jacob:67'  0, 1, 0,  0, dt,  0,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             0,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               0,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               0,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               0; */
+  /* 'ekf_state_jacob:68'  0, 0, 1,  0,  0, dt,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             0,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               0,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               0,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               0; */
+  /* 'ekf_state_jacob:69'  0, 0, 0,  1,  0,  0,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     dt*(2*accBx*q1 - 2*accBy*q4 + 2*accBz*q3),                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       dt*(2*accBx*q2 + 2*accBy*q3 + 2*accBz*q4),                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       dt*(2*accBy*q2 - 2*accBx*q3 + 2*accBz*q1),                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      -dt*(2*accBy*q1 + 2*accBx*q4 - 2*accBz*q2); */
+  /* 'ekf_state_jacob:70'  0, 0, 0,  0,  1,  0,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     dt*(2*accBy*q1 + 2*accBx*q4 - 2*accBz*q2),                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      -dt*(2*accBy*q2 - 2*accBx*q3 + 2*accBz*q1),                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       dt*(2*accBx*q2 + 2*accBy*q3 + 2*accBz*q4),                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       dt*(2*accBx*q1 - 2*accBy*q4 + 2*accBz*q3); */
+  /* 'ekf_state_jacob:71'  0, 0, 0,  0,  0,  1,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     dt*(2*accBy*q2 - 2*accBx*q3 + 2*accBz*q1),                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       dt*(2*accBy*q1 + 2*accBx*q4 - 2*accBz*q2),                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      -dt*(2*accBx*q1 - 2*accBy*q4 + 2*accBz*q3),                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       dt*(2*accBx*q2 + 2*accBy*q3 + 2*accBz*q4); */
+  /* 'ekf_state_jacob:72'  0, 0, 0,  0,  0,  0,               1/((q2 + dt*((omegax*q1)/2 - (omegay*q4)/2 + (omegaz*q3)/2))^2 + (q3 + dt*((omegay*q1)/2 + (omegax*q4)/2 - (omegaz*q2)/2))^2 + (q4 + dt*((omegay*q2)/2 - (omegax*q3)/2 + (omegaz*q1)/2))^2 + (q1 - dt*((omegax*q2)/2 + (omegay*q3)/2 + (omegaz*q4)/2))^2)^(1/2) - ((q1 - dt*((omegax*q2)/2 + (omegay*q3)/2 + (omegaz*q4)/2))*(2*q1 - 2*dt*((omegax*q2)/2 + (omegay*q3)/2 + (omegaz*q4)/2) + dt*omegax*(q2 + dt*((omegax*q1)/2 - (omegay*q4)/2 + (omegaz*q3)/2)) + dt*omegay*(q3 + dt*((omegay*q1)/2 + (omegax*q4)/2 - (omegaz*q2)/2)) + dt*omegaz*(q4 + dt*((omegay*q2)/2 - (omegax*q3)/2 + (omegaz*q1)/2))))/(2*((q2 + dt*((omegax*q1)/2 - (omegay*q4)/2 + (omegaz*q3)/2))^2 + (q3 + dt*((omegay*q1)/2 + (omegax*q4)/2 - (omegaz*q2)/2))^2 + (q4 + dt*((omegay*q2)/2 - (omegax*q3)/2 + (omegaz*q1)/2))^2 + (q1 - dt*((omegax*q2)/2 + (omegay*q3)/2 + (omegaz*q4)/2))^2)^(3/2)), - (dt*omegax)/(2*((q2 + dt*((omegax*q1)/2 - (omegay*q4)/2 + (omegaz*q3)/2))^2 + (q3 + dt*((omegay*q1)/2 + (omegax*q4)/2 - (omegaz*q2)/2))^2 + (q4 + dt*((omegay*q2)/2 - (omegax*q3)/2 + (omegaz*q1)/2))^2 + (q1 - dt*((omegax*q2)/2 + (omegay*q3)/2 + (omegaz*q4)/2))^2)^(1/2)) - ((q1 - dt*((omegax*q2)/2 + (omegay*q3)/2 + (omegaz*q4)/2))*(2*q2 + 2*dt*((omegax*q1)/2 - (omegay*q4)/2 + (omegaz*q3)/2) - dt*omegax*(q1 - dt*((omegax*q2)/2 + (omegay*q3)/2 + (omegaz*q4)/2)) + dt*omegay*(q4 + dt*((omegay*q2)/2 - (omegax*q3)/2 + (omegaz*q1)/2)) - dt*omegaz*(q3 + dt*((omegay*q1)/2 + (omegax*q4)/2 - (omegaz*q2)/2))))/(2*((q2 + dt*((omegax*q1)/2 - (omegay*q4)/2 + (omegaz*q3)/2))^2 + (q3 + dt*((omegay*q1)/2 + (omegax*q4)/2 - (omegaz*q2)/2))^2 + (q4 + dt*((omegay*q2)/2 - (omegax*q3)/2 + (omegaz*q1)/2))^2 + (q1 - dt*((omegax*q2)/2 + (omegay*q3)/2 + (omegaz*q4)/2))^2)^(3/2)), - (dt*omegay)/(2*((q2 + dt*((omegax*q1)/2 - (omegay*q4)/2 + (omegaz*q3)/2))^2 + (q3 + dt*((omegay*q1)/2 + (omegax*q4)/2 - (omegaz*q2)/2))^2 + (q4 + dt*((omegay*q2)/2 - (omegax*q3)/2 + (omegaz*q1)/2))^2 + (q1 - dt*((omegax*q2)/2 + (omegay*q3)/2 + (omegaz*q4)/2))^2)^(1/2)) - ((q1 - dt*((omegax*q2)/2 + (omegay*q3)/2 + (omegaz*q4)/2))*(2*q3 + 2*dt*((omegay*q1)/2 + (omegax*q4)/2 - (omegaz*q2)/2) - dt*omegax*(q4 + dt*((omegay*q2)/2 - (omegax*q3)/2 + (omegaz*q1)/2)) - dt*omegay*(q1 - dt*((omegax*q2)/2 + (omegay*q3)/2 + (omegaz*q4)/2)) + dt*omegaz*(q2 + dt*((omegax*q1)/2 - (omegay*q4)/2 + (omegaz*q3)/2))))/(2*((q2 + dt*((omegax*q1)/2 - (omegay*q4)/2 + (omegaz*q3)/2))^2 + (q3 + dt*((omegay*q1)/2 + (omegax*q4)/2 - (omegaz*q2)/2))^2 + (q4 + dt*((omegay*q2)/2 - (omegax*q3)/2 + (omegaz*q1)/2))^2 + (q1 - dt*((omegax*q2)/2 + (omegay*q3)/2 + (omegaz*q4)/2))^2)^(3/2)), - (dt*omegaz)/(2*((q2 + dt*((omegax*q1)/2 - (omegay*q4)/2 + (omegaz*q3)/2))^2 + (q3 + dt*((omegay*q1)/2 + (omegax*q4)/2 - (omegaz*q2)/2))^2 + (q4 + dt*((omegay*q2)/2 - (omegax*q3)/2 + (omegaz*q1)/2))^2 + (q1 - dt*((omegax*q2)/2 + (omegay*q3)/2 + (omegaz*q4)/2))^2)^(1/2)) - ((q1 - dt*((omegax*q2)/2 + (omegay*q3)/2 + (omegaz*q4)/2))*(2*q4 + 2*dt*((omegay*q2)/2 - (omegax*q3)/2 + (omegaz*q1)/2) + dt*omegax*(q3 + dt*((omegay*q1)/2 + (omegax*q4)/2 - (omegaz*q2)/2)) - dt*omegay*(q2 + dt*((omegax*q1)/2 - (omegay*q4)/2 + (omegaz*q3)/2)) - dt*omegaz*(q1 - dt*((omegax*q2)/2 + (omegay*q3)/2 + (omegaz*q4)/2))))/(2*((q2 + dt*((omegax*q1)/2 - (omegay*q4)/2 + (omegaz*q3)/2))^2 + (q3 + dt*((omegay*q1)/2 + (omegax*q4)/2 - (omegaz*q2)/2))^2 + (q4 + dt*((omegay*q2)/2 - (omegax*q3)/2 + (omegaz*q1)/2))^2 + (q1 - dt*((omegax*q2)/2 + (omegay*q3)/2 + (omegaz*q4)/2))^2)^(3/2)); */
+  /* 'ekf_state_jacob:73'  0, 0, 0,  0,  0,  0, (dt*omegax)/(2*((q2 + dt*((omegax*q1)/2 - (omegay*q4)/2 + (omegaz*q3)/2))^2 + (q3 + dt*((omegay*q1)/2 + (omegax*q4)/2 - (omegaz*q2)/2))^2 + (q4 + dt*((omegay*q2)/2 - (omegax*q3)/2 + (omegaz*q1)/2))^2 + (q1 - dt*((omegax*q2)/2 + (omegay*q3)/2 + (omegaz*q4)/2))^2)^(1/2)) - ((q2 + dt*((omegax*q1)/2 - (omegay*q4)/2 + (omegaz*q3)/2))*(2*q1 - 2*dt*((omegax*q2)/2 + (omegay*q3)/2 + (omegaz*q4)/2) + dt*omegax*(q2 + dt*((omegax*q1)/2 - (omegay*q4)/2 + (omegaz*q3)/2)) + dt*omegay*(q3 + dt*((omegay*q1)/2 + (omegax*q4)/2 - (omegaz*q2)/2)) + dt*omegaz*(q4 + dt*((omegay*q2)/2 - (omegax*q3)/2 + (omegaz*q1)/2))))/(2*((q2 + dt*((omegax*q1)/2 - (omegay*q4)/2 + (omegaz*q3)/2))^2 + (q3 + dt*((omegay*q1)/2 + (omegax*q4)/2 - (omegaz*q2)/2))^2 + (q4 + dt*((omegay*q2)/2 - (omegax*q3)/2 + (omegaz*q1)/2))^2 + (q1 - dt*((omegax*q2)/2 + (omegay*q3)/2 + (omegaz*q4)/2))^2)^(3/2)),                 1/((q2 + dt*((omegax*q1)/2 - (omegay*q4)/2 + (omegaz*q3)/2))^2 + (q3 + dt*((omegay*q1)/2 + (omegax*q4)/2 - (omegaz*q2)/2))^2 + (q4 + dt*((omegay*q2)/2 - (omegax*q3)/2 + (omegaz*q1)/2))^2 + (q1 - dt*((omegax*q2)/2 + (omegay*q3)/2 + (omegaz*q4)/2))^2)^(1/2) - ((q2 + dt*((omegax*q1)/2 - (omegay*q4)/2 + (omegaz*q3)/2))*(2*q2 + 2*dt*((omegax*q1)/2 - (omegay*q4)/2 + (omegaz*q3)/2) - dt*omegax*(q1 - dt*((omegax*q2)/2 + (omegay*q3)/2 + (omegaz*q4)/2)) + dt*omegay*(q4 + dt*((omegay*q2)/2 - (omegax*q3)/2 + (omegaz*q1)/2)) - dt*omegaz*(q3 + dt*((omegay*q1)/2 + (omegax*q4)/2 - (omegaz*q2)/2))))/(2*((q2 + dt*((omegax*q1)/2 - (omegay*q4)/2 + (omegaz*q3)/2))^2 + (q3 + dt*((omegay*q1)/2 + (omegax*q4)/2 - (omegaz*q2)/2))^2 + (q4 + dt*((omegay*q2)/2 - (omegax*q3)/2 + (omegaz*q1)/2))^2 + (q1 - dt*((omegax*q2)/2 + (omegay*q3)/2 + (omegaz*q4)/2))^2)^(3/2)),   (dt*omegaz)/(2*((q2 + dt*((omegax*q1)/2 - (omegay*q4)/2 + (omegaz*q3)/2))^2 + (q3 + dt*((omegay*q1)/2 + (omegax*q4)/2 - (omegaz*q2)/2))^2 + (q4 + dt*((omegay*q2)/2 - (omegax*q3)/2 + (omegaz*q1)/2))^2 + (q1 - dt*((omegax*q2)/2 + (omegay*q3)/2 + (omegaz*q4)/2))^2)^(1/2)) - ((q2 + dt*((omegax*q1)/2 - (omegay*q4)/2 + (omegaz*q3)/2))*(2*q3 + 2*dt*((omegay*q1)/2 + (omegax*q4)/2 - (omegaz*q2)/2) - dt*omegax*(q4 + dt*((omegay*q2)/2 - (omegax*q3)/2 + (omegaz*q1)/2)) - dt*omegay*(q1 - dt*((omegax*q2)/2 + (omegay*q3)/2 + (omegaz*q4)/2)) + dt*omegaz*(q2 + dt*((omegax*q1)/2 - (omegay*q4)/2 + (omegaz*q3)/2))))/(2*((q2 + dt*((omegax*q1)/2 - (omegay*q4)/2 + (omegaz*q3)/2))^2 + (q3 + dt*((omegay*q1)/2 + (omegax*q4)/2 - (omegaz*q2)/2))^2 + (q4 + dt*((omegay*q2)/2 - (omegax*q3)/2 + (omegaz*q1)/2))^2 + (q1 - dt*((omegax*q2)/2 + (omegay*q3)/2 + (omegaz*q4)/2))^2)^(3/2)), - (dt*omegay)/(2*((q2 + dt*((omegax*q1)/2 - (omegay*q4)/2 + (omegaz*q3)/2))^2 + (q3 + dt*((omegay*q1)/2 + (omegax*q4)/2 - (omegaz*q2)/2))^2 + (q4 + dt*((omegay*q2)/2 - (omegax*q3)/2 + (omegaz*q1)/2))^2 + (q1 - dt*((omegax*q2)/2 + (omegay*q3)/2 + (omegaz*q4)/2))^2)^(1/2)) - ((q2 + dt*((omegax*q1)/2 - (omegay*q4)/2 + (omegaz*q3)/2))*(2*q4 + 2*dt*((omegay*q2)/2 - (omegax*q3)/2 + (omegaz*q1)/2) + dt*omegax*(q3 + dt*((omegay*q1)/2 + (omegax*q4)/2 - (omegaz*q2)/2)) - dt*omegay*(q2 + dt*((omegax*q1)/2 - (omegay*q4)/2 + (omegaz*q3)/2)) - dt*omegaz*(q1 - dt*((omegax*q2)/2 + (omegay*q3)/2 + (omegaz*q4)/2))))/(2*((q2 + dt*((omegax*q1)/2 - (omegay*q4)/2 + (omegaz*q3)/2))^2 + (q3 + dt*((omegay*q1)/2 + (omegax*q4)/2 - (omegaz*q2)/2))^2 + (q4 + dt*((omegay*q2)/2 - (omegax*q3)/2 + (omegaz*q1)/2))^2 + (q1 - dt*((omegax*q2)/2 + (omegay*q3)/2 + (omegaz*q4)/2))^2)^(3/2)); */
+  /* 'ekf_state_jacob:74'  0, 0, 0,  0,  0,  0, (dt*omegay)/(2*((q2 + dt*((omegax*q1)/2 - (omegay*q4)/2 + (omegaz*q3)/2))^2 + (q3 + dt*((omegay*q1)/2 + (omegax*q4)/2 - (omegaz*q2)/2))^2 + (q4 + dt*((omegay*q2)/2 - (omegax*q3)/2 + (omegaz*q1)/2))^2 + (q1 - dt*((omegax*q2)/2 + (omegay*q3)/2 + (omegaz*q4)/2))^2)^(1/2)) - ((q3 + dt*((omegay*q1)/2 + (omegax*q4)/2 - (omegaz*q2)/2))*(2*q1 - 2*dt*((omegax*q2)/2 + (omegay*q3)/2 + (omegaz*q4)/2) + dt*omegax*(q2 + dt*((omegax*q1)/2 - (omegay*q4)/2 + (omegaz*q3)/2)) + dt*omegay*(q3 + dt*((omegay*q1)/2 + (omegax*q4)/2 - (omegaz*q2)/2)) + dt*omegaz*(q4 + dt*((omegay*q2)/2 - (omegax*q3)/2 + (omegaz*q1)/2))))/(2*((q2 + dt*((omegax*q1)/2 - (omegay*q4)/2 + (omegaz*q3)/2))^2 + (q3 + dt*((omegay*q1)/2 + (omegax*q4)/2 - (omegaz*q2)/2))^2 + (q4 + dt*((omegay*q2)/2 - (omegax*q3)/2 + (omegaz*q1)/2))^2 + (q1 - dt*((omegax*q2)/2 + (omegay*q3)/2 + (omegaz*q4)/2))^2)^(3/2)), - (dt*omegaz)/(2*((q2 + dt*((omegax*q1)/2 - (omegay*q4)/2 + (omegaz*q3)/2))^2 + (q3 + dt*((omegay*q1)/2 + (omegax*q4)/2 - (omegaz*q2)/2))^2 + (q4 + dt*((omegay*q2)/2 - (omegax*q3)/2 + (omegaz*q1)/2))^2 + (q1 - dt*((omegax*q2)/2 + (omegay*q3)/2 + (omegaz*q4)/2))^2)^(1/2)) - ((q3 + dt*((omegay*q1)/2 + (omegax*q4)/2 - (omegaz*q2)/2))*(2*q2 + 2*dt*((omegax*q1)/2 - (omegay*q4)/2 + (omegaz*q3)/2) - dt*omegax*(q1 - dt*((omegax*q2)/2 + (omegay*q3)/2 + (omegaz*q4)/2)) + dt*omegay*(q4 + dt*((omegay*q2)/2 - (omegax*q3)/2 + (omegaz*q1)/2)) - dt*omegaz*(q3 + dt*((omegay*q1)/2 + (omegax*q4)/2 - (omegaz*q2)/2))))/(2*((q2 + dt*((omegax*q1)/2 - (omegay*q4)/2 + (omegaz*q3)/2))^2 + (q3 + dt*((omegay*q1)/2 + (omegax*q4)/2 - (omegaz*q2)/2))^2 + (q4 + dt*((omegay*q2)/2 - (omegax*q3)/2 + (omegaz*q1)/2))^2 + (q1 - dt*((omegax*q2)/2 + (omegay*q3)/2 + (omegaz*q4)/2))^2)^(3/2)),                 1/((q2 + dt*((omegax*q1)/2 - (omegay*q4)/2 + (omegaz*q3)/2))^2 + (q3 + dt*((omegay*q1)/2 + (omegax*q4)/2 - (omegaz*q2)/2))^2 + (q4 + dt*((omegay*q2)/2 - (omegax*q3)/2 + (omegaz*q1)/2))^2 + (q1 - dt*((omegax*q2)/2 + (omegay*q3)/2 + (omegaz*q4)/2))^2)^(1/2) - ((q3 + dt*((omegay*q1)/2 + (omegax*q4)/2 - (omegaz*q2)/2))*(2*q3 + 2*dt*((omegay*q1)/2 + (omegax*q4)/2 - (omegaz*q2)/2) - dt*omegax*(q4 + dt*((omegay*q2)/2 - (omegax*q3)/2 + (omegaz*q1)/2)) - dt*omegay*(q1 - dt*((omegax*q2)/2 + (omegay*q3)/2 + (omegaz*q4)/2)) + dt*omegaz*(q2 + dt*((omegax*q1)/2 - (omegay*q4)/2 + (omegaz*q3)/2))))/(2*((q2 + dt*((omegax*q1)/2 - (omegay*q4)/2 + (omegaz*q3)/2))^2 + (q3 + dt*((omegay*q1)/2 + (omegax*q4)/2 - (omegaz*q2)/2))^2 + (q4 + dt*((omegay*q2)/2 - (omegax*q3)/2 + (omegaz*q1)/2))^2 + (q1 - dt*((omegax*q2)/2 + (omegay*q3)/2 + (omegaz*q4)/2))^2)^(3/2)),   (dt*omegax)/(2*((q2 + dt*((omegax*q1)/2 - (omegay*q4)/2 + (omegaz*q3)/2))^2 + (q3 + dt*((omegay*q1)/2 + (omegax*q4)/2 - (omegaz*q2)/2))^2 + (q4 + dt*((omegay*q2)/2 - (omegax*q3)/2 + (omegaz*q1)/2))^2 + (q1 - dt*((omegax*q2)/2 + (omegay*q3)/2 + (omegaz*q4)/2))^2)^(1/2)) - ((q3 + dt*((omegay*q1)/2 + (omegax*q4)/2 - (omegaz*q2)/2))*(2*q4 + 2*dt*((omegay*q2)/2 - (omegax*q3)/2 + (omegaz*q1)/2) + dt*omegax*(q3 + dt*((omegay*q1)/2 + (omegax*q4)/2 - (omegaz*q2)/2)) - dt*omegay*(q2 + dt*((omegax*q1)/2 - (omegay*q4)/2 + (omegaz*q3)/2)) - dt*omegaz*(q1 - dt*((omegax*q2)/2 + (omegay*q3)/2 + (omegaz*q4)/2))))/(2*((q2 + dt*((omegax*q1)/2 - (omegay*q4)/2 + (omegaz*q3)/2))^2 + (q3 + dt*((omegay*q1)/2 + (omegax*q4)/2 - (omegaz*q2)/2))^2 + (q4 + dt*((omegay*q2)/2 - (omegax*q3)/2 + (omegaz*q1)/2))^2 + (q1 - dt*((omegax*q2)/2 + (omegay*q3)/2 + (omegaz*q4)/2))^2)^(3/2)); */
+  /* 'ekf_state_jacob:75'  0, 0, 0,  0,  0,  0, (dt*omegaz)/(2*((q2 + dt*((omegax*q1)/2 - (omegay*q4)/2 + (omegaz*q3)/2))^2 + (q3 + dt*((omegay*q1)/2 + (omegax*q4)/2 - (omegaz*q2)/2))^2 + (q4 + dt*((omegay*q2)/2 - (omegax*q3)/2 + (omegaz*q1)/2))^2 + (q1 - dt*((omegax*q2)/2 + (omegay*q3)/2 + (omegaz*q4)/2))^2)^(1/2)) - ((q4 + dt*((omegay*q2)/2 - (omegax*q3)/2 + (omegaz*q1)/2))*(2*q1 - 2*dt*((omegax*q2)/2 + (omegay*q3)/2 + (omegaz*q4)/2) + dt*omegax*(q2 + dt*((omegax*q1)/2 - (omegay*q4)/2 + (omegaz*q3)/2)) + dt*omegay*(q3 + dt*((omegay*q1)/2 + (omegax*q4)/2 - (omegaz*q2)/2)) + dt*omegaz*(q4 + dt*((omegay*q2)/2 - (omegax*q3)/2 + (omegaz*q1)/2))))/(2*((q2 + dt*((omegax*q1)/2 - (omegay*q4)/2 + (omegaz*q3)/2))^2 + (q3 + dt*((omegay*q1)/2 + (omegax*q4)/2 - (omegaz*q2)/2))^2 + (q4 + dt*((omegay*q2)/2 - (omegax*q3)/2 + (omegaz*q1)/2))^2 + (q1 - dt*((omegax*q2)/2 + (omegay*q3)/2 + (omegaz*q4)/2))^2)^(3/2)),   (dt*omegay)/(2*((q2 + dt*((omegax*q1)/2 - (omegay*q4)/2 + (omegaz*q3)/2))^2 + (q3 + dt*((omegay*q1)/2 + (omegax*q4)/2 - (omegaz*q2)/2))^2 + (q4 + dt*((omegay*q2)/2 - (omegax*q3)/2 + (omegaz*q1)/2))^2 + (q1 - dt*((omegax*q2)/2 + (omegay*q3)/2 + (omegaz*q4)/2))^2)^(1/2)) - ((q4 + dt*((omegay*q2)/2 - (omegax*q3)/2 + (omegaz*q1)/2))*(2*q2 + 2*dt*((omegax*q1)/2 - (omegay*q4)/2 + (omegaz*q3)/2) - dt*omegax*(q1 - dt*((omegax*q2)/2 + (omegay*q3)/2 + (omegaz*q4)/2)) + dt*omegay*(q4 + dt*((omegay*q2)/2 - (omegax*q3)/2 + (omegaz*q1)/2)) - dt*omegaz*(q3 + dt*((omegay*q1)/2 + (omegax*q4)/2 - (omegaz*q2)/2))))/(2*((q2 + dt*((omegax*q1)/2 - (omegay*q4)/2 + (omegaz*q3)/2))^2 + (q3 + dt*((omegay*q1)/2 + (omegax*q4)/2 - (omegaz*q2)/2))^2 + (q4 + dt*((omegay*q2)/2 - (omegax*q3)/2 + (omegaz*q1)/2))^2 + (q1 - dt*((omegax*q2)/2 + (omegay*q3)/2 + (omegaz*q4)/2))^2)^(3/2)), - (dt*omegax)/(2*((q2 + dt*((omegax*q1)/2 - (omegay*q4)/2 + (omegaz*q3)/2))^2 + (q3 + dt*((omegay*q1)/2 + (omegax*q4)/2 - (omegaz*q2)/2))^2 + (q4 + dt*((omegay*q2)/2 - (omegax*q3)/2 + (omegaz*q1)/2))^2 + (q1 - dt*((omegax*q2)/2 + (omegay*q3)/2 + (omegaz*q4)/2))^2)^(1/2)) - ((q4 + dt*((omegay*q2)/2 - (omegax*q3)/2 + (omegaz*q1)/2))*(2*q3 + 2*dt*((omegay*q1)/2 + (omegax*q4)/2 - (omegaz*q2)/2) - dt*omegax*(q4 + dt*((omegay*q2)/2 - (omegax*q3)/2 + (omegaz*q1)/2)) - dt*omegay*(q1 - dt*((omegax*q2)/2 + (omegay*q3)/2 + (omegaz*q4)/2)) + dt*omegaz*(q2 + dt*((omegax*q1)/2 - (omegay*q4)/2 + (omegaz*q3)/2))))/(2*((q2 + dt*((omegax*q1)/2 - (omegay*q4)/2 + (omegaz*q3)/2))^2 + (q3 + dt*((omegay*q1)/2 + (omegax*q4)/2 - (omegaz*q2)/2))^2 + (q4 + dt*((omegay*q2)/2 - (omegax*q3)/2 + (omegaz*q1)/2))^2 + (q1 - dt*((omegax*q2)/2 + (omegay*q3)/2 + (omegaz*q4)/2))^2)^(3/2)),                 1/((q2 + dt*((omegax*q1)/2 - (omegay*q4)/2 + (omegaz*q3)/2))^2 + (q3 + dt*((omegay*q1)/2 + (omegax*q4)/2 - (omegaz*q2)/2))^2 + (q4 + dt*((omegay*q2)/2 - (omegax*q3)/2 + (omegaz*q1)/2))^2 + (q1 - dt*((omegax*q2)/2 + (omegay*q3)/2 + (omegaz*q4)/2))^2)^(1/2) - ((q4 + dt*((omegay*q2)/2 - (omegax*q3)/2 + (omegaz*q1)/2))*(2*q4 + 2*dt*((omegay*q2)/2 - (omegax*q3)/2 + (omegaz*q1)/2) + dt*omegax*(q3 + dt*((omegay*q1)/2 + (omegax*q4)/2 - (omegaz*q2)/2)) - dt*omegay*(q2 + dt*((omegax*q1)/2 - (omegay*q4)/2 + (omegaz*q3)/2)) - dt*omegaz*(q1 - dt*((omegax*q2)/2 + (omegay*q3)/2 + (omegaz*q4)/2))))/(2*((q2 + dt*((omegax*q1)/2 - (omegay*q4)/2 + (omegaz*q3)/2))^2 + (q3 + dt*((omegay*q1)/2 + (omegax*q4)/2 - (omegaz*q2)/2))^2 + (q4 + dt*((omegay*q2)/2 - (omegax*q3)/2 + (omegaz*q1)/2))^2 + (q1 - dt*((omegax*q2)/2 + (omegay*q3)/2 + (omegaz*q4)/2))^2)^(3/2))]; */
+  a_tmp_tmp = (u[3] * x[6] / 2.0 - u[4] * x[9] / 2.0) + u[5] * x[8] / 2.0;
+  a_tmp = a_tmp_tmp * 0.002 + x[7];
+  b_a_tmp_tmp = (u[4] * x[6] / 2.0 + u[3] * x[9] / 2.0) - u[5] * x[7] / 2.0;
+  b_a_tmp = b_a_tmp_tmp * 0.002 + x[8];
+  c_a_tmp_tmp = (u[4] * x[7] / 2.0 - u[3] * x[8] / 2.0) + u[5] * x[6] / 2.0;
+  c_a_tmp = c_a_tmp_tmp * 0.002 + x[9];
+  d_a_tmp_tmp = (u[3] * x[7] / 2.0 + u[4] * x[8] / 2.0) + u[5] * x[9] / 2.0;
+  d_a_tmp = x[6] - d_a_tmp_tmp * 0.002;
+  for (i = 0; i < 10; i++) {
+    A[10 * i] = b[i];
+    A[1 + 10 * i] = c[i];
+    A[2 + 10 * i] = d[i];
+  }
+
+  A[3] = 0.0;
+  A[13] = 0.0;
+  A[23] = 0.0;
+  A[33] = 1.0;
+  A[43] = 0.0;
+  A[53] = 0.0;
+  A_tmp_tmp = (2.0 * u[0] * x[6] - 2.0 * u[1] * x[9]) + 2.0 * u[2] * x[8];
+  A_tmp_2 = A_tmp_tmp * 0.002;
+  A[63] = A_tmp_2;
+  A_tmp_1 = ((2.0 * u[0] * x[7] + 2.0 * u[1] * x[8]) + 2.0 * u[2] * x[9]) *
+    0.002;
+  A[73] = A_tmp_1;
+  A_tmp_0 = (2.0 * u[1] * x[7] - 2.0 * u[0] * x[8]) + 2.0 * u[2] * x[6];
+  A_tmp_3 = A_tmp_0 * 0.002;
+  A[83] = A_tmp_3;
+  A_tmp = (2.0 * u[1] * x[6] + 2.0 * u[0] * x[9]) - 2.0 * u[2] * x[7];
+  A[93] = A_tmp * -0.002;
+  A[4] = 0.0;
+  A[14] = 0.0;
+  A[24] = 0.0;
+  A[34] = 0.0;
+  A[44] = 1.0;
+  A[54] = 0.0;
+  A_tmp *= 0.002;
+  A[64] = A_tmp;
+  A[74] = A_tmp_0 * -0.002;
+  A[84] = A_tmp_1;
+  A[94] = A_tmp_2;
+  A[5] = 0.0;
+  A[15] = 0.0;
+  A[25] = 0.0;
+  A[35] = 0.0;
+  A[45] = 0.0;
+  A[55] = 1.0;
+  A[65] = A_tmp_3;
+  A[75] = A_tmp;
+  A[85] = A_tmp_tmp * -0.002;
+  A[95] = A_tmp_1;
+  A[6] = 0.0;
+  A[16] = 0.0;
+  A[26] = 0.0;
+  A[36] = 0.0;
+  A[46] = 0.0;
+  A[56] = 0.0;
+  A_tmp_2 = ((a_tmp * (0.002 * u[3]) + (2.0 * x[6] - d_a_tmp_tmp * 0.004)) +
+             b_a_tmp * (0.002 * u[4])) + c_a_tmp * (0.002 * u[5]);
+  A[66] = 1.0 / std::sqrt(((a_tmp * a_tmp + b_a_tmp * b_a_tmp) + c_a_tmp *
+    c_a_tmp) + d_a_tmp * d_a_tmp) - A_tmp_2 * d_a_tmp / (rt_powd_snf(((a_tmp *
+    a_tmp + b_a_tmp * b_a_tmp) + c_a_tmp * c_a_tmp) + d_a_tmp * d_a_tmp, 1.5) *
+    2.0);
+  A_tmp_1 = (((a_tmp_tmp * 0.004 + 2.0 * x[7]) - d_a_tmp * (0.002 * u[3])) +
+             c_a_tmp * (0.002 * u[4])) - b_a_tmp * (0.002 * u[5]);
+  A[76] = -(0.002 * u[3]) / (std::sqrt(((a_tmp * a_tmp + b_a_tmp * b_a_tmp) +
+    c_a_tmp * c_a_tmp) + d_a_tmp * d_a_tmp) * 2.0) - A_tmp_1 * d_a_tmp /
+    (rt_powd_snf(((a_tmp * a_tmp + b_a_tmp * b_a_tmp) + c_a_tmp * c_a_tmp) +
+                 d_a_tmp * d_a_tmp, 1.5) * 2.0);
+  A_tmp_0 = (((b_a_tmp_tmp * 0.004 + 2.0 * x[8]) - c_a_tmp * (0.002 * u[3])) -
+             d_a_tmp * (0.002 * u[4])) + a_tmp * (0.002 * u[5]);
+  A[86] = -(0.002 * u[4]) / (std::sqrt(((a_tmp * a_tmp + b_a_tmp * b_a_tmp) +
+    c_a_tmp * c_a_tmp) + d_a_tmp * d_a_tmp) * 2.0) - A_tmp_0 * d_a_tmp /
+    (rt_powd_snf(((a_tmp * a_tmp + b_a_tmp * b_a_tmp) + c_a_tmp * c_a_tmp) +
+                 d_a_tmp * d_a_tmp, 1.5) * 2.0);
+  A_tmp_3 = ((b_a_tmp * (0.002 * u[3]) + (c_a_tmp_tmp * 0.004 + 2.0 * x[9])) -
+             a_tmp * (0.002 * u[4])) - d_a_tmp * (0.002 * u[5]);
+  A[96] = -(0.002 * u[5]) / (std::sqrt(((a_tmp * a_tmp + b_a_tmp * b_a_tmp) +
+    c_a_tmp * c_a_tmp) + d_a_tmp * d_a_tmp) * 2.0) - A_tmp_3 * d_a_tmp /
+    (rt_powd_snf(((a_tmp * a_tmp + b_a_tmp * b_a_tmp) + c_a_tmp * c_a_tmp) +
+                 d_a_tmp * d_a_tmp, 1.5) * 2.0);
+  A[7] = 0.0;
+  A[17] = 0.0;
+  A[27] = 0.0;
+  A[37] = 0.0;
+  A[47] = 0.0;
+  A[57] = 0.0;
+  A[67] = 0.002 * u[3] / (std::sqrt(((a_tmp * a_tmp + b_a_tmp * b_a_tmp) +
+    c_a_tmp * c_a_tmp) + d_a_tmp * d_a_tmp) * 2.0) - A_tmp_2 * a_tmp /
+    (rt_powd_snf(((a_tmp * a_tmp + b_a_tmp * b_a_tmp) + c_a_tmp * c_a_tmp) +
+                 d_a_tmp * d_a_tmp, 1.5) * 2.0);
+  A[77] = 1.0 / std::sqrt(((a_tmp * a_tmp + b_a_tmp * b_a_tmp) + c_a_tmp *
+    c_a_tmp) + d_a_tmp * d_a_tmp) - A_tmp_1 * a_tmp / (rt_powd_snf(((a_tmp *
+    a_tmp + b_a_tmp * b_a_tmp) + c_a_tmp * c_a_tmp) + d_a_tmp * d_a_tmp, 1.5) *
+    2.0);
+  A[87] = 0.002 * u[5] / (std::sqrt(((a_tmp * a_tmp + b_a_tmp * b_a_tmp) +
+    c_a_tmp * c_a_tmp) + d_a_tmp * d_a_tmp) * 2.0) - A_tmp_0 * a_tmp /
+    (rt_powd_snf(((a_tmp * a_tmp + b_a_tmp * b_a_tmp) + c_a_tmp * c_a_tmp) +
+                 d_a_tmp * d_a_tmp, 1.5) * 2.0);
+  A[97] = -(0.002 * u[4]) / (std::sqrt(((a_tmp * a_tmp + b_a_tmp * b_a_tmp) +
+    c_a_tmp * c_a_tmp) + d_a_tmp * d_a_tmp) * 2.0) - A_tmp_3 * a_tmp /
+    (rt_powd_snf(((a_tmp * a_tmp + b_a_tmp * b_a_tmp) + c_a_tmp * c_a_tmp) +
+                 d_a_tmp * d_a_tmp, 1.5) * 2.0);
+  A[8] = 0.0;
+  A[18] = 0.0;
+  A[28] = 0.0;
+  A[38] = 0.0;
+  A[48] = 0.0;
+  A[58] = 0.0;
+  A[68] = 0.002 * u[4] / (std::sqrt(((a_tmp * a_tmp + b_a_tmp * b_a_tmp) +
+    c_a_tmp * c_a_tmp) + d_a_tmp * d_a_tmp) * 2.0) - A_tmp_2 * b_a_tmp /
+    (rt_powd_snf(((a_tmp * a_tmp + b_a_tmp * b_a_tmp) + c_a_tmp * c_a_tmp) +
+                 d_a_tmp * d_a_tmp, 1.5) * 2.0);
+  A[78] = -(0.002 * u[5]) / (std::sqrt(((a_tmp * a_tmp + b_a_tmp * b_a_tmp) +
+    c_a_tmp * c_a_tmp) + d_a_tmp * d_a_tmp) * 2.0) - A_tmp_1 * b_a_tmp /
+    (rt_powd_snf(((a_tmp * a_tmp + b_a_tmp * b_a_tmp) + c_a_tmp * c_a_tmp) +
+                 d_a_tmp * d_a_tmp, 1.5) * 2.0);
+  A[88] = 1.0 / std::sqrt(((a_tmp * a_tmp + b_a_tmp * b_a_tmp) + c_a_tmp *
+    c_a_tmp) + d_a_tmp * d_a_tmp) - A_tmp_0 * b_a_tmp / (rt_powd_snf(((a_tmp *
+    a_tmp + b_a_tmp * b_a_tmp) + c_a_tmp * c_a_tmp) + d_a_tmp * d_a_tmp, 1.5) *
+    2.0);
+  A[98] = 0.002 * u[3] / (std::sqrt(((a_tmp * a_tmp + b_a_tmp * b_a_tmp) +
+    c_a_tmp * c_a_tmp) + d_a_tmp * d_a_tmp) * 2.0) - A_tmp_3 * b_a_tmp /
+    (rt_powd_snf(((a_tmp * a_tmp + b_a_tmp * b_a_tmp) + c_a_tmp * c_a_tmp) +
+                 d_a_tmp * d_a_tmp, 1.5) * 2.0);
+  A[9] = 0.0;
+  A[19] = 0.0;
+  A[29] = 0.0;
+  A[39] = 0.0;
+  A[49] = 0.0;
+  A[59] = 0.0;
+  A[69] = 0.002 * u[5] / (std::sqrt(((a_tmp * a_tmp + b_a_tmp * b_a_tmp) +
+    c_a_tmp * c_a_tmp) + d_a_tmp * d_a_tmp) * 2.0) - A_tmp_2 * c_a_tmp /
+    (rt_powd_snf(((a_tmp * a_tmp + b_a_tmp * b_a_tmp) + c_a_tmp * c_a_tmp) +
+                 d_a_tmp * d_a_tmp, 1.5) * 2.0);
+  A[79] = 0.002 * u[4] / (std::sqrt(((a_tmp * a_tmp + b_a_tmp * b_a_tmp) +
+    c_a_tmp * c_a_tmp) + d_a_tmp * d_a_tmp) * 2.0) - A_tmp_1 * c_a_tmp /
+    (rt_powd_snf(((a_tmp * a_tmp + b_a_tmp * b_a_tmp) + c_a_tmp * c_a_tmp) +
+                 d_a_tmp * d_a_tmp, 1.5) * 2.0);
+  A[89] = -(0.002 * u[3]) / (std::sqrt(((a_tmp * a_tmp + b_a_tmp * b_a_tmp) +
+    c_a_tmp * c_a_tmp) + d_a_tmp * d_a_tmp) * 2.0) - A_tmp_0 * c_a_tmp /
+    (rt_powd_snf(((a_tmp * a_tmp + b_a_tmp * b_a_tmp) + c_a_tmp * c_a_tmp) +
+                 d_a_tmp * d_a_tmp, 1.5) * 2.0);
+  A[99] = 1.0 / std::sqrt(((a_tmp * a_tmp + b_a_tmp * b_a_tmp) + c_a_tmp *
+    c_a_tmp) + d_a_tmp * d_a_tmp) - A_tmp_3 * c_a_tmp / (rt_powd_snf(((a_tmp *
+    a_tmp + b_a_tmp * b_a_tmp) + c_a_tmp * c_a_tmp) + d_a_tmp * d_a_tmp, 1.5) *
+    2.0);
+}
+
+/* Function for MATLAB Function: '<S37>/Correct' */
+void URControlModelClass::URControl_mrdivide_helper_e(real_T A[54], const real_T
+  B[36])
+{
+  real_T b_A[36];
+  int8_T ipiv[6];
+  int32_T j;
+  int32_T ix;
+  real_T smax;
+  real_T s;
+  int32_T iy;
+  int32_T c_ix;
+  int32_T d;
+  int32_T ijA;
+  int32_T jBcol;
+  int32_T kBcol;
+  memcpy(&b_A[0], &B[0], 36U * sizeof(real_T));
+  for (d = 0; d < 6; d++) {
+    ipiv[d] = (int8_T)(1 + d);
+  }
+
+  for (j = 0; j < 5; j++) {
+    jBcol = j * 7;
+    iy = 0;
+    ix = jBcol;
+    smax = std::abs(b_A[jBcol]);
+    for (kBcol = 2; kBcol <= 6 - j; kBcol++) {
+      ix++;
+      s = std::abs(b_A[ix]);
+      if (s > smax) {
+        iy = kBcol - 1;
+        smax = s;
+      }
+    }
+
+    if (b_A[jBcol + iy] != 0.0) {
+      if (iy != 0) {
+        iy += j;
+        ipiv[j] = (int8_T)(iy + 1);
+        ix = j;
+        for (kBcol = 0; kBcol < 6; kBcol++) {
+          smax = b_A[ix];
+          b_A[ix] = b_A[iy];
+          b_A[iy] = smax;
+          ix += 6;
+          iy += 6;
+        }
+      }
+
+      iy = (jBcol - j) + 6;
+      for (ix = jBcol + 1; ix < iy; ix++) {
+        b_A[ix] /= b_A[jBcol];
+      }
+    }
+
+    iy = jBcol;
+    ix = jBcol + 6;
+    for (kBcol = 0; kBcol <= 4 - j; kBcol++) {
+      if (b_A[ix] != 0.0) {
+        smax = -b_A[ix];
+        c_ix = jBcol + 1;
+        d = (iy - j) + 12;
+        for (ijA = 7 + iy; ijA < d; ijA++) {
+          b_A[ijA] += b_A[c_ix] * smax;
+          c_ix++;
+        }
+      }
+
+      ix += 6;
+      iy += 6;
+    }
+  }
+
+  for (j = 0; j < 6; j++) {
+    jBcol = 9 * j;
+    iy = 6 * j;
+    for (ix = 0; ix < j; ix++) {
+      kBcol = 9 * ix;
+      smax = b_A[ix + iy];
+      if (smax != 0.0) {
+        for (c_ix = 0; c_ix < 9; c_ix++) {
+          d = c_ix + jBcol;
+          A[d] -= smax * A[c_ix + kBcol];
+        }
+      }
+    }
+
+    smax = 1.0 / b_A[j + iy];
+    for (iy = 0; iy < 9; iy++) {
+      d = iy + jBcol;
+      A[d] *= smax;
+    }
+  }
+
+  for (j = 5; j >= 0; j--) {
+    jBcol = 9 * j;
+    iy = 6 * j - 1;
+    for (ix = j + 2; ix < 7; ix++) {
+      kBcol = (ix - 1) * 9;
+      smax = b_A[ix + iy];
+      if (smax != 0.0) {
+        for (c_ix = 0; c_ix < 9; c_ix++) {
+          A[c_ix + jBcol] -= smax * A[c_ix + kBcol];
+        }
+      }
+    }
+  }
+
+  for (j = 4; j >= 0; j--) {
+    if (j + 1 != ipiv[j]) {
+      jBcol = ipiv[j] - 1;
+      for (iy = 0; iy < 9; iy++) {
+        smax = A[9 * j + iy];
+        A[iy + 9 * j] = A[9 * jBcol + iy];
+        A[iy + 9 * jBcol] = smax;
+      }
+    }
+  }
+}
+
 /* Model step function */
 void URControlModelClass::step()
 {
   /* local block i/o variables */
   real_T rtb_acc[3];
+  real_T rtb_accs_filter[3];
   real_T rtb_VectorConcatenate1[6];
   real_T rtb_n_des[3];
   real_T rtb_DiscreteStateSpace[3];
-  real_T psi;
   real_T R_IB[9];
-  real_T FMax[4];
   real_T FMin[4];
-  int32_T r1;
+  boolean_T rEQ0;
   int32_T r2;
   int32_T r3;
-  real_T maxval;
   int32_T rtemp;
   real_T Iu;
-  real_T Iv;
-  real_T MuPrec;
-  real_T uDot_max;
   static const int8_T b[3] = { 0, 0, -1 };
 
-  real_T rotVec3[3];
-  real_T Fset[4];
+  real_T errorVel[3];
+  real_T h[3];
+  real_T b_z1[2];
+  real_T z1[4];
+  real_T zEstimated[7];
+  real_T gain[70];
+  static const int8_T b_0[70] = { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 1 };
+
+  static const int8_T a[70] = { 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
+    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
+    0, 1 };
+
+  real_T Jacobian[100];
   real_T dHdx[54];
-  real_T zEstimated[6];
-  real_T dPos[3];
-  real_T gain[54];
-  static const int8_T b_0[9] = { 0, 0, 0, 0, 0, 0, 1, 0, 0 };
+  real_T zEstimated_0[6];
+  real_T gain_0[54];
+  static const int8_T b_1[9] = { 0, 0, 0, 0, 0, 0, 1, 0, 0 };
 
   static const int8_T c[9] = { 0, 0, 0, 0, 0, 0, 0, 1, 0 };
 
   static const int8_T d[9] = { 0, 0, 0, 0, 0, 0, 0, 0, 1 };
 
-  real_T Jacobian[81];
-  static const real_T b_1[9] = { 1.0, 0.0, 0.0, 0.002, 0.0, 0.0, 0.0, 0.0, 0.0 };
+  real_T Jacobian_0[81];
+  static const real_T b_2[9] = { 1.0, 0.0, 0.0, 0.002, 0.0, 0.0, 0.0, 0.0, 0.0 };
 
   static const real_T c_0[9] = { 0.0, 1.0, 0.0, 0.0, 0.002, 0.0, 0.0, 0.0, 0.0 };
 
@@ -3252,26 +3752,42 @@ void URControlModelClass::step()
 
   real_T rtb_omega[3];
   real_T rtb_att[3];
+  real_T rtb_TmpSignalConversionAtSFun_h[4];
+  int32_T i;
+  real_T rtb_DataStoreRead_k[10];
+  real_T rtb_Product3;
+  real_T rtb_Product2;
+  real_T rtb_Product1;
+  real_T rtb_fcn5;
+  real_T rtb_Uk1_o;
   real_T rtb_VectorConcatenate2[6];
+  real_T rtb_xNew_k[10];
   real_T rtb_xNew[9];
-  real_T tmp[32];
+  real_T rtb_TmpSignalConversionAtSFunct[6];
   real_T dHdx_0[36];
-  real_T tmp_0[9];
+  real_T tmp[32];
+  real_T a_0[49];
+  real_T rtb_TmpSignalConversionAtSFun_j[4];
+  real_T rtb_TmpSignalConversionAtSFun_0[4];
+  real_T a_1[70];
+  real_T rtb_pos_0[7];
+  real_T rtb_pos_1[7];
+  real_T Jacobian_1[100];
   real_T dHdx_1[54];
-  real_T gain_0[81];
-  real_T tmp_1[81];
-  real_T rtb_VectorConcatenate2_0[6];
-  real_T rtb_att_out_idx_2;
-  real_T uv_des_idx_1;
+  real_T gain_1[81];
+  real_T tmp_0[81];
+  uint32_T tmp_1;
+  real_T rtb_DataTypeConversion8_idx_0;
   real_T rtb_DataTypeConversion8_idx_1;
-  real_T dummy_idx_1;
+  real_T rtb_DataTypeConversion8_idx_2;
   real_T dummy_idx_0;
-  real_T errorVel_idx_0;
-  real_T errorVel_idx_1;
-  real_T w_max_idx_0;
-  real_T wRotorSet_data_idx_3;
+  real_T rtb_u2_idx_2;
+  real_T rtb_u2_idx_1;
+  real_T w_min_idx_1;
+  real_T Fset_idx_2;
+  int32_T a_tmp;
   boolean_T tmp_2;
-  boolean_T tmp_3;
+  real_T dHdx_tmp;
   real_T Jacobian_tmp;
   real_T Jacobian_tmp_0;
   real_T Jacobian_tmp_tmp;
@@ -3281,359 +3797,441 @@ void URControlModelClass::step()
    */
   rtb_acc[0] = URControl_U.accs[0];
 
-  /* SignalConversion: '<S5>/BusConversion_InsertedFor_basic estimators_at_inport_0' */
-  rtb_DiscreteStateSpace[0] = 0.0;
+  /* DataTypeConversion: '<Root>/Data Type Conversion2' incorporates:
+   *  Inport: '<Root>/vel'
+   */
+  rtb_DiscreteStateSpace[0] = URControl_U.vel[0];
 
   /* DataTypeConversion: '<Root>/Data Type Conversion5' incorporates:
    *  Inport: '<Root>/rates'
    */
   rtb_omega[0] = URControl_U.rates[0];
 
-  /* SignalConversion: '<S15>/ConcatBufferAtVector Concatenate2In1' incorporates:
-   *  DataTypeConversion: '<Root>/Data Type Conversion4'
-   *  Inport: '<Root>/pos'
+  /* DataTypeConversion: '<Root>/Data Type Conversion6' incorporates:
+   *  Inport: '<Root>/att'
    */
-  rtb_VectorConcatenate2[0] = URControl_U.pos[0];
+  rtb_att[0] = URControl_U.att[0];
+
+  /* BusCreator: '<S5>/BusConversion_InsertedFor_basic estimators_at_inport_0' */
+  h[0] = rtb_DiscreteStateSpace[0];
 
   /* DataTypeConversion: '<Root>/Data Type Conversion1' incorporates:
    *  Inport: '<Root>/accs'
    */
   rtb_acc[1] = URControl_U.accs[1];
 
-  /* SignalConversion: '<S5>/BusConversion_InsertedFor_basic estimators_at_inport_0' */
-  rtb_DiscreteStateSpace[1] = 0.0;
+  /* DataTypeConversion: '<Root>/Data Type Conversion2' incorporates:
+   *  Inport: '<Root>/vel'
+   */
+  rtb_DiscreteStateSpace[1] = URControl_U.vel[1];
 
   /* DataTypeConversion: '<Root>/Data Type Conversion5' incorporates:
    *  Inport: '<Root>/rates'
    */
   rtb_omega[1] = URControl_U.rates[1];
 
-  /* SignalConversion: '<S15>/ConcatBufferAtVector Concatenate2In1' incorporates:
-   *  DataTypeConversion: '<Root>/Data Type Conversion4'
-   *  Inport: '<Root>/pos'
+  /* DataTypeConversion: '<Root>/Data Type Conversion6' incorporates:
+   *  Inport: '<Root>/att'
    */
-  rtb_VectorConcatenate2[1] = URControl_U.pos[1];
+  rtb_att[1] = URControl_U.att[1];
+
+  /* BusCreator: '<S5>/BusConversion_InsertedFor_basic estimators_at_inport_0' */
+  h[1] = rtb_DiscreteStateSpace[1];
 
   /* DataTypeConversion: '<Root>/Data Type Conversion1' incorporates:
    *  Inport: '<Root>/accs'
    */
   rtb_acc[2] = URControl_U.accs[2];
 
-  /* SignalConversion: '<S5>/BusConversion_InsertedFor_basic estimators_at_inport_0' */
-  rtb_DiscreteStateSpace[2] = 0.0;
+  /* DataTypeConversion: '<Root>/Data Type Conversion2' incorporates:
+   *  Inport: '<Root>/vel'
+   */
+  rtb_DiscreteStateSpace[2] = URControl_U.vel[2];
 
   /* DataTypeConversion: '<Root>/Data Type Conversion5' incorporates:
    *  Inport: '<Root>/rates'
    */
   rtb_omega[2] = URControl_U.rates[2];
 
-  /* SignalConversion: '<S15>/ConcatBufferAtVector Concatenate2In1' incorporates:
-   *  DataTypeConversion: '<Root>/Data Type Conversion4'
-   *  Inport: '<Root>/pos'
+  /* DataTypeConversion: '<Root>/Data Type Conversion6' incorporates:
+   *  Inport: '<Root>/att'
    */
-  rtb_VectorConcatenate2[2] = URControl_U.pos[2];
+  rtb_att[2] = URControl_U.att[2];
 
-  /* MATLAB Function: '<S15>/unwrap2pi' incorporates:
+  /* BusCreator: '<S5>/BusConversion_InsertedFor_basic estimators_at_inport_0' */
+  h[2] = rtb_DiscreteStateSpace[2];
+
+  /* DSPFlip: '<S15>/Flip' incorporates:
    *  DataTypeConversion: '<Root>/Data Type Conversion6'
    *  Inport: '<Root>/att'
    */
-  /* :  psi0 = att(3); */
-  /* :  if isempty(psi_last) */
-  if (!URControl_DW.psi_last_not_empty) {
-    /* :  psi_last = psi0; */
-    URControl_DW.psi_last = URControl_U.att[2];
-    URControl_DW.psi_last_not_empty = true;
-  }
+  rtb_DiscreteStateSpace[0] = URControl_U.att[2];
+  rtb_DiscreteStateSpace[2] = URControl_U.att[0];
+  rtb_DiscreteStateSpace[1] = URControl_U.att[1];
+  rtb_DiscreteStateSpace[1] = URControl_U.att[1];
 
-  /* :  if isempty(N) */
-  /* :  if (psi0-psi_last)>1.0*pi */
-  uv_des_idx_1 = URControl_U.att[2] - URControl_DW.psi_last;
-  if (uv_des_idx_1 > 3.1415926535897931) {
-    /* :  N = N-1; */
-    URControl_DW.N--;
-  } else {
-    if (uv_des_idx_1 < -3.1415926535897931) {
-      /* :  elseif (psi0-psi_last)< -1.0*pi */
-      /* :  N = N+1; */
-      URControl_DW.N++;
-    }
-  }
+  /* Gain: '<S21>/1//2' */
+  rtb_u2_idx_2 = 0.5 * rtb_DiscreteStateSpace[0];
 
-  /* :  psi_last = psi0; */
-  URControl_DW.psi_last = URControl_U.att[2];
+  /* Trigonometry: '<S21>/sincos' */
+  rtb_DiscreteStateSpace[0] = std::sin(rtb_u2_idx_2);
+  rtb_Product3 = std::cos(rtb_u2_idx_2);
 
-  /* :  att_out = att; */
-  /* :  att_out(3) = psi0 + 2*N*pi; */
-  rtb_att_out_idx_2 = 2.0 * URControl_DW.N * 3.1415926535897931 +
-    URControl_U.att[2];
+  /* Fcn: '<S21>/q0' */
+  w_min_idx_1 = rtb_Product3;
 
-  /* End of MATLAB Function: '<S15>/unwrap2pi' */
+  /* Trigonometry: '<S21>/sincos' */
+  rtb_DataTypeConversion8_idx_0 = rtb_Product3;
+
+  /* Gain: '<S21>/1//2' */
+  rtb_u2_idx_2 = 0.5 * rtb_DiscreteStateSpace[1];
+
+  /* Trigonometry: '<S21>/sincos' */
+  rtb_DiscreteStateSpace[1] = std::sin(rtb_u2_idx_2);
+  rtb_Product3 = std::cos(rtb_u2_idx_2);
+
+  /* Fcn: '<S21>/q0' */
+  Iu = rtb_Product3;
+
+  /* Trigonometry: '<S21>/sincos' */
+  rtb_DataTypeConversion8_idx_1 = rtb_Product3;
+
+  /* Gain: '<S21>/1//2' */
+  rtb_u2_idx_2 = 0.5 * rtb_DiscreteStateSpace[2];
+
+  /* Trigonometry: '<S21>/sincos' */
+  rtb_DiscreteStateSpace[2] = std::sin(rtb_u2_idx_2);
+  rtb_Product3 = std::cos(rtb_u2_idx_2);
+
+  /* Fcn: '<S21>/q0' incorporates:
+   *  Fcn: '<S21>/q1'
+   */
+  rtb_fcn5 = rtb_DiscreteStateSpace[0] * rtb_DiscreteStateSpace[1];
+
+  /* SignalConversion: '<S19>/TmpSignal ConversionAt SFunction Inport1' incorporates:
+   *  Fcn: '<S21>/q0'
+   *  Fcn: '<S21>/q1'
+   *  MATLAB Function: '<S15>/MATLAB Function'
+   */
+  rtb_TmpSignalConversionAtSFun_h[0] = w_min_idx_1 * Iu * rtb_Product3 +
+    rtb_fcn5 * rtb_DiscreteStateSpace[2];
+  rtb_TmpSignalConversionAtSFun_h[1] = rtb_DataTypeConversion8_idx_0 *
+    rtb_DataTypeConversion8_idx_1 * rtb_DiscreteStateSpace[2] - rtb_fcn5 *
+    rtb_Product3;
+
+  /* Fcn: '<S21>/q2' incorporates:
+   *  Fcn: '<S21>/q3'
+   */
+  rtb_fcn5 = rtb_DiscreteStateSpace[0] * rtb_DataTypeConversion8_idx_1;
+  w_min_idx_1 = rtb_DataTypeConversion8_idx_0 * rtb_DiscreteStateSpace[1];
+
+  /* SignalConversion: '<S19>/TmpSignal ConversionAt SFunction Inport1' incorporates:
+   *  Fcn: '<S21>/q2'
+   *  Fcn: '<S21>/q3'
+   *  MATLAB Function: '<S15>/MATLAB Function'
+   */
+  rtb_TmpSignalConversionAtSFun_h[2] = w_min_idx_1 * rtb_Product3 + rtb_fcn5 *
+    rtb_DiscreteStateSpace[2];
+  rtb_TmpSignalConversionAtSFun_h[3] = rtb_fcn5 * rtb_Product3 - w_min_idx_1 *
+    rtb_DiscreteStateSpace[2];
 
   /* MATLAB Function: '<S15>/MATLAB Function' incorporates:
-   *  DataTypeConversion: '<Root>/Data Type Conversion5'
-   *  DataTypeConversion: '<Root>/Data Type Conversion6'
-   *  Inport: '<Root>/att'
-   *  Inport: '<Root>/rates'
-   *  Sum: '<S17>/Diff'
-   *  UnitDelay: '<S17>/UD'
+   *  Memory: '<S15>/Memory'
    */
-  /* :  if isempty(psi_last) */
-  /* :  tol_max = 2; */
-  /* :  tol = 1e-3; */
-  /* :  dt = 0.002; */
-  /* :  r = rates(3); */
-  /* :  if abs(psi_diff) < tol */
-  if (std::abs(rtb_att_out_idx_2 - URControl_DW.UD_DSTATE) < 0.001) {
-    /* :  psi = psi_last + r * dt; */
-    psi = URControl_U.rates[2] * 0.002 + URControl_DW.psi_last_b;
-  } else if (std::abs(URControl_DW.psi_last_b - rtb_att_out_idx_2) > 2.0) {
-    /* :  elseif abs(psi_last - att(3)) > tol_max */
-    /* :  psi = psi_last + r * dt; */
-    psi = URControl_U.rates[2] * 0.002 + URControl_DW.psi_last_b;
+  /* :  error1 = norm(qMeas - qState); */
+  /* :  error2 = norm(-qMeas - qState); */
+  /* :  if error1 > error2 */
+  rtb_TmpSignalConversionAtSFun_j[0] = rtb_TmpSignalConversionAtSFun_h[0] -
+    URControl_DW.Memory_PreviousInput[0];
+  rtb_TmpSignalConversionAtSFun_0[0] = -rtb_TmpSignalConversionAtSFun_h[0] -
+    URControl_DW.Memory_PreviousInput[0];
+  rtb_TmpSignalConversionAtSFun_j[1] = rtb_TmpSignalConversionAtSFun_h[1] -
+    URControl_DW.Memory_PreviousInput[1];
+  rtb_TmpSignalConversionAtSFun_0[1] = -rtb_TmpSignalConversionAtSFun_h[1] -
+    URControl_DW.Memory_PreviousInput[1];
+  rtb_TmpSignalConversionAtSFun_j[2] = rtb_TmpSignalConversionAtSFun_h[2] -
+    URControl_DW.Memory_PreviousInput[2];
+  rtb_TmpSignalConversionAtSFun_0[2] = -rtb_TmpSignalConversionAtSFun_h[2] -
+    URControl_DW.Memory_PreviousInput[2];
+  rtb_TmpSignalConversionAtSFun_j[3] = rtb_TmpSignalConversionAtSFun_h[3] -
+    URControl_DW.Memory_PreviousInput[3];
+  rtb_TmpSignalConversionAtSFun_0[3] = -rtb_TmpSignalConversionAtSFun_h[3] -
+    URControl_DW.Memory_PreviousInput[3];
+  if (URControl_norm_d(rtb_TmpSignalConversionAtSFun_j) > URControl_norm_d
+      (rtb_TmpSignalConversionAtSFun_0)) {
+    /* :  q = -qMeas; */
+    rtb_TmpSignalConversionAtSFun_h[0] = -rtb_TmpSignalConversionAtSFun_h[0];
+    rtb_TmpSignalConversionAtSFun_h[1] = -rtb_TmpSignalConversionAtSFun_h[1];
+    rtb_TmpSignalConversionAtSFun_h[2] = -rtb_TmpSignalConversionAtSFun_h[2];
+    rtb_TmpSignalConversionAtSFun_h[3] = -rtb_TmpSignalConversionAtSFun_h[3];
   } else {
     /* :  else */
-    /* :  psi = att(3); */
-    psi = rtb_att_out_idx_2;
+    /* :  q = qMeas; */
   }
 
-  /* :  psi_last = psi; */
-  URControl_DW.psi_last_b = psi;
-
-  /* :  att_smooth = att; */
-  rtb_VectorConcatenate2[3] = URControl_U.att[0];
-  rtb_VectorConcatenate2[4] = URControl_U.att[1];
-
-  /* :  att_smooth(3) = psi; */
-  rtb_VectorConcatenate2[5] = psi;
-
-  /* End of MATLAB Function: '<S15>/MATLAB Function' */
+  /* MATLAB Function: '<S15>/enableMeas' */
+  URControl_enableMeas(rtb_att, &URControl_B.sf_enableMeas,
+                       &URControl_DW.sf_enableMeas);
 
   /* Outputs for Enabled SubSystem: '<S18>/Correct1' incorporates:
-   *  EnablePort: '<S21>/Enable'
+   *  EnablePort: '<S23>/Enable'
    */
-  /* MATLAB Function: '<S21>/Correct' incorporates:
-   *  Constant: '<S18>/R1'
-   *  DataStoreRead: '<S21>/Data Store ReadP'
-   *  DataStoreRead: '<S21>/Data Store ReadX'
-   */
-  /* :  if pM.IsSimulinkFcn */
-  /* :  else */
-  /* :  MeasurementFcnH = str2func(pM.FcnName); */
-  /* :  if pM.HasJacobian */
-  /* :  MeasurementJacobianFcnH = str2func(pM.JacobianFcnName); */
-  /* :  switch pM.NumberOfExtraArgumentInports */
-  /* :  case 1 */
-  /* :  extraArgs = {uMeas}; */
-  /* :  xNew = zeros(size(x),'like',x); */
-  /* :  if pM.HasAdditiveNoise */
-  /* :  [xNew,P] = matlabshared.tracking.internal.EKFCorrectorAdditive.correct(... */
-  /* :          yMeas,R,x,P,MeasurementFcnH,MeasurementJacobianFcnH,extraArgs{:}); */
-  /* 'EKF_att_pos_mea_Jacobian:3' phi = x(7); */
-  /* 'EKF_att_pos_mea_Jacobian:4' theta = x(8); */
-  /* 'EKF_att_pos_mea_Jacobian:5' psi = x(9); */
-  /* 'EKF_att_pos_mea_Jacobian:7' dx = u(1); */
-  /* 'EKF_att_pos_mea_Jacobian:8' dy = u(2); */
-  /* 'EKF_att_pos_mea_Jacobian:9' dz = u(3); */
-  /* 'EKF_att_pos_mea_Jacobian:29' B = ... */
-  /* 'EKF_att_pos_mea_Jacobian:30' [ 1, 0, 0, 0, 0, 0,   (dy)*(sin((phi))*sin((psi)) + cos((phi))*cos((psi))*sin((theta))) + (dz)*(cos((phi))*sin((psi)) - cos((psi))*sin((phi))*sin((theta))), cos((phi))*cos((psi))*cos((theta))*(dz) - cos((psi))*sin((theta))*(dx) + cos((psi))*cos((theta))*sin((phi))*(dy), (dz)*(cos((psi))*sin((phi)) - cos((phi))*sin((psi))*sin((theta))) - (dy)*(cos((phi))*cos((psi)) + sin((phi))*sin((psi))*sin((theta))) - cos((theta))*sin((psi))*(dx); */
-  /* 'EKF_att_pos_mea_Jacobian:31'  0, 1, 0, 0, 0, 0, - (dy)*(cos((psi))*sin((phi)) - cos((phi))*sin((psi))*sin((theta))) - (dz)*(cos((phi))*cos((psi)) + sin((phi))*sin((psi))*sin((theta))), cos((phi))*cos((theta))*sin((psi))*(dz) - sin((psi))*sin((theta))*(dx) + cos((theta))*sin((phi))*sin((psi))*(dy), (dz)*(sin((phi))*sin((psi)) + cos((phi))*cos((psi))*sin((theta))) - (dy)*(cos((phi))*sin((psi)) - cos((psi))*sin((phi))*sin((theta))) + cos((psi))*cos((theta))*(dx); */
-  /* 'EKF_att_pos_mea_Jacobian:32'  0, 0, 1, 0, 0, 0,                                                                                                     cos((phi))*cos((theta))*(dy) - cos((theta))*sin((phi))*(dz),                                            - cos((theta))*(dx) - cos((phi))*sin((theta))*(dz) - sin((phi))*sin((theta))*(dy),                                                                                                                                                                                                                                0; */
-  /* 'EKF_att_pos_mea_Jacobian:33'  0, 0, 0, 0, 0, 0,                                                                                                                                                                                       1,                                                                                                                                                            0,                                                                                                                                                                                                                                0; */
-  /* 'EKF_att_pos_mea_Jacobian:34'  0, 0, 0, 0, 0, 0,                                                                                                                                                                                       0,                                                                                                                                                            1,                                                                                                                                                                                                                                0; */
-  /* 'EKF_att_pos_mea_Jacobian:35'  0, 0, 0, 0, 0, 0,                                                                                                                                                                                       0,                                                                                                                                                            0,                                                                                                                                                                                                                                1]; */
-  dHdx[0] = 1.0;
-  dHdx[6] = 0.0;
-  dHdx[12] = 0.0;
-  dHdx[18] = 0.0;
-  dHdx[24] = 0.0;
-  dHdx[30] = 0.0;
-  MuPrec = std::cos(URControl_DW.x[6]);
-  psi = std::sin(URControl_DW.x[8]);
-  w_max_idx_0 = std::cos(URControl_DW.x[8]);
-  Iu = std::sin(URControl_DW.x[6]);
-  maxval = std::sin(URControl_DW.x[7]);
-  dummy_idx_0 = MuPrec * w_max_idx_0;
-  dummy_idx_1 = MuPrec * psi;
-  uv_des_idx_1 = w_max_idx_0 * Iu;
-  uDot_max = Iu * psi;
-  rtb_DataTypeConversion8_idx_1 = (dummy_idx_0 * maxval + uDot_max) * 0.0;
-  Iv = (dummy_idx_1 - uv_des_idx_1 * maxval) * 0.0;
-  dHdx[36] = rtb_DataTypeConversion8_idx_1 + Iv;
-  errorVel_idx_0 = std::cos(URControl_DW.x[7]);
-  errorVel_idx_1 = w_max_idx_0 * errorVel_idx_0;
-  wRotorSet_data_idx_3 = w_max_idx_0 * maxval;
-  dHdx[42] = (dummy_idx_0 * errorVel_idx_0 * 0.0 - wRotorSet_data_idx_3 * 0.0) +
-    errorVel_idx_1 * Iu * 0.0;
-  dummy_idx_1 = uv_des_idx_1 - dummy_idx_1 * maxval;
-  dummy_idx_0 = (uDot_max * maxval + dummy_idx_0) * 0.0;
-  dHdx[48] = (dummy_idx_1 * 0.0 - dummy_idx_0) - errorVel_idx_0 * psi * 0.0;
-  dHdx[1] = 0.0;
-  dHdx[7] = 1.0;
-  dHdx[13] = 0.0;
-  dHdx[19] = 0.0;
-  dHdx[25] = 0.0;
-  dHdx[31] = 0.0;
-  dHdx[37] = dummy_idx_1 * -0.0 - dummy_idx_0;
-  dummy_idx_0 = MuPrec * errorVel_idx_0;
-  dummy_idx_1 = errorVel_idx_0 * Iu;
-  uDot_max = psi * maxval;
-  dHdx[43] = (dummy_idx_0 * psi * 0.0 - uDot_max * 0.0) + dummy_idx_1 * psi *
-    0.0;
-  dHdx[49] = (rtb_DataTypeConversion8_idx_1 - Iv) + errorVel_idx_1 * 0.0;
-  dHdx[2] = 0.0;
-  dHdx[8] = 0.0;
-  dHdx[14] = 1.0;
-  dHdx[20] = 0.0;
-  dHdx[26] = 0.0;
-  dHdx[32] = 0.0;
-  dHdx[38] = dummy_idx_0 * 0.0 - dummy_idx_1 * 0.0;
-  dHdx[44] = (-errorVel_idx_0 * 0.0 - MuPrec * maxval * 0.0) - Iu * maxval * 0.0;
-  dHdx[50] = 0.0;
-  for (r1 = 0; r1 < 9; r1++) {
-    dHdx[3 + 6 * r1] = b_0[r1];
-    dHdx[4 + 6 * r1] = c[r1];
-    dHdx[5 + 6 * r1] = d[r1];
-  }
+  /* DataTypeConversion: '<S18>/DataTypeConversion_Enable1' */
+  if (URControl_B.sf_enableMeas.enableMeas != 0.0) {
+    /* MATLAB Function: '<S23>/Correct' incorporates:
+     *  Constant: '<S18>/R1'
+     *  DataStoreRead: '<S23>/Data Store ReadP'
+     *  DataStoreRead: '<S23>/Data Store ReadX'
+     */
+    /* :  if pM.IsSimulinkFcn */
+    /* :  else */
+    /* :  MeasurementFcnH = str2func(pM.FcnName); */
+    /* :  if pM.HasJacobian */
+    /* :  MeasurementJacobianFcnH = str2func(pM.JacobianFcnName); */
+    /* :  switch pM.NumberOfExtraArgumentInports */
+    /* :  case 0 */
+    /* :  extraArgs = {}; */
+    /* :  xNew = zeros(size(x),'like',x); */
+    /* :  if pM.HasAdditiveNoise */
+    /* :  [xNew,P] = matlabshared.tracking.internal.EKFCorrectorAdditive.correct(... */
+    /* :          yMeas,R,x,P,MeasurementFcnH,MeasurementJacobianFcnH,extraArgs{:}); */
+    /* 'ekf_meas_func:3' y = zeros(7,1); */
+    /* 'ekf_meas_func:5' px = x(1); */
+    /* 'ekf_meas_func:6' py = x(2); */
+    /* 'ekf_meas_func:7' pz = x(3); */
+    /* 'ekf_meas_func:9' q = x(7:10); */
+    /* 'ekf_meas_func:11' y(1) = px; */
+    zEstimated[0] = URControl_DW.x[0];
 
-  /* 'EKF_att_pos_mea:3' y = zeros(6,1); */
-  /* 'EKF_att_pos_mea:5' px = x(1); */
-  /* 'EKF_att_pos_mea:6' py = x(2); */
-  /* 'EKF_att_pos_mea:7' pz = x(3); */
-  /* 'EKF_att_pos_mea:9' phi = x(7); */
-  /* 'EKF_att_pos_mea:10' theta = x(8); */
-  /* 'EKF_att_pos_mea:11' psi = x(9); */
-  /* 'EKF_att_pos_mea:13' dx = u(1); */
-  /* 'EKF_att_pos_mea:14' dy = u(2); */
-  /* 'EKF_att_pos_mea:15' dz = u(3); */
-  /* 'EKF_att_pos_mea:17' R_IB = [cos(psi)*cos(theta) , cos(psi)*sin(theta)*sin(phi)-sin(psi)*cos(phi), cos(psi)*sin(theta)*cos(phi)+sin(psi)*sin(phi); */
-  /* 'EKF_att_pos_mea:18'     sin(psi)*cos(theta) ,sin(psi)*sin(theta)*sin(phi)+cos(psi)*cos(phi), sin(psi)*sin(theta)*cos(phi)-cos(psi)*sin(phi); */
-  /* 'EKF_att_pos_mea:19'     -sin(theta)          , cos(theta)*sin(phi)                          , cos(theta)*cos(phi)                          ]; */
-  /* 'EKF_att_pos_mea:21' dPos = R_IB*[dx;dy;dz]; */
-  tmp_0[0] = errorVel_idx_1;
-  tmp_0[3] = wRotorSet_data_idx_3 * Iu - psi * MuPrec;
-  tmp_0[6] = wRotorSet_data_idx_3 * MuPrec + psi * Iu;
-  tmp_0[1] = psi * errorVel_idx_0;
-  tmp_0[4] = uDot_max * Iu + w_max_idx_0 * MuPrec;
-  tmp_0[7] = uDot_max * MuPrec - uv_des_idx_1;
-  tmp_0[2] = -maxval;
-  tmp_0[5] = dummy_idx_1;
-  tmp_0[8] = errorVel_idx_0 * MuPrec;
-  for (r1 = 0; r1 < 3; r1++) {
-    dPos[r1] = tmp_0[r1 + 6] * 0.0 + (tmp_0[r1 + 3] * 0.0 + tmp_0[r1] * 0.0);
-  }
+    /* 'ekf_meas_func:12' y(2) = py; */
+    zEstimated[1] = URControl_DW.x[1];
 
-  /* 'EKF_att_pos_mea:23' y(1) = px + dPos(1); */
-  zEstimated[0] = URControl_DW.x[0] + dPos[0];
+    /* 'ekf_meas_func:13' y(3) = pz; */
+    zEstimated[2] = URControl_DW.x[2];
 
-  /* 'EKF_att_pos_mea:24' y(2) = py + dPos(2); */
-  zEstimated[1] = URControl_DW.x[1] + dPos[1];
-
-  /* 'EKF_att_pos_mea:25' y(3) = pz + dPos(3); */
-  zEstimated[2] = URControl_DW.x[2] + dPos[2];
-
-  /* 'EKF_att_pos_mea:26' y(4) = phi; */
-  zEstimated[3] = URControl_DW.x[6];
-
-  /* 'EKF_att_pos_mea:27' y(5) = theta; */
-  zEstimated[4] = URControl_DW.x[7];
-
-  /* 'EKF_att_pos_mea:28' y(6) = psi; */
-  zEstimated[5] = URControl_DW.x[8];
-  for (r1 = 0; r1 < 9; r1++) {
-    for (r2 = 0; r2 < 6; r2++) {
-      rtemp = r1 + 9 * r2;
-      gain[rtemp] = 0.0;
-      for (r3 = 0; r3 < 9; r3++) {
-        gain[rtemp] = URControl_DW.P[9 * r3 + r1] * dHdx[6 * r3 + r2] + gain[9 *
-          r2 + r1];
+    /* 'ekf_meas_func:14' y(4:7) = q; */
+    zEstimated[3] = URControl_DW.x[6];
+    zEstimated[4] = URControl_DW.x[7];
+    zEstimated[5] = URControl_DW.x[8];
+    zEstimated[6] = URControl_DW.x[9];
+    for (r2 = 0; r2 < 7; r2++) {
+      for (r3 = 0; r3 < 10; r3++) {
+        rtemp = r3 + 10 * r2;
+        gain[rtemp] = 0.0;
+        a_tmp = r2 + 7 * r3;
+        a_1[a_tmp] = 0.0;
+        for (i = 0; i < 10; i++) {
+          gain[rtemp] = URControl_DW.P[10 * i + r3] * (real_T)b_0[10 * r2 + i] +
+            gain[10 * r2 + r3];
+          a_1[a_tmp] = (real_T)a[7 * i + r2] * URControl_DW.P[10 * r3 + i] +
+            a_1[7 * r3 + r2];
+        }
       }
-    }
-  }
 
-  for (r1 = 0; r1 < 6; r1++) {
-    for (r2 = 0; r2 < 9; r2++) {
-      rtemp = r1 + 6 * r2;
-      dHdx_1[rtemp] = 0.0;
-      for (r3 = 0; r3 < 9; r3++) {
-        dHdx_1[rtemp] = dHdx[6 * r3 + r1] * URControl_DW.P[9 * r2 + r3] +
-          dHdx_1[6 * r2 + r1];
+      for (r3 = 0; r3 < 7; r3++) {
+        rtb_DataTypeConversion8_idx_0 = 0.0;
+        for (i = 0; i < 10; i++) {
+          rtb_DataTypeConversion8_idx_0 += a_1[7 * i + r2] * (real_T)b_0[10 * r3
+            + i];
+        }
+
+        a_0[r2 + 7 * r3] = URControl_ConstP.R1_Value[7 * r3 + r2] +
+          rtb_DataTypeConversion8_idx_0;
       }
     }
 
-    for (r2 = 0; r2 < 6; r2++) {
-      uv_des_idx_1 = 0.0;
-      for (r3 = 0; r3 < 9; r3++) {
-        uv_des_idx_1 += dHdx_1[6 * r3 + r1] * dHdx[6 * r3 + r2];
+    URControl_mrdivide_helper(gain, a_0);
+    for (r2 = 0; r2 < 10; r2++) {
+      for (r3 = 0; r3 < 10; r3++) {
+        rtemp = r2 + 10 * r3;
+        Jacobian[rtemp] = 0.0;
+        for (i = 0; i < 7; i++) {
+          Jacobian[rtemp] = gain[10 * i + r2] * (real_T)a[7 * r3 + i] +
+            Jacobian[10 * r3 + r2];
+        }
       }
 
-      dHdx_0[r1 + 6 * r2] = URControl_ConstP.R1_Value[6 * r2 + r1] +
-        uv_des_idx_1;
-    }
-  }
+      for (r3 = 0; r3 < 10; r3++) {
+        rtb_DataTypeConversion8_idx_0 = 0.0;
+        for (i = 0; i < 10; i++) {
+          rtb_DataTypeConversion8_idx_0 += Jacobian[10 * i + r2] *
+            URControl_DW.P[10 * r3 + i];
+        }
 
-  URControl_mrdivide_helper(gain, dHdx_0);
-  for (r1 = 0; r1 < 9; r1++) {
-    for (r2 = 0; r2 < 9; r2++) {
-      rtemp = r1 + 9 * r2;
-      gain_0[rtemp] = 0.0;
-      for (r3 = 0; r3 < 6; r3++) {
-        gain_0[rtemp] = gain[9 * r3 + r1] * dHdx[6 * r2 + r3] + gain_0[9 * r2 +
-          r1];
+        Jacobian_1[r2 + 10 * r3] = URControl_DW.P[10 * r3 + r2] -
+          rtb_DataTypeConversion8_idx_0;
       }
     }
 
-    for (r2 = 0; r2 < 9; r2++) {
-      uv_des_idx_1 = 0.0;
-      for (r3 = 0; r3 < 9; r3++) {
-        uv_des_idx_1 += gain_0[9 * r3 + r1] * URControl_DW.P[9 * r2 + r3];
+    /* DataStoreWrite: '<S23>/Data Store WriteP' */
+    memcpy(&URControl_DW.P[0], &Jacobian_1[0], 100U * sizeof(real_T));
+
+    /* SignalConversion: '<S26>/TmpSignal ConversionAt SFunction Inport3' incorporates:
+     *  DataTypeConversion: '<Root>/Data Type Conversion4'
+     *  Inport: '<Root>/pos'
+     *  MATLAB Function: '<S23>/Correct'
+     */
+    rtb_pos_0[0] = URControl_U.pos[0];
+    rtb_pos_0[1] = URControl_U.pos[1];
+    rtb_pos_0[2] = URControl_U.pos[2];
+    rtb_pos_0[3] = rtb_TmpSignalConversionAtSFun_h[0];
+    rtb_pos_0[4] = rtb_TmpSignalConversionAtSFun_h[1];
+    rtb_pos_0[5] = rtb_TmpSignalConversionAtSFun_h[2];
+    rtb_pos_0[6] = rtb_TmpSignalConversionAtSFun_h[3];
+
+    /* MATLAB Function: '<S23>/Correct' incorporates:
+     *  SignalConversion: '<S26>/TmpSignal ConversionAt SFunction Inport3'
+     */
+    for (r2 = 0; r2 < 7; r2++) {
+      rtb_pos_1[r2] = rtb_pos_0[r2] - zEstimated[r2];
+    }
+
+    /* DataStoreWrite: '<S23>/Data Store WriteX' incorporates:
+     *  DataStoreRead: '<S23>/Data Store ReadX'
+     *  MATLAB Function: '<S23>/Correct'
+     */
+    for (r2 = 0; r2 < 10; r2++) {
+      rtb_DataTypeConversion8_idx_0 = 0.0;
+      for (r3 = 0; r3 < 7; r3++) {
+        rtb_DataTypeConversion8_idx_0 += gain[10 * r3 + r2] * rtb_pos_1[r3];
       }
 
-      tmp_1[r1 + 9 * r2] = URControl_DW.P[9 * r2 + r1] - uv_des_idx_1;
-    }
-  }
-
-  /* DataStoreWrite: '<S21>/Data Store WriteP' */
-  memcpy(&URControl_DW.P[0], &tmp_1[0], 81U * sizeof(real_T));
-
-  /* MATLAB Function: '<S21>/Correct' */
-  for (r1 = 0; r1 < 6; r1++) {
-    rtb_VectorConcatenate2_0[r1] = rtb_VectorConcatenate2[r1] - zEstimated[r1];
-  }
-
-  /* DataStoreWrite: '<S21>/Data Store WriteX' incorporates:
-   *  DataStoreRead: '<S21>/Data Store ReadX'
-   *  MATLAB Function: '<S21>/Correct'
-   */
-  for (r1 = 0; r1 < 9; r1++) {
-    uv_des_idx_1 = 0.0;
-    for (r2 = 0; r2 < 6; r2++) {
-      uv_des_idx_1 += gain[9 * r2 + r1] * rtb_VectorConcatenate2_0[r2];
+      URControl_DW.x[r2] += rtb_DataTypeConversion8_idx_0;
     }
 
-    URControl_DW.x[r1] += uv_des_idx_1;
+    /* End of DataStoreWrite: '<S23>/Data Store WriteX' */
   }
 
-  /* End of DataStoreWrite: '<S21>/Data Store WriteX' */
+  /* End of DataTypeConversion: '<S18>/DataTypeConversion_Enable1' */
   /* End of Outputs for SubSystem: '<S18>/Correct1' */
+
+  /* Outputs for Atomic SubSystem: '<S18>/Output' */
+  /* DataStoreRead: '<S24>/Data Store Read' */
+  memcpy(&rtb_DataStoreRead_k[0], &URControl_DW.x[0], 10U * sizeof(real_T));
+
+  /* Sqrt: '<S30>/sqrt' incorporates:
+   *  DataStoreRead: '<S24>/Data Store Read'
+   *  Product: '<S31>/Product'
+   *  Product: '<S31>/Product1'
+   *  Product: '<S31>/Product2'
+   *  Product: '<S31>/Product3'
+   *  Sum: '<S31>/Sum'
+   */
+  rtb_Product3 = std::sqrt(((URControl_DW.x[6] * URControl_DW.x[6] +
+    URControl_DW.x[7] * URControl_DW.x[7]) + URControl_DW.x[8] * URControl_DW.x
+    [8]) + URControl_DW.x[9] * URControl_DW.x[9]);
+
+  /* Product: '<S29>/Product' incorporates:
+   *  DataStoreRead: '<S24>/Data Store Read'
+   */
+  rtb_fcn5 = URControl_DW.x[6] / rtb_Product3;
+
+  /* Product: '<S29>/Product1' incorporates:
+   *  DataStoreRead: '<S24>/Data Store Read'
+   */
+  rtb_Product1 = URControl_DW.x[7] / rtb_Product3;
+
+  /* Product: '<S29>/Product2' incorporates:
+   *  DataStoreRead: '<S24>/Data Store Read'
+   */
+  rtb_Product2 = URControl_DW.x[8] / rtb_Product3;
+
+  /* Product: '<S29>/Product3' incorporates:
+   *  DataStoreRead: '<S24>/Data Store Read'
+   */
+  rtb_Product3 = URControl_DW.x[9] / rtb_Product3;
+
+  /* End of Outputs for SubSystem: '<S18>/Output' */
+
+  /* Fcn: '<S20>/fcn2' incorporates:
+   *  Fcn: '<S20>/fcn5'
+   */
+  w_min_idx_1 = rtb_fcn5 * rtb_fcn5;
+  Iu = rtb_Product1 * rtb_Product1;
+  dummy_idx_0 = rtb_Product2 * rtb_Product2;
+  rtb_DataTypeConversion8_idx_0 = rtb_Product3 * rtb_Product3;
+
+  /* DSPFlip: '<S15>/Flip1' incorporates:
+   *  Fcn: '<S20>/fcn1'
+   *  Fcn: '<S20>/fcn2'
+   *  Trigonometry: '<S28>/Trigonometric Function1'
+   */
+  URControl_B.att_ekfquat[2] = rt_atan2d_snf((rtb_Product1 * rtb_Product2 +
+    rtb_fcn5 * rtb_Product3) * 2.0, ((w_min_idx_1 + Iu) - dummy_idx_0) -
+    rtb_DataTypeConversion8_idx_0);
+
+  /* Fcn: '<S20>/fcn3' */
+  rtb_Uk1_o = (rtb_Product1 * rtb_Product3 - rtb_fcn5 * rtb_Product2) * -2.0;
+
+  /* Trigonometry: '<S28>/trigFcn' */
+  if (rtb_Uk1_o > 1.0) {
+    rtb_Uk1_o = 1.0;
+  } else {
+    if (rtb_Uk1_o < -1.0) {
+      rtb_Uk1_o = -1.0;
+    }
+  }
+
+  rtb_DataTypeConversion8_idx_1 = std::asin(rtb_Uk1_o);
+
+  /* End of Trigonometry: '<S28>/trigFcn' */
+
+  /* DSPFlip: '<S15>/Flip1' incorporates:
+   *  Fcn: '<S20>/fcn4'
+   *  Fcn: '<S20>/fcn5'
+   *  Trigonometry: '<S28>/Trigonometric Function3'
+   */
+  URControl_B.att_ekfquat[0] = rt_atan2d_snf((rtb_Product2 * rtb_Product3 +
+    rtb_fcn5 * rtb_Product1) * 2.0, ((w_min_idx_1 - Iu) - dummy_idx_0) +
+    rtb_DataTypeConversion8_idx_0);
+  URControl_B.att_ekfquat[1] = rtb_DataTypeConversion8_idx_1;
+  URControl_B.att_ekfquat[1] = rtb_DataTypeConversion8_idx_1;
+
+  /* Delay: '<Root>/Delay' incorporates:
+   *  Constant: '<Root>/delay'
+   *  DataTypeConversion: '<Root>/Data Type Conversion10'
+   *  Inport: '<Root>/fail_flag'
+   */
+  rtb_DataTypeConversion8_idx_0 = std::floor(URControlParams.fail_delay * 500.0);
+  if ((rtb_DataTypeConversion8_idx_0 < 1.0) || rtIsNaN
+      (rtb_DataTypeConversion8_idx_0)) {
+    rtb_Product3 = URControl_U.fail_flag;
+  } else {
+    if (rtb_DataTypeConversion8_idx_0 > 1000.0) {
+      tmp_1 = 1000U;
+    } else {
+      if (rtIsNaN(rtb_DataTypeConversion8_idx_0) || rtIsInf
+          (rtb_DataTypeConversion8_idx_0)) {
+        rtb_DataTypeConversion8_idx_0 = 0.0;
+      } else {
+        rtb_DataTypeConversion8_idx_0 = std::fmod(rtb_DataTypeConversion8_idx_0,
+          4.294967296E+9);
+      }
+
+      tmp_1 = rtb_DataTypeConversion8_idx_0 < 0.0 ? (uint32_T)-(int32_T)
+        (uint32_T)-rtb_DataTypeConversion8_idx_0 : (uint32_T)
+        rtb_DataTypeConversion8_idx_0;
+    }
+
+    rtb_Product3 = URControl_DW.Delay_DSTATE[1000U - tmp_1];
+  }
+
+  /* End of Delay: '<Root>/Delay' */
 
   /* MATLAB Function: '<S5>/basic estimators' incorporates:
    *  BusCreator: '<S5>/BusConversion_InsertedFor_basic estimators_at_inport_0'
-   *  DataStoreRead: '<S22>/Data Store Read'
-   *  DataTypeConversion: '<Root>/Data Type Conversion10'
-   *  DataTypeConversion: '<Root>/Data Type Conversion2'
+   *  DataStoreRead: '<S24>/Data Store Read'
    *  DataTypeConversion: '<Root>/Data Type Conversion4'
    *  DataTypeConversion: '<Root>/Data Type Conversion5'
    *  DataTypeConversion: '<Root>/Data Type Conversion6'
    *  DataTypeConversion: '<Root>/Data Type Conversion7'
    *  Inport: '<Root>/att'
    *  Inport: '<Root>/esc_rpm'
-   *  Inport: '<Root>/fail_flag'
    *  Inport: '<Root>/pos'
    *  Inport: '<Root>/rates'
-   *  Inport: '<Root>/vel'
    *  MATLAB Function: '<S3>/Precession'
    */
-  /* :  [State, DAQ] = UREstimators(sensors, State, DAQ, pos_est, vel_est, att_est, fail_id, par, URControlParams); */
+  /* :  [State, DAQ] = UREstimators(sensors, State, DAQ, pos_ekf, vel_ekf, att_ekf, fail_id, par, URControlParams); */
   /* 'UREstimators:3' if isempty(omegaFilter) */
   if (!URControl_DW.omegaFilter_not_empty) {
     /* 'UREstimators:3' omegaFilter = LPFilter(URpar.est_omegaFilterT, [0,0,0], 40, -40); */
@@ -3691,90 +4289,206 @@ void URControlModelClass::step()
     URControl_DW.velFilter_not_empty = true;
   }
 
-  /* 'UREstimators:7' state.acc = sensors.acc; */
+  /* 'UREstimators:6' if isempty(accFilter) */
+  if (!URControl_DW.accFilter_not_empty) {
+    /* 'UREstimators:6' accFilter = LPFilter(URpar.est_accFilterT, [0,0,0], 40, -40); */
+    /* 'LPFilter:14' obj.filterT = filterT; */
+    URControl_DW.accFilter.filterT = URControlParams.est_accFilterT;
+
+    /* 'LPFilter:15' obj.value = initValue; */
+    URControl_DW.accFilter.value[0] = 0.0;
+    URControl_DW.accFilter.value[1] = 0.0;
+    URControl_DW.accFilter.value[2] = 0.0;
+
+    /* 'LPFilter:16' obj.maxLim = maxLim; */
+    URControl_DW.accFilter.maxLim = 40.0;
+
+    /* 'LPFilter:17' obj.minLim = minLim; */
+    URControl_DW.accFilter.minLim = -40.0;
+    URControl_DW.accFilter_not_empty = true;
+  }
+
+  /* 'UREstimators:8' state.acc = sensors.acc; */
   URControl_DW.State.acc[0] = rtb_acc[0];
   URControl_DW.State.acc[1] = rtb_acc[1];
   URControl_DW.State.acc[2] = rtb_acc[2];
 
-  /* 'UREstimators:8' if URpar.est_useEKF == 1 */
+  /* 'UREstimators:9' if URpar.est_useEKF == 1 */
   if (URControlParams.est_useEKF == 1.0) {
     /* Outputs for Atomic SubSystem: '<S18>/Output' */
-    /* 'UREstimators:9' state.vel = vel_est'; */
-    /* 'UREstimators:10' state.pos = pos_est'; */
-    /* 'UREstimators:11' state.att = att_est'; */
+    /* 'UREstimators:10' state.vel = vel_est'; */
+    /* 'UREstimators:11' state.pos = pos_est'; */
+    /* 'UREstimators:12' state.att = (mod(att_est + pi, 2*pi) - pi)'; */
     URControl_DW.State.vel[0] = URControl_DW.x[3];
     URControl_DW.State.pos[0] = URControl_DW.x[0];
-    URControl_DW.State.att[0] = URControl_DW.x[6];
-    URControl_DW.State.vel[1] = URControl_DW.x[4];
-    URControl_DW.State.pos[1] = URControl_DW.x[1];
-    URControl_DW.State.att[1] = URControl_DW.x[7];
-    URControl_DW.State.vel[2] = URControl_DW.x[5];
-    URControl_DW.State.pos[2] = URControl_DW.x[2];
-    URControl_DW.State.att[2] = URControl_DW.x[8];
 
     /* End of Outputs for SubSystem: '<S18>/Output' */
+    if ((!rtIsInf(URControl_B.att_ekfquat[0] + 3.1415926535897931)) && (!rtIsNaN
+         (URControl_B.att_ekfquat[0] + 3.1415926535897931))) {
+      if (URControl_B.att_ekfquat[0] + 3.1415926535897931 == 0.0) {
+        rtb_fcn5 = 0.0;
+      } else {
+        rtb_fcn5 = std::fmod(URControl_B.att_ekfquat[0] + 3.1415926535897931,
+                             6.2831853071795862);
+        rEQ0 = (rtb_fcn5 == 0.0);
+        if (!rEQ0) {
+          rtb_Product1 = std::abs((URControl_B.att_ekfquat[0] +
+            3.1415926535897931) / 6.2831853071795862);
+          rEQ0 = (std::abs(rtb_Product1 - std::floor(rtb_Product1 + 0.5)) <=
+                  2.2204460492503131E-16 * rtb_Product1);
+        }
+
+        if (rEQ0) {
+          rtb_fcn5 = 0.0;
+        } else {
+          if (URControl_B.att_ekfquat[0] + 3.1415926535897931 < 0.0) {
+            rtb_fcn5 += 6.2831853071795862;
+          }
+        }
+      }
+    } else {
+      rtb_fcn5 = (rtNaN);
+    }
+
+    URControl_DW.State.att[0] = rtb_fcn5 - 3.1415926535897931;
+
+    /* Outputs for Atomic SubSystem: '<S18>/Output' */
+    URControl_DW.State.vel[1] = URControl_DW.x[4];
+    URControl_DW.State.pos[1] = URControl_DW.x[1];
+
+    /* End of Outputs for SubSystem: '<S18>/Output' */
+    if ((!rtIsInf(URControl_B.att_ekfquat[1] + 3.1415926535897931)) && (!rtIsNaN
+         (URControl_B.att_ekfquat[1] + 3.1415926535897931))) {
+      if (URControl_B.att_ekfquat[1] + 3.1415926535897931 == 0.0) {
+        rtb_fcn5 = 0.0;
+      } else {
+        rtb_fcn5 = std::fmod(URControl_B.att_ekfquat[1] + 3.1415926535897931,
+                             6.2831853071795862);
+        rEQ0 = (rtb_fcn5 == 0.0);
+        if (!rEQ0) {
+          rtb_Product1 = std::abs((URControl_B.att_ekfquat[1] +
+            3.1415926535897931) / 6.2831853071795862);
+          rEQ0 = (std::abs(rtb_Product1 - std::floor(rtb_Product1 + 0.5)) <=
+                  2.2204460492503131E-16 * rtb_Product1);
+        }
+
+        if (rEQ0) {
+          rtb_fcn5 = 0.0;
+        } else {
+          if (URControl_B.att_ekfquat[1] + 3.1415926535897931 < 0.0) {
+            rtb_fcn5 += 6.2831853071795862;
+          }
+        }
+      }
+    } else {
+      rtb_fcn5 = (rtNaN);
+    }
+
+    URControl_DW.State.att[1] = rtb_fcn5 - 3.1415926535897931;
+
+    /* Outputs for Atomic SubSystem: '<S18>/Output' */
+    URControl_DW.State.vel[2] = URControl_DW.x[5];
+    URControl_DW.State.pos[2] = URControl_DW.x[2];
+
+    /* End of Outputs for SubSystem: '<S18>/Output' */
+    if ((!rtIsInf(URControl_B.att_ekfquat[2] + 3.1415926535897931)) && (!rtIsNaN
+         (URControl_B.att_ekfquat[2] + 3.1415926535897931))) {
+      if (URControl_B.att_ekfquat[2] + 3.1415926535897931 == 0.0) {
+        rtb_fcn5 = 0.0;
+      } else {
+        rtb_fcn5 = std::fmod(URControl_B.att_ekfquat[2] + 3.1415926535897931,
+                             6.2831853071795862);
+        rEQ0 = (rtb_fcn5 == 0.0);
+        if (!rEQ0) {
+          rtb_Product1 = std::abs((URControl_B.att_ekfquat[2] +
+            3.1415926535897931) / 6.2831853071795862);
+          rEQ0 = (std::abs(rtb_Product1 - std::floor(rtb_Product1 + 0.5)) <=
+                  2.2204460492503131E-16 * rtb_Product1);
+        }
+
+        if (rEQ0) {
+          rtb_fcn5 = 0.0;
+        } else {
+          if (URControl_B.att_ekfquat[2] + 3.1415926535897931 < 0.0) {
+            rtb_fcn5 += 6.2831853071795862;
+          }
+        }
+      }
+    } else {
+      rtb_fcn5 = (rtNaN);
+    }
+
+    URControl_DW.State.att[2] = rtb_fcn5 - 3.1415926535897931;
   } else {
-    /* 'UREstimators:12' else */
-    /* 'UREstimators:13' state.vel = sensors.vel; */
-    /* 'UREstimators:14' state.pos = sensors.pos; */
-    /* 'UREstimators:15' state.att = sensors.att; */
-    URControl_DW.State.vel[0] = URControl_U.vel[0];
+    /* 'UREstimators:13' else */
+    /* 'UREstimators:14' state.vel = sensors.vel; */
+    /* 'UREstimators:15' state.pos = sensors.pos; */
+    /* 'UREstimators:16' state.att = sensors.att; */
+    URControl_DW.State.vel[0] = h[0];
     URControl_DW.State.pos[0] = URControl_U.pos[0];
     URControl_DW.State.att[0] = URControl_U.att[0];
-    URControl_DW.State.vel[1] = URControl_U.vel[1];
+    URControl_DW.State.vel[1] = h[1];
     URControl_DW.State.pos[1] = URControl_U.pos[1];
     URControl_DW.State.att[1] = URControl_U.att[1];
-    URControl_DW.State.vel[2] = URControl_U.vel[2];
+    URControl_DW.State.vel[2] = h[2];
     URControl_DW.State.pos[2] = URControl_U.pos[2];
     URControl_DW.State.att[2] = URControl_U.att[2];
   }
 
-  /* 'UREstimators:17' state.velB = sensors.velB; */
-  /* 'UREstimators:18' state.omega = sensors.omega; */
-  URControl_DW.State.velB[0] = rtb_DiscreteStateSpace[0];
+  /* 'UREstimators:19' state.omega = sensors.omega; */
   URControl_DW.State.omega[0] = URControl_U.rates[0];
-  URControl_DW.State.velB[1] = rtb_DiscreteStateSpace[1];
   URControl_DW.State.omega[1] = URControl_U.rates[1];
-  URControl_DW.State.velB[2] = rtb_DiscreteStateSpace[2];
   URControl_DW.State.omega[2] = URControl_U.rates[2];
 
-  /* 'UREstimators:20' omegaFilter.updateFilterT(URpar.est_omegaFilterT); */
+  /* 'UREstimators:21' omegaFilter.updateFilterT(URpar.est_omegaFilterT); */
   /* 'LPFilter:26' obj.filterT = filterT; */
   URControl_DW.omegaFilter.filterT = URControlParams.est_omegaFilterT;
 
-  /* 'UREstimators:21' omegaFilter.update(sensors.omega); */
+  /* 'UREstimators:22' omegaFilter.update(sensors.omega); */
   URControl_LPFilter_update(&URControl_DW.omegaFilter, rtb_omega);
 
-  /* 'UREstimators:22' state.omegaf = omegaFilter.value; */
+  /* 'UREstimators:23' state.omegaf = omegaFilter.value; */
   URControl_DW.State.omegaf[0] = URControl_DW.omegaFilter.value[0];
   URControl_DW.State.omegaf[1] = URControl_DW.omegaFilter.value[1];
   URControl_DW.State.omegaf[2] = URControl_DW.omegaFilter.value[2];
 
-  /* 'UREstimators:24' posFilter.updateFilterT(URpar.est_posFilterT); */
+  /* 'UREstimators:25' posFilter.updateFilterT(URpar.est_posFilterT); */
   /* 'LPFilter:26' obj.filterT = filterT; */
   URControl_DW.posFilter.filterT = URControlParams.est_posFilterT;
 
-  /* 'UREstimators:25' posFilter.update(state.pos); */
+  /* 'UREstimators:26' posFilter.update(state.pos); */
   URControl_LPFilter_update(&URControl_DW.posFilter, URControl_DW.State.pos);
 
-  /* 'UREstimators:26' state.posf = posFilter.value; */
+  /* 'UREstimators:27' state.posf = posFilter.value; */
   URControl_DW.State.posf[0] = URControl_DW.posFilter.value[0];
   URControl_DW.State.posf[1] = URControl_DW.posFilter.value[1];
   URControl_DW.State.posf[2] = URControl_DW.posFilter.value[2];
 
-  /* 'UREstimators:28' velFilter.updateFilterT(URpar.est_velFilterT); */
+  /* 'UREstimators:29' velFilter.updateFilterT(URpar.est_velFilterT); */
   /* 'LPFilter:26' obj.filterT = filterT; */
   URControl_DW.velFilter.filterT = URControlParams.est_velFilterT;
 
-  /* 'UREstimators:29' velFilter.update(state.vel); */
+  /* 'UREstimators:30' velFilter.update(state.vel); */
   URControl_LPFilter_update(&URControl_DW.velFilter, URControl_DW.State.vel);
 
-  /* 'UREstimators:30' state.velf = velFilter.value; */
+  /* 'UREstimators:31' state.velf = velFilter.value; */
   URControl_DW.State.velf[0] = URControl_DW.velFilter.value[0];
   URControl_DW.State.velf[1] = URControl_DW.velFilter.value[1];
   URControl_DW.State.velf[2] = URControl_DW.velFilter.value[2];
 
-  /* 'UREstimators:32' state.wRotor = sensors.wRotor/30*pi; */
+  /* 'UREstimators:33' accFilter.updateFilterT(URpar.est_accFilterT); */
+  /* 'LPFilter:26' obj.filterT = filterT; */
+  URControl_DW.accFilter.filterT = URControlParams.est_accFilterT;
+
+  /* 'UREstimators:34' accFilter.update(state.acc); */
+  URControl_LPFilter_update(&URControl_DW.accFilter, URControl_DW.State.acc);
+
+  /* 'UREstimators:35' state.accf = accFilter.value; */
+  URControl_DW.State.accf[0] = URControl_DW.accFilter.value[0];
+  URControl_DW.State.accf[1] = URControl_DW.accFilter.value[1];
+  URControl_DW.State.accf[2] = URControl_DW.accFilter.value[2];
+
+  /* 'UREstimators:37' state.wRotor = sensors.wRotor/30*pi; */
   URControl_DW.State.wRotor[0] = (real_T)URControl_U.esc_rpm[0] / 30.0 *
     3.1415926535897931;
   URControl_DW.State.wRotor[1] = (real_T)URControl_U.esc_rpm[1] / 30.0 *
@@ -3784,54 +4498,56 @@ void URControlModelClass::step()
   URControl_DW.State.wRotor[3] = (real_T)URControl_U.esc_rpm[3] / 30.0 *
     3.1415926535897931;
 
-  /* 'UREstimators:34' phi = state.att(1); */
-  /* 'UREstimators:35' theta = state.att(2); */
-  /* 'UREstimators:36' psi = state.att(3); */
-  /* 'UREstimators:39' R_IB = [cos(theta)*cos(psi)                             , cos(theta)*sin(psi)                               , -sin(theta); */
-  /* 'UREstimators:40'         sin(phi)*sin(theta)*cos(psi)-cos(phi)*sin(psi)  , sin(phi)*sin(theta)*sin(psi)+cos(phi)*cos(psi)    , sin(phi)*cos(theta); */
-  /* 'UREstimators:41'         cos(phi)*sin(theta)*cos(psi)+sin(phi)*sin(psi)  , cos(phi)*sin(theta)*sin(psi)-sin(phi)*cos(psi)    , cos(phi)*cos(theta)]; */
-  MuPrec = std::cos(URControl_DW.State.att[1]);
-  psi = std::cos(URControl_DW.State.att[2]);
-  R_IB[0] = MuPrec * psi;
-  w_max_idx_0 = std::sin(URControl_DW.State.att[2]);
-  R_IB[3] = MuPrec * w_max_idx_0;
-  Iu = std::sin(URControl_DW.State.att[1]);
-  R_IB[6] = -Iu;
-  maxval = std::sin(URControl_DW.State.att[0]);
-  dummy_idx_0 = maxval * Iu;
-  dummy_idx_1 = std::cos(URControl_DW.State.att[0]);
-  R_IB[1] = dummy_idx_0 * psi - dummy_idx_1 * w_max_idx_0;
-  R_IB[4] = dummy_idx_0 * w_max_idx_0 + dummy_idx_1 * psi;
-  R_IB[7] = maxval * MuPrec;
-  Iu *= dummy_idx_1;
-  R_IB[2] = Iu * psi + maxval * w_max_idx_0;
-  R_IB[5] = Iu * w_max_idx_0 - maxval * psi;
-  R_IB[8] = dummy_idx_1 * MuPrec;
+  /* 'UREstimators:39' phi = state.att(1); */
+  /* 'UREstimators:40' theta = state.att(2); */
+  /* 'UREstimators:41' psi = state.att(3); */
+  /* 'UREstimators:44' R_IB = [cos(theta)*cos(psi)                             , cos(theta)*sin(psi)                               , -sin(theta); */
+  /* 'UREstimators:45'         sin(phi)*sin(theta)*cos(psi)-cos(phi)*sin(psi)  , sin(phi)*sin(theta)*sin(psi)+cos(phi)*cos(psi)    , sin(phi)*cos(theta); */
+  /* 'UREstimators:46'         cos(phi)*sin(theta)*cos(psi)+sin(phi)*sin(psi)  , cos(phi)*sin(theta)*sin(psi)-sin(phi)*cos(psi)    , cos(phi)*cos(theta)]; */
+  rtb_fcn5 = std::cos(URControl_DW.State.att[1]);
+  w_min_idx_1 = std::cos(URControl_DW.State.att[2]);
+  R_IB[0] = rtb_fcn5 * w_min_idx_1;
+  Iu = std::sin(URControl_DW.State.att[2]);
+  R_IB[3] = rtb_fcn5 * Iu;
+  rtb_Product1 = std::sin(URControl_DW.State.att[1]);
+  R_IB[6] = -rtb_Product1;
+  dummy_idx_0 = std::sin(URControl_DW.State.att[0]);
+  rtb_DataTypeConversion8_idx_1 = dummy_idx_0 * rtb_Product1;
+  rtb_DataTypeConversion8_idx_0 = std::cos(URControl_DW.State.att[0]);
+  R_IB[1] = rtb_DataTypeConversion8_idx_1 * w_min_idx_1 -
+    rtb_DataTypeConversion8_idx_0 * Iu;
+  R_IB[4] = rtb_DataTypeConversion8_idx_1 * Iu + rtb_DataTypeConversion8_idx_0 *
+    w_min_idx_1;
+  R_IB[7] = dummy_idx_0 * rtb_fcn5;
+  rtb_Product1 *= rtb_DataTypeConversion8_idx_0;
+  R_IB[2] = rtb_Product1 * w_min_idx_1 + dummy_idx_0 * Iu;
+  R_IB[5] = rtb_Product1 * Iu - dummy_idx_0 * w_min_idx_1;
+  R_IB[8] = rtb_DataTypeConversion8_idx_0 * rtb_fcn5;
 
-  /* 'UREstimators:43' state.n = (R_IB\[0;0;-1])'; */
-  r1 = 0;
+  /* 'UREstimators:48' state.n = (R_IB\[0;0;-1])'; */
+  i = 0;
   r2 = 1;
   r3 = 2;
-  maxval = std::abs(R_IB[0]);
-  psi = std::abs(R_IB[1]);
-  if (psi > maxval) {
-    maxval = psi;
-    r1 = 1;
+  rtb_Product2 = std::abs(R_IB[0]);
+  rtb_Product1 = std::abs(R_IB[1]);
+  if (rtb_Product1 > rtb_Product2) {
+    rtb_Product2 = rtb_Product1;
+    i = 1;
     r2 = 0;
   }
 
-  if (std::abs(R_IB[2]) > maxval) {
-    r1 = 2;
+  if (std::abs(R_IB[2]) > rtb_Product2) {
+    i = 2;
     r2 = 1;
     r3 = 0;
   }
 
-  R_IB[r2] /= R_IB[r1];
-  R_IB[r3] /= R_IB[r1];
-  R_IB[3 + r2] -= R_IB[3 + r1] * R_IB[r2];
-  R_IB[3 + r3] -= R_IB[3 + r1] * R_IB[r3];
-  R_IB[6 + r2] -= R_IB[6 + r1] * R_IB[r2];
-  R_IB[6 + r3] -= R_IB[6 + r1] * R_IB[r3];
+  R_IB[r2] /= R_IB[i];
+  R_IB[r3] /= R_IB[i];
+  R_IB[3 + r2] -= R_IB[3 + i] * R_IB[r2];
+  R_IB[3 + r3] -= R_IB[3 + i] * R_IB[r3];
+  R_IB[6 + r2] -= R_IB[6 + i] * R_IB[r2];
+  R_IB[6 + r3] -= R_IB[6 + i] * R_IB[r3];
   if (std::abs(R_IB[3 + r3]) > std::abs(R_IB[3 + r2])) {
     rtemp = r2;
     r2 = r3;
@@ -3840,81 +4556,81 @@ void URControlModelClass::step()
 
   R_IB[3 + r3] /= R_IB[3 + r2];
   R_IB[6 + r3] -= R_IB[3 + r3] * R_IB[6 + r2];
-  rtb_DataTypeConversion8_idx_1 = (real_T)b[r2] - (real_T)b[r1] * R_IB[r2];
-  maxval = (((real_T)b[r3] - (real_T)b[r1] * R_IB[r3]) - R_IB[3 + r3] *
-            rtb_DataTypeConversion8_idx_1) / R_IB[6 + r3];
-  rtb_DataTypeConversion8_idx_1 -= R_IB[6 + r2] * maxval;
+  rtb_DataTypeConversion8_idx_1 = (real_T)b[r2] - (real_T)b[i] * R_IB[r2];
+  rtb_DataTypeConversion8_idx_2 = (((real_T)b[r3] - (real_T)b[i] * R_IB[r3]) -
+    R_IB[3 + r3] * rtb_DataTypeConversion8_idx_1) / R_IB[6 + r3];
+  rtb_DataTypeConversion8_idx_1 -= R_IB[6 + r2] * rtb_DataTypeConversion8_idx_2;
   rtb_DataTypeConversion8_idx_1 /= R_IB[3 + r2];
-  URControl_DW.State.n[0] = (((real_T)b[r1] - R_IB[6 + r1] * maxval) - R_IB[3 +
-    r1] * rtb_DataTypeConversion8_idx_1) / R_IB[r1];
+  URControl_DW.State.n[0] = (((real_T)b[i] - R_IB[6 + i] *
+    rtb_DataTypeConversion8_idx_2) - R_IB[3 + i] * rtb_DataTypeConversion8_idx_1)
+    / R_IB[i];
   URControl_DW.State.n[1] = rtb_DataTypeConversion8_idx_1;
-  URControl_DW.State.n[2] = maxval;
+  URControl_DW.State.n[2] = rtb_DataTypeConversion8_idx_2;
 
-  /* 'UREstimators:47' rotAngle = 45/180*pi; */
-  /* 'UREstimators:48' Rxu = [cos(rotAngle), -sin(rotAngle); ... */
-  /* 'UREstimators:49'        sin(rotAngle), cos(rotAngle)]; */
-  /* 'UREstimators:52' dummy = Rxu*[state.omega(1); state.omega(2)]; */
-  /* 'UREstimators:53' uRot = dummy(1); */
-  /* 'UREstimators:53' vRot = dummy(2); */
-  /* 'UREstimators:54' state.omegaUV = [uRot,vRot,state.omega(3)]; */
-  URControl_DW.State.omegaUV[0] = 0.70710678118654757 *
-    URControl_DW.State.omega[0] + -0.70710678118654746 *
+  /* 'UREstimators:53' dummy = par.URC.R_xy_uv*[state.omega(1); state.omega(2)]; */
+  /* 'UREstimators:54' uRot = dummy(1); */
+  /* 'UREstimators:54' vRot = dummy(2); */
+  /* 'UREstimators:55' state.omegaUV = [uRot,vRot,state.omega(3)]; */
+  URControl_DW.State.omegaUV[0] = URControl_ConstP.pooled1.URC.R_xy_uv[0] *
+    URControl_DW.State.omega[0] + URControl_ConstP.pooled1.URC.R_xy_uv[2] *
     URControl_DW.State.omega[1];
-  URControl_DW.State.omegaUV[1] = 0.70710678118654746 *
-    URControl_DW.State.omega[0] + 0.70710678118654757 *
+  URControl_DW.State.omegaUV[1] = URControl_ConstP.pooled1.URC.R_xy_uv[1] *
+    URControl_DW.State.omega[0] + URControl_ConstP.pooled1.URC.R_xy_uv[3] *
     URControl_DW.State.omega[1];
   URControl_DW.State.omegaUV[2] = URControl_DW.State.omega[2];
 
-  /* 'UREstimators:56' dummy = Rxu*[state.omegaf(1); state.omegaf(2)]; */
-  /* 'UREstimators:57' uRot = dummy(1); */
-  /* 'UREstimators:57' vRot = dummy(2); */
-  /* 'UREstimators:58' state.omegafUV = [uRot,vRot,state.omegaf(3)]; */
-  URControl_DW.State.omegafUV[0] = 0.70710678118654757 *
-    URControl_DW.State.omegaf[0] + -0.70710678118654746 *
+  /* 'UREstimators:57' dummy = par.URC.R_xy_uv*[state.omegaf(1); state.omegaf(2)]; */
+  /* 'UREstimators:58' uRot = dummy(1); */
+  /* 'UREstimators:58' vRot = dummy(2); */
+  /* 'UREstimators:59' state.omegafUV = [uRot,vRot,state.omegaf(3)]; */
+  URControl_DW.State.omegafUV[0] = URControl_ConstP.pooled1.URC.R_xy_uv[0] *
+    URControl_DW.State.omegaf[0] + URControl_ConstP.pooled1.URC.R_xy_uv[2] *
     URControl_DW.State.omegaf[1];
-  URControl_DW.State.omegafUV[1] = 0.70710678118654746 *
-    URControl_DW.State.omegaf[0] + 0.70710678118654757 *
+  URControl_DW.State.omegafUV[1] = URControl_ConstP.pooled1.URC.R_xy_uv[1] *
+    URControl_DW.State.omegaf[0] + URControl_ConstP.pooled1.URC.R_xy_uv[3] *
     URControl_DW.State.omegaf[1];
   URControl_DW.State.omegafUV[2] = URControl_DW.State.omegaf[2];
 
-  /* 'UREstimators:61' FMax = URpar.envp_FMax; */
-  /* 'UREstimators:62' FMin = URpar.envp_FMin; */
-  FMax[0] = URControlParams.envp_FMax[0];
+  /* 'UREstimators:62' FMax = URpar.envp_FMax; */
+  /* 'UREstimators:63' FMin = URpar.envp_FMin; */
+  rtb_TmpSignalConversionAtSFun_h[0] = URControlParams.envp_FMax[0];
   FMin[0] = URControlParams.envp_FMin[0];
-  FMax[1] = URControlParams.envp_FMax[1];
+  rtb_TmpSignalConversionAtSFun_h[1] = URControlParams.envp_FMax[1];
   FMin[1] = URControlParams.envp_FMin[1];
-  FMax[2] = URControlParams.envp_FMax[2];
+  rtb_TmpSignalConversionAtSFun_h[2] = URControlParams.envp_FMax[2];
   FMin[2] = URControlParams.envp_FMin[2];
-  FMax[3] = URControlParams.envp_FMax[3];
+  rtb_TmpSignalConversionAtSFun_h[3] = URControlParams.envp_FMax[3];
   FMin[3] = URControlParams.envp_FMin[3];
 
-  /* 'UREstimators:63' if fail_id > 0 */
-  if (URControl_U.fail_flag > 0) {
-    /* 'UREstimators:64' FMax(fail_id) = par.fail_wRot^2*URpar.k0; */
-    MuPrec = 90000.0 * URControlParams.k0;
-    FMax[URControl_U.fail_flag - 1] = MuPrec;
+  /* 'UREstimators:64' if fail_id > 0 */
+  if (rtb_Product3 > 0.0) {
+    /* 'UREstimators:65' FMax(fail_id) = URpar.fail_wRot^2*URpar.k0; */
+    rtb_fcn5 = URControlParams.fail_wRot * URControlParams.fail_wRot *
+      URControlParams.k0;
+    r2 = (int32_T)rtb_Product3 - 1;
+    rtb_TmpSignalConversionAtSFun_h[r2] = rtb_fcn5;
 
-    /* 'UREstimators:65' FMin(fail_id) = par.fail_wRot^2*URpar.k0; */
-    FMin[URControl_U.fail_flag - 1] = MuPrec;
+    /* 'UREstimators:66' FMin(fail_id) = URpar.fail_wRot^2*URpar.k0; */
+    FMin[r2] = rtb_fcn5;
   }
 
-  /* 'UREstimators:67' state.FMax = FMax; */
-  /* 'UREstimators:68' state.FMin = FMin; */
-  URControl_DW.State.FMax[0] = FMax[0];
+  /* 'UREstimators:68' state.FMax = FMax; */
+  /* 'UREstimators:69' state.FMin = FMin; */
+  URControl_DW.State.FMax[0] = rtb_TmpSignalConversionAtSFun_h[0];
   URControl_DW.State.FMin[0] = FMin[0];
-  URControl_DW.State.FMax[1] = FMax[1];
+  URControl_DW.State.FMax[1] = rtb_TmpSignalConversionAtSFun_h[1];
   URControl_DW.State.FMin[1] = FMin[1];
-  URControl_DW.State.FMax[2] = FMax[2];
+  URControl_DW.State.FMax[2] = rtb_TmpSignalConversionAtSFun_h[2];
   URControl_DW.State.FMin[2] = FMin[2];
-  URControl_DW.State.FMax[3] = FMax[3];
+  URControl_DW.State.FMax[3] = rtb_TmpSignalConversionAtSFun_h[3];
   URControl_DW.State.FMin[3] = FMin[3];
 
-  /* 'UREstimators:70' state.fail_id = fail_id; */
-  URControl_DW.State.fail_id = URControl_U.fail_flag;
+  /* 'UREstimators:71' state.fail_id = fail_id; */
+  URControl_DW.State.fail_id = rtb_Product3;
 
-  /* 'UREstimators:73' [uvDot_max, uvDot_min, uv_max, uv_min] = UREnvelopCalc(state, URpar); */
+  /* 'UREstimators:74' [uvDot_max, uvDot_min, uv_max, uv_min] = UREnvelopCalc(state, URpar); */
   /* 'UREnvelopCalc:3' s = sqrt(URpar.l^2 + URpar.b^2); */
-  w_max_idx_0 = std::sqrt(URControlParams.l * URControlParams.l +
+  w_min_idx_1 = std::sqrt(URControlParams.l * URControlParams.l +
     URControlParams.b * URControlParams.b);
 
   /* 'UREnvelopCalc:4' r = state.omega(3); */
@@ -3923,29 +4639,33 @@ void URControlModelClass::step()
   /* 'UREnvelopCalc:9' Mv_max = (state.FMax(1) - state.FMin(3))*s; */
   /* 'UREnvelopCalc:10' Mv_min = (state.FMin(1) - state.FMax(3))*s; */
   /* 'UREnvelopCalc:13' Iu = sqrt(URpar.Ix^2 + URpar.Iy^2); */
-  psi = std::sqrt(URControlParams.Ix * URControlParams.Ix + URControlParams.Iy *
-                  URControlParams.Iy);
+  rtb_Product3 = std::sqrt(URControlParams.Ix * URControlParams.Ix +
+    URControlParams.Iy * URControlParams.Iy);
 
   /* 'UREnvelopCalc:14' Iv = sqrt(URpar.Ix^2 + URpar.Iy^2); */
   /* 'UREnvelopCalc:17' MuPrec = state.omegafUV(2)*r*(Iv - URpar.Iz); */
-  MuPrec = URControl_DW.State.omegafUV[1] * URControl_DW.State.omega[2] * (psi -
-    URControlParams.Iz);
+  rtb_fcn5 = URControl_DW.State.omegafUV[1] * URControl_DW.State.omega[2] *
+    (rtb_Product3 - URControlParams.Iz);
 
   /* 'UREnvelopCalc:18' MvPrec = state.omegafUV(1)*r*(URpar.Iz - Iu); */
-  maxval = URControl_DW.State.omegafUV[0] * URControl_DW.State.omega[2] *
-    (URControlParams.Iz - psi);
+  rtb_Product1 = URControl_DW.State.omegafUV[0] * URControl_DW.State.omega[2] *
+    (URControlParams.Iz - rtb_Product3);
 
   /* 'UREnvelopCalc:21' uDot_max = (MuPrec + Mu_max)/Iu; */
-  uDot_max = ((-FMin[1] + FMax[3]) * w_max_idx_0 + MuPrec) / psi;
+  rtb_Product2 = ((-FMin[1] + rtb_TmpSignalConversionAtSFun_h[3]) * w_min_idx_1
+                  + rtb_fcn5) / rtb_Product3;
 
   /* 'UREnvelopCalc:22' uDot_min = (MuPrec + Mu_min)/Iu; */
-  MuPrec = ((-FMax[1] + FMin[3]) * w_max_idx_0 + MuPrec) / psi;
+  rtb_fcn5 = ((-rtb_TmpSignalConversionAtSFun_h[1] + FMin[3]) * w_min_idx_1 +
+              rtb_fcn5) / rtb_Product3;
 
   /* 'UREnvelopCalc:24' vDot_max = (MvPrec + Mv_max)/Iv; */
-  Iu = ((FMax[0] - FMin[2]) * w_max_idx_0 + maxval) / psi;
+  Iu = ((rtb_TmpSignalConversionAtSFun_h[0] - FMin[2]) * w_min_idx_1 +
+        rtb_Product1) / rtb_Product3;
 
   /* 'UREnvelopCalc:25' vDot_min = (MvPrec + Mv_min)/Iv; */
-  psi = ((FMin[0] - FMax[2]) * w_max_idx_0 + maxval) / psi;
+  rtb_Product3 = ((FMin[0] - rtb_TmpSignalConversionAtSFun_h[2]) * w_min_idx_1 +
+                  rtb_Product1) / rtb_Product3;
 
   /* 'UREnvelopCalc:28' dt = URpar.envp_timeHorz; */
   /* 'UREnvelopCalc:30' u_max = state.omegafUV(1) + max(uDot_max,URpar.envp_minDeviation)*dt; */
@@ -3956,54 +4676,54 @@ void URControlModelClass::step()
   /* 'UREnvelopCalc:38' uvDot_min = [uDot_min; vDot_min]; */
   /* 'UREnvelopCalc:39' uv_min = [u_min; v_min]; */
   /* 'UREnvelopCalc:40' uv_max = [u_max; v_max]; */
-  /* 'UREstimators:74' state.uvDot_max = uvDot_max; */
-  URControl_DW.State.uvDot_max[0] = uDot_max;
+  /* 'UREstimators:75' state.uvDot_max = uvDot_max; */
+  URControl_DW.State.uvDot_max[0] = rtb_Product2;
   URControl_DW.State.uvDot_max[1] = Iu;
 
-  /* 'UREstimators:75' state.uvDot_min = uvDot_min; */
-  URControl_DW.State.uvDot_min[0] = MuPrec;
-  URControl_DW.State.uvDot_min[1] = psi;
+  /* 'UREstimators:76' state.uvDot_min = uvDot_min; */
+  URControl_DW.State.uvDot_min[0] = rtb_fcn5;
+  URControl_DW.State.uvDot_min[1] = rtb_Product3;
 
-  /* 'UREstimators:76' state.uv_max = uv_max; */
-  tmp_2 = rtIsNaN(URControlParams.envp_minDeviation);
-  if ((uDot_max > URControlParams.envp_minDeviation) || tmp_2) {
-    maxval = uDot_max;
+  /* 'UREstimators:77' state.uv_max = uv_max; */
+  rEQ0 = rtIsNaN(URControlParams.envp_minDeviation);
+  if ((rtb_Product2 > URControlParams.envp_minDeviation) || rEQ0) {
+    rtb_Product1 = rtb_Product2;
   } else {
-    maxval = URControlParams.envp_minDeviation;
+    rtb_Product1 = URControlParams.envp_minDeviation;
   }
 
-  URControl_DW.State.uv_max[0] = maxval * URControlParams.envp_timeHorz +
+  URControl_DW.State.uv_max[0] = rtb_Product1 * URControlParams.envp_timeHorz +
     URControl_DW.State.omegafUV[0];
-  if ((Iu > URControlParams.envp_minDeviation) || tmp_2) {
-    maxval = Iu;
+  if ((Iu > URControlParams.envp_minDeviation) || rEQ0) {
+    rtb_Product1 = Iu;
   } else {
-    maxval = URControlParams.envp_minDeviation;
+    rtb_Product1 = URControlParams.envp_minDeviation;
   }
 
-  URControl_DW.State.uv_max[1] = maxval * URControlParams.envp_timeHorz +
+  URControl_DW.State.uv_max[1] = rtb_Product1 * URControlParams.envp_timeHorz +
     URControl_DW.State.omegafUV[1];
 
-  /* 'UREstimators:77' state.uv_min = uv_min; */
-  tmp_3 = rtIsNaN(-URControlParams.envp_minDeviation);
-  if ((MuPrec < -URControlParams.envp_minDeviation) || tmp_3) {
-    maxval = MuPrec;
+  /* 'UREstimators:78' state.uv_min = uv_min; */
+  tmp_2 = rtIsNaN(-URControlParams.envp_minDeviation);
+  if ((rtb_fcn5 < -URControlParams.envp_minDeviation) || tmp_2) {
+    rtb_Product1 = rtb_fcn5;
   } else {
-    maxval = -URControlParams.envp_minDeviation;
+    rtb_Product1 = -URControlParams.envp_minDeviation;
   }
 
-  URControl_DW.State.uv_min[0] = maxval * URControlParams.envp_timeHorz +
+  URControl_DW.State.uv_min[0] = rtb_Product1 * URControlParams.envp_timeHorz +
     URControl_DW.State.omegafUV[0];
-  if ((psi < -URControlParams.envp_minDeviation) || tmp_3) {
-    maxval = psi;
+  if ((rtb_Product3 < -URControlParams.envp_minDeviation) || tmp_2) {
+    rtb_Product1 = rtb_Product3;
   } else {
-    maxval = -URControlParams.envp_minDeviation;
+    rtb_Product1 = -URControlParams.envp_minDeviation;
   }
 
-  URControl_DW.State.uv_min[1] = maxval * URControlParams.envp_timeHorz +
+  URControl_DW.State.uv_min[1] = rtb_Product1 * URControlParams.envp_timeHorz +
     URControl_DW.State.omegafUV[1];
 
-  /* 'UREstimators:80' daq.omegaUV = state.omegaUV; */
-  /* 'UREstimators:81' daq.omegafUV = state.omegafUV; */
+  /* 'UREstimators:81' daq.omegaUV = state.omegaUV; */
+  /* 'UREstimators:82' daq.omegafUV = state.omegafUV; */
   URControl_DW.DAQ.omegaUV[0] = URControl_DW.State.omegaUV[0];
   URControl_DW.DAQ.omegafUV[0] = URControl_DW.State.omegafUV[0];
   URControl_DW.DAQ.omegaUV[1] = URControl_DW.State.omegaUV[1];
@@ -4011,51 +4731,51 @@ void URControlModelClass::step()
   URControl_DW.DAQ.omegaUV[2] = URControl_DW.State.omegaUV[2];
   URControl_DW.DAQ.omegafUV[2] = URControl_DW.State.omegafUV[2];
 
-  /* 'UREstimators:82' daq.FMax = state.FMax; */
-  /* 'UREstimators:83' daq.FMin = state.FMin; */
-  URControl_DW.DAQ.FMax[0] = FMax[0];
+  /* 'UREstimators:83' daq.FMax = state.FMax; */
+  /* 'UREstimators:84' daq.FMin = state.FMin; */
+  URControl_DW.DAQ.FMax[0] = rtb_TmpSignalConversionAtSFun_h[0];
   URControl_DW.DAQ.FMin[0] = FMin[0];
-  URControl_DW.DAQ.FMax[1] = FMax[1];
+  URControl_DW.DAQ.FMax[1] = rtb_TmpSignalConversionAtSFun_h[1];
   URControl_DW.DAQ.FMin[1] = FMin[1];
-  URControl_DW.DAQ.FMax[2] = FMax[2];
+  URControl_DW.DAQ.FMax[2] = rtb_TmpSignalConversionAtSFun_h[2];
   URControl_DW.DAQ.FMin[2] = FMin[2];
-  URControl_DW.DAQ.FMax[3] = FMax[3];
+  URControl_DW.DAQ.FMax[3] = rtb_TmpSignalConversionAtSFun_h[3];
   URControl_DW.DAQ.FMin[3] = FMin[3];
 
-  /* 'UREstimators:84' daq.uvDot_max = state.uvDot_max; */
-  URControl_DW.DAQ.uvDot_max[0] = uDot_max;
+  /* 'UREstimators:85' daq.uvDot_max = state.uvDot_max; */
+  URControl_DW.DAQ.uvDot_max[0] = rtb_Product2;
   URControl_DW.DAQ.uvDot_max[1] = Iu;
 
-  /* 'UREstimators:85' daq.uvDot_min = state.uvDot_min; */
-  URControl_DW.DAQ.uvDot_min[0] = MuPrec;
-  URControl_DW.DAQ.uvDot_min[1] = psi;
+  /* 'UREstimators:86' daq.uvDot_min = state.uvDot_min; */
+  URControl_DW.DAQ.uvDot_min[0] = rtb_fcn5;
+  URControl_DW.DAQ.uvDot_min[1] = rtb_Product3;
 
-  /* 'UREstimators:86' daq.uv_max = state.uv_max; */
-  if ((!(uDot_max > URControlParams.envp_minDeviation)) && (!tmp_2)) {
-    uDot_max = URControlParams.envp_minDeviation;
+  /* 'UREstimators:87' daq.uv_max = state.uv_max; */
+  if ((!(rtb_Product2 > URControlParams.envp_minDeviation)) && (!rEQ0)) {
+    rtb_Product2 = URControlParams.envp_minDeviation;
   }
 
-  URControl_DW.DAQ.uv_max[0] = uDot_max * URControlParams.envp_timeHorz +
+  URControl_DW.DAQ.uv_max[0] = rtb_Product2 * URControlParams.envp_timeHorz +
     URControl_DW.State.omegafUV[0];
-  if ((!(Iu > URControlParams.envp_minDeviation)) && (!tmp_2)) {
+  if ((!(Iu > URControlParams.envp_minDeviation)) && (!rEQ0)) {
     Iu = URControlParams.envp_minDeviation;
   }
 
   URControl_DW.DAQ.uv_max[1] = Iu * URControlParams.envp_timeHorz +
     URControl_DW.State.omegafUV[1];
 
-  /* 'UREstimators:87' daq.uv_min = state.uv_min; */
-  if ((!(MuPrec < -URControlParams.envp_minDeviation)) && (!tmp_3)) {
-    MuPrec = -URControlParams.envp_minDeviation;
+  /* 'UREstimators:88' daq.uv_min = state.uv_min; */
+  if ((!(rtb_fcn5 < -URControlParams.envp_minDeviation)) && (!tmp_2)) {
+    rtb_fcn5 = -URControlParams.envp_minDeviation;
   }
 
-  URControl_DW.DAQ.uv_min[0] = MuPrec * URControlParams.envp_timeHorz +
+  URControl_DW.DAQ.uv_min[0] = rtb_fcn5 * URControlParams.envp_timeHorz +
     URControl_DW.State.omegafUV[0];
-  if ((!(psi < -URControlParams.envp_minDeviation)) && (!tmp_3)) {
-    psi = -URControlParams.envp_minDeviation;
+  if ((!(rtb_Product3 < -URControlParams.envp_minDeviation)) && (!tmp_2)) {
+    rtb_Product3 = -URControlParams.envp_minDeviation;
   }
 
-  URControl_DW.DAQ.uv_min[1] = psi * URControlParams.envp_timeHorz +
+  URControl_DW.DAQ.uv_min[1] = rtb_Product3 * URControlParams.envp_timeHorz +
     URControl_DW.State.omegafUV[1];
 
   /* MATLAB Function: '<S3>/Precession' incorporates:
@@ -4066,137 +4786,139 @@ void URControlModelClass::step()
   /* 'URGenPrecession:3' s = sqrt(URpar.l^2 + URpar.b^2); */
   /* 'URGenPrecession:4' r = state.omegaf(3); */
   /* 'URGenPrecession:7' Mu_max = (-state.FMin(2) + state.FMax(4))*s; */
-  MuPrec = (-URControl_DW.State.FMin[1] + URControl_DW.State.FMax[3]) *
-    w_max_idx_0;
+  rtb_fcn5 = (-URControl_DW.State.FMin[1] + URControl_DW.State.FMax[3]) *
+    w_min_idx_1;
 
   /* 'URGenPrecession:8' Mu_min = (-state.FMax(2) + state.FMin(4))*s; */
-  uDot_max = (-URControl_DW.State.FMax[1] + URControl_DW.State.FMin[3]) *
-    w_max_idx_0;
+  rtb_Product2 = (-URControl_DW.State.FMax[1] + URControl_DW.State.FMin[3]) *
+    w_min_idx_1;
 
   /* 'URGenPrecession:9' Mv_max = (state.FMax(1) - state.FMin(3))*s; */
-  maxval = (URControl_DW.State.FMax[0] - URControl_DW.State.FMin[2]) *
-    w_max_idx_0;
+  rtb_Product1 = (URControl_DW.State.FMax[0] - URControl_DW.State.FMin[2]) *
+    w_min_idx_1;
 
   /* 'URGenPrecession:10' Mv_min = (state.FMin(1) - state.FMax(3))*s; */
-  psi = (URControl_DW.State.FMin[0] - URControl_DW.State.FMax[2]) * w_max_idx_0;
+  rtb_Product3 = (URControl_DW.State.FMin[0] - URControl_DW.State.FMax[2]) *
+    w_min_idx_1;
 
   /* 'URGenPrecession:12' MMargin = URpar.attitude_MMargin; */
   /* 'URGenPrecession:15' if Mu_max < MMargin */
-  if (MuPrec < URControlParams.attitude_MMargin) {
+  if (rtb_fcn5 < URControlParams.attitude_MMargin) {
     /* 'URGenPrecession:16' MuPrec = MMargin - Mu_max; */
-    MuPrec = URControlParams.attitude_MMargin - MuPrec;
-  } else if (uDot_max > -URControlParams.attitude_MMargin) {
+    rtb_fcn5 = URControlParams.attitude_MMargin - rtb_fcn5;
+  } else if (rtb_Product2 > -URControlParams.attitude_MMargin) {
     /* 'URGenPrecession:17' elseif Mu_min > -MMargin */
     /* 'URGenPrecession:18' MuPrec = -MMargin - Mu_min; */
-    MuPrec = -URControlParams.attitude_MMargin - uDot_max;
+    rtb_fcn5 = -URControlParams.attitude_MMargin - rtb_Product2;
   } else {
     /* 'URGenPrecession:19' else */
     /* 'URGenPrecession:20' MuPrec = 0; */
-    MuPrec = 0.0;
+    rtb_fcn5 = 0.0;
   }
 
   /* 'URGenPrecession:24' if Mv_max < MMargin */
-  if (maxval < URControlParams.attitude_MMargin) {
+  if (rtb_Product1 < URControlParams.attitude_MMargin) {
     /* 'URGenPrecession:25' MvPrec = MMargin - Mv_max; */
-    maxval = URControlParams.attitude_MMargin - maxval;
-  } else if (psi > -URControlParams.attitude_MMargin) {
+    rtb_Product1 = URControlParams.attitude_MMargin - rtb_Product1;
+  } else if (rtb_Product3 > -URControlParams.attitude_MMargin) {
     /* 'URGenPrecession:26' elseif Mv_min > -MMargin */
     /* 'URGenPrecession:27' MvPrec = -MMargin - Mv_min; */
-    maxval = -URControlParams.attitude_MMargin - psi;
+    rtb_Product1 = -URControlParams.attitude_MMargin - rtb_Product3;
   } else {
     /* 'URGenPrecession:28' else */
     /* 'URGenPrecession:29' MvPrec = 0; */
-    maxval = 0.0;
+    rtb_Product1 = 0.0;
   }
 
   /* 'URGenPrecession:32' Iu = sqrt(URpar.Ix^2 + URpar.Iy^2); */
   /* 'URGenPrecession:33' Iv = sqrt(URpar.Ix^2 + URpar.Iy^2); */
   /* 'URGenPrecession:38' if abs(r) < URpar.attitude_yawThreshold */
-  uv_des_idx_1 = std::abs(URControl_DW.State.omegaf[2]);
-  if (uv_des_idx_1 < URControlParams.attitude_yawThreshold) {
+  rtb_DataTypeConversion8_idx_0 = std::abs(URControl_DW.State.omegaf[2]);
+  if (rtb_DataTypeConversion8_idx_0 < URControlParams.attitude_yawThreshold) {
     /* 'URGenPrecession:39' rTemp = sign(r)*URpar.attitude_yawThreshold; */
     if (URControl_DW.State.omegaf[2] < 0.0) {
-      uDot_max = -1.0;
+      rtb_Product2 = -1.0;
     } else if (URControl_DW.State.omegaf[2] > 0.0) {
-      uDot_max = 1.0;
+      rtb_Product2 = 1.0;
     } else if (URControl_DW.State.omegaf[2] == 0.0) {
-      uDot_max = 0.0;
+      rtb_Product2 = 0.0;
     } else {
-      uDot_max = (rtNaN);
+      rtb_Product2 = (rtNaN);
     }
 
-    uDot_max *= URControlParams.attitude_yawThreshold;
+    rtb_Product2 *= URControlParams.attitude_yawThreshold;
 
     /* 'URGenPrecession:40' gain = 1 - (URpar.attitude_yawThreshold - abs(r))/URpar.attitude_yawThreshold; */
     /* 'URGenPrecession:41' gain = max(min(gain,1),0); */
-    Iv = 1.0 - (URControlParams.attitude_yawThreshold - uv_des_idx_1) /
+    rtb_Uk1_o = 1.0 - (URControlParams.attitude_yawThreshold -
+                       rtb_DataTypeConversion8_idx_0) /
       URControlParams.attitude_yawThreshold;
-    if (!(Iv < 1.0)) {
-      Iv = 1.0;
+    if (!(rtb_Uk1_o < 1.0)) {
+      rtb_Uk1_o = 1.0;
     }
 
-    if (!(Iv > 0.0)) {
-      Iv = 0.0;
+    if (!(rtb_Uk1_o > 0.0)) {
+      rtb_Uk1_o = 0.0;
     }
 
     /* 'URGenPrecession:42' u_prec = (MvPrec/(rTemp*(URpar.Iz - Iu)))*gain; */
-    psi = maxval / ((URControlParams.Iz - std::sqrt(URControlParams.Ix *
-      URControlParams.Ix + URControlParams.Iy * URControlParams.Iy)) * uDot_max)
-      * Iv;
+    rtb_Product3 = rtb_Product1 / ((URControlParams.Iz - std::sqrt
+      (URControlParams.Ix * URControlParams.Ix + URControlParams.Iy *
+       URControlParams.Iy)) * rtb_Product2) * rtb_Uk1_o;
 
     /* 'URGenPrecession:43' v_prec = (MuPrec/(rTemp*(Iv - URpar.Iz)))*gain; */
-    MuPrec = MuPrec / ((std::sqrt(URControlParams.Ix * URControlParams.Ix +
-      URControlParams.Iy * URControlParams.Iy) - URControlParams.Iz) * uDot_max)
-      * Iv;
+    rtb_fcn5 = rtb_fcn5 / ((std::sqrt(URControlParams.Ix * URControlParams.Ix +
+      URControlParams.Iy * URControlParams.Iy) - URControlParams.Iz) *
+      rtb_Product2) * rtb_Uk1_o;
   } else {
     /* 'URGenPrecession:44' else */
     /* 'URGenPrecession:45' u_prec = MvPrec/(r*(URpar.Iz - Iu)); */
-    psi = maxval / ((URControlParams.Iz - std::sqrt(URControlParams.Ix *
-      URControlParams.Ix + URControlParams.Iy * URControlParams.Iy)) *
-                    URControl_DW.State.omegaf[2]);
+    rtb_Product3 = rtb_Product1 / ((URControlParams.Iz - std::sqrt
+      (URControlParams.Ix * URControlParams.Ix + URControlParams.Iy *
+       URControlParams.Iy)) * URControl_DW.State.omegaf[2]);
 
     /* 'URGenPrecession:46' v_prec = MuPrec/(r*(Iv - URpar.Iz)); */
-    MuPrec /= (std::sqrt(URControlParams.Ix * URControlParams.Ix +
-                         URControlParams.Iy * URControlParams.Iy) -
-               URControlParams.Iz) * URControl_DW.State.omegaf[2];
+    rtb_fcn5 /= (std::sqrt(URControlParams.Ix * URControlParams.Ix +
+      URControlParams.Iy * URControlParams.Iy) - URControlParams.Iz) *
+      URControl_DW.State.omegaf[2];
   }
 
   /* 'URGenPrecession:49' u_prec = max(min(u_prec,URpar.attitude_maxPrecSpeed),-URpar.attitude_maxPrecSpeed); */
-  tmp_2 = rtIsNaN(URControlParams.attitude_maxPrecSpeed);
-  if ((!(psi < URControlParams.attitude_maxPrecSpeed)) && (!tmp_2)) {
-    psi = URControlParams.attitude_maxPrecSpeed;
+  rEQ0 = rtIsNaN(URControlParams.attitude_maxPrecSpeed);
+  if ((!(rtb_Product3 < URControlParams.attitude_maxPrecSpeed)) && (!rEQ0)) {
+    rtb_Product3 = URControlParams.attitude_maxPrecSpeed;
   }
 
-  tmp_3 = rtIsNaN(-URControlParams.attitude_maxPrecSpeed);
-  if ((!(psi > -URControlParams.attitude_maxPrecSpeed)) && (!tmp_3)) {
-    psi = -URControlParams.attitude_maxPrecSpeed;
+  tmp_2 = rtIsNaN(-URControlParams.attitude_maxPrecSpeed);
+  if ((!(rtb_Product3 > -URControlParams.attitude_maxPrecSpeed)) && (!tmp_2)) {
+    rtb_Product3 = -URControlParams.attitude_maxPrecSpeed;
   }
 
   /* 'URGenPrecession:50' v_prec = max(min(v_prec,URpar.attitude_maxPrecSpeed),-URpar.attitude_maxPrecSpeed); */
-  if ((!(MuPrec < URControlParams.attitude_maxPrecSpeed)) && (!tmp_2)) {
-    MuPrec = URControlParams.attitude_maxPrecSpeed;
+  if ((!(rtb_fcn5 < URControlParams.attitude_maxPrecSpeed)) && (!rEQ0)) {
+    rtb_fcn5 = URControlParams.attitude_maxPrecSpeed;
   }
 
-  if ((!(MuPrec > -URControlParams.attitude_maxPrecSpeed)) && (!tmp_3)) {
-    MuPrec = -URControlParams.attitude_maxPrecSpeed;
+  if ((!(rtb_fcn5 > -URControlParams.attitude_maxPrecSpeed)) && (!tmp_2)) {
+    rtb_fcn5 = -URControlParams.attitude_maxPrecSpeed;
   }
 
   /* 'URGenPrecession:52' if URpar.attitude_enablePrec == 0 */
   if (URControlParams.attitude_enablePrec == 0.0) {
     /* 'URGenPrecession:53' u_prec = 0; */
-    psi = 0.0;
+    rtb_Product3 = 0.0;
 
     /* 'URGenPrecession:53' v_prec = 0; */
-    MuPrec = 0.0;
+    rtb_fcn5 = 0.0;
   }
 
   /* 'URGenPrecession:56' uv_prec = [u_prec; v_prec]; */
-  dummy_idx_0 = psi;
-  dummy_idx_1 = MuPrec;
+  dummy_idx_0 = rtb_Product3;
+  rtb_DataTypeConversion8_idx_1 = rtb_fcn5;
 
   /* 'URGenPrecession:59' daq.uv_prec = uv_prec; */
-  URControl_DW.DAQ.uv_prec[0] = psi;
-  URControl_DW.DAQ.uv_prec[1] = MuPrec;
+  URControl_DW.DAQ.uv_prec[0] = rtb_Product3;
+  URControl_DW.DAQ.uv_prec[1] = rtb_fcn5;
 
   /* MATLAB Function: '<S3>/yawRateControl' incorporates:
    *  MATLAB Function: '<S5>/basic estimators'
@@ -4204,13 +4926,13 @@ void URControlModelClass::step()
   /* :  [w_min, w_max, MzGain, DAQ] = URFailureYawRateControl(state, DAQ, par, URControlParams); */
   /* 'URFailureYawRateControl:4' w_max = ones(4,1)*par.wRotorMax; */
   /* 'URFailureYawRateControl:5' w_min = ones(4,1)*par.wRotorMin; */
-  w_max_idx_0 = 1200.0;
-  FMax[1] = 0.0;
-  Iu = 1200.0;
-  FMax[3] = 0.0;
+  FMin[0] = 1200.0;
+  w_min_idx_1 = 0.0;
+  FMin[2] = 1200.0;
+  Iu = 0.0;
 
   /* 'URFailureYawRateControl:6' MzGain = URpar.rate_MzGain; */
-  psi = URControlParams.rate_MzGain;
+  rtb_Product3 = URControlParams.rate_MzGain;
 
   /* 'URFailureYawRateControl:8' if URpar.YRCFail_enable && state.fail_id > 0 */
   if ((URControlParams.YRCFail_enable != 0.0) && (URControl_DW.State.fail_id >
@@ -4220,52 +4942,52 @@ void URControlModelClass::step()
     /* 'URFailureYawRateControl:13' errorGain = (state.n(3) - URpar.YRCFail_nLim2)/(URpar.YRCFail_nLim1 - URpar.YRCFail_nLim2); */
     /* 'URFailureYawRateControl:14' errorGain = max(min(errorGain,1),0); */
     /* 'URFailureYawRateControl:16' error = (r*yawDirection - URpar.YRCFail_yawRateTarget)*errorGain; */
-    Iv = (URControl_DW.State.n[2] - URControlParams.YRCFail_nLim2) /
+    rtb_Uk1_o = (URControl_DW.State.n[2] - URControlParams.YRCFail_nLim2) /
       (URControlParams.YRCFail_nLim1 - URControlParams.YRCFail_nLim2);
-    if (!(Iv < 1.0)) {
-      Iv = 1.0;
+    if (!(rtb_Uk1_o < 1.0)) {
+      rtb_Uk1_o = 1.0;
     }
 
-    if (!(Iv > 0.0)) {
-      Iv = 0.0;
+    if (!(rtb_Uk1_o > 0.0)) {
+      rtb_Uk1_o = 0.0;
     }
 
-    MuPrec = (URControl_DW.State.omegaf[2] * rt_powd_snf(-1.0,
-               URControl_DW.State.fail_id) -
-              URControlParams.YRCFail_yawRateTarget) * Iv;
+    rtb_fcn5 = (URControl_DW.State.omegaf[2] * rt_powd_snf(-1.0,
+      URControl_DW.State.fail_id) - URControlParams.YRCFail_yawRateTarget) *
+      rtb_Uk1_o;
 
     /* 'URFailureYawRateControl:18' if URpar.YRCFail_mode == 1 */
     if (URControlParams.YRCFail_mode == 1.0) {
       /* 'URFailureYawRateControl:19' dw = -error*URpar.YRCFail_Kp_dw; */
       /* 'URFailureYawRateControl:21' lim = par.wRotorMax - par.wRotorMin; */
       /* 'URFailureYawRateControl:22' dw = max(min(dw, lim), 0); */
-      MuPrec = -MuPrec * URControlParams.YRCFail_Kp_dw;
-      if (!(MuPrec < 1200.0)) {
-        MuPrec = 1200.0;
+      rtb_fcn5 = -rtb_fcn5 * URControlParams.YRCFail_Kp_dw;
+      if (!(rtb_fcn5 < 1200.0)) {
+        rtb_fcn5 = 1200.0;
       }
 
-      if (!(MuPrec > 0.0)) {
-        MuPrec = 0.0;
+      if (!(rtb_fcn5 > 0.0)) {
+        rtb_fcn5 = 0.0;
       }
 
       /* 'URFailureYawRateControl:25' w_max = w_max - [dw; 0; dw; 0]; */
       /* 'URFailureYawRateControl:26' w_min = w_min + [0; dw; 0; dw]; */
-      w_max_idx_0 = 1200.0 - MuPrec;
-      FMax[1] = MuPrec;
-      Iu = 1200.0 - MuPrec;
-      FMax[3] = MuPrec;
+      FMin[0] = 1200.0 - rtb_fcn5;
+      w_min_idx_1 = rtb_fcn5;
+      FMin[2] = 1200.0 - rtb_fcn5;
+      Iu = rtb_fcn5;
     } else {
       if (URControlParams.YRCFail_mode == 2.0) {
         /* 'URFailureYawRateControl:28' elseif URpar.YRCFail_mode == 2 */
         /* 'URFailureYawRateControl:29' dMzGain = -error*URpar.YRCFail_Kp_dMzGain; */
         /* 'URFailureYawRateControl:30' dMzGain = max(dMzGain,0); */
-        psi = -MuPrec * URControlParams.YRCFail_Kp_dMzGain;
-        if (!(psi > 0.0)) {
-          psi = 0.0;
+        rtb_Product3 = -rtb_fcn5 * URControlParams.YRCFail_Kp_dMzGain;
+        if (!(rtb_Product3 > 0.0)) {
+          rtb_Product3 = 0.0;
         }
 
         /* 'URFailureYawRateControl:31' MzGain = MzGain + dMzGain^2; */
-        psi = psi * psi + URControlParams.rate_MzGain;
+        rtb_Product3 = rtb_Product3 * rtb_Product3 + URControlParams.rate_MzGain;
       }
     }
   }
@@ -4280,193 +5002,194 @@ void URControlModelClass::step()
   /* 'URpositionControl:6' if state.fail_id > 0 */
   if (URControl_DW.State.fail_id > 0.0) {
     /* 'URpositionControl:8' maxAngle = URpar.position_maxAngleFailure; */
-    maxval = URControlParams.position_maxAngleFailure;
+    rtb_fcn5 = URControlParams.position_maxAngleFailure;
 
     /* 'URpositionControl:9' overallGain = URpar.position_failGain; */
-    MuPrec = URControlParams.position_failGain;
+    rtb_Product1 = URControlParams.position_failGain;
   } else {
     /* 'URpositionControl:10' else */
     /* 'URpositionControl:11' maxAngle = URpar.position_maxAngle; */
-    maxval = URControlParams.position_maxAngle;
+    rtb_fcn5 = URControlParams.position_maxAngle;
 
     /* 'URpositionControl:12' overallGain = 1; */
-    MuPrec = 1.0;
+    rtb_Product1 = 1.0;
   }
 
   /* 'URpositionControl:16' errorPos = [inputs.xTarget, inputs.yTarget, inputs.zTarget]  - state.posf; */
   /* 'URpositionControl:17' velTarget = URpar.position_Kp_pos.*errorPos*overallGain; */
+  rtb_DataTypeConversion8_idx_2 = (URControl_U.pos_sp[0] -
+    URControl_DW.State.posf[0]) * URControlParams.position_Kp_pos[0] *
+    rtb_Product1;
+  rtb_u2_idx_1 = (URControl_U.pos_sp[1] - URControl_DW.State.posf[1]) *
+    URControlParams.position_Kp_pos[1] * rtb_Product1;
+  rtb_u2_idx_2 = (URControl_U.pos_sp[2] - URControl_DW.State.posf[2]) *
+    URControlParams.position_Kp_pos[2] * rtb_Product1;
+
   /* 'URpositionControl:18' maxVel = URpar.position_maxVel; */
   /* 'URpositionControl:19' velTarget = max(min(velTarget,maxVel),-maxVel); */
-  Iv = (URControl_U.pos_sp[0] - URControl_DW.State.posf[0]) *
-    URControlParams.position_Kp_pos[0] * MuPrec;
-  tmp_2 = rtIsNaN(URControlParams.position_maxVel);
-  if ((Iv < URControlParams.position_maxVel) || tmp_2) {
-    dPos[0] = Iv;
+  rEQ0 = rtIsNaN(URControlParams.position_maxVel);
+  if ((rtb_DataTypeConversion8_idx_2 < URControlParams.position_maxVel) || rEQ0)
+  {
+    h[0] = rtb_DataTypeConversion8_idx_2;
   } else {
-    dPos[0] = URControlParams.position_maxVel;
+    h[0] = URControlParams.position_maxVel;
   }
 
-  Iv = (URControl_U.pos_sp[1] - URControl_DW.State.posf[1]) *
-    URControlParams.position_Kp_pos[1] * MuPrec;
-  if ((Iv < URControlParams.position_maxVel) || tmp_2) {
-    dPos[1] = Iv;
+  if ((rtb_u2_idx_1 < URControlParams.position_maxVel) || rEQ0) {
+    h[1] = rtb_u2_idx_1;
   } else {
-    dPos[1] = URControlParams.position_maxVel;
+    h[1] = URControlParams.position_maxVel;
   }
 
-  Iv = (URControl_U.pos_sp[2] - URControl_DW.State.posf[2]) *
-    URControlParams.position_Kp_pos[2] * MuPrec;
-  if ((Iv < URControlParams.position_maxVel) || tmp_2) {
-    dPos[2] = Iv;
+  if ((rtb_u2_idx_2 < URControlParams.position_maxVel) || rEQ0) {
+    h[2] = rtb_u2_idx_2;
   } else {
-    dPos[2] = URControlParams.position_maxVel;
+    h[2] = URControlParams.position_maxVel;
   }
 
   /* 'URpositionControl:22' errorVel = velTarget - state.velf; */
   /* 'URpositionControl:23' errorInt = errorInt + errorVel/par.freq; */
-  tmp_2 = rtIsNaN(-URControlParams.position_maxVel);
-  if ((dPos[0] > -URControlParams.position_maxVel) || tmp_2) {
-    uv_des_idx_1 = dPos[0];
+  rEQ0 = rtIsNaN(-URControlParams.position_maxVel);
+  if ((h[0] > -URControlParams.position_maxVel) || rEQ0) {
+    rtb_u2_idx_2 = h[0];
   } else {
-    uv_des_idx_1 = -URControlParams.position_maxVel;
+    rtb_u2_idx_2 = -URControlParams.position_maxVel;
   }
 
-  wRotorSet_data_idx_3 = uv_des_idx_1 - URControl_DW.State.velf[0];
-  URControl_DW.errorInt_p[0] += wRotorSet_data_idx_3 / 500.0;
-  rtb_att[0] = uv_des_idx_1;
-  errorVel_idx_0 = wRotorSet_data_idx_3;
-  if ((dPos[1] > -URControlParams.position_maxVel) || tmp_2) {
-    uv_des_idx_1 = dPos[1];
+  rtb_DataTypeConversion8_idx_2 = rtb_u2_idx_2 - URControl_DW.State.velf[0];
+  URControl_DW.errorInt_p[0] += rtb_DataTypeConversion8_idx_2 / 500.0;
+  URControl_DW.DAQ.velTarget[0] = rtb_u2_idx_2;
+  errorVel[0] = rtb_DataTypeConversion8_idx_2;
+  if ((h[1] > -URControlParams.position_maxVel) || rEQ0) {
+    rtb_u2_idx_2 = h[1];
   } else {
-    uv_des_idx_1 = -URControlParams.position_maxVel;
+    rtb_u2_idx_2 = -URControlParams.position_maxVel;
   }
 
-  wRotorSet_data_idx_3 = uv_des_idx_1 - URControl_DW.State.velf[1];
-  URControl_DW.errorInt_p[1] += wRotorSet_data_idx_3 / 500.0;
-  rtb_att[1] = uv_des_idx_1;
-  errorVel_idx_1 = wRotorSet_data_idx_3;
-  if ((dPos[2] > -URControlParams.position_maxVel) || tmp_2) {
-    uv_des_idx_1 = dPos[2];
+  rtb_DataTypeConversion8_idx_2 = rtb_u2_idx_2 - URControl_DW.State.velf[1];
+  URControl_DW.errorInt_p[1] += rtb_DataTypeConversion8_idx_2 / 500.0;
+  URControl_DW.DAQ.velTarget[1] = rtb_u2_idx_2;
+  errorVel[1] = rtb_DataTypeConversion8_idx_2;
+  if ((h[2] > -URControlParams.position_maxVel) || rEQ0) {
+    rtb_u2_idx_2 = h[2];
   } else {
-    uv_des_idx_1 = -URControlParams.position_maxVel;
+    rtb_u2_idx_2 = -URControlParams.position_maxVel;
   }
 
-  wRotorSet_data_idx_3 = uv_des_idx_1 - URControl_DW.State.velf[2];
-  URControl_DW.errorInt_p[2] += wRotorSet_data_idx_3 / 500.0;
+  rtb_DataTypeConversion8_idx_2 = rtb_u2_idx_2 - URControl_DW.State.velf[2];
+  URControl_DW.errorInt_p[2] += rtb_DataTypeConversion8_idx_2 / 500.0;
 
   /* 'URpositionControl:24' intLim = URpar.position_intLim; */
   /* 'URpositionControl:25' errorInt = max(min(errorInt,intLim),-intLim); */
-  tmp_2 = rtIsNaN(URControlParams.position_intLim);
-  if ((URControl_DW.errorInt_p[0] < URControlParams.position_intLim) || tmp_2) {
-    uDot_max = URControl_DW.errorInt_p[0];
+  rEQ0 = rtIsNaN(URControlParams.position_intLim);
+  if ((URControl_DW.errorInt_p[0] < URControlParams.position_intLim) || rEQ0) {
+    rtb_DataTypeConversion8_idx_0 = URControl_DW.errorInt_p[0];
   } else {
-    uDot_max = URControlParams.position_intLim;
+    rtb_DataTypeConversion8_idx_0 = URControlParams.position_intLim;
   }
 
-  if ((URControl_DW.errorInt_p[1] < URControlParams.position_intLim) || tmp_2) {
-    rtb_DataTypeConversion8_idx_1 = URControl_DW.errorInt_p[1];
+  if ((URControl_DW.errorInt_p[1] < URControlParams.position_intLim) || rEQ0) {
+    rtb_Product2 = URControl_DW.errorInt_p[1];
   } else {
-    rtb_DataTypeConversion8_idx_1 = URControlParams.position_intLim;
+    rtb_Product2 = URControlParams.position_intLim;
   }
 
-  if ((URControl_DW.errorInt_p[2] < URControlParams.position_intLim) || tmp_2) {
-    Iv = URControl_DW.errorInt_p[2];
+  if ((URControl_DW.errorInt_p[2] < URControlParams.position_intLim) || rEQ0) {
+    rtb_Uk1_o = URControl_DW.errorInt_p[2];
   } else {
-    Iv = URControlParams.position_intLim;
+    rtb_Uk1_o = URControlParams.position_intLim;
   }
 
-  /* 'URpositionControl:28' a_ref = (URpar.position_Kp_vel.*errorVel + URpar.position_Ki_vel.*errorInt)*overallGain; */
-  tmp_2 = rtIsNaN(-URControlParams.position_intLim);
-  if ((uDot_max > -URControlParams.position_intLim) || tmp_2) {
-    URControl_DW.errorInt_p[0] = uDot_max;
+  /* 'URpositionControl:28' a_ref = URpar.position_Kp_vel.*errorVel*overallGain + URpar.position_Ki_vel.*errorInt; */
+  rEQ0 = rtIsNaN(-URControlParams.position_intLim);
+  if ((rtb_DataTypeConversion8_idx_0 > -URControlParams.position_intLim) || rEQ0)
+  {
+    URControl_DW.errorInt_p[0] = rtb_DataTypeConversion8_idx_0;
   } else {
     URControl_DW.errorInt_p[0] = -URControlParams.position_intLim;
   }
 
-  errorVel_idx_0 = (URControlParams.position_Kp_vel[0] * errorVel_idx_0 +
-                    URControlParams.position_Ki_vel[0] *
-                    URControl_DW.errorInt_p[0]) * MuPrec;
-  if ((rtb_DataTypeConversion8_idx_1 > -URControlParams.position_intLim) ||
-      tmp_2) {
-    URControl_DW.errorInt_p[1] = rtb_DataTypeConversion8_idx_1;
+  errorVel[0] = URControlParams.position_Kp_vel[0] * errorVel[0] * rtb_Product1
+    + URControlParams.position_Ki_vel[0] * URControl_DW.errorInt_p[0];
+  if ((rtb_Product2 > -URControlParams.position_intLim) || rEQ0) {
+    URControl_DW.errorInt_p[1] = rtb_Product2;
   } else {
     URControl_DW.errorInt_p[1] = -URControlParams.position_intLim;
   }
 
-  errorVel_idx_1 = (URControlParams.position_Kp_vel[1] * errorVel_idx_1 +
-                    URControlParams.position_Ki_vel[1] *
-                    URControl_DW.errorInt_p[1]) * MuPrec;
-  if ((Iv > -URControlParams.position_intLim) || tmp_2) {
-    URControl_DW.errorInt_p[2] = Iv;
+  errorVel[1] = URControlParams.position_Kp_vel[1] * errorVel[1] * rtb_Product1
+    + URControlParams.position_Ki_vel[1] * URControl_DW.errorInt_p[1];
+  if ((rtb_Uk1_o > -URControlParams.position_intLim) || rEQ0) {
+    URControl_DW.errorInt_p[2] = rtb_Uk1_o;
   } else {
     URControl_DW.errorInt_p[2] = -URControlParams.position_intLim;
   }
 
-  wRotorSet_data_idx_3 = (URControlParams.position_Kp_vel[2] *
-    wRotorSet_data_idx_3 + URControlParams.position_Ki_vel[2] *
-    URControl_DW.errorInt_p[2]) * MuPrec;
+  rtb_DataTypeConversion8_idx_2 = URControlParams.position_Kp_vel[2] *
+    rtb_DataTypeConversion8_idx_2 * rtb_Product1 +
+    URControlParams.position_Ki_vel[2] * URControl_DW.errorInt_p[2];
 
   /* 'URpositionControl:30' a_ref(3) = a_ref(3) - par.g; */
   /* 'URpositionControl:31' a_ref(3) = min(a_ref(3), par.URC.position_maxAref); */
-  if (wRotorSet_data_idx_3 - 9.81 < -2.0) {
-    rtb_DataTypeConversion8_idx_1 = wRotorSet_data_idx_3 - 9.81;
+  if (rtb_DataTypeConversion8_idx_2 - 9.81 < -2.0) {
+    rtb_DataTypeConversion8_idx_0 = rtb_DataTypeConversion8_idx_2 - 9.81;
   } else {
-    rtb_DataTypeConversion8_idx_1 = -2.0;
+    rtb_DataTypeConversion8_idx_0 = -2.0;
   }
 
   /* 'URpositionControl:34' maxLateral = abs(par.g*tan(maxAngle)); */
   /* 'URpositionControl:35' latRatio = sqrt(a_ref(1)^2 + a_ref(2)^2)/maxLateral; */
-  MuPrec = std::sqrt(errorVel_idx_0 * errorVel_idx_0 + errorVel_idx_1 *
-                     errorVel_idx_1) / std::abs(9.81 * std::tan(maxval));
+  rtb_fcn5 = std::sqrt(errorVel[0] * errorVel[0] + errorVel[1] * errorVel[1]) /
+    std::abs(9.81 * std::tan(rtb_fcn5));
 
   /* 'URpositionControl:36' a_ref(1) = a_ref(1)/(max(latRatio,1)); */
-  if (MuPrec > 1.0) {
-    maxval = MuPrec;
+  if (rtb_fcn5 > 1.0) {
+    rtb_Product1 = rtb_fcn5;
   } else {
-    maxval = 1.0;
-    MuPrec = 1.0;
+    rtb_Product1 = 1.0;
+    rtb_fcn5 = 1.0;
   }
 
-  errorVel_idx_0 /= maxval;
+  errorVel[0] /= rtb_Product1;
 
   /* 'URpositionControl:37' a_ref(2) = a_ref(2)/(max(latRatio,1)); */
-  errorVel_idx_1 /= MuPrec;
+  errorVel[1] /= rtb_fcn5;
 
   /* 'URpositionControl:43' n_des = a_ref/norm(a_ref); */
-  MuPrec = 3.3121686421112381E-170;
-  uDot_max = std::abs(errorVel_idx_0);
-  if (uDot_max > 3.3121686421112381E-170) {
-    maxval = 1.0;
-    MuPrec = uDot_max;
+  rtb_Product1 = 3.3121686421112381E-170;
+  rtb_Product2 = std::abs(errorVel[0]);
+  if (rtb_Product2 > 3.3121686421112381E-170) {
+    rtb_fcn5 = 1.0;
+    rtb_Product1 = rtb_Product2;
   } else {
-    Iv = uDot_max / 3.3121686421112381E-170;
-    maxval = Iv * Iv;
+    rtb_Uk1_o = rtb_Product2 / 3.3121686421112381E-170;
+    rtb_fcn5 = rtb_Uk1_o * rtb_Uk1_o;
   }
 
-  uDot_max = std::abs(errorVel_idx_1);
-  if (uDot_max > MuPrec) {
-    Iv = MuPrec / uDot_max;
-    maxval = maxval * Iv * Iv + 1.0;
-    MuPrec = uDot_max;
+  rtb_Product2 = std::abs(errorVel[1]);
+  if (rtb_Product2 > rtb_Product1) {
+    rtb_Uk1_o = rtb_Product1 / rtb_Product2;
+    rtb_fcn5 = rtb_fcn5 * rtb_Uk1_o * rtb_Uk1_o + 1.0;
+    rtb_Product1 = rtb_Product2;
   } else {
-    Iv = uDot_max / MuPrec;
-    maxval += Iv * Iv;
+    rtb_Uk1_o = rtb_Product2 / rtb_Product1;
+    rtb_fcn5 += rtb_Uk1_o * rtb_Uk1_o;
   }
 
-  uDot_max = std::abs(rtb_DataTypeConversion8_idx_1);
-  if (uDot_max > MuPrec) {
-    Iv = MuPrec / uDot_max;
-    maxval = maxval * Iv * Iv + 1.0;
-    MuPrec = uDot_max;
+  rtb_Product2 = std::abs(rtb_DataTypeConversion8_idx_0);
+  if (rtb_Product2 > rtb_Product1) {
+    rtb_Uk1_o = rtb_Product1 / rtb_Product2;
+    rtb_fcn5 = rtb_fcn5 * rtb_Uk1_o * rtb_Uk1_o + 1.0;
+    rtb_Product1 = rtb_Product2;
   } else {
-    Iv = uDot_max / MuPrec;
-    maxval += Iv * Iv;
+    rtb_Uk1_o = rtb_Product2 / rtb_Product1;
+    rtb_fcn5 += rtb_Uk1_o * rtb_Uk1_o;
   }
 
-  maxval = MuPrec * std::sqrt(maxval);
-  rtb_n_des[0] = errorVel_idx_0 / maxval;
-  rtb_n_des[1] = errorVel_idx_1 / maxval;
-  rtb_n_des[2] = rtb_DataTypeConversion8_idx_1 / maxval;
+  rtb_fcn5 = rtb_Product1 * std::sqrt(rtb_fcn5);
+  rtb_n_des[0] = errorVel[0] / rtb_fcn5;
+  rtb_n_des[1] = errorVel[1] / rtb_fcn5;
+  rtb_n_des[2] = rtb_DataTypeConversion8_idx_0 / rtb_fcn5;
 
   /* 'URpositionControl:45' if URpar.position_enable == 0 */
   if (URControlParams.position_enable == 0.0) {
@@ -4479,14 +5202,12 @@ void URControlModelClass::step()
   /* 'URpositionControl:50' daq.velTarget = velTarget; */
   /* 'URpositionControl:51' daq.a_ref = a_ref; */
   /* 'URpositionControl:52' daq.n_des = n_des; */
-  URControl_DW.DAQ.velTarget[0] = rtb_att[0];
-  URControl_DW.DAQ.a_ref[0] = errorVel_idx_0;
+  URControl_DW.DAQ.a_ref[0] = errorVel[0];
   URControl_DW.DAQ.n_des[0] = rtb_n_des[0];
-  URControl_DW.DAQ.velTarget[1] = rtb_att[1];
-  URControl_DW.DAQ.a_ref[1] = errorVel_idx_1;
+  URControl_DW.DAQ.a_ref[1] = errorVel[1];
   URControl_DW.DAQ.n_des[1] = rtb_n_des[1];
-  URControl_DW.DAQ.velTarget[2] = uv_des_idx_1;
-  URControl_DW.DAQ.a_ref[2] = rtb_DataTypeConversion8_idx_1;
+  URControl_DW.DAQ.velTarget[2] = rtb_u2_idx_2;
+  URControl_DW.DAQ.a_ref[2] = rtb_DataTypeConversion8_idx_0;
   URControl_DW.DAQ.n_des[2] = rtb_n_des[2];
 
   /* End of MATLAB Function: '<S2>/position control' */
@@ -4508,35 +5229,35 @@ void URControlModelClass::step()
   /* 'URYawControl:3' psiError = inputs.yawTarget - state.att(3); */
   /* 'URYawControl:4' psi_dot_cmd = psiError*URpar.YRC_Kp_psi; */
   /* 'URYawControl:6' r_cmd = psi_dot_cmd*cos(state.att(1))*cos(state.att(2))-sin(state.att(1))*state.omegaf(2); */
-  maxval = std::cos(URControl_DW.State.att[1]);
-  rtb_DataTypeConversion8_idx_1 = std::sin(URControl_DW.State.att[0]);
-  Iv = std::cos(URControl_DW.State.att[0]);
-  MuPrec = (URControl_U.yaw_sp - URControl_DW.State.att[2]) *
-    URControlParams.YRC_Kp_psi * Iv * maxval - rtb_DataTypeConversion8_idx_1 *
-    URControl_DW.State.omegaf[1];
+  rtb_Product1 = std::cos(URControl_DW.State.att[1]);
+  rtb_DataTypeConversion8_idx_2 = std::sin(URControl_DW.State.att[0]);
+  rtb_u2_idx_2 = std::cos(URControl_DW.State.att[0]);
+  rtb_fcn5 = (URControl_U.yaw_sp - URControl_DW.State.att[2]) *
+    URControlParams.YRC_Kp_psi * rtb_u2_idx_2 * rtb_Product1 -
+    rtb_DataTypeConversion8_idx_2 * URControl_DW.State.omegaf[1];
 
   /* 'URYawControl:8' if URpar.YRC_mode == 2 */
   if (URControlParams.YRC_mode == 2.0) {
     /* 'URYawControl:9' r_cmd = URpar.YRC_rateCmd; */
-    MuPrec = URControlParams.YRC_rateCmd;
+    rtb_fcn5 = URControlParams.YRC_rateCmd;
   }
 
   /* 'URYawControl:13' if state.fail_id > 0 */
   if (URControl_DW.State.fail_id > 0.0) {
     /* 'URYawControl:14' yawDirection = (-1)^(state.fail_id); */
     /* 'URYawControl:15' r_cmd = yawDirection*URpar.YRC_r_cmd_fail; */
-    MuPrec = rt_powd_snf(-1.0, URControl_DW.State.fail_id) *
+    rtb_fcn5 = rt_powd_snf(-1.0, URControl_DW.State.fail_id) *
       URControlParams.YRC_r_cmd_fail;
   }
 
   /* 'URYawControl:19' if URpar.YRC_enable == 0 */
   if (URControlParams.YRC_enable == 0.0) {
     /* 'URYawControl:20' r_cmd = 0; */
-    MuPrec = 0.0;
+    rtb_fcn5 = 0.0;
   }
 
   /* 'URYawControl:25' daq.r_cmd = r_cmd; */
-  URControl_DW.DAQ.r_cmd = MuPrec;
+  URControl_DW.DAQ.r_cmd = rtb_fcn5;
 
   /* MATLAB Function: '<S3>/attitude controller' incorporates:
    *  MATLAB Function: '<S2>/yaw rate control'
@@ -4544,193 +5265,239 @@ void URControlModelClass::step()
    *  MATLAB Function: '<S5>/basic estimators'
    */
   /* :  [pqr_des, uvr_des, w_max, w_min, MzGain, DAQ] = URAttitudeController(state, DAQ, uv_prec, w_min, w_max, MzGain, nd_i,ndi_dot,r_cmd,par,URControlParams); */
-  /* 'URAttitudeController:4' rotAngle = 45/180*pi; */
-  /* 'URAttitudeController:5' Rxu = [cos(rotAngle), -sin(rotAngle); ... */
-  /* 'URAttitudeController:6'        sin(rotAngle), cos(rotAngle)]; */
-  /* 'URAttitudeController:9' primAxis = URpar.attitude_primary_axis; */
-  /* 'URAttitudeController:11' [uv_attCtrl, rotVec] = URAngleControl(nd_i, primAxis, state, par, URpar); */
-  /* 'URAngleControl:3' rotAngle = 45/180*pi; */
-  /* 'URAngleControl:4' Rxu = [cos(rotAngle), -sin(rotAngle); ... */
-  /* 'URAngleControl:5'        sin(rotAngle), cos(rotAngle)]; */
-  /* 'URAngleControl:7' phi = state.att(1); */
-  /* 'URAngleControl:8' theta = state.att(2); */
-  /* 'URAngleControl:9' psi = state.att(3); */
-  /* 'URAngleControl:12' R_BI = [cos(theta)*cos(psi) cos(theta)*sin(psi) -sin(theta); */
-  /* 'URAngleControl:13'         sin(phi)*sin(theta)*cos(psi)-cos(phi)*sin(psi) sin(phi)*sin(theta)*sin(psi)+cos(phi)*cos(psi) sin(phi)*cos(theta); */
-  /* 'URAngleControl:14'         cos(phi)*sin(theta)*cos(psi)+sin(phi)*sin(psi) cos(phi)*sin(theta)*sin(psi)-sin(phi)*cos(psi) cos(phi)*cos(theta)]; */
-  /* 'URAngleControl:17' h = R_BI*nd_i; */
-  uv_des_idx_1 = std::cos(URControl_DW.State.att[2]);
-  tmp_0[0] = maxval * uv_des_idx_1;
-  uDot_max = std::sin(URControl_DW.State.att[2]);
-  tmp_0[3] = maxval * uDot_max;
-  errorVel_idx_0 = std::sin(URControl_DW.State.att[1]);
-  tmp_0[6] = -errorVel_idx_0;
-  errorVel_idx_1 = rtb_DataTypeConversion8_idx_1 * errorVel_idx_0;
-  tmp_0[1] = errorVel_idx_1 * uv_des_idx_1 - Iv * uDot_max;
-  tmp_0[4] = errorVel_idx_1 * uDot_max + Iv * uv_des_idx_1;
-  tmp_0[7] = rtb_DataTypeConversion8_idx_1 * maxval;
-  errorVel_idx_0 *= Iv;
-  tmp_0[2] = errorVel_idx_0 * uv_des_idx_1 + rtb_DataTypeConversion8_idx_1 *
-    uDot_max;
-  tmp_0[5] = errorVel_idx_0 * uDot_max - rtb_DataTypeConversion8_idx_1 *
-    uv_des_idx_1;
-  tmp_0[8] = Iv * maxval;
-  for (r1 = 0; r1 < 3; r1++) {
-    dPos[r1] = tmp_0[r1 + 6] * rtb_n_des[2] + (tmp_0[r1 + 3] * rtb_n_des[1] +
-      tmp_0[r1] * rtb_n_des[0]);
+  /* 'URAttitudeController:4' primAxis = URpar.attitude_primary_axis; */
+  /* 'URAttitudeController:6' [uv_attCtrl, rotVec, daq] = URAngleControl(daq, nd_i, primAxis, state, par, URpar); */
+  /* 'URAngleControl:3' phi = state.att(1); */
+  /* 'URAngleControl:4' theta = state.att(2); */
+  /* 'URAngleControl:5' psi = state.att(3); */
+  /* 'URAngleControl:8' R_BI = [cos(theta)*cos(psi) cos(theta)*sin(psi) -sin(theta); */
+  /* 'URAngleControl:9'         sin(phi)*sin(theta)*cos(psi)-cos(phi)*sin(psi) sin(phi)*sin(theta)*sin(psi)+cos(phi)*cos(psi) sin(phi)*cos(theta); */
+  /* 'URAngleControl:10'         cos(phi)*sin(theta)*cos(psi)+sin(phi)*sin(psi) cos(phi)*sin(theta)*sin(psi)-sin(phi)*cos(psi) cos(phi)*cos(theta)]; */
+  /* 'URAngleControl:13' h = R_BI*nd_i; */
+  rtb_DataTypeConversion8_idx_0 = std::cos(URControl_DW.State.att[2]);
+  R_IB[0] = rtb_Product1 * rtb_DataTypeConversion8_idx_0;
+  rtb_Product2 = std::sin(URControl_DW.State.att[2]);
+  R_IB[3] = rtb_Product1 * rtb_Product2;
+  rtb_u2_idx_1 = std::sin(URControl_DW.State.att[1]);
+  R_IB[6] = -rtb_u2_idx_1;
+  rtb_Uk1_o = rtb_DataTypeConversion8_idx_2 * rtb_u2_idx_1;
+  R_IB[1] = rtb_Uk1_o * rtb_DataTypeConversion8_idx_0 - rtb_u2_idx_2 *
+    rtb_Product2;
+  R_IB[4] = rtb_Uk1_o * rtb_Product2 + rtb_u2_idx_2 *
+    rtb_DataTypeConversion8_idx_0;
+  R_IB[7] = rtb_DataTypeConversion8_idx_2 * rtb_Product1;
+  rtb_u2_idx_1 *= rtb_u2_idx_2;
+  R_IB[2] = rtb_u2_idx_1 * rtb_DataTypeConversion8_idx_0 +
+    rtb_DataTypeConversion8_idx_2 * rtb_Product2;
+  R_IB[5] = rtb_u2_idx_1 * rtb_Product2 - rtb_DataTypeConversion8_idx_2 *
+    rtb_DataTypeConversion8_idx_0;
+  R_IB[8] = rtb_u2_idx_2 * rtb_Product1;
+  for (r2 = 0; r2 < 3; r2++) {
+    h[r2] = R_IB[r2 + 6] * rtb_n_des[2] + (R_IB[r2 + 3] * rtb_n_des[1] + R_IB[r2]
+      * rtb_n_des[0]);
   }
 
-  /* 'URAngleControl:19' h_uv = [Rxu*h(1:2); h(3)]; */
-  rtb_att[0] = 0.70710678118654757 * dPos[0] + -0.70710678118654746 * dPos[1];
-  uDot_max = 0.70710678118654746 * dPos[0] + 0.70710678118654757 * dPos[1];
+  /* 'URAngleControl:15' h_uv = [par.URC.R_xy_uv*h(1:2); h(3)]; */
+  rtb_DataTypeConversion8_idx_2 = URControl_ConstP.pooled1.URC.R_xy_uv[0] * h[0]
+    + URControl_ConstP.pooled1.URC.R_xy_uv[2] * h[1];
+  rtb_Product1 = URControl_ConstP.pooled1.URC.R_xy_uv[1] * h[0] +
+    URControl_ConstP.pooled1.URC.R_xy_uv[3] * h[1];
 
-  /* 'URAngleControl:21' n = primAxis; */
-  /* 'URAngleControl:24' currRotVec = [state.omegafUV(1); state.omegafUV(2); 0]*URpar.attitude_rotComp; */
-  /* 'URAngleControl:27' rotVec3 = cross(h_uv,n); */
-  rtb_DataTypeConversion8_idx_1 = uDot_max *
-    URControlParams.attitude_primary_axis[2] - dPos[2] *
+  /* 'URAngleControl:17' n = primAxis; */
+  /* 'URAngleControl:20' currRotVec = [state.omegaUV(1); state.omegaUV(2); 0]; */
+  /* 'URAngleControl:23' totAngle = atan2(norm(cross(h_uv,n)),dot(h_uv,n)); */
+  rtb_u2_idx_2 = rtb_Product1 * URControlParams.attitude_primary_axis[2] - h[2] *
     URControlParams.attitude_primary_axis[1];
-  rotVec3[0] = rtb_DataTypeConversion8_idx_1;
-  Iv = dPos[2] * URControlParams.attitude_primary_axis[0] - rtb_att[0] *
-    URControlParams.attitude_primary_axis[2];
-  rotVec3[1] = Iv;
-  errorVel_idx_0 = rtb_att[0] * URControlParams.attitude_primary_axis[1] -
-    uDot_max * URControlParams.attitude_primary_axis[0];
-  rotVec3[2] = errorVel_idx_0;
-
-  /* 'URAngleControl:28' rotVec3 = rotVec3/max(abs(norm(rotVec3)),0.001); */
-  maxval = std::abs(URControl_norm(rotVec3));
-  if (!(maxval > 0.001)) {
-    maxval = 0.001;
-  }
-
-  rotVec3[0] = rtb_DataTypeConversion8_idx_1 / maxval;
-  rotVec3[1] = Iv / maxval;
-  uv_des_idx_1 = errorVel_idx_0 / maxval;
-
-  /* 'URAngleControl:31' totAngle = atan2(norm(cross(h_uv,n)),dot(h_uv,n)); */
-  rtb_omega[0] = rtb_DataTypeConversion8_idx_1;
-  rtb_omega[1] = Iv;
-  rtb_omega[2] = errorVel_idx_0;
-  uDot_max = rt_atan2d_snf(URControl_norm(rtb_omega), (rtb_att[0] *
-    URControlParams.attitude_primary_axis[0] + uDot_max *
-    URControlParams.attitude_primary_axis[1]) + dPos[2] *
+  rtb_omega[0] = rtb_u2_idx_2;
+  rtb_u2_idx_1 = h[2] * URControlParams.attitude_primary_axis[0] -
+    rtb_DataTypeConversion8_idx_2 * URControlParams.attitude_primary_axis[2];
+  rtb_omega[1] = rtb_u2_idx_1;
+  rtb_DataTypeConversion8_idx_0 = rtb_DataTypeConversion8_idx_2 *
+    URControlParams.attitude_primary_axis[1] - rtb_Product1 *
+    URControlParams.attitude_primary_axis[0];
+  rtb_omega[2] = rtb_DataTypeConversion8_idx_0;
+  rtb_Product1 = rt_atan2d_snf(URControl_norm(rtb_omega),
+    (rtb_DataTypeConversion8_idx_2 * URControlParams.attitude_primary_axis[0] +
+     rtb_Product1 * URControlParams.attitude_primary_axis[1]) + h[2] *
     URControlParams.attitude_primary_axis[2]);
 
-  /* 'URAngleControl:33' speedCompVec = dot(currRotVec, rotVec3*abs(totAngle)/180); */
-  maxval = std::abs(uDot_max);
-  maxval = (rotVec3[0] * maxval / 180.0 * (URControl_DW.State.omegafUV[0] *
-             URControlParams.attitude_rotComp) + rotVec3[1] * maxval / 180.0 *
-            (URControl_DW.State.omegafUV[1] * URControlParams.attitude_rotComp))
-    + uv_des_idx_1 * maxval / 180.0 * (0.0 * URControlParams.attitude_rotComp);
+  /* 'URAngleControl:26' rotVec3 = cross(h_uv,n); */
+  errorVel[0] = rtb_u2_idx_2;
+  errorVel[1] = rtb_u2_idx_1;
+  errorVel[2] = rtb_DataTypeConversion8_idx_0;
 
-  /* 'URAngleControl:34' rotVec3 = rotVec3 - speedCompVec*rotVec3; */
-  rotVec3[0] -= maxval * rotVec3[0];
-  rotVec3[1] -= maxval * rotVec3[1];
-  rotVec3[2] = uv_des_idx_1 - maxval * uv_des_idx_1;
-
-  /* 'URAngleControl:35' rotVec3 = rotVec3/max(abs(norm(rotVec3)),0.001); */
-  maxval = std::abs(URControl_norm(rotVec3));
-  if (!(maxval > 0.001)) {
-    maxval = 0.001;
+  /* 'URAngleControl:27' rotVec3 = rotVec3/max(abs(norm(rotVec3)),0.001); */
+  rtb_Product2 = std::abs(URControl_norm(errorVel));
+  if (!(rtb_Product2 > 0.001)) {
+    rtb_Product2 = 0.001;
   }
 
-  rotVec3[0] /= maxval;
-  uv_des_idx_1 = rotVec3[1] / maxval;
+  errorVel[0] = rtb_u2_idx_2 / rtb_Product2;
+  errorVel[1] = rtb_u2_idx_1 / rtb_Product2;
 
-  /* 'URAngleControl:36' rotVec = rotVec3(1:2); */
-  /* 'URAngleControl:38' rotAction = totAngle*URpar.attitude_rotKp; */
-  maxval = uDot_max * URControlParams.attitude_rotKp;
+  /* 'URAngleControl:28' rotVec = rotVec3(1:2); */
+  rtb_u2_idx_1 = errorVel[0];
+  rtb_DataTypeConversion8_idx_2 = errorVel[1];
 
-  /* 'URAngleControl:40' uv_attCtrl = [rotVec(1); rotVec(2)]*rotAction; */
-  Iv = rotVec3[0] * maxval;
-  maxval *= uv_des_idx_1;
+  /* 'URAngleControl:30' speedAroundVec = dot(currRotVec, rotVec3); */
+  rtb_Uk1_o = (URControl_DW.State.omegaUV[0] * errorVel[0] +
+               URControl_DW.State.omegaUV[1] * errorVel[1]) +
+    rtb_DataTypeConversion8_idx_0 / rtb_Product2 * 0.0;
 
-  /* 'URAttitudeController:14' uv_des_raw = (uv_prec + uv_attCtrl); */
-  dummy_idx_0 += Iv;
-  errorVel_idx_0 = dummy_idx_1 + maxval;
+  /* 'URAngleControl:32' if par.URC.attitude_enableTraj == 1 && totAngle > par.URC.attitude_trajThreshold */
+  if (rtb_Product1 > 1.2217304763960306) {
+    /* 'URAngleControl:33' tNormal = URTrajCalc(totAngle, -speedAroundVec, URpar.attitude_rotSpeedComp); */
+    rtb_Product2 = URControl_URTrajCalc(rtb_Product1, -rtb_Uk1_o,
+      URControlParams.attitude_rotSpeedComp);
 
-  /* 'URAttitudeController:21' if URpar.envp_envelopeProt == 1 */
+    /* 'URAngleControl:34' tReverse = URTrajCalc(2*pi - totAngle, speedAroundVec, URpar.attitude_rotSpeedComp); */
+    rtb_Uk1_o = URControl_URTrajCalc(6.2831853071795862 - rtb_Product1,
+      rtb_Uk1_o, URControlParams.attitude_rotSpeedComp);
+
+    /* 'URAngleControl:36' if tNormal > 0 && tReverse > 0 */
+    if ((rtb_Product2 > 0.0) && (rtb_Uk1_o > 0.0) && (rtb_Product2 > rtb_Uk1_o))
+    {
+      /* 'URAngleControl:37' if tNormal > tReverse */
+      /* 'URAngleControl:38' rotVec = -rotVec; */
+      rtb_u2_idx_1 = -errorVel[0];
+      rtb_DataTypeConversion8_idx_2 = -errorVel[1];
+    }
+  }
+
+  /* 'URAngleControl:43' rotAction = abs(totAngle)*URpar.attitude_rotKp; */
+  rtb_Product1 = std::abs(rtb_Product1) * URControlParams.attitude_rotKp;
+
+  /* 'URAngleControl:45' uv_attCtrl = [rotVec(1); rotVec(2)]*rotAction; */
+  rtb_Uk1_o = rtb_u2_idx_1 * rtb_Product1;
+  Fset_idx_2 = rtb_DataTypeConversion8_idx_2 * rtb_Product1;
+
+  /* 'URAttitudeController:9' uv_des_raw = (uv_prec + uv_attCtrl); */
+  dummy_idx_0 += rtb_Uk1_o;
+  rtb_DataTypeConversion8_idx_1 += Fset_idx_2;
+
+  /* 'URAttitudeController:16' if URpar.envp_envelopeProt == 1 */
   if (URControlParams.envp_envelopeProt == 1.0) {
-    /* 'URAttitudeController:22' uv_des = min(max(uv_des_raw, state.uv_min), state.uv_max); */
+    /* 'URAttitudeController:17' uv_des = min(max(uv_des_raw, state.uv_min), state.uv_max); */
     if ((dummy_idx_0 > URControl_DW.State.uv_min[0]) || rtIsNaN
         (URControl_DW.State.uv_min[0])) {
-      uv_des_idx_1 = dummy_idx_0;
+      rtb_DataTypeConversion8_idx_2 = dummy_idx_0;
     } else {
-      uv_des_idx_1 = URControl_DW.State.uv_min[0];
+      rtb_DataTypeConversion8_idx_2 = URControl_DW.State.uv_min[0];
     }
 
-    if ((uv_des_idx_1 < URControl_DW.State.uv_max[0]) || rtIsNaN
-        (URControl_DW.State.uv_max[0])) {
-      dummy_idx_1 = uv_des_idx_1;
+    if ((rtb_DataTypeConversion8_idx_2 < URControl_DW.State.uv_max[0]) ||
+        rtIsNaN(URControl_DW.State.uv_max[0])) {
+      rtb_u2_idx_1 = rtb_DataTypeConversion8_idx_2;
     } else {
-      dummy_idx_1 = URControl_DW.State.uv_max[0];
+      rtb_u2_idx_1 = URControl_DW.State.uv_max[0];
     }
 
-    if ((errorVel_idx_0 > URControl_DW.State.uv_min[1]) || rtIsNaN
-        (URControl_DW.State.uv_min[1])) {
-      uv_des_idx_1 = errorVel_idx_0;
+    if ((rtb_DataTypeConversion8_idx_1 > URControl_DW.State.uv_min[1]) ||
+        rtIsNaN(URControl_DW.State.uv_min[1])) {
+      rtb_DataTypeConversion8_idx_2 = rtb_DataTypeConversion8_idx_1;
     } else {
-      uv_des_idx_1 = URControl_DW.State.uv_min[1];
+      rtb_DataTypeConversion8_idx_2 = URControl_DW.State.uv_min[1];
     }
 
-    if ((!(uv_des_idx_1 < URControl_DW.State.uv_max[1])) && (!rtIsNaN
-         (URControl_DW.State.uv_max[1]))) {
-      uv_des_idx_1 = URControl_DW.State.uv_max[1];
+    if ((!(rtb_DataTypeConversion8_idx_2 < URControl_DW.State.uv_max[1])) &&
+        (!rtIsNaN(URControl_DW.State.uv_max[1]))) {
+      rtb_DataTypeConversion8_idx_2 = URControl_DW.State.uv_max[1];
     }
   } else {
-    /* 'URAttitudeController:23' else */
-    /* 'URAttitudeController:24' uv_des = uv_des_raw; */
-    dummy_idx_1 = dummy_idx_0;
-    uv_des_idx_1 = errorVel_idx_0;
+    /* 'URAttitudeController:18' else */
+    /* 'URAttitudeController:19' uv_des = uv_des_raw; */
+    rtb_u2_idx_1 = dummy_idx_0;
+    rtb_DataTypeConversion8_idx_2 = rtb_DataTypeConversion8_idx_1;
   }
 
-  /* 'URAttitudeController:28' pq_des = Rxu\uv_des; */
-  uDot_max = (uv_des_idx_1 - dummy_idx_1 * 0.99999999999999989) /
-    1.4142135623730949;
-  rtb_DataTypeConversion8_idx_1 = (dummy_idx_1 - uDot_max * -0.70710678118654746)
-    / 0.70710678118654757;
+  /* 'URAttitudeController:23' uv_des = max(min(uv_des,URpar.attitude_maxuv_des),-URpar.attitude_maxuv_des); */
+  rEQ0 = rtIsNaN(URControlParams.attitude_maxuv_des);
+  if ((!(rtb_u2_idx_1 < URControlParams.attitude_maxuv_des)) && (!rEQ0)) {
+    rtb_u2_idx_1 = URControlParams.attitude_maxuv_des;
+  }
 
-  /* 'URAttitudeController:30' pqr_des = [pq_des; r_cmd]; */
-  dPos[2] = MuPrec;
+  tmp_2 = rtIsNaN(-URControlParams.attitude_maxuv_des);
+  if ((rtb_u2_idx_1 > -URControlParams.attitude_maxuv_des) || tmp_2) {
+    rtb_DataTypeConversion8_idx_0 = rtb_u2_idx_1;
+    b_z1[0] = rtb_u2_idx_1;
+  } else {
+    rtb_DataTypeConversion8_idx_0 = -URControlParams.attitude_maxuv_des;
+    b_z1[0] = -URControlParams.attitude_maxuv_des;
+  }
 
-  /* 'URAttitudeController:31' uvr_des = [uv_des; r_cmd]; */
-  rtb_att[0] = dummy_idx_1;
-  rtb_att[1] = uv_des_idx_1;
-  rtb_att[2] = MuPrec;
+  if ((rtb_DataTypeConversion8_idx_2 < URControlParams.attitude_maxuv_des) ||
+      rEQ0) {
+    rtb_u2_idx_1 = rtb_DataTypeConversion8_idx_2;
+  } else {
+    rtb_u2_idx_1 = URControlParams.attitude_maxuv_des;
+  }
 
-  /* 'URAttitudeController:34' daq.pqr_des = pqr_des; */
-  /* 'URAttitudeController:35' daq.uvr_des = uvr_des; */
-  URControl_DW.DAQ.pqr_des[0] = rtb_DataTypeConversion8_idx_1;
-  URControl_DW.DAQ.uvr_des[0] = dummy_idx_1;
-  URControl_DW.DAQ.pqr_des[1] = uDot_max;
-  URControl_DW.DAQ.uvr_des[1] = uv_des_idx_1;
-  URControl_DW.DAQ.pqr_des[2] = MuPrec;
-  URControl_DW.DAQ.uvr_des[2] = MuPrec;
+  if ((rtb_u2_idx_1 > -URControlParams.attitude_maxuv_des) || tmp_2) {
+    rtb_Product2 = rtb_u2_idx_1;
+    b_z1[1] = rtb_u2_idx_1;
+  } else {
+    rtb_Product2 = -URControlParams.attitude_maxuv_des;
+    b_z1[1] = -URControlParams.attitude_maxuv_des;
+  }
 
-  /* 'URAttitudeController:36' daq.uv_des_raw = uv_des_raw; */
-  /* 'URAttitudeController:37' daq.uv_des = uv_des; */
-  /* 'URAttitudeController:38' daq.uv_attCtrl = uv_attCtrl; */
+  /* 'URAttitudeController:26' pq_des = par.URC.R_xy_uv\uv_des; */
+  if (std::abs(URControl_ConstP.pooled1.URC.R_xy_uv[1]) > std::abs
+      (URControl_ConstP.pooled1.URC.R_xy_uv[0])) {
+    i = 1;
+    r2 = 0;
+  } else {
+    i = 0;
+    r2 = 1;
+  }
+
+  rtb_Product1 = URControl_ConstP.pooled1.URC.R_xy_uv[r2] /
+    URControl_ConstP.pooled1.URC.R_xy_uv[i];
+  rtb_u2_idx_2 = URControl_ConstP.pooled1.URC.R_xy_uv[2 + i];
+  rtb_DataTypeConversion8_idx_2 = (b_z1[r2] - b_z1[i] * rtb_Product1) /
+    (URControl_ConstP.pooled1.URC.R_xy_uv[2 + r2] - rtb_u2_idx_2 * rtb_Product1);
+  rtb_u2_idx_1 = (b_z1[i] - rtb_u2_idx_2 * rtb_DataTypeConversion8_idx_2) /
+    URControl_ConstP.pooled1.URC.R_xy_uv[i];
+
+  /* 'URAttitudeController:28' pqr_des = [pq_des; r_cmd]; */
+  rtb_u2_idx_2 = rtb_fcn5;
+
+  /* 'URAttitudeController:29' uvr_des = [uv_des; r_cmd]; */
+  h[0] = rtb_DataTypeConversion8_idx_0;
+  h[1] = rtb_Product2;
+  h[2] = rtb_fcn5;
+
+  /* 'URAttitudeController:32' daq.pqr_des = pqr_des; */
+  /* 'URAttitudeController:33' daq.uvr_des = uvr_des; */
+  URControl_DW.DAQ.pqr_des[0] = rtb_u2_idx_1;
+  URControl_DW.DAQ.uvr_des[0] = b_z1[0];
+  URControl_DW.DAQ.pqr_des[1] = rtb_DataTypeConversion8_idx_2;
+  URControl_DW.DAQ.uvr_des[1] = b_z1[1];
+  URControl_DW.DAQ.pqr_des[2] = rtb_fcn5;
+  URControl_DW.DAQ.uvr_des[2] = rtb_fcn5;
+
+  /* 'URAttitudeController:34' daq.uv_des_raw = uv_des_raw; */
+  /* 'URAttitudeController:35' daq.uv_des = uv_des; */
+  /* 'URAttitudeController:36' daq.uv_attCtrl = uv_attCtrl; */
   URControl_DW.DAQ.uv_des_raw[0] = dummy_idx_0;
-  URControl_DW.DAQ.uv_des[0] = dummy_idx_1;
-  URControl_DW.DAQ.uv_attCtrl[0] = Iv;
-  URControl_DW.DAQ.uv_des_raw[1] = errorVel_idx_0;
-  URControl_DW.DAQ.uv_des[1] = uv_des_idx_1;
-  URControl_DW.DAQ.uv_attCtrl[1] = maxval;
+  URControl_DW.DAQ.uv_des[0] = rtb_DataTypeConversion8_idx_0;
+  URControl_DW.DAQ.uv_attCtrl[0] = rtb_Uk1_o;
+  URControl_DW.DAQ.uv_des_raw[1] = rtb_DataTypeConversion8_idx_1;
+  URControl_DW.DAQ.uv_des[1] = rtb_Product2;
+  URControl_DW.DAQ.uv_attCtrl[1] = Fset_idx_2;
 
-  /* 'URAttitudeController:39' daq.w_max = w_max; */
-  /* 'URAttitudeController:40' daq.w_min = w_min; */
-  URControl_DW.DAQ.w_max[0] = w_max_idx_0;
+  /* 'URAttitudeController:37' daq.w_max = w_max; */
+  /* 'URAttitudeController:38' daq.w_min = w_min; */
+  URControl_DW.DAQ.w_max[0] = FMin[0];
   URControl_DW.DAQ.w_min[0] = 0.0;
   URControl_DW.DAQ.w_max[1] = 1200.0;
-  URControl_DW.DAQ.w_min[1] = FMax[1];
-  URControl_DW.DAQ.w_max[2] = Iu;
+  URControl_DW.DAQ.w_min[1] = w_min_idx_1;
+  URControl_DW.DAQ.w_max[2] = FMin[2];
   URControl_DW.DAQ.w_min[2] = 0.0;
   URControl_DW.DAQ.w_max[3] = 1200.0;
-  URControl_DW.DAQ.w_min[3] = FMax[3];
+  URControl_DW.DAQ.w_min[3] = Iu;
 
-  /* 'URAttitudeController:41' daq.MzGain = MzGain; */
-  URControl_DW.DAQ.MzGain = psi;
+  /* 'URAttitudeController:39' daq.MzGain = MzGain; */
+  URControl_DW.DAQ.MzGain = rtb_Product3;
 
   /* MATLAB Function: '<S2>/altitude control' incorporates:
    *  DataTypeConversion: '<Root>/Data Type Conversion8'
@@ -4744,35 +5511,35 @@ void URControlModelClass::step()
   /* 'URAltitudeControl:8' maxVel = URpar.altitude_maxVel; */
   /* 'URAltitudeControl:9' velTarget = max(min(velTarget,maxVel),-maxVel); */
   /* 'URAltitudeControl:13' errorVel = velTarget - state.vel(3); */
-  Iv = (URControl_U.pos_sp[2] - URControl_DW.State.pos[2]) *
+  rtb_Uk1_o = (URControl_U.pos_sp[2] - URControl_DW.State.pos[2]) *
     URControlParams.altitude_Kp_pos;
-  if ((!(Iv < URControlParams.altitude_maxVel)) && (!rtIsNaN
+  if ((!(rtb_Uk1_o < URControlParams.altitude_maxVel)) && (!rtIsNaN
        (URControlParams.altitude_maxVel))) {
-    Iv = URControlParams.altitude_maxVel;
+    rtb_Uk1_o = URControlParams.altitude_maxVel;
   }
 
-  if ((!(Iv > -URControlParams.altitude_maxVel)) && (!rtIsNaN
+  if ((!(rtb_Uk1_o > -URControlParams.altitude_maxVel)) && (!rtIsNaN
        (-URControlParams.altitude_maxVel))) {
-    Iv = -URControlParams.altitude_maxVel;
+    rtb_Uk1_o = -URControlParams.altitude_maxVel;
   }
 
-  MuPrec = Iv - URControl_DW.State.vel[2];
+  rtb_fcn5 = rtb_Uk1_o - URControl_DW.State.vel[2];
 
   /* 'URAltitudeControl:14' errorInt = errorInt + errorVel/par.freq; */
-  URControl_DW.errorInt_b += MuPrec / 500.0;
+  URControl_DW.errorInt_b += rtb_fcn5 / 500.0;
 
   /* 'URAltitudeControl:15' intLim = URpar.altitude_intLim; */
   /* 'URAltitudeControl:16' errorInt = max(min(errorInt,intLim),-intLim); */
   if ((URControl_DW.errorInt_b < URControlParams.altitude_intLim) || rtIsNaN
       (URControlParams.altitude_intLim)) {
-    Iv = URControl_DW.errorInt_b;
+    rtb_Uk1_o = URControl_DW.errorInt_b;
   } else {
-    Iv = URControlParams.altitude_intLim;
+    rtb_Uk1_o = URControlParams.altitude_intLim;
   }
 
-  if ((Iv > -URControlParams.altitude_intLim) || rtIsNaN
+  if ((rtb_Uk1_o > -URControlParams.altitude_intLim) || rtIsNaN
       (-URControlParams.altitude_intLim)) {
-    URControl_DW.errorInt_b = Iv;
+    URControl_DW.errorInt_b = rtb_Uk1_o;
   } else {
     URControl_DW.errorInt_b = -URControlParams.altitude_intLim;
   }
@@ -4782,79 +5549,80 @@ void URControlModelClass::step()
   /* 'URAltitudeControl:24' multiFactor = 1/(cos(max(min(state.att(1),peakAngle),-peakAngle))*cos(max(min(state.att(2),peakAngle),-peakAngle))); */
   /* 'URAltitudeControl:25' Ftot_ref = -(az_ref - par.g)*par.mass*multiFactor; */
   /* 'URAltitudeControl:26' Ftot_ref = max(Ftot_ref,0); */
-  tmp_2 = rtIsNaN(URControlParams.altitude_peakAngle);
-  if ((URControl_DW.State.att[1] < URControlParams.altitude_peakAngle) || tmp_2)
+  rEQ0 = rtIsNaN(URControlParams.altitude_peakAngle);
+  if ((URControl_DW.State.att[0] < URControlParams.altitude_peakAngle) || rEQ0)
   {
-    Iv = URControl_DW.State.att[1];
+    rtb_Uk1_o = URControl_DW.State.att[0];
   } else {
-    Iv = URControlParams.altitude_peakAngle;
+    rtb_Uk1_o = URControlParams.altitude_peakAngle;
   }
 
-  if ((URControl_DW.State.att[0] < URControlParams.altitude_peakAngle) || tmp_2)
+  if ((URControl_DW.State.att[1] < URControlParams.altitude_peakAngle) || rEQ0)
   {
-    maxval = URControl_DW.State.att[0];
+    rtb_Product1 = URControl_DW.State.att[1];
   } else {
-    maxval = URControlParams.altitude_peakAngle;
+    rtb_Product1 = URControlParams.altitude_peakAngle;
   }
 
-  tmp_2 = rtIsNaN(-URControlParams.altitude_peakAngle);
-  if ((!(maxval > -URControlParams.altitude_peakAngle)) && (!tmp_2)) {
-    maxval = -URControlParams.altitude_peakAngle;
+  rEQ0 = rtIsNaN(-URControlParams.altitude_peakAngle);
+  if ((!(rtb_Uk1_o > -URControlParams.altitude_peakAngle)) && (!rEQ0)) {
+    rtb_Uk1_o = -URControlParams.altitude_peakAngle;
   }
 
-  if ((!(Iv > -URControlParams.altitude_peakAngle)) && (!tmp_2)) {
-    Iv = -URControlParams.altitude_peakAngle;
+  if ((!(rtb_Product1 > -URControlParams.altitude_peakAngle)) && (!rEQ0)) {
+    rtb_Product1 = -URControlParams.altitude_peakAngle;
   }
 
-  MuPrec = -((URControlParams.altitude_Kp_vel * MuPrec +
-              URControlParams.altitude_Ki_vel * URControl_DW.errorInt_b) - 9.81)
-    * 0.374 * (1.0 / (std::cos(maxval) * std::cos(Iv)));
-  if (!(MuPrec > 0.0)) {
-    MuPrec = 0.0;
+  rtb_Product1 = -((URControlParams.altitude_Kp_vel * rtb_fcn5 +
+                    URControlParams.altitude_Ki_vel * URControl_DW.errorInt_b) -
+                   9.81) * 0.374 * (1.0 / (std::cos(rtb_Uk1_o) * std::cos
+    (rtb_Product1)));
+  if (!(rtb_Product1 > 0.0)) {
+    rtb_Product1 = 0.0;
   }
 
   /* 'URAltitudeControl:27' maxAngle = max(abs(state.att(1)),abs(state.att(2))); */
-  Iv = std::abs(URControl_DW.State.att[0]);
-  maxval = std::abs(URControl_DW.State.att[1]);
-  if ((Iv > maxval) || rtIsNaN(maxval)) {
-    maxval = Iv;
+  rtb_Uk1_o = std::abs(URControl_DW.State.att[0]);
+  rtb_fcn5 = std::abs(URControl_DW.State.att[1]);
+  if ((rtb_Uk1_o > rtb_fcn5) || rtIsNaN(rtb_fcn5)) {
+    rtb_fcn5 = rtb_Uk1_o;
   }
 
   /* 'URAltitudeControl:28' if maxAngle > URpar.altitude_peakAngle */
-  if (maxval > URControlParams.altitude_peakAngle) {
+  if (rtb_fcn5 > URControlParams.altitude_peakAngle) {
     /* 'URAltitudeControl:30' redFactor = 1 - (maxAngle - URpar.altitude_peakAngle)/(URpar.altitude_LOCAngle - URpar.altitude_peakAngle); */
     /* 'URAltitudeControl:31' redFactor = max(min(redFactor,1),0); */
     /* 'URAltitudeControl:32' Ftot_ref = Ftot_ref*redFactor; */
-    Iv = 1.0 - (maxval - URControlParams.altitude_peakAngle) /
+    rtb_Uk1_o = 1.0 - (rtb_fcn5 - URControlParams.altitude_peakAngle) /
       (URControlParams.altitude_LOCAngle - URControlParams.altitude_peakAngle);
-    if (!(Iv < 1.0)) {
-      Iv = 1.0;
+    if (!(rtb_Uk1_o < 1.0)) {
+      rtb_Uk1_o = 1.0;
     }
 
-    if (!(Iv > 0.0)) {
-      Iv = 0.0;
+    if (!(rtb_Uk1_o > 0.0)) {
+      rtb_Uk1_o = 0.0;
     }
 
-    MuPrec *= Iv;
+    rtb_Product1 *= rtb_Uk1_o;
   }
 
   /* 'URAltitudeControl:38' maxFtot = sum(state.FMax)*URpar.altitude_maxFPerc; */
   /* 'URAltitudeControl:39' Ftot_ref = min(Ftot_ref,maxFtot); */
-  maxval = (((URControl_DW.State.FMax[0] + URControl_DW.State.FMax[1]) +
-             URControl_DW.State.FMax[2]) + URControl_DW.State.FMax[3]) *
+  rtb_fcn5 = (((URControl_DW.State.FMax[0] + URControl_DW.State.FMax[1]) +
+               URControl_DW.State.FMax[2]) + URControl_DW.State.FMax[3]) *
     URControlParams.altitude_maxFPerc;
-  if ((!(MuPrec < maxval)) && (!rtIsNaN(maxval))) {
-    MuPrec = maxval;
+  if ((!(rtb_Product1 < rtb_fcn5)) && (!rtIsNaN(rtb_fcn5))) {
+    rtb_Product1 = rtb_fcn5;
   }
 
   /* 'URAltitudeControl:41' if URpar.altitude_enable == 0 */
   if (URControlParams.altitude_enable == 0.0) {
     /* 'URAltitudeControl:42' Ftot_ref = par.g*par.mass; */
-    MuPrec = 3.66894;
+    rtb_Product1 = 3.66894;
   }
 
   /* 'URAltitudeControl:46' daq.Ftot_ref = Ftot_ref; */
-  URControl_DW.DAQ.Ftot_ref = MuPrec;
+  URControl_DW.DAQ.Ftot_ref = rtb_Product1;
 
   /* MATLAB Function: '<S6>/control allocator' incorporates:
    *  Inport: '<Root>/fail_flag'
@@ -4909,22 +5677,22 @@ void URControlModelClass::step()
     URControl_DW.accZFilt_not_empty = true;
   }
 
-  /* 'URControl_alloc:9' wRotorSet = [0,0,0,0]; */
-  Iv = 0.0;
-  errorVel_idx_0 = 0.0;
-  errorVel_idx_1 = 0.0;
-  wRotorSet_data_idx_3 = 0.0;
+  /* 'URControl_alloc:9' wRotorSet = [0;0;0;0]; */
+  rtb_TmpSignalConversionAtSFun_h[0] = 0.0;
+  rtb_TmpSignalConversionAtSFun_h[1] = 0.0;
+  rtb_TmpSignalConversionAtSFun_h[2] = 0.0;
+  rtb_TmpSignalConversionAtSFun_h[3] = 0.0;
 
   /* 'URControl_alloc:11' if URpar.rate_mode == 1 */
   if (URControlParams.rate_mode == 1.0) {
     /* 'URControl_alloc:13' error = pqr_des - state.omegaf'; */
     /* 'URControl_alloc:14' pqr_des_dot = error.*URpar.rate_INDI_rateDotKp'; */
-    dummy_idx_1 = (rtb_DataTypeConversion8_idx_1 - URControl_DW.State.omegaf[0])
-      * URControlParams.rate_INDI_rateDotKp[0];
-    uv_des_idx_1 = (uDot_max - URControl_DW.State.omegaf[1]) *
-      URControlParams.rate_INDI_rateDotKp[1];
-    dummy_idx_0 = (dPos[2] - URControl_DW.State.omegaf[2]) *
-      URControlParams.rate_INDI_rateDotKp[2];
+    dummy_idx_0 = (rtb_u2_idx_1 - URControl_DW.State.omegaf[0]) *
+      URControlParams.rate_INDI_rateDotKp[0];
+    rtb_Product2 = (rtb_DataTypeConversion8_idx_2 - URControl_DW.State.omegaf[1])
+      * URControlParams.rate_INDI_rateDotKp[1];
+    rtb_DataTypeConversion8_idx_2 = (rtb_u2_idx_2 - URControl_DW.State.omegaf[2])
+      * URControlParams.rate_INDI_rateDotKp[2];
 
     /* 'URControl_alloc:15' acc_z_des = -Ftot_ref/URpar.mass; */
     /* 'URControl_alloc:16' v = [pqr_des_dot; acc_z_des]; */
@@ -4941,49 +5709,45 @@ void URControlModelClass::step()
     /* 'LPFilter:22' obj.value = max(min(obj.value,obj.maxLim),obj.minLim); */
     if ((URControl_DW.accZFilt.value < URControl_DW.accZFilt.maxLim) || rtIsNaN
         (URControl_DW.accZFilt.maxLim)) {
-      Iv = URControl_DW.accZFilt.value;
+      rtb_DataTypeConversion8_idx_0 = URControl_DW.accZFilt.value;
     } else {
-      Iv = URControl_DW.accZFilt.maxLim;
+      rtb_DataTypeConversion8_idx_0 = URControl_DW.accZFilt.maxLim;
     }
 
-    if ((Iv > URControl_DW.accZFilt.minLim) || rtIsNaN
-        (URControl_DW.accZFilt.minLim)) {
-      URControl_DW.accZFilt.value = Iv;
+    if ((rtb_DataTypeConversion8_idx_0 > URControl_DW.accZFilt.minLim) ||
+        rtIsNaN(URControl_DW.accZFilt.minLim)) {
+      URControl_DW.accZFilt.value = rtb_DataTypeConversion8_idx_0;
     } else {
       URControl_DW.accZFilt.value = URControl_DW.accZFilt.minLim;
     }
 
     /* 'URControl_alloc:21' [w_cmd]  = URINDI_allocator(state.fail_id, omegaDot.derValue', accZFilt.value, v, URpar.rate_INDI_G, [], state.wRotor', par); */
-    FMin[0] = dummy_idx_1;
-    FMin[1] = uv_des_idx_1;
-    FMin[2] = dummy_idx_0;
-    FMin[3] = -MuPrec / URControlParams.mass;
+    rtb_TmpSignalConversionAtSFun_j[0] = dummy_idx_0;
+    rtb_TmpSignalConversionAtSFun_j[1] = rtb_Product2;
+    rtb_TmpSignalConversionAtSFun_j[2] = rtb_DataTypeConversion8_idx_2;
+    rtb_TmpSignalConversionAtSFun_j[3] = -rtb_Product1 / URControlParams.mass;
     memcpy(&tmp[0], &URControlParams.rate_INDI_G[0], sizeof(real_T) << 5U);
     URControl_URINDI_allocator(URControl_DW.State.fail_id,
-      URControl_DW.omegaDot.derValue, URControl_DW.accZFilt.value, FMin, tmp,
-      URControl_DW.State.wRotor, &URControl_ConstP.pooled1, Fset);
+      URControl_DW.omegaDot.derValue, URControl_DW.accZFilt.value,
+      rtb_TmpSignalConversionAtSFun_j, tmp, URControl_DW.State.wRotor,
+      &URControl_ConstP.pooled1, rtb_TmpSignalConversionAtSFun_h);
 
     /* 'URControl_alloc:23' wRotorSet = w_cmd; */
-    Iv = Fset[0];
-    errorVel_idx_0 = Fset[1];
-    errorVel_idx_1 = Fset[2];
-    wRotorSet_data_idx_3 = Fset[3];
-
     /* 'URControl_alloc:25' daq.pqr_des_dot = pqr_des_dot; */
     /* 'URControl_alloc:26' daq.omegaDot = omegaDot.derValue; */
-    URControl_DW.DAQ.pqr_des_dot[0] = dummy_idx_1;
+    URControl_DW.DAQ.pqr_des_dot[0] = dummy_idx_0;
     URControl_DW.DAQ.omegaDot[0] = URControl_DW.omegaDot.derValue[0];
-    URControl_DW.DAQ.pqr_des_dot[1] = uv_des_idx_1;
+    URControl_DW.DAQ.pqr_des_dot[1] = rtb_Product2;
     URControl_DW.DAQ.omegaDot[1] = URControl_DW.omegaDot.derValue[1];
-    URControl_DW.DAQ.pqr_des_dot[2] = dummy_idx_0;
+    URControl_DW.DAQ.pqr_des_dot[2] = rtb_DataTypeConversion8_idx_2;
     URControl_DW.DAQ.omegaDot[2] = URControl_DW.omegaDot.derValue[2];
   } else {
     if (URControlParams.rate_mode == 2.0) {
       /* 'URControl_alloc:28' elseif URpar.rate_mode == 2 */
       /* 'URControl_alloc:30' M_uvr = zeros(3,1); */
-      dummy_idx_0 = 0.0;
-      rtb_DataTypeConversion8_idx_1 = 0.0;
-      maxval = 0.0;
+      rtb_DataTypeConversion8_idx_2 = 0.0;
+      rtb_u2_idx_1 = 0.0;
+      rtb_u2_idx_2 = 0.0;
 
       /* 'URControl_alloc:31' if URpar.rate_momentMode == 1 */
       if (URControlParams.rate_momentMode == 1.0) {
@@ -5043,100 +5807,100 @@ void URControlModelClass::step()
         /* 'PIDMomentGen:10' errorf = uvr_des' - state.omegafUV; */
         /* 'PIDMomentGen:11' error = uvr_des' - state.omegaUV; */
         /* 'PIDMomentGen:12' errorInt = errorInt + errorf/par.freq; */
-        /* 'PIDMomentGen:13' errorInt = max(min(errorInt,URpar.rate_MPID_maxInt),-URpar.rate_MPID_maxInt); */
-        dummy_idx_0 = dummy_idx_1 - URControl_DW.State.omegafUV[0];
-        URControl_DW.errorInt[0] += dummy_idx_0 / 500.0;
-        tmp_2 = rtIsNaN(URControlParams.rate_MPID_maxInt);
-        if ((URControl_DW.errorInt[0] < URControlParams.rate_MPID_maxInt) ||
-            tmp_2) {
-          uDot_max = URControl_DW.errorInt[0];
+        /* 'PIDMomentGen:13' intLim = URpar.rate_MPID_maxInt * 1e-3; */
+        rtb_fcn5 = URControlParams.rate_MPID_maxInt * 0.001;
+
+        /* 'PIDMomentGen:14' errorInt = max(min(errorInt,intLim),-intLim); */
+        rtb_u2_idx_2 = b_z1[0] - URControl_DW.State.omegafUV[0];
+        URControl_DW.errorInt[0] += rtb_u2_idx_2 / 500.0;
+        rEQ0 = rtIsNaN(rtb_fcn5);
+        if ((URControl_DW.errorInt[0] < rtb_fcn5) || rEQ0) {
+          rtb_DataTypeConversion8_idx_0 = URControl_DW.errorInt[0];
         } else {
-          uDot_max = URControlParams.rate_MPID_maxInt;
+          rtb_DataTypeConversion8_idx_0 = rtb_fcn5;
         }
 
-        errorVel_idx_0 = uv_des_idx_1 - URControl_DW.State.omegafUV[1];
-        URControl_DW.errorInt[1] += errorVel_idx_0 / 500.0;
-        if ((URControl_DW.errorInt[1] < URControlParams.rate_MPID_maxInt) ||
-            tmp_2) {
+        dummy_idx_0 = rtb_u2_idx_2;
+        rtb_u2_idx_2 = b_z1[1] - URControl_DW.State.omegafUV[1];
+        URControl_DW.errorInt[1] += rtb_u2_idx_2 / 500.0;
+        if ((URControl_DW.errorInt[1] < rtb_fcn5) || rEQ0) {
           rtb_DataTypeConversion8_idx_1 = URControl_DW.errorInt[1];
         } else {
-          rtb_DataTypeConversion8_idx_1 = URControlParams.rate_MPID_maxInt;
+          rtb_DataTypeConversion8_idx_1 = rtb_fcn5;
         }
 
-        maxval = rtb_att[2] - URControl_DW.State.omegafUV[2];
-        URControl_DW.errorInt[2] += maxval / 500.0;
-        if ((URControl_DW.errorInt[2] < URControlParams.rate_MPID_maxInt) ||
-            tmp_2) {
-          Iv = URControl_DW.errorInt[2];
+        rtb_Product2 = h[2] - URControl_DW.State.omegafUV[2];
+        URControl_DW.errorInt[2] += rtb_Product2 / 500.0;
+        if ((URControl_DW.errorInt[2] < rtb_fcn5) || rEQ0) {
+          rtb_DataTypeConversion8_idx_2 = URControl_DW.errorInt[2];
         } else {
-          Iv = URControlParams.rate_MPID_maxInt;
+          rtb_DataTypeConversion8_idx_2 = rtb_fcn5;
         }
 
-        /* 'PIDMomentGen:15' errorD.filterHandle.filterT = URpar.rate_MPID_derFilterT; */
+        /* 'PIDMomentGen:16' errorD.filterHandle.filterT = URpar.rate_MPID_derFilterT; */
         URControl_DW.errorD.filterHandle.filterT =
           URControlParams.rate_MPID_derFilterT;
 
-        /* 'PIDMomentGen:16' errorD.update(error,1/par.freq) */
-        tmp_2 = rtIsNaN(-URControlParams.rate_MPID_maxInt);
-        if ((uDot_max > -URControlParams.rate_MPID_maxInt) || tmp_2) {
-          URControl_DW.errorInt[0] = uDot_max;
+        /* 'PIDMomentGen:17' errorD.update(error,1/par.freq) */
+        rEQ0 = rtIsNaN(-rtb_fcn5);
+        if ((rtb_DataTypeConversion8_idx_0 > -rtb_fcn5) || rEQ0) {
+          URControl_DW.errorInt[0] = rtb_DataTypeConversion8_idx_0;
         } else {
-          URControl_DW.errorInt[0] = -URControlParams.rate_MPID_maxInt;
+          URControl_DW.errorInt[0] = -rtb_fcn5;
         }
 
-        rtb_omega[0] = dummy_idx_1 - URControl_DW.State.omegaUV[0];
-        if ((rtb_DataTypeConversion8_idx_1 > -URControlParams.rate_MPID_maxInt) ||
-            tmp_2) {
+        errorVel[0] = b_z1[0] - URControl_DW.State.omegaUV[0];
+        if ((rtb_DataTypeConversion8_idx_1 > -rtb_fcn5) || rEQ0) {
           URControl_DW.errorInt[1] = rtb_DataTypeConversion8_idx_1;
         } else {
-          URControl_DW.errorInt[1] = -URControlParams.rate_MPID_maxInt;
+          URControl_DW.errorInt[1] = -rtb_fcn5;
         }
 
-        rtb_omega[1] = uv_des_idx_1 - URControl_DW.State.omegaUV[1];
-        if ((Iv > -URControlParams.rate_MPID_maxInt) || tmp_2) {
-          URControl_DW.errorInt[2] = Iv;
+        errorVel[1] = b_z1[1] - URControl_DW.State.omegaUV[1];
+        if ((rtb_DataTypeConversion8_idx_2 > -rtb_fcn5) || rEQ0) {
+          URControl_DW.errorInt[2] = rtb_DataTypeConversion8_idx_2;
         } else {
-          URControl_DW.errorInt[2] = -URControlParams.rate_MPID_maxInt;
+          URControl_DW.errorInt[2] = -rtb_fcn5;
         }
 
-        rtb_omega[2] = rtb_att[2] - URControl_DW.State.omegaUV[2];
-        URContr_SimpleDerivative_update(&URControl_DW.errorD, rtb_omega, 0.002);
+        errorVel[2] = h[2] - URControl_DW.State.omegaUV[2];
+        URContr_SimpleDerivative_update(&URControl_DW.errorD, errorVel, 0.002);
 
-        /* 'PIDMomentGen:18' uvrDer.filterHandle.filterT = URpar.rate_MPID_uvrdesderFilterT; */
+        /* 'PIDMomentGen:19' uvrDer.filterHandle.filterT = URpar.rate_MPID_uvrdesderFilterT; */
         URControl_DW.uvrDer.filterHandle.filterT =
           URControlParams.rate_MPID_uvrdesderFilterT;
 
-        /* 'PIDMomentGen:19' uvrDer.update(uvr_des', 1/par.freq); */
-        URContr_SimpleDerivative_update(&URControl_DW.uvrDer, rtb_att, 0.002);
+        /* 'PIDMomentGen:20' uvrDer.update(uvr_des', 1/par.freq); */
+        URContr_SimpleDerivative_update(&URControl_DW.uvrDer, h, 0.002);
 
-        /* 'PIDMomentGen:20' uvr_des_dot = uvrDer.derValue; */
-        /* 'PIDMomentGen:22' uvrDot_des = errorf.*URpar.rate_MPID_rateDotKp + errorInt.*URpar.rate_MPID_rateDotKi + errorD.derValue.*URpar.rate_MPID_rateDotKd + uvr_des_dot; */
-        /* 'PIDMomentGen:25' M_uvr = uvrDot_des'.*[URpar.Iu; URpar.Iv; URpar.Iz]; */
-        /* 'PIDMomentGen:27' daq.uvrDot_des = uvrDot_des; */
-        uv_des_idx_1 = ((dummy_idx_0 * URControlParams.rate_MPID_rateDotKp[0] +
-                         URControl_DW.errorInt[0] *
-                         URControlParams.rate_MPID_rateDotKi[0]) +
-                        URControl_DW.errorD.derValue[0] *
-                        URControlParams.rate_MPID_rateDotKd[0]) +
+        /* 'PIDMomentGen:21' uvr_des_dot = uvrDer.derValue; */
+        /* 'PIDMomentGen:23' uvrDot_des = errorf.*URpar.rate_MPID_rateDotKp + errorInt.*URpar.rate_MPID_rateDotKi + errorD.derValue.*URpar.rate_MPID_rateDotKd + uvr_des_dot; */
+        /* 'PIDMomentGen:26' M_uvr = uvrDot_des'.*[URpar.Iu; URpar.Iv; URpar.Iz]; */
+        /* 'PIDMomentGen:28' daq.uvrDot_des = uvrDot_des; */
+        dummy_idx_0 = ((dummy_idx_0 * URControlParams.rate_MPID_rateDotKp[0] +
+                        URControl_DW.errorInt[0] *
+                        URControlParams.rate_MPID_rateDotKi[0]) +
+                       URControl_DW.errorD.derValue[0] *
+                       URControlParams.rate_MPID_rateDotKd[0]) +
           URControl_DW.uvrDer.derValue[0];
-        URControl_DW.DAQ.uvrDot_des[0] = uv_des_idx_1;
-        dummy_idx_0 = uv_des_idx_1 * URControlParams.Iu;
-        uv_des_idx_1 = ((errorVel_idx_0 * URControlParams.rate_MPID_rateDotKp[1]
-                         + URControl_DW.errorInt[1] *
-                         URControlParams.rate_MPID_rateDotKi[1]) +
-                        URControl_DW.errorD.derValue[1] *
-                        URControlParams.rate_MPID_rateDotKd[1]) +
+        URControl_DW.DAQ.uvrDot_des[0] = dummy_idx_0;
+        rtb_DataTypeConversion8_idx_2 = dummy_idx_0 * URControlParams.Iu;
+        dummy_idx_0 = ((rtb_u2_idx_2 * URControlParams.rate_MPID_rateDotKp[1] +
+                        URControl_DW.errorInt[1] *
+                        URControlParams.rate_MPID_rateDotKi[1]) +
+                       URControl_DW.errorD.derValue[1] *
+                       URControlParams.rate_MPID_rateDotKd[1]) +
           URControl_DW.uvrDer.derValue[1];
-        URControl_DW.DAQ.uvrDot_des[1] = uv_des_idx_1;
-        rtb_DataTypeConversion8_idx_1 = uv_des_idx_1 * URControlParams.Iv;
-        uv_des_idx_1 = ((maxval * URControlParams.rate_MPID_rateDotKp[2] +
-                         URControl_DW.errorInt[2] *
-                         URControlParams.rate_MPID_rateDotKi[2]) +
-                        URControl_DW.errorD.derValue[2] *
-                        URControlParams.rate_MPID_rateDotKd[2]) +
+        URControl_DW.DAQ.uvrDot_des[1] = dummy_idx_0;
+        rtb_u2_idx_1 = dummy_idx_0 * URControlParams.Iv;
+        dummy_idx_0 = ((rtb_Product2 * URControlParams.rate_MPID_rateDotKp[2] +
+                        URControl_DW.errorInt[2] *
+                        URControlParams.rate_MPID_rateDotKi[2]) +
+                       URControl_DW.errorD.derValue[2] *
+                       URControlParams.rate_MPID_rateDotKd[2]) +
           URControl_DW.uvrDer.derValue[2];
-        URControl_DW.DAQ.uvrDot_des[2] = uv_des_idx_1;
-        maxval = uv_des_idx_1 * URControlParams.Iz;
+        URControl_DW.DAQ.uvrDot_des[2] = dummy_idx_0;
+        rtb_u2_idx_2 = dummy_idx_0 * URControlParams.Iz;
       } else {
         if (URControlParams.rate_momentMode == 2.0) {
           /* 'URControl_alloc:33' elseif URpar.rate_momentMode == 2 */
@@ -5166,101 +5930,215 @@ void URControlModelClass::step()
             URControl_DW.omegaDot_not_empty_l = true;
           }
 
-          /* 'INDIMomentGen:5' Fset = state.wRotor.^2*URpar.k0; */
-          Fset[0] = URControl_DW.State.wRotor[0] * URControl_DW.State.wRotor[0] *
-            URControlParams.k0;
-          Fset[1] = URControl_DW.State.wRotor[1] * URControl_DW.State.wRotor[1] *
-            URControlParams.k0;
-          Fset[2] = URControl_DW.State.wRotor[2] * URControl_DW.State.wRotor[2] *
-            URControlParams.k0;
-          uDot_max = URControl_DW.State.wRotor[3] * URControl_DW.State.wRotor[3]
-            * URControlParams.k0;
+          /* 'INDIMomentGen:4' if isempty(wRotorFilter) */
+          if (!URControl_DW.wRotorFilter_not_empty) {
+            /* 'INDIMomentGen:4' wRotorFilter = LPFilter(URpar.est_omegaFilterT, [0,0,0,0], 1200, 0); */
+            /* 'LPFilter:14' obj.filterT = filterT; */
+            URControl_DW.wRotorFilter.filterT = URControlParams.est_omegaFilterT;
 
-          /* 'INDIMomentGen:7' M_uvr_prev = zeros(3,1); */
-          /* 'INDIMomentGen:8' M_uvr_prev(1) = (Fset(4) - Fset(2))*URpar.s; */
-          /* 'INDIMomentGen:9' M_uvr_prev(2) = (Fset(1) - Fset(3))*URpar.s; */
-          /* 'INDIMomentGen:10' M_uvr_prev(3) = (Fset(1) - Fset(2) + Fset(3) - Fset(4))*URpar.t0/URpar.k0; */
-          /* 'INDIMomentGen:13' error1 = uvr_des' - state.omegafUV; */
-          /* 'INDIMomentGen:15' uvrDot_des = error1.*URpar.rate_MINDI_rateDotKp; */
-          rtb_att[0] = (dummy_idx_1 - URControl_DW.State.omegafUV[0]) *
-            URControlParams.rate_MINDI_rateDotKp[0];
-          rtb_att[1] = (uv_des_idx_1 - URControl_DW.State.omegafUV[1]) *
+            /* 'LPFilter:15' obj.value = initValue; */
+            URControl_DW.wRotorFilter.value[0] = 0.0;
+            URControl_DW.wRotorFilter.value[1] = 0.0;
+            URControl_DW.wRotorFilter.value[2] = 0.0;
+            URControl_DW.wRotorFilter.value[3] = 0.0;
+
+            /* 'LPFilter:16' obj.maxLim = maxLim; */
+            URControl_DW.wRotorFilter.maxLim = 1200.0;
+
+            /* 'LPFilter:17' obj.minLim = minLim; */
+            URControl_DW.wRotorFilter.minLim = 0.0;
+            URControl_DW.wRotorFilter_not_empty = true;
+          }
+
+          /* 'INDIMomentGen:6' wRotorFilter.updateFilterT(URpar.rate_MINDI_derFilterT); */
+          /* 'LPFilter:26' obj.filterT = filterT; */
+          URControl_DW.wRotorFilter.filterT =
+            URControlParams.rate_MINDI_derFilterT;
+
+          /* 'INDIMomentGen:7' wRotorFilter.update(state.wRotor); */
+          /* 'LPFilter:21' obj.value = obj.value*obj.filterT + newValue*(1 - obj.filterT); */
+          /* 'LPFilter:22' obj.value = max(min(obj.value,obj.maxLim),obj.minLim); */
+          /* 'INDIMomentGen:9' Fset = wRotorFilter.value.^2*URpar.k0; */
+          URControl_DW.wRotorFilter.value[0] = (1.0 -
+            URControl_DW.wRotorFilter.filterT) * URControl_DW.State.wRotor[0] +
+            URControl_DW.wRotorFilter.value[0] *
+            URControl_DW.wRotorFilter.filterT;
+          if ((URControl_DW.wRotorFilter.value[0] <
+               URControl_DW.wRotorFilter.maxLim) || rtIsNaN
+              (URControl_DW.wRotorFilter.maxLim)) {
+            rtb_fcn5 = URControl_DW.wRotorFilter.value[0];
+          } else {
+            rtb_fcn5 = URControl_DW.wRotorFilter.maxLim;
+          }
+
+          if ((rtb_fcn5 > URControl_DW.wRotorFilter.minLim) || rtIsNaN
+              (URControl_DW.wRotorFilter.minLim)) {
+            URControl_DW.wRotorFilter.value[0] = rtb_fcn5;
+          } else {
+            URControl_DW.wRotorFilter.value[0] =
+              URControl_DW.wRotorFilter.minLim;
+          }
+
+          rtb_DataTypeConversion8_idx_1 = URControl_DW.wRotorFilter.value[0] *
+            URControl_DW.wRotorFilter.value[0] * URControlParams.k0;
+          URControl_DW.wRotorFilter.value[1] = (1.0 -
+            URControl_DW.wRotorFilter.filterT) * URControl_DW.State.wRotor[1] +
+            URControl_DW.wRotorFilter.value[1] *
+            URControl_DW.wRotorFilter.filterT;
+          if ((URControl_DW.wRotorFilter.value[1] <
+               URControl_DW.wRotorFilter.maxLim) || rtIsNaN
+              (URControl_DW.wRotorFilter.maxLim)) {
+            rtb_fcn5 = URControl_DW.wRotorFilter.value[1];
+          } else {
+            rtb_fcn5 = URControl_DW.wRotorFilter.maxLim;
+          }
+
+          if ((rtb_fcn5 > URControl_DW.wRotorFilter.minLim) || rtIsNaN
+              (URControl_DW.wRotorFilter.minLim)) {
+            URControl_DW.wRotorFilter.value[1] = rtb_fcn5;
+          } else {
+            URControl_DW.wRotorFilter.value[1] =
+              URControl_DW.wRotorFilter.minLim;
+          }
+
+          rtb_Uk1_o = URControl_DW.wRotorFilter.value[1] *
+            URControl_DW.wRotorFilter.value[1] * URControlParams.k0;
+          URControl_DW.wRotorFilter.value[2] = (1.0 -
+            URControl_DW.wRotorFilter.filterT) * URControl_DW.State.wRotor[2] +
+            URControl_DW.wRotorFilter.value[2] *
+            URControl_DW.wRotorFilter.filterT;
+          if ((URControl_DW.wRotorFilter.value[2] <
+               URControl_DW.wRotorFilter.maxLim) || rtIsNaN
+              (URControl_DW.wRotorFilter.maxLim)) {
+            rtb_fcn5 = URControl_DW.wRotorFilter.value[2];
+          } else {
+            rtb_fcn5 = URControl_DW.wRotorFilter.maxLim;
+          }
+
+          if ((rtb_fcn5 > URControl_DW.wRotorFilter.minLim) || rtIsNaN
+              (URControl_DW.wRotorFilter.minLim)) {
+            URControl_DW.wRotorFilter.value[2] = rtb_fcn5;
+          } else {
+            URControl_DW.wRotorFilter.value[2] =
+              URControl_DW.wRotorFilter.minLim;
+          }
+
+          Fset_idx_2 = URControl_DW.wRotorFilter.value[2] *
+            URControl_DW.wRotorFilter.value[2] * URControlParams.k0;
+          URControl_DW.wRotorFilter.value[3] = (1.0 -
+            URControl_DW.wRotorFilter.filterT) * URControl_DW.State.wRotor[3] +
+            URControl_DW.wRotorFilter.value[3] *
+            URControl_DW.wRotorFilter.filterT;
+          if ((URControl_DW.wRotorFilter.value[3] <
+               URControl_DW.wRotorFilter.maxLim) || rtIsNaN
+              (URControl_DW.wRotorFilter.maxLim)) {
+            rtb_fcn5 = URControl_DW.wRotorFilter.value[3];
+          } else {
+            rtb_fcn5 = URControl_DW.wRotorFilter.maxLim;
+          }
+
+          if ((rtb_fcn5 > URControl_DW.wRotorFilter.minLim) || rtIsNaN
+              (URControl_DW.wRotorFilter.minLim)) {
+            URControl_DW.wRotorFilter.value[3] = rtb_fcn5;
+          } else {
+            URControl_DW.wRotorFilter.value[3] =
+              URControl_DW.wRotorFilter.minLim;
+          }
+
+          rtb_fcn5 = URControl_DW.wRotorFilter.value[3] *
+            URControl_DW.wRotorFilter.value[3] * URControlParams.k0;
+
+          /* 'INDIMomentGen:11' M_uvr_prev = zeros(3,1); */
+          /* 'INDIMomentGen:12' M_uvr_prev(1) = (Fset(4) - Fset(2))*URpar.s; */
+          /* 'INDIMomentGen:13' M_uvr_prev(2) = (Fset(1) - Fset(3))*URpar.s; */
+          /* 'INDIMomentGen:14' M_uvr_prev(3) = (Fset(1) - Fset(2) + Fset(3) - Fset(4))*URpar.t0/URpar.k0; */
+          /* 'INDIMomentGen:17' error1 = uvr_des' - state.omegafUV; */
+          /* 'INDIMomentGen:19' uvrDot_des = error1.*URpar.rate_MINDI_rateDotKp; */
+          h[0] = (rtb_DataTypeConversion8_idx_0 - URControl_DW.State.omegafUV[0])
+            * URControlParams.rate_MINDI_rateDotKp[0];
+          h[1] = (rtb_Product2 - URControl_DW.State.omegafUV[1]) *
             URControlParams.rate_MINDI_rateDotKp[1];
-          uv_des_idx_1 = (rtb_att[2] - URControl_DW.State.omegafUV[2]) *
+          dummy_idx_0 = (h[2] - URControl_DW.State.omegafUV[2]) *
             URControlParams.rate_MINDI_rateDotKp[2];
 
-          /* 'INDIMomentGen:18' omegaDot.updateFilterT(URpar.rate_MINDI_derFilterT); */
+          /* 'INDIMomentGen:22' omegaDot.updateFilterT(URpar.rate_MINDI_derFilterT); */
           /* 'SimpleDerivative:23' obj.filterHandle.updateFilterT(filterT); */
           /* 'LPFilter:26' obj.filterT = filterT; */
           URControl_DW.omegaDot_p.filterHandle.filterT =
             URControlParams.rate_MINDI_derFilterT;
 
-          /* 'INDIMomentGen:19' omegaDot.update(state.omegaUV, 1/par.freq); */
+          /* 'INDIMomentGen:23' omegaDot.update(state.omegaUV, 1/par.freq); */
           URContr_SimpleDerivative_update(&URControl_DW.omegaDot_p,
             URControl_DW.State.omegaUV, 0.002);
 
-          /* 'INDIMomentGen:21' error2 = uvrDot_des - omegaDot.derValue; */
-          /* 'INDIMomentGen:23' dM = error2.*URpar.rate_MINDI_MKp*1e-4; */
-          /* 'INDIMomentGen:25' M_uvr = M_uvr_prev + dM'; */
-          /* 'INDIMomentGen:27' daq.uvrDot_des = uvrDot_des; */
-          /* 'INDIMomentGen:28' daq.omegaDot = omegaDot.derValue; */
-          URControl_DW.DAQ.uvrDot_des[0] = rtb_att[0];
+          /* 'INDIMomentGen:25' error2 = uvrDot_des - omegaDot.derValue; */
+          /* 'INDIMomentGen:27' dM = error2.*URpar.rate_MINDI_MKp*1e-4; */
+          /* 'INDIMomentGen:29' M_uvr = M_uvr_prev + dM'; */
+          /* 'INDIMomentGen:31' daq.uvrDot_des = uvrDot_des; */
+          /* 'INDIMomentGen:32' daq.omegaDot = omegaDot.derValue; */
+          /* 'INDIMomentGen:33' daq.dM = dM; */
+          rtb_u2_idx_2 = (h[0] - URControl_DW.omegaDot_p.derValue[0]) *
+            URControlParams.rate_MINDI_MKp[0] * 0.0001;
+          URControl_DW.DAQ.uvrDot_des[0] = h[0];
           URControl_DW.DAQ.omegaDot[0] = URControl_DW.omegaDot_p.derValue[0];
-          dummy_idx_0 = (rtb_att[0] - URControl_DW.omegaDot_p.derValue[0]) *
-            URControlParams.rate_MINDI_MKp[0] * 0.0001 + (uDot_max - Fset[1]) *
-            URControlParams.s;
-          URControl_DW.DAQ.uvrDot_des[1] = rtb_att[1];
+          URControl_DW.DAQ.dM[0] = rtb_u2_idx_2;
+          rtb_DataTypeConversion8_idx_2 = (rtb_fcn5 - rtb_Uk1_o) *
+            URControlParams.s + rtb_u2_idx_2;
+          rtb_u2_idx_2 = (h[1] - URControl_DW.omegaDot_p.derValue[1]) *
+            URControlParams.rate_MINDI_MKp[1] * 0.0001;
+          URControl_DW.DAQ.uvrDot_des[1] = h[1];
           URControl_DW.DAQ.omegaDot[1] = URControl_DW.omegaDot_p.derValue[1];
-          rtb_DataTypeConversion8_idx_1 = (rtb_att[1] -
-            URControl_DW.omegaDot_p.derValue[1]) *
-            URControlParams.rate_MINDI_MKp[1] * 0.0001 + (Fset[0] - Fset[2]) *
-            URControlParams.s;
-          URControl_DW.DAQ.uvrDot_des[2] = uv_des_idx_1;
-          URControl_DW.DAQ.omegaDot[2] = URControl_DW.omegaDot_p.derValue[2];
-          maxval = (((Fset[0] - Fset[1]) + Fset[2]) - uDot_max) *
-            URControlParams.t0 / URControlParams.k0 + (uv_des_idx_1 -
-            URControl_DW.omegaDot_p.derValue[2]) *
+          URControl_DW.DAQ.dM[1] = rtb_u2_idx_2;
+          rtb_u2_idx_1 = (rtb_DataTypeConversion8_idx_1 - Fset_idx_2) *
+            URControlParams.s + rtb_u2_idx_2;
+          rtb_u2_idx_2 = (dummy_idx_0 - URControl_DW.omegaDot_p.derValue[2]) *
             URControlParams.rate_MINDI_MKp[2] * 0.0001;
+          URControl_DW.DAQ.uvrDot_des[2] = dummy_idx_0;
+          URControl_DW.DAQ.omegaDot[2] = URControl_DW.omegaDot_p.derValue[2];
+          URControl_DW.DAQ.dM[2] = rtb_u2_idx_2;
+          rtb_u2_idx_2 += (((rtb_DataTypeConversion8_idx_1 - rtb_Uk1_o) +
+                            Fset_idx_2) - rtb_fcn5) * URControlParams.t0 /
+            URControlParams.k0;
         }
       }
 
       /* 'URControl_alloc:37' M_uvr = max(min(M_uvr, URpar.rate_maxMoments'), -URpar.rate_maxMoments'); */
-      if ((!(dummy_idx_0 < URControlParams.rate_maxMoments[0])) && (!rtIsNaN
-           (URControlParams.rate_maxMoments[0]))) {
-        dummy_idx_0 = URControlParams.rate_maxMoments[0];
+      if ((!(rtb_DataTypeConversion8_idx_2 < URControlParams.rate_maxMoments[0]))
+          && (!rtIsNaN(URControlParams.rate_maxMoments[0]))) {
+        rtb_DataTypeConversion8_idx_2 = URControlParams.rate_maxMoments[0];
       }
 
-      if ((dummy_idx_0 > -URControlParams.rate_maxMoments[0]) || rtIsNaN
-          (-URControlParams.rate_maxMoments[0])) {
-        dummy_idx_1 = dummy_idx_0;
+      if ((rtb_DataTypeConversion8_idx_2 > -URControlParams.rate_maxMoments[0]) ||
+          rtIsNaN(-URControlParams.rate_maxMoments[0])) {
+        dummy_idx_0 = rtb_DataTypeConversion8_idx_2;
       } else {
-        dummy_idx_1 = -URControlParams.rate_maxMoments[0];
+        dummy_idx_0 = -URControlParams.rate_maxMoments[0];
       }
 
-      if ((rtb_DataTypeConversion8_idx_1 < URControlParams.rate_maxMoments[1]) ||
-          rtIsNaN(URControlParams.rate_maxMoments[1])) {
-        dummy_idx_0 = rtb_DataTypeConversion8_idx_1;
+      if ((rtb_u2_idx_1 < URControlParams.rate_maxMoments[1]) || rtIsNaN
+          (URControlParams.rate_maxMoments[1])) {
+        rtb_DataTypeConversion8_idx_2 = rtb_u2_idx_1;
       } else {
-        dummy_idx_0 = URControlParams.rate_maxMoments[1];
+        rtb_DataTypeConversion8_idx_2 = URControlParams.rate_maxMoments[1];
       }
 
-      if ((dummy_idx_0 > -URControlParams.rate_maxMoments[1]) || rtIsNaN
-          (-URControlParams.rate_maxMoments[1])) {
-        uv_des_idx_1 = dummy_idx_0;
+      if ((rtb_DataTypeConversion8_idx_2 > -URControlParams.rate_maxMoments[1]) ||
+          rtIsNaN(-URControlParams.rate_maxMoments[1])) {
+        rtb_Product2 = rtb_DataTypeConversion8_idx_2;
       } else {
-        uv_des_idx_1 = -URControlParams.rate_maxMoments[1];
+        rtb_Product2 = -URControlParams.rate_maxMoments[1];
       }
 
-      if ((maxval < URControlParams.rate_maxMoments[2]) || rtIsNaN
+      if ((rtb_u2_idx_2 < URControlParams.rate_maxMoments[2]) || rtIsNaN
           (URControlParams.rate_maxMoments[2])) {
-        dummy_idx_0 = maxval;
+        rtb_DataTypeConversion8_idx_2 = rtb_u2_idx_2;
       } else {
-        dummy_idx_0 = URControlParams.rate_maxMoments[2];
+        rtb_DataTypeConversion8_idx_2 = URControlParams.rate_maxMoments[2];
       }
 
-      if ((!(dummy_idx_0 > -URControlParams.rate_maxMoments[2])) && (!rtIsNaN
-           (-URControlParams.rate_maxMoments[2]))) {
-        dummy_idx_0 = -URControlParams.rate_maxMoments[2];
+      if ((!(rtb_DataTypeConversion8_idx_2 > -URControlParams.rate_maxMoments[2]))
+          && (!rtIsNaN(-URControlParams.rate_maxMoments[2]))) {
+        rtb_DataTypeConversion8_idx_2 = -URControlParams.rate_maxMoments[2];
       }
 
       /* 'URControl_alloc:40' refStruct.MuRef = M_uvr(1); */
@@ -5275,249 +6153,909 @@ void URControlModelClass::step()
       /* 'URControl_alloc:42' gains.MzGain = MzGain; */
       /* 'URControl_alloc:45' y_state_initial = y_state_prev; */
       /* 'URControl_alloc:47' [x,y_state,iter,optimal] = controlAllocQPQuick(refStruct, state.FMax, state.FMin, gains, y_state_initial, par, URpar); */
-      URControl_controlAllocQPQuick(dummy_idx_1, uv_des_idx_1, dummy_idx_0,
-        MuPrec, URControl_DW.State.FMax, URControl_DW.State.FMin,
-        URControlParams.rate_MuGain, URControlParams.rate_MvGain,
-        URControlParams.rate_FtotGain, URControlParams.rate_FGain, psi,
-        URControl_DW.y_state_prev, &URControl_ConstP.pooled1,
-        URControlParams.rate_maxIter, FMin, &URControl_DW.DAQ.iter, &maxval);
+      URControl_controlAllocQPQuick(dummy_idx_0, rtb_Product2,
+        rtb_DataTypeConversion8_idx_2, rtb_Product1, URControl_DW.State.FMax,
+        URControl_DW.State.FMin, URControlParams.rate_MuGain,
+        URControlParams.rate_MvGain, URControlParams.rate_FtotGain,
+        URControlParams.rate_FGain, rtb_Product3, URControl_DW.y_state_prev,
+        &URControl_ConstP.pooled1, URControlParams.rate_maxIter, z1,
+        &URControl_DW.DAQ.iter, &rtb_fcn5);
 
       /* 'URControl_alloc:48' y_state_prev = y_state; */
       /* 'URControl_alloc:49' if optimal */
-      if (maxval != 0.0) {
+      if (rtb_fcn5 != 0.0) {
         /* 'URControl_alloc:50' Fset = x; */
         /* 'URControl_alloc:51' Fset_prev = Fset; */
-        Fset[0] = FMin[0];
-        URControl_DW.Fset_prev[0] = FMin[0];
-        Fset[1] = FMin[1];
-        URControl_DW.Fset_prev[1] = FMin[1];
-        Fset[2] = FMin[2];
-        URControl_DW.Fset_prev[2] = FMin[2];
-        Fset[3] = FMin[3];
-        URControl_DW.Fset_prev[3] = FMin[3];
+        rtb_DataTypeConversion8_idx_1 = z1[0];
+        URControl_DW.Fset_prev[0] = z1[0];
+        rtb_Uk1_o = z1[1];
+        URControl_DW.Fset_prev[1] = z1[1];
+        Fset_idx_2 = z1[2];
+        URControl_DW.Fset_prev[2] = z1[2];
+        rtb_Product3 = z1[3];
+        URControl_DW.Fset_prev[3] = z1[3];
       } else {
         /* 'URControl_alloc:52' else */
         /* 'URControl_alloc:53' Fset = Fset_prev*0.99; */
-        Fset[0] = URControl_DW.Fset_prev[0] * 0.99;
-        Fset[1] = URControl_DW.Fset_prev[1] * 0.99;
-        Fset[2] = URControl_DW.Fset_prev[2] * 0.99;
-        Fset[3] = URControl_DW.Fset_prev[3] * 0.99;
+        rtb_DataTypeConversion8_idx_1 = URControl_DW.Fset_prev[0] * 0.99;
+        rtb_Uk1_o = URControl_DW.Fset_prev[1] * 0.99;
+        Fset_idx_2 = URControl_DW.Fset_prev[2] * 0.99;
+        rtb_Product3 = URControl_DW.Fset_prev[3] * 0.99;
       }
 
       /* 'URControl_alloc:56' wRotorSet = sqrt(max(Fset,0)/URpar.k0); */
-      if (Fset[0] > 0.0) {
-        uDot_max = Fset[0];
-      } else {
-        uDot_max = 0.0;
+      if (!(rtb_DataTypeConversion8_idx_1 > 0.0)) {
+        rtb_DataTypeConversion8_idx_1 = 0.0;
       }
 
-      Iv = std::sqrt(uDot_max / URControlParams.k0);
-      if (Fset[1] > 0.0) {
-        uDot_max = Fset[1];
-      } else {
-        uDot_max = 0.0;
+      rtb_TmpSignalConversionAtSFun_h[0] = std::sqrt
+        (rtb_DataTypeConversion8_idx_1 / URControlParams.k0);
+      if (!(rtb_Uk1_o > 0.0)) {
+        rtb_Uk1_o = 0.0;
       }
 
-      errorVel_idx_0 = std::sqrt(uDot_max / URControlParams.k0);
-      if (Fset[2] > 0.0) {
-        uDot_max = Fset[2];
-      } else {
-        uDot_max = 0.0;
+      rtb_TmpSignalConversionAtSFun_h[1] = std::sqrt(rtb_Uk1_o /
+        URControlParams.k0);
+      if (!(Fset_idx_2 > 0.0)) {
+        Fset_idx_2 = 0.0;
       }
 
-      errorVel_idx_1 = std::sqrt(uDot_max / URControlParams.k0);
-      if (Fset[3] > 0.0) {
-        uDot_max = Fset[3];
-      } else {
-        uDot_max = 0.0;
+      rtb_TmpSignalConversionAtSFun_h[2] = std::sqrt(Fset_idx_2 /
+        URControlParams.k0);
+      if (!(rtb_Product3 > 0.0)) {
+        rtb_Product3 = 0.0;
       }
 
-      wRotorSet_data_idx_3 = std::sqrt(uDot_max / URControlParams.k0);
+      rtb_TmpSignalConversionAtSFun_h[3] = std::sqrt(rtb_Product3 /
+        URControlParams.k0);
 
       /* 'URControl_alloc:59' M_uvr_set(1) = (x(4) - x(2))*URpar.s; */
-      URControl_DW.M_uvr_set[0] = (FMin[3] - FMin[1]) * URControlParams.s;
+      URControl_DW.M_uvr_set[0] = (z1[3] - z1[1]) * URControlParams.s;
 
       /* 'URControl_alloc:60' M_uvr_set(2) = (x(1) - x(3))*URpar.s; */
-      URControl_DW.M_uvr_set[1] = (FMin[0] - FMin[2]) * URControlParams.s;
+      URControl_DW.M_uvr_set[1] = (z1[0] - z1[2]) * URControlParams.s;
 
       /* 'URControl_alloc:61' M_uvr_set(3) = (x(1) - x(2) + x(3) - x(4))*URpar.t0/URpar.k0; */
-      URControl_DW.M_uvr_set[2] = (((FMin[0] - FMin[1]) + FMin[2]) - FMin[3]) *
+      URControl_DW.M_uvr_set[2] = (((z1[0] - z1[1]) + z1[2]) - z1[3]) *
         URControlParams.t0 / URControlParams.k0;
 
       /* 'URControl_alloc:62' Ftot_set = sum(x); */
       /* 'URControl_alloc:65' daq.iter = iter; */
       /* 'URControl_alloc:66' daq.optimal = optimal; */
-      URControl_DW.DAQ.optimal = maxval;
+      URControl_DW.DAQ.optimal = rtb_fcn5;
 
       /* 'URControl_alloc:67' daq.M_uvr_des = M_uvr; */
       /* 'URControl_alloc:68' daq.M_uvr_set = M_uvr_set; */
-      URControl_DW.DAQ.M_uvr_des[0] = dummy_idx_1;
+      URControl_DW.DAQ.M_uvr_des[0] = dummy_idx_0;
       URControl_DW.DAQ.M_uvr_set[0] = URControl_DW.M_uvr_set[0];
-      URControl_DW.DAQ.M_uvr_des[1] = uv_des_idx_1;
+      URControl_DW.DAQ.M_uvr_des[1] = rtb_Product2;
       URControl_DW.DAQ.M_uvr_set[1] = URControl_DW.M_uvr_set[1];
-      URControl_DW.DAQ.M_uvr_des[2] = dummy_idx_0;
+      URControl_DW.DAQ.M_uvr_des[2] = rtb_DataTypeConversion8_idx_2;
       URControl_DW.DAQ.M_uvr_set[2] = URControl_DW.M_uvr_set[2];
 
       /* 'URControl_alloc:69' daq.Ftot_set = Ftot_set; */
-      URControl_DW.DAQ.Ftot_set = ((FMin[0] + FMin[1]) + FMin[2]) + FMin[3];
+      URControl_DW.DAQ.Ftot_set = ((z1[0] + z1[1]) + z1[2]) + z1[3];
     }
   }
 
   /* 'URControl_alloc:73' wRotorSet = max(min(wRotorSet, w_max), w_min); */
-  if ((Iv < w_max_idx_0) || rtIsNaN(w_max_idx_0)) {
-    w_max_idx_0 = Iv;
+  rEQ0 = rtIsNaN(FMin[0]);
+  if ((rtb_TmpSignalConversionAtSFun_h[0] < FMin[0]) || rEQ0) {
+    rtb_DataTypeConversion8_idx_0 = rtb_TmpSignalConversionAtSFun_h[0];
+  } else {
+    rtb_DataTypeConversion8_idx_0 = FMin[0];
   }
 
-  if (w_max_idx_0 > 0.0) {
-    URControl_DW.DAQ.wRotorSet[0] = w_max_idx_0;
-    Fset[0] = w_max_idx_0;
+  if ((rtb_TmpSignalConversionAtSFun_h[0] < FMin[0]) || rEQ0) {
+    z1[0] = rtb_TmpSignalConversionAtSFun_h[0];
   } else {
-    URControl_DW.DAQ.wRotorSet[0] = 0.0;
-    Fset[0] = 0.0;
+    z1[0] = FMin[0];
   }
 
-  if (errorVel_idx_0 < 1200.0) {
-    w_max_idx_0 = errorVel_idx_0;
+  if (rtb_TmpSignalConversionAtSFun_h[1] < 1200.0) {
+    rtb_Product2 = rtb_TmpSignalConversionAtSFun_h[1];
   } else {
-    w_max_idx_0 = 1200.0;
+    rtb_Product2 = 1200.0;
   }
 
-  tmp_2 = rtIsNaN(FMax[1]);
-  if ((w_max_idx_0 > FMax[1]) || tmp_2) {
-    URControl_DW.DAQ.wRotorSet[1] = w_max_idx_0;
+  if (rtb_TmpSignalConversionAtSFun_h[1] < 1200.0) {
+    z1[1] = rtb_TmpSignalConversionAtSFun_h[1];
   } else {
-    URControl_DW.DAQ.wRotorSet[1] = FMax[1];
+    z1[1] = 1200.0;
   }
 
-  if ((w_max_idx_0 > FMax[1]) || tmp_2) {
-    Fset[1] = w_max_idx_0;
+  rEQ0 = rtIsNaN(FMin[2]);
+  if ((rtb_TmpSignalConversionAtSFun_h[2] < FMin[2]) || rEQ0) {
+    rtb_Uk1_o = rtb_TmpSignalConversionAtSFun_h[2];
   } else {
-    Fset[1] = FMax[1];
+    rtb_Uk1_o = FMin[2];
   }
 
-  if ((errorVel_idx_1 < Iu) || rtIsNaN(Iu)) {
-    w_max_idx_0 = errorVel_idx_1;
+  if ((rtb_TmpSignalConversionAtSFun_h[2] < FMin[2]) || rEQ0) {
+    z1[2] = rtb_TmpSignalConversionAtSFun_h[2];
   } else {
-    w_max_idx_0 = Iu;
+    z1[2] = FMin[2];
   }
 
-  if (w_max_idx_0 > 0.0) {
-    URControl_DW.DAQ.wRotorSet[2] = w_max_idx_0;
-    Fset[2] = w_max_idx_0;
+  if (rtb_TmpSignalConversionAtSFun_h[3] < 1200.0) {
+    rtb_Product1 = rtb_TmpSignalConversionAtSFun_h[3];
   } else {
-    URControl_DW.DAQ.wRotorSet[2] = 0.0;
-    Fset[2] = 0.0;
+    rtb_Product1 = 1200.0;
   }
 
-  if (wRotorSet_data_idx_3 < 1200.0) {
-    w_max_idx_0 = wRotorSet_data_idx_3;
+  if (rtb_TmpSignalConversionAtSFun_h[3] < 1200.0) {
+    z1[3] = rtb_TmpSignalConversionAtSFun_h[3];
   } else {
-    w_max_idx_0 = 1200.0;
+    z1[3] = 1200.0;
   }
 
-  tmp_2 = rtIsNaN(FMax[3]);
-  if ((w_max_idx_0 > FMax[3]) || tmp_2) {
-    Fset[3] = w_max_idx_0;
+  if (rtb_DataTypeConversion8_idx_0 > 0.0) {
+    rtb_TmpSignalConversionAtSFun_h[0] = rtb_DataTypeConversion8_idx_0;
   } else {
-    Fset[3] = FMax[3];
+    rtb_TmpSignalConversionAtSFun_h[0] = 0.0;
+  }
+
+  rEQ0 = rtIsNaN(w_min_idx_1);
+  if ((rtb_Product2 > w_min_idx_1) || rEQ0) {
+    rtb_TmpSignalConversionAtSFun_h[1] = rtb_Product2;
+  } else {
+    rtb_TmpSignalConversionAtSFun_h[1] = w_min_idx_1;
+  }
+
+  if (rtb_Uk1_o > 0.0) {
+    rtb_TmpSignalConversionAtSFun_h[2] = rtb_Uk1_o;
+  } else {
+    rtb_TmpSignalConversionAtSFun_h[2] = 0.0;
+  }
+
+  tmp_2 = rtIsNaN(Iu);
+  if ((rtb_Product1 > Iu) || tmp_2) {
+    rtb_TmpSignalConversionAtSFun_h[3] = rtb_Product1;
+  } else {
+    rtb_TmpSignalConversionAtSFun_h[3] = Iu;
   }
 
   /* 'URControl_alloc:75' daq.wRotorSet = wRotorSet; */
-  if ((w_max_idx_0 > FMax[3]) || tmp_2) {
-    URControl_DW.DAQ.wRotorSet[3] = w_max_idx_0;
+  if (z1[0] > 0.0) {
+    URControl_DW.DAQ.wRotorSet[0] = z1[0];
   } else {
-    URControl_DW.DAQ.wRotorSet[3] = FMax[3];
+    URControl_DW.DAQ.wRotorSet[0] = 0.0;
+  }
+
+  if ((z1[1] > w_min_idx_1) || rEQ0) {
+    URControl_DW.DAQ.wRotorSet[1] = z1[1];
+  } else {
+    URControl_DW.DAQ.wRotorSet[1] = w_min_idx_1;
+  }
+
+  if (z1[2] > 0.0) {
+    URControl_DW.DAQ.wRotorSet[2] = z1[2];
+  } else {
+    URControl_DW.DAQ.wRotorSet[2] = 0.0;
+  }
+
+  if ((z1[3] > Iu) || tmp_2) {
+    URControl_DW.DAQ.wRotorSet[3] = z1[3];
+  } else {
+    URControl_DW.DAQ.wRotorSet[3] = Iu;
   }
 
   /* 'URControl_alloc:78' if fail_id_quick~=0 */
   if (URControl_U.fail_flag != 0) {
-    /* 'URControl_alloc:79' wRotorSet(fail_id_quick) = par.fail_wRot; */
-    Fset[URControl_U.fail_flag - 1] = 300.0;
+    /* 'URControl_alloc:79' wRotorSet(fail_id_quick) = URpar.fail_wRot; */
+    rtb_TmpSignalConversionAtSFun_h[URControl_U.fail_flag - 1] =
+      URControlParams.fail_wRot;
   }
 
   /* End of MATLAB Function: '<S6>/control allocator' */
 
-  /* Outport: '<Root>/w_rotors' incorporates:
-   *  DataTypeConversion: '<Root>/Data Type Conversion'
-   *  MATLAB Function: '<S1>/MATLAB Function'
+  /* MATLAB Function: '<S1>/MATLAB Function' incorporates:
+   *  MATLAB Function: '<S5>/basic estimators'
    */
   /* :  [wRotorSetFinal, DAQ] = UROverrides(state, DAQ, wRotorSet, par, URControlParams); */
-  /* 'UROverrides:3' wRotorSetFinal = wRotorSet; */
+  /* 'UROverrides:3' if isempty(fallCount) */
+  /* 'UROverrides:4' if isempty(thrown) */
+  /* 'UROverrides:6' if isempty(flipTime) */
+  /* 'UROverrides:8' wRotorSetFinal = wRotorSet; */
+  /* 'UROverrides:11' if URpar.throw_mode == 1 */
+  if (URControlParams.throw_mode == 1.0) {
+    /* 'UROverrides:14' if rms(state.accf) < URpar.throw_threshold */
+    if (std::sqrt(((URControl_DW.State.accf[0] * URControl_DW.State.accf[0] +
+                    URControl_DW.State.accf[1] * URControl_DW.State.accf[1]) +
+                   URControl_DW.State.accf[2] * URControl_DW.State.accf[2]) /
+                  3.0) < URControlParams.throw_threshold) {
+      /* 'UROverrides:15' fallCount = fallCount + 1; */
+      URControl_DW.fallCount++;
+    } else {
+      /* 'UROverrides:16' else */
+      /* 'UROverrides:17' fallCount = fallCount*0.998; */
+      URControl_DW.fallCount *= 0.998;
+    }
+
+    /* 'UROverrides:20' if fallCount > URpar.throw_falltime*par.freq */
+    if (URControl_DW.fallCount > URControlParams.throw_falltime * 500.0) {
+      /* 'UROverrides:21' thrown = 1; */
+      URControl_DW.thrown = 1.0;
+    }
+
+    /* 'UROverrides:24' if thrown == 0 */
+    if (URControl_DW.thrown == 0.0) {
+      /* 'UROverrides:25' wRotorSetFinal = ones(4,1).*par.w_min; */
+      rtb_DataTypeConversion8_idx_1 = 300.0;
+      rtb_Uk1_o = 300.0;
+      Fset_idx_2 = 300.0;
+      rtb_Product3 = 300.0;
+    } else {
+      /* 'UROverrides:26' else */
+      /* 'UROverrides:27' wRotorSetFinal = wRotorSet; */
+      rtb_DataTypeConversion8_idx_1 = rtb_TmpSignalConversionAtSFun_h[0];
+      rtb_Uk1_o = rtb_TmpSignalConversionAtSFun_h[1];
+      Fset_idx_2 = rtb_TmpSignalConversionAtSFun_h[2];
+      rtb_Product3 = rtb_TmpSignalConversionAtSFun_h[3];
+    }
+  } else {
+    /* 'UROverrides:30' else */
+    /* 'UROverrides:31' fallCount = 0; */
+    URControl_DW.fallCount = 0.0;
+
+    /* 'UROverrides:32' thrown = 0; */
+    URControl_DW.thrown = 0.0;
+
+    /* 'UROverrides:33' wRotorSetFinal = wRotorSet; */
+    rtb_DataTypeConversion8_idx_1 = rtb_TmpSignalConversionAtSFun_h[0];
+    rtb_Uk1_o = rtb_TmpSignalConversionAtSFun_h[1];
+    Fset_idx_2 = rtb_TmpSignalConversionAtSFun_h[2];
+    rtb_Product3 = rtb_TmpSignalConversionAtSFun_h[3];
+  }
+
+  /* 'UROverrides:37' if ~(URpar.throw_mode == 1 && thrown == 0) */
+  if ((!(URControlParams.throw_mode == 1.0)) || (!(URControl_DW.thrown == 0.0)))
+  {
+    /* 'UROverrides:38' if URpar.flip_mode == 0 */
+    if (URControlParams.flip_mode == 0.0) {
+      /* 'UROverrides:39' flipTime = 0; */
+      URControl_DW.flipTime = 0.0;
+
+      /* 'UROverrides:40' wRotorSetFinal = wRotorSet; */
+      rtb_DataTypeConversion8_idx_1 = rtb_TmpSignalConversionAtSFun_h[0];
+      rtb_Uk1_o = rtb_TmpSignalConversionAtSFun_h[1];
+      Fset_idx_2 = rtb_TmpSignalConversionAtSFun_h[2];
+      rtb_Product3 = rtb_TmpSignalConversionAtSFun_h[3];
+    } else {
+      if (URControlParams.flip_mode == 1.0) {
+        /* 'UROverrides:42' elseif URpar.flip_mode == 1 */
+        /* 'UROverrides:44' flipTime = flipTime + 1/par.freq; */
+        URControl_DW.flipTime += 0.002;
+
+        /* 'UROverrides:45' if flipTime > URpar.flip_time */
+        if (URControl_DW.flipTime > URControlParams.flip_time) {
+          /* 'UROverrides:46' wRotorSetFinal = wRotorSet; */
+          rtb_DataTypeConversion8_idx_1 = rtb_TmpSignalConversionAtSFun_h[0];
+          rtb_Uk1_o = rtb_TmpSignalConversionAtSFun_h[1];
+          Fset_idx_2 = rtb_TmpSignalConversionAtSFun_h[2];
+          rtb_Product3 = rtb_TmpSignalConversionAtSFun_h[3];
+        } else {
+          /* 'UROverrides:47' else */
+          /* 'UROverrides:48' wRotorSetFinal = ones(4,1).*600 + [1;-1;-1;1]*URpar.flip_intensityX + [1;1;-1;-1]*URpar.flip_intensityY; */
+          rtb_DataTypeConversion8_idx_1 = (600.0 +
+            URControlParams.flip_intensityX) + URControlParams.flip_intensityY;
+          rtb_Uk1_o = (600.0 + -URControlParams.flip_intensityX) +
+            URControlParams.flip_intensityY;
+          Fset_idx_2 = (600.0 + -URControlParams.flip_intensityX) +
+            -URControlParams.flip_intensityY;
+          rtb_Product3 = (600.0 + URControlParams.flip_intensityX) +
+            -URControlParams.flip_intensityY;
+        }
+      }
+    }
+  }
+
+  /* End of MATLAB Function: '<S1>/MATLAB Function' */
+
+  /* Outport: '<Root>/w_rotors' incorporates:
+   *  DataTypeConversion: '<Root>/Data Type Conversion'
+   */
   /* :  actuator_controls = w_sp_to_px4_actuator_controls(w_sp, par); */
   /* 'w_sp_to_px4_actuator_controls:10' w_min_sq = par.px4.w_min^2; */
   /* 'w_sp_to_px4_actuator_controls:11' w_max_sq = par.px4.w_max^2; */
   /* 'w_sp_to_px4_actuator_controls:13' actuator_controls = -1 + 2*(w_sp.^2 - w_min_sq)./(w_max_sq - w_min_sq); */
-  URControl_Y.w_rotors[0] = (real32_T)Fset[0];
+  URControl_Y.w_rotors[0] = (real32_T)rtb_DataTypeConversion8_idx_1;
 
   /* Outport: '<Root>/actuators_control' incorporates:
+   *  DataTypeConversion: '<Root>/Data Type Conversion'
    *  DataTypeConversion: '<Root>/Data Type Conversion11'
    *  MATLAB Function: '<Root>/conversion to px4'
-   *  MATLAB Function: '<S1>/MATLAB Function'
    */
-  URControl_Y.actuators_control[0] = (real32_T)((Fset[0] * Fset[0] -
+  URControl_Y.actuators_control[0] = (real32_T)((rtb_DataTypeConversion8_idx_1 *
+    rtb_DataTypeConversion8_idx_1 - 98696.044010893587) * 2.0 /
+    1.5335171993870398E+6 + -1.0);
+
+  /* Outport: '<Root>/w_rotors' incorporates:
+   *  DataTypeConversion: '<Root>/Data Type Conversion'
+   */
+  URControl_Y.w_rotors[1] = (real32_T)rtb_Uk1_o;
+
+  /* Outport: '<Root>/actuators_control' incorporates:
+   *  DataTypeConversion: '<Root>/Data Type Conversion'
+   *  DataTypeConversion: '<Root>/Data Type Conversion11'
+   *  MATLAB Function: '<Root>/conversion to px4'
+   */
+  URControl_Y.actuators_control[1] = (real32_T)((rtb_Uk1_o * rtb_Uk1_o -
     98696.044010893587) * 2.0 / 1.5335171993870398E+6 + -1.0);
 
   /* Outport: '<Root>/w_rotors' incorporates:
    *  DataTypeConversion: '<Root>/Data Type Conversion'
-   *  MATLAB Function: '<S1>/MATLAB Function'
    */
-  URControl_Y.w_rotors[1] = (real32_T)Fset[1];
+  URControl_Y.w_rotors[2] = (real32_T)Fset_idx_2;
 
   /* Outport: '<Root>/actuators_control' incorporates:
+   *  DataTypeConversion: '<Root>/Data Type Conversion'
    *  DataTypeConversion: '<Root>/Data Type Conversion11'
    *  MATLAB Function: '<Root>/conversion to px4'
-   *  MATLAB Function: '<S1>/MATLAB Function'
    */
-  URControl_Y.actuators_control[1] = (real32_T)((Fset[1] * Fset[1] -
+  URControl_Y.actuators_control[2] = (real32_T)((Fset_idx_2 * Fset_idx_2 -
     98696.044010893587) * 2.0 / 1.5335171993870398E+6 + -1.0);
 
   /* Outport: '<Root>/w_rotors' incorporates:
    *  DataTypeConversion: '<Root>/Data Type Conversion'
-   *  MATLAB Function: '<S1>/MATLAB Function'
    */
-  URControl_Y.w_rotors[2] = (real32_T)Fset[2];
+  URControl_Y.w_rotors[3] = (real32_T)rtb_Product3;
 
   /* Outport: '<Root>/actuators_control' incorporates:
-   *  DataTypeConversion: '<Root>/Data Type Conversion11'
-   *  MATLAB Function: '<Root>/conversion to px4'
-   *  MATLAB Function: '<S1>/MATLAB Function'
-   */
-  URControl_Y.actuators_control[2] = (real32_T)((Fset[2] * Fset[2] -
-    98696.044010893587) * 2.0 / 1.5335171993870398E+6 + -1.0);
-
-  /* Outport: '<Root>/w_rotors' incorporates:
    *  DataTypeConversion: '<Root>/Data Type Conversion'
-   *  MATLAB Function: '<S1>/MATLAB Function'
-   */
-  URControl_Y.w_rotors[3] = (real32_T)Fset[3];
-
-  /* Outport: '<Root>/actuators_control' incorporates:
    *  DataTypeConversion: '<Root>/Data Type Conversion11'
    *  MATLAB Function: '<Root>/conversion to px4'
-   *  MATLAB Function: '<S1>/MATLAB Function'
    */
-  URControl_Y.actuators_control[3] = (real32_T)((Fset[3] * Fset[3] -
+  URControl_Y.actuators_control[3] = (real32_T)((rtb_Product3 * rtb_Product3 -
     98696.044010893587) * 2.0 / 1.5335171993870398E+6 + -1.0);
 
-  /* SignalConversion: '<S15>/ConcatBufferAtVector Concatenate1In1' incorporates:
+  /* DiscreteStateSpace: '<S15>/Discrete State-Space' */
+  {
+    rtb_accs_filter[0] = (1.0)*URControl_DW.DiscreteStateSpace_DSTATE_i[0];
+    rtb_accs_filter[1] = (1.0)*URControl_DW.DiscreteStateSpace_DSTATE_i[1];
+    rtb_accs_filter[2] = (1.0)*URControl_DW.DiscreteStateSpace_DSTATE_i[2];
+  }
+
+  /* Outputs for Atomic SubSystem: '<S18>/Predict' */
+  /* SignalConversion: '<S27>/TmpSignal ConversionAt SFunction Inport4' incorporates:
+   *  DataTypeConversion: '<Root>/Data Type Conversion5'
+   *  Inport: '<Root>/rates'
+   *  MATLAB Function: '<S25>/Predict'
+   */
+  rtb_TmpSignalConversionAtSFunct[0] = rtb_accs_filter[0];
+  rtb_TmpSignalConversionAtSFunct[3] = URControl_U.rates[0];
+  rtb_TmpSignalConversionAtSFunct[1] = rtb_accs_filter[1];
+  rtb_TmpSignalConversionAtSFunct[4] = URControl_U.rates[1];
+  rtb_TmpSignalConversionAtSFunct[2] = rtb_accs_filter[2];
+  rtb_TmpSignalConversionAtSFunct[5] = URControl_U.rates[2];
+
+  /* MATLAB Function: '<S25>/Predict' incorporates:
+   *  DataStoreRead: '<S25>/Data Store ReadP'
+   *  DataStoreRead: '<S25>/Data Store ReadX'
+   *  DataTypeConversion: '<Root>/Data Type Conversion5'
+   *  Inport: '<Root>/rates'
+   *  SignalConversion: '<S27>/TmpSignal ConversionAt SFunction Inport4'
+   */
+  /* :  if pS.IsSimulinkFcn */
+  /* :  else */
+  /* :  StateTransitionFcnH = str2func(pS.FcnName); */
+  /* :  if pS.HasJacobian */
+  /* :  StateTransitionJacobianFcnH = str2func(pS.JacobianFcnName); */
+  /* :  switch pS.NumberOfExtraArgumentInports */
+  /* :  case 1 */
+  /* :  extraArgs = {uState}; */
+  /* :  xNew = zeros(size(x),'like',x); */
+  /* :  if pS.HasAdditiveNoise */
+  /* :  [xNew,P] = matlabshared.tracking.internal.EKFPredictorAdditive.predict(... */
+  /* :          Q,x,P,StateTransitionFcnH,StateTransitionJacobianFcnH,extraArgs{:}); */
+  URControl_ekf_state_jacob(URControl_DW.x, rtb_TmpSignalConversionAtSFunct,
+    Jacobian);
+
+  /* 'ekf_state_func:7' posx = x(1); */
+  /* 'ekf_state_func:8' posy = x(2); */
+  /* 'ekf_state_func:9' posz = x(3); */
+  /* 'ekf_state_func:11' velx = x(4); */
+  /* 'ekf_state_func:12' vely = x(5); */
+  /* 'ekf_state_func:13' velz = x(6); */
+  /* 'ekf_state_func:15' q1 = x(7); */
+  /* 'ekf_state_func:16' q2 = x(8); */
+  /* 'ekf_state_func:17' q3 = x(9); */
+  /* 'ekf_state_func:18' q4 = x(10); */
+  /* 'ekf_state_func:20' accBx = u(1); */
+  /* 'ekf_state_func:21' accBy = u(2); */
+  /* 'ekf_state_func:22' accBz = u(3); */
+  /* 'ekf_state_func:24' omegax = u(4); */
+  /* 'ekf_state_func:25' omegay = u(5); */
+  /* 'ekf_state_func:26' omegaz = u(6); */
+  /* 'ekf_state_func:28' dt = 0.002; */
+  /* 'ekf_state_func:31' pos = [posx; posy; posz]; */
+  /* 'ekf_state_func:32' vel = [velx; vely; velz]; */
+  /* 'ekf_state_func:33' accB = [accBx; accBy; accBz]; */
+  /* 'ekf_state_func:34' omega = [omegax; omegay; omegaz]; */
+  /* 'ekf_state_func:35' q = [q1; q2; q3; q4]; */
+  /* 'ekf_state_func:37' x = zeros(10,1); */
+  /* 'ekf_state_func:39' acc = quatRot(q', accB') + [0,0,9.81]; */
+  /* 'quatRot:3' qconj = [ q(:,1)  -q(:,2:4) ]; */
+  /* 'quatRot:5' dummy = HProduct(HProduct(q,[0,vector]),qconj); */
+  /* 'quatRot:14' vec = [v1(:,1).*v2(:,2) v1(:,1).*v2(:,3) v1(:,1).*v2(:,4)] + ... */
+  /* 'quatRot:15'          [v2(:,1).*v1(:,2) v2(:,1).*v1(:,3) v2(:,1).*v1(:,4)]+... */
+  /* 'quatRot:16'          [ v1(:,3).*v2(:,4)-v1(:,4).*v2(:,3) ... */
+  /* 'quatRot:17'            v1(:,4).*v2(:,2)-v1(:,2).*v2(:,4) ... */
+  /* 'quatRot:18'            v1(:,2).*v2(:,3)-v1(:,3).*v2(:,2)]; */
+  /* 'quatRot:22' scalar = v1(:,1).*v2(:,1) - v1(:,2).*v2(:,2) - ... */
+  /* 'quatRot:23'              v1(:,3).*v2(:,3) - v1(:,4).*v2(:,4); */
+  /* 'quatRot:25' qout = [scalar  vec]; */
+  rtb_Product3 = ((URControl_DW.x[6] * 0.0 - URControl_DW.x[7] *
+                   rtb_accs_filter[0]) - URControl_DW.x[8] * rtb_accs_filter[1])
+    - URControl_DW.x[9] * rtb_accs_filter[2];
+  w_min_idx_1 = (URControl_DW.x[6] * rtb_accs_filter[0] + 0.0 * URControl_DW.x[7])
+    + (URControl_DW.x[8] * rtb_accs_filter[2] - URControl_DW.x[9] *
+       rtb_accs_filter[1]);
+  rtb_fcn5 = (URControl_DW.x[6] * rtb_accs_filter[1] + 0.0 * URControl_DW.x[8])
+    + (URControl_DW.x[9] * rtb_accs_filter[0] - URControl_DW.x[7] *
+       rtb_accs_filter[2]);
+  Iu = (URControl_DW.x[6] * rtb_accs_filter[2] + 0.0 * URControl_DW.x[9]) +
+    (URControl_DW.x[7] * rtb_accs_filter[1] - URControl_DW.x[8] *
+     rtb_accs_filter[0]);
+
+  /* 'quatRot:14' vec = [v1(:,1).*v2(:,2) v1(:,1).*v2(:,3) v1(:,1).*v2(:,4)] + ... */
+  /* 'quatRot:15'          [v2(:,1).*v1(:,2) v2(:,1).*v1(:,3) v2(:,1).*v1(:,4)]+... */
+  /* 'quatRot:16'          [ v1(:,3).*v2(:,4)-v1(:,4).*v2(:,3) ... */
+  /* 'quatRot:17'            v1(:,4).*v2(:,2)-v1(:,2).*v2(:,4) ... */
+  /* 'quatRot:18'            v1(:,2).*v2(:,3)-v1(:,3).*v2(:,2)]; */
+  /* 'quatRot:22' scalar = v1(:,1).*v2(:,1) - v1(:,2).*v2(:,2) - ... */
+  /* 'quatRot:23'              v1(:,3).*v2(:,3) - v1(:,4).*v2(:,4); */
+  /* 'quatRot:25' qout = [scalar  vec]; */
+  /* 'quatRot:6' r = dummy(2:4); */
+  /* 'ekf_state_func:42' for i = 1:3 */
+  /* 'ekf_state_func:45' for i = 1:3 */
+  /* 'ekf_state_func:49' q_dot1 = -0.5*dotProduct(q(2:4),omega); */
+  /* 'dotProduct:3' c = sum(a.*b); */
+  /* 'ekf_state_func:43' x(i) = pos(i) + vel(i)*dt; */
+  rtb_xNew_k[0] = URControl_DW.x[3] * 0.002 + URControl_DW.x[0];
+
+  /* 'ekf_state_func:46' x(i+3) = vel(i) + acc(i)*dt; */
+  rtb_xNew_k[3] = ((rtb_Product3 * -URControl_DW.x[7] + URControl_DW.x[6] *
+                    w_min_idx_1) + (rtb_fcn5 * -URControl_DW.x[9] - Iu *
+    -URControl_DW.x[8])) * 0.002 + URControl_DW.x[3];
+
+  /* 'ekf_state_func:43' x(i) = pos(i) + vel(i)*dt; */
+  rtb_xNew_k[1] = URControl_DW.x[4] * 0.002 + URControl_DW.x[1];
+
+  /* 'ekf_state_func:46' x(i+3) = vel(i) + acc(i)*dt; */
+  rtb_xNew_k[4] = ((rtb_Product3 * -URControl_DW.x[8] + URControl_DW.x[6] *
+                    rtb_fcn5) + (Iu * -URControl_DW.x[7] - w_min_idx_1 *
+    -URControl_DW.x[9])) * 0.002 + URControl_DW.x[4];
+
+  /* 'ekf_state_func:43' x(i) = pos(i) + vel(i)*dt; */
+  rtb_xNew_k[2] = URControl_DW.x[5] * 0.002 + URControl_DW.x[2];
+
+  /* 'ekf_state_func:46' x(i+3) = vel(i) + acc(i)*dt; */
+  rtb_xNew_k[5] = (((rtb_Product3 * -URControl_DW.x[9] + URControl_DW.x[6] * Iu)
+                    + (w_min_idx_1 * -URControl_DW.x[8] - rtb_fcn5 *
+                       -URControl_DW.x[7])) + 9.81) * 0.002 + URControl_DW.x[5];
+
+  /* 'ekf_state_func:50' q_dot24 = 0.5*(crossProduct(q(2:4),omega) + omega*q(1)); */
+  /* 'crossProduct:3' c = [a(2)*b(3) - a(3)*b(2); a(3)*b(1) - a(1)*b(3); a(1)*b(2) - a(2)*b(1)]; */
+  /* 'ekf_state_func:51' q_dot = [q_dot1; q_dot24]; */
+  /* 'ekf_state_func:53' q = q + q_dot*dt; */
+  rtb_DataTypeConversion8_idx_1 = ((URControl_DW.x[7] * URControl_U.rates[0] +
+    URControl_DW.x[8] * URControl_U.rates[1]) + URControl_DW.x[9] *
+    URControl_U.rates[2]) * -0.5 * 0.002 + URControl_DW.x[6];
+  rtb_Uk1_o = ((URControl_DW.x[8] * URControl_U.rates[2] - URControl_DW.x[9] *
+                URControl_U.rates[1]) + URControl_U.rates[0] * URControl_DW.x[6])
+    * 0.5 * 0.002 + URControl_DW.x[7];
+  Fset_idx_2 = ((URControl_DW.x[9] * URControl_U.rates[0] - URControl_DW.x[7] *
+                 URControl_U.rates[2]) + URControl_U.rates[1] * URControl_DW.x[6])
+    * 0.5 * 0.002 + URControl_DW.x[8];
+  rtb_fcn5 = ((URControl_DW.x[7] * URControl_U.rates[1] - URControl_DW.x[8] *
+               URControl_U.rates[0]) + URControl_U.rates[2] * URControl_DW.x[6])
+    * 0.5 * 0.002 + URControl_DW.x[9];
+
+  /* 'ekf_state_func:54' qnorm = sqrt(q(1)^2 + q(2)^2 + q(3)^2 + q(4)^2); */
+  rtb_Product3 = std::sqrt(((rtb_DataTypeConversion8_idx_1 *
+    rtb_DataTypeConversion8_idx_1 + rtb_Uk1_o * rtb_Uk1_o) + Fset_idx_2 *
+    Fset_idx_2) + rtb_fcn5 * rtb_fcn5);
+
+  /* 'ekf_state_func:55' q = q/qnorm; */
+  /* 'ekf_state_func:57' for i = 1:4 */
+  /* 'ekf_state_func:58' x(i+6) = q(i); */
+  rtb_xNew_k[6] = rtb_DataTypeConversion8_idx_1 / rtb_Product3;
+
+  /* 'ekf_state_func:58' x(i+6) = q(i); */
+  rtb_xNew_k[7] = rtb_Uk1_o / rtb_Product3;
+
+  /* 'ekf_state_func:58' x(i+6) = q(i); */
+  rtb_xNew_k[8] = Fset_idx_2 / rtb_Product3;
+
+  /* 'ekf_state_func:58' x(i+6) = q(i); */
+  rtb_xNew_k[9] = rtb_fcn5 / rtb_Product3;
+  for (r2 = 0; r2 < 10; r2++) {
+    for (r3 = 0; r3 < 10; r3++) {
+      rtemp = r3 + 10 * r2;
+      Jacobian_1[rtemp] = 0.0;
+      for (i = 0; i < 10; i++) {
+        Jacobian_1[rtemp] = Jacobian[10 * i + r3] * URControl_DW.P[10 * r2 + i]
+          + Jacobian_1[10 * r2 + r3];
+      }
+    }
+  }
+
+  for (i = 0; i < 10; i++) {
+    /* DataStoreWrite: '<S25>/Data Store WriteP' incorporates:
+     *  Constant: '<S18>/Q'
+     *  MATLAB Function: '<S25>/Predict'
+     */
+    for (r2 = 0; r2 < 10; r2++) {
+      rtb_DataTypeConversion8_idx_0 = 0.0;
+      for (r3 = 0; r3 < 10; r3++) {
+        rtb_DataTypeConversion8_idx_0 += Jacobian_1[10 * r3 + i] * Jacobian[10 *
+          r3 + r2];
+      }
+
+      URControl_DW.P[i + 10 * r2] = URControl_ConstP.Q_Value[10 * r2 + i] +
+        rtb_DataTypeConversion8_idx_0;
+    }
+
+    /* End of DataStoreWrite: '<S25>/Data Store WriteP' */
+
+    /* DataStoreWrite: '<S25>/Data Store WriteX' */
+    URControl_DW.x[i] = rtb_xNew_k[i];
+  }
+
+  /* End of Outputs for SubSystem: '<S18>/Predict' */
+
+  /* SignalConversion: '<S16>/ConcatBufferAtVector Concatenate1In1' incorporates:
    *  DataTypeConversion: '<Root>/Data Type Conversion5'
    *  Inport: '<Root>/rates'
    */
   rtb_VectorConcatenate1[0] = URControl_U.rates[0];
+
+  /* SignalConversion: '<S16>/ConcatBufferAtVector Concatenate2In1' incorporates:
+   *  DataTypeConversion: '<Root>/Data Type Conversion4'
+   *  Inport: '<Root>/pos'
+   */
+  rtb_VectorConcatenate2[0] = URControl_U.pos[0];
+
+  /* SignalConversion: '<S16>/ConcatBufferAtVector Concatenate1In1' incorporates:
+   *  DataTypeConversion: '<Root>/Data Type Conversion5'
+   *  Inport: '<Root>/rates'
+   */
   rtb_VectorConcatenate1[1] = URControl_U.rates[1];
+
+  /* SignalConversion: '<S16>/ConcatBufferAtVector Concatenate2In1' incorporates:
+   *  DataTypeConversion: '<Root>/Data Type Conversion4'
+   *  Inport: '<Root>/pos'
+   */
+  rtb_VectorConcatenate2[1] = URControl_U.pos[1];
+
+  /* SignalConversion: '<S16>/ConcatBufferAtVector Concatenate1In1' incorporates:
+   *  DataTypeConversion: '<Root>/Data Type Conversion5'
+   *  Inport: '<Root>/rates'
+   */
   rtb_VectorConcatenate1[2] = URControl_U.rates[2];
 
-  /* DiscreteStateSpace: '<S15>/Discrete State-Space' */
-  {
-    rtb_VectorConcatenate1[3] = (1.0)*URControl_DW.DiscreteStateSpace_DSTATE_a[0];
-    rtb_VectorConcatenate1[4] = (1.0)*URControl_DW.DiscreteStateSpace_DSTATE_a[1];
-    rtb_VectorConcatenate1[5] = (1.0)*URControl_DW.DiscreteStateSpace_DSTATE_a[2];
+  /* SignalConversion: '<S16>/ConcatBufferAtVector Concatenate2In1' incorporates:
+   *  DataTypeConversion: '<Root>/Data Type Conversion4'
+   *  Inport: '<Root>/pos'
+   */
+  rtb_VectorConcatenate2[2] = URControl_U.pos[2];
+
+  /* MATLAB Function: '<S16>/unwrap2pi' incorporates:
+   *  DataTypeConversion: '<Root>/Data Type Conversion6'
+   *  Inport: '<Root>/att'
+   */
+  /* :  psi0 = att(3); */
+  /* :  if isempty(psi_last) */
+  if (!URControl_DW.psi_last_not_empty) {
+    /* :  psi_last = psi0; */
+    URControl_DW.psi_last = URControl_U.att[2];
+    URControl_DW.psi_last_not_empty = true;
   }
 
-  /* Outputs for Atomic SubSystem: '<S18>/Predict' */
-  /* MATLAB Function: '<S23>/Predict' incorporates:
-   *  DataStoreRead: '<S23>/Data Store ReadP'
-   *  DataStoreRead: '<S23>/Data Store ReadX'
+  /* :  if isempty(N) */
+  /* :  if (psi0-psi_last)>1.0*pi */
+  rtb_DataTypeConversion8_idx_0 = URControl_U.att[2] - URControl_DW.psi_last;
+  if (rtb_DataTypeConversion8_idx_0 > 3.1415926535897931) {
+    /* :  N = N-1; */
+    URControl_DW.N--;
+  } else {
+    if (rtb_DataTypeConversion8_idx_0 < -3.1415926535897931) {
+      /* :  elseif (psi0-psi_last)< -1.0*pi */
+      /* :  N = N+1; */
+      URControl_DW.N++;
+    }
+  }
+
+  /* :  psi_last = psi0; */
+  URControl_DW.psi_last = URControl_U.att[2];
+
+  /* :  att_out = att; */
+  /* :  att_out(3) = psi0 + 2*N*pi; */
+  rtb_fcn5 = 2.0 * URControl_DW.N * 3.1415926535897931 + URControl_U.att[2];
+
+  /* End of MATLAB Function: '<S16>/unwrap2pi' */
+
+  /* DiscreteStateSpace: '<S16>/Discrete State-Space' */
+  {
+    rtb_VectorConcatenate1[3] = (1.0)*URControl_DW.DiscreteStateSpace_DSTATE_n[0];
+    rtb_VectorConcatenate1[4] = (1.0)*URControl_DW.DiscreteStateSpace_DSTATE_n[1];
+    rtb_VectorConcatenate1[5] = (1.0)*URControl_DW.DiscreteStateSpace_DSTATE_n[2];
+  }
+
+  /* MATLAB Function: '<S16>/MATLAB Function' incorporates:
+   *  DataTypeConversion: '<Root>/Data Type Conversion5'
+   *  DataTypeConversion: '<Root>/Data Type Conversion6'
+   *  Inport: '<Root>/att'
+   *  Inport: '<Root>/rates'
+   *  Sum: '<S32>/Diff'
+   *  UnitDelay: '<S32>/UD'
+   */
+  /* :  if isempty(psi_last) */
+  /* :  tol_max = 2; */
+  /* :  tol = 1e-3; */
+  /* :  dt = 0.002; */
+  /* :  r = rates(3); */
+  /* :  if abs(psi_diff) < tol */
+  if (std::abs(rtb_fcn5 - URControl_DW.UD_DSTATE_p) < 0.001) {
+    /* :  psi = psi_last + r * dt; */
+    rtb_Product3 = URControl_U.rates[2] * 0.002 + URControl_DW.psi_last_b;
+  } else if (std::abs(URControl_DW.psi_last_b - rtb_fcn5) > 2.0) {
+    /* :  elseif abs(psi_last - att(3)) > tol_max */
+    /* :  psi = psi_last + r * dt; */
+    rtb_Product3 = URControl_U.rates[2] * 0.002 + URControl_DW.psi_last_b;
+  } else {
+    /* :  else */
+    /* :  psi = att(3); */
+    rtb_Product3 = rtb_fcn5;
+  }
+
+  /* :  psi_last = psi; */
+  URControl_DW.psi_last_b = rtb_Product3;
+
+  /* :  att_smooth = att; */
+  rtb_VectorConcatenate2[3] = URControl_U.att[0];
+  rtb_VectorConcatenate2[4] = URControl_U.att[1];
+
+  /* :  att_smooth(3) = psi; */
+  rtb_VectorConcatenate2[5] = rtb_Product3;
+
+  /* End of MATLAB Function: '<S16>/MATLAB Function' */
+
+  /* MATLAB Function: '<S16>/enableMeas' */
+  URControl_enableMeas(rtb_att, &URControl_B.sf_enableMeas_e,
+                       &URControl_DW.sf_enableMeas_e);
+
+  /* Outputs for Enabled SubSystem: '<S33>/Correct1' incorporates:
+   *  EnablePort: '<S37>/Enable'
+   */
+  /* DataTypeConversion: '<S33>/DataTypeConversion_Enable1' */
+  if (URControl_B.sf_enableMeas_e.enableMeas != 0.0) {
+    /* MATLAB Function: '<S37>/Correct' incorporates:
+     *  Constant: '<S33>/R1'
+     *  DataStoreRead: '<S37>/Data Store ReadP'
+     *  DataStoreRead: '<S37>/Data Store ReadX'
+     */
+    /* :  if pM.IsSimulinkFcn */
+    /* :  else */
+    /* :  MeasurementFcnH = str2func(pM.FcnName); */
+    /* :  if pM.HasJacobian */
+    /* :  MeasurementJacobianFcnH = str2func(pM.JacobianFcnName); */
+    /* :  switch pM.NumberOfExtraArgumentInports */
+    /* :  case 1 */
+    /* :  extraArgs = {uMeas}; */
+    /* :  xNew = zeros(size(x),'like',x); */
+    /* :  if pM.HasAdditiveNoise */
+    /* :  [xNew,P] = matlabshared.tracking.internal.EKFCorrectorAdditive.correct(... */
+    /* :          yMeas,R,x,P,MeasurementFcnH,MeasurementJacobianFcnH,extraArgs{:}); */
+    /* 'EKF_att_pos_mea_Jacobian:3' phi = x(7); */
+    /* 'EKF_att_pos_mea_Jacobian:4' theta = x(8); */
+    /* 'EKF_att_pos_mea_Jacobian:5' psi = x(9); */
+    /* 'EKF_att_pos_mea_Jacobian:7' dx = u(1); */
+    /* 'EKF_att_pos_mea_Jacobian:8' dy = u(2); */
+    /* 'EKF_att_pos_mea_Jacobian:9' dz = u(3); */
+    /* 'EKF_att_pos_mea_Jacobian:29' B = ... */
+    /* 'EKF_att_pos_mea_Jacobian:30' [ 1, 0, 0, 0, 0, 0,   (dy)*(sin((phi))*sin((psi)) + cos((phi))*cos((psi))*sin((theta))) + (dz)*(cos((phi))*sin((psi)) - cos((psi))*sin((phi))*sin((theta))), cos((phi))*cos((psi))*cos((theta))*(dz) - cos((psi))*sin((theta))*(dx) + cos((psi))*cos((theta))*sin((phi))*(dy), (dz)*(cos((psi))*sin((phi)) - cos((phi))*sin((psi))*sin((theta))) - (dy)*(cos((phi))*cos((psi)) + sin((phi))*sin((psi))*sin((theta))) - cos((theta))*sin((psi))*(dx); */
+    /* 'EKF_att_pos_mea_Jacobian:31'  0, 1, 0, 0, 0, 0, - (dy)*(cos((psi))*sin((phi)) - cos((phi))*sin((psi))*sin((theta))) - (dz)*(cos((phi))*cos((psi)) + sin((phi))*sin((psi))*sin((theta))), cos((phi))*cos((theta))*sin((psi))*(dz) - sin((psi))*sin((theta))*(dx) + cos((theta))*sin((phi))*sin((psi))*(dy), (dz)*(sin((phi))*sin((psi)) + cos((phi))*cos((psi))*sin((theta))) - (dy)*(cos((phi))*sin((psi)) - cos((psi))*sin((phi))*sin((theta))) + cos((psi))*cos((theta))*(dx); */
+    /* 'EKF_att_pos_mea_Jacobian:32'  0, 0, 1, 0, 0, 0,                                                                                                     cos((phi))*cos((theta))*(dy) - cos((theta))*sin((phi))*(dz),                                            - cos((theta))*(dx) - cos((phi))*sin((theta))*(dz) - sin((phi))*sin((theta))*(dy),                                                                                                                                                                                                                                0; */
+    /* 'EKF_att_pos_mea_Jacobian:33'  0, 0, 0, 0, 0, 0,                                                                                                                                                                                       1,                                                                                                                                                            0,                                                                                                                                                                                                                                0; */
+    /* 'EKF_att_pos_mea_Jacobian:34'  0, 0, 0, 0, 0, 0,                                                                                                                                                                                       0,                                                                                                                                                            1,                                                                                                                                                                                                                                0; */
+    /* 'EKF_att_pos_mea_Jacobian:35'  0, 0, 0, 0, 0, 0,                                                                                                                                                                                       0,                                                                                                                                                            0,                                                                                                                                                                                                                                1]; */
+    dHdx[0] = 1.0;
+    dHdx[6] = 0.0;
+    dHdx[12] = 0.0;
+    dHdx[18] = 0.0;
+    dHdx[24] = 0.0;
+    dHdx[30] = 0.0;
+    rtb_Product3 = std::cos(URControl_DW.x_e[6]);
+    w_min_idx_1 = std::sin(URControl_DW.x_e[8]);
+    Iu = std::cos(URControl_DW.x_e[8]);
+    rtb_Product1 = std::sin(URControl_DW.x_e[6]);
+    dummy_idx_0 = std::sin(URControl_DW.x_e[7]);
+    rtb_DataTypeConversion8_idx_1 = rtb_Product3 * Iu;
+    rtb_DataTypeConversion8_idx_0 = rtb_Product3 * w_min_idx_1;
+    rtb_Product2 = Iu * rtb_Product1;
+    rtb_DataTypeConversion8_idx_2 = rtb_Product1 * w_min_idx_1;
+    rtb_u2_idx_2 = (rtb_DataTypeConversion8_idx_1 * dummy_idx_0 +
+                    rtb_DataTypeConversion8_idx_2) * 0.0;
+    rtb_u2_idx_1 = (rtb_DataTypeConversion8_idx_0 - rtb_Product2 * dummy_idx_0) *
+      0.0;
+    dHdx[36] = rtb_u2_idx_2 + rtb_u2_idx_1;
+    rtb_Uk1_o = std::cos(URControl_DW.x_e[7]);
+    Fset_idx_2 = Iu * rtb_Uk1_o;
+    dHdx_tmp = Iu * dummy_idx_0;
+    dHdx[42] = (rtb_DataTypeConversion8_idx_1 * rtb_Uk1_o * 0.0 - dHdx_tmp *
+                0.01) + Fset_idx_2 * rtb_Product1 * 0.0;
+    rtb_DataTypeConversion8_idx_0 = rtb_Product2 - rtb_DataTypeConversion8_idx_0
+      * dummy_idx_0;
+    rtb_DataTypeConversion8_idx_1 = (rtb_DataTypeConversion8_idx_2 * dummy_idx_0
+      + rtb_DataTypeConversion8_idx_1) * 0.0;
+    dHdx[48] = (rtb_DataTypeConversion8_idx_0 * 0.0 -
+                rtb_DataTypeConversion8_idx_1) - rtb_Uk1_o * w_min_idx_1 * 0.01;
+    dHdx[1] = 0.0;
+    dHdx[7] = 1.0;
+    dHdx[13] = 0.0;
+    dHdx[19] = 0.0;
+    dHdx[25] = 0.0;
+    dHdx[31] = 0.0;
+    dHdx[37] = rtb_DataTypeConversion8_idx_0 * -0.0 -
+      rtb_DataTypeConversion8_idx_1;
+    rtb_DataTypeConversion8_idx_1 = rtb_Product3 * rtb_Uk1_o;
+    rtb_DataTypeConversion8_idx_0 = rtb_Uk1_o * rtb_Product1;
+    rtb_DataTypeConversion8_idx_2 = w_min_idx_1 * dummy_idx_0;
+    dHdx[43] = (rtb_DataTypeConversion8_idx_1 * w_min_idx_1 * 0.0 -
+                rtb_DataTypeConversion8_idx_2 * 0.01) +
+      rtb_DataTypeConversion8_idx_0 * w_min_idx_1 * 0.0;
+    dHdx[49] = (rtb_u2_idx_2 - rtb_u2_idx_1) + Fset_idx_2 * 0.01;
+    dHdx[2] = 0.0;
+    dHdx[8] = 0.0;
+    dHdx[14] = 1.0;
+    dHdx[20] = 0.0;
+    dHdx[26] = 0.0;
+    dHdx[32] = 0.0;
+    dHdx[38] = rtb_DataTypeConversion8_idx_1 * 0.0 -
+      rtb_DataTypeConversion8_idx_0 * 0.0;
+    dHdx[44] = (-rtb_Uk1_o * 0.01 - rtb_Product3 * dummy_idx_0 * 0.0) -
+      rtb_Product1 * dummy_idx_0 * 0.0;
+    dHdx[50] = 0.0;
+    for (r2 = 0; r2 < 9; r2++) {
+      dHdx[3 + 6 * r2] = b_1[r2];
+      dHdx[4 + 6 * r2] = c[r2];
+      dHdx[5 + 6 * r2] = d[r2];
+    }
+
+    /* 'EKF_att_pos_mea:3' y = zeros(6,1); */
+    /* 'EKF_att_pos_mea:5' px = x(1); */
+    /* 'EKF_att_pos_mea:6' py = x(2); */
+    /* 'EKF_att_pos_mea:7' pz = x(3); */
+    /* 'EKF_att_pos_mea:9' phi = x(7); */
+    /* 'EKF_att_pos_mea:10' theta = x(8); */
+    /* 'EKF_att_pos_mea:11' psi = x(9); */
+    /* 'EKF_att_pos_mea:13' dx = u(1); */
+    /* 'EKF_att_pos_mea:14' dy = u(2); */
+    /* 'EKF_att_pos_mea:15' dz = u(3); */
+    /* 'EKF_att_pos_mea:17' R_IB = [cos(psi)*cos(theta) , cos(psi)*sin(theta)*sin(phi)-sin(psi)*cos(phi), cos(psi)*sin(theta)*cos(phi)+sin(psi)*sin(phi); */
+    /* 'EKF_att_pos_mea:18'     sin(psi)*cos(theta) ,sin(psi)*sin(theta)*sin(phi)+cos(psi)*cos(phi), sin(psi)*sin(theta)*cos(phi)-cos(psi)*sin(phi); */
+    /* 'EKF_att_pos_mea:19'     -sin(theta)          , cos(theta)*sin(phi)                          , cos(theta)*cos(phi)                          ]; */
+    /* 'EKF_att_pos_mea:21' dPos = R_IB*[dx;dy;dz]; */
+    R_IB[0] = Fset_idx_2;
+    R_IB[3] = dHdx_tmp * rtb_Product1 - w_min_idx_1 * rtb_Product3;
+    R_IB[6] = dHdx_tmp * rtb_Product3 + w_min_idx_1 * rtb_Product1;
+    R_IB[1] = w_min_idx_1 * rtb_Uk1_o;
+    R_IB[4] = rtb_DataTypeConversion8_idx_2 * rtb_Product1 + Iu * rtb_Product3;
+    R_IB[7] = rtb_DataTypeConversion8_idx_2 * rtb_Product3 - rtb_Product2;
+    R_IB[2] = -dummy_idx_0;
+    R_IB[5] = rtb_DataTypeConversion8_idx_0;
+    R_IB[8] = rtb_Uk1_o * rtb_Product3;
+    for (r2 = 0; r2 < 3; r2++) {
+      rtb_omega[r2] = R_IB[r2 + 6] * 0.0 + (R_IB[r2 + 3] * 0.0 + R_IB[r2] * 0.01);
+    }
+
+    /* 'EKF_att_pos_mea:23' y(1) = px + dPos(1); */
+    zEstimated_0[0] = URControl_DW.x_e[0] + rtb_omega[0];
+
+    /* 'EKF_att_pos_mea:24' y(2) = py + dPos(2); */
+    zEstimated_0[1] = URControl_DW.x_e[1] + rtb_omega[1];
+
+    /* 'EKF_att_pos_mea:25' y(3) = pz + dPos(3); */
+    zEstimated_0[2] = URControl_DW.x_e[2] + rtb_omega[2];
+
+    /* 'EKF_att_pos_mea:26' y(4) = phi; */
+    zEstimated_0[3] = URControl_DW.x_e[6];
+
+    /* 'EKF_att_pos_mea:27' y(5) = theta; */
+    zEstimated_0[4] = URControl_DW.x_e[7];
+
+    /* 'EKF_att_pos_mea:28' y(6) = psi; */
+    zEstimated_0[5] = URControl_DW.x_e[8];
+    for (r2 = 0; r2 < 9; r2++) {
+      for (r3 = 0; r3 < 6; r3++) {
+        rtemp = r2 + 9 * r3;
+        gain_0[rtemp] = 0.0;
+        for (i = 0; i < 9; i++) {
+          gain_0[rtemp] = URControl_DW.P_n[9 * i + r2] * dHdx[6 * i + r3] +
+            gain_0[9 * r3 + r2];
+        }
+      }
+    }
+
+    for (r2 = 0; r2 < 6; r2++) {
+      for (r3 = 0; r3 < 9; r3++) {
+        rtemp = r2 + 6 * r3;
+        dHdx_1[rtemp] = 0.0;
+        for (i = 0; i < 9; i++) {
+          dHdx_1[rtemp] = dHdx[6 * i + r2] * URControl_DW.P_n[9 * r3 + i] +
+            dHdx_1[6 * r3 + r2];
+        }
+      }
+
+      for (r3 = 0; r3 < 6; r3++) {
+        rtb_DataTypeConversion8_idx_0 = 0.0;
+        for (i = 0; i < 9; i++) {
+          rtb_DataTypeConversion8_idx_0 += dHdx_1[6 * i + r2] * dHdx[6 * i + r3];
+        }
+
+        dHdx_0[r2 + 6 * r3] = URControl_ConstP.R1_Value_a[6 * r3 + r2] +
+          rtb_DataTypeConversion8_idx_0;
+      }
+    }
+
+    URControl_mrdivide_helper_e(gain_0, dHdx_0);
+    for (r2 = 0; r2 < 9; r2++) {
+      for (r3 = 0; r3 < 9; r3++) {
+        rtemp = r2 + 9 * r3;
+        gain_1[rtemp] = 0.0;
+        for (i = 0; i < 6; i++) {
+          gain_1[rtemp] = gain_0[9 * i + r2] * dHdx[6 * r3 + i] + gain_1[9 * r3
+            + r2];
+        }
+      }
+
+      for (r3 = 0; r3 < 9; r3++) {
+        rtb_DataTypeConversion8_idx_0 = 0.0;
+        for (i = 0; i < 9; i++) {
+          rtb_DataTypeConversion8_idx_0 += gain_1[9 * i + r2] *
+            URControl_DW.P_n[9 * r3 + i];
+        }
+
+        tmp_0[r2 + 9 * r3] = URControl_DW.P_n[9 * r3 + r2] -
+          rtb_DataTypeConversion8_idx_0;
+      }
+    }
+
+    /* DataStoreWrite: '<S37>/Data Store WriteP' */
+    memcpy(&URControl_DW.P_n[0], &tmp_0[0], 81U * sizeof(real_T));
+
+    /* MATLAB Function: '<S37>/Correct' */
+    for (r2 = 0; r2 < 6; r2++) {
+      rtb_TmpSignalConversionAtSFunct[r2] = rtb_VectorConcatenate2[r2] -
+        zEstimated_0[r2];
+    }
+
+    /* DataStoreWrite: '<S37>/Data Store WriteX' incorporates:
+     *  DataStoreRead: '<S37>/Data Store ReadX'
+     *  MATLAB Function: '<S37>/Correct'
+     */
+    for (r2 = 0; r2 < 9; r2++) {
+      rtb_DataTypeConversion8_idx_0 = 0.0;
+      for (r3 = 0; r3 < 6; r3++) {
+        rtb_DataTypeConversion8_idx_0 += gain_0[9 * r3 + r2] *
+          rtb_TmpSignalConversionAtSFunct[r3];
+      }
+
+      URControl_DW.x_e[r2] += rtb_DataTypeConversion8_idx_0;
+    }
+
+    /* End of DataStoreWrite: '<S37>/Data Store WriteX' */
+  }
+
+  /* End of DataTypeConversion: '<S33>/DataTypeConversion_Enable1' */
+  /* End of Outputs for SubSystem: '<S33>/Correct1' */
+
+  /* Outputs for Atomic SubSystem: '<S33>/Predict' */
+  /* MATLAB Function: '<S39>/Predict' incorporates:
+   *  DataStoreRead: '<S39>/Data Store ReadP'
+   *  DataStoreRead: '<S39>/Data Store ReadX'
    */
   /* :  if pS.IsSimulinkFcn */
   /* :  else */
@@ -5557,109 +7095,115 @@ void URControlModelClass::step()
   /* 'EKF_att_pos_state_Jacobian:62'   0, 0, 0,  0,  0,  0,                                                                                                        1 - dt*r*sin(phi)*tan(theta),                                           dt*((tan(theta)^2 + 1)*(r*cos(phi) + q*sin(theta)) + q*cos(theta)*tan(theta)),                                                                                                                                                                    0; */
   /* 'EKF_att_pos_state_Jacobian:63'   0, 0, 0,  0,  0,  0,                                                                                                       -dt*(r*cos(phi) + q*sin(phi)),                                                                                                                       1,                                                                                                                                                                    0; */
   /* 'EKF_att_pos_state_Jacobian:64'   0, 0, 0,  0,  0,  0,                                                                                           (dt*(q*cos(phi) - r*sin(phi)))/cos(theta),                                                                  (dt*sin(theta)*(r*cos(phi) + q*sin(phi)))/cos(theta)^2,                                                                                                                                                                    1]; */
-  w_max_idx_0 = std::tan(URControl_DW.x[7]);
-  maxval = std::cos(URControl_DW.x[7]);
-  for (r1 = 0; r1 < 9; r1++) {
-    Jacobian[9 * r1] = b_1[r1];
-    Jacobian[1 + 9 * r1] = c_0[r1];
-    Jacobian[2 + 9 * r1] = d_0[r1];
+  w_min_idx_1 = std::tan(URControl_DW.x_e[7]);
+  rtb_Product1 = std::cos(URControl_DW.x_e[7]);
+  for (r2 = 0; r2 < 9; r2++) {
+    Jacobian_0[9 * r2] = b_2[r2];
+    Jacobian_0[1 + 9 * r2] = c_0[r2];
+    Jacobian_0[2 + 9 * r2] = d_0[r2];
   }
 
-  Jacobian[3] = 0.0;
-  Jacobian[12] = 0.0;
-  Jacobian[21] = 0.0;
-  Jacobian[30] = 1.0;
-  Jacobian[39] = 0.0;
-  Jacobian[48] = 0.0;
-  MuPrec = std::cos(URControl_DW.x[6]);
-  psi = std::sin(URControl_DW.x[8]);
-  Iu = std::cos(URControl_DW.x[8]);
-  dummy_idx_0 = std::sin(URControl_DW.x[6]);
-  dummy_idx_1 = std::sin(URControl_DW.x[7]);
-  uv_des_idx_1 = MuPrec * Iu;
-  uDot_max = dummy_idx_0 * psi;
-  rtb_DataTypeConversion8_idx_1 = MuPrec * psi;
-  Iv = Iu * dummy_idx_0;
-  errorVel_idx_0 = uv_des_idx_1 * dummy_idx_1 + uDot_max;
-  errorVel_idx_1 = rtb_DataTypeConversion8_idx_1 - Iv * dummy_idx_1;
-  Jacobian[57] = (errorVel_idx_0 * rtb_VectorConcatenate1[4] + errorVel_idx_1 *
-                  (rtb_VectorConcatenate1[5] - -0.1)) * 0.002;
-  wRotorSet_data_idx_3 = Iu * maxval;
-  Jacobian_tmp = Iu * dummy_idx_1;
-  Jacobian[66] = ((uv_des_idx_1 * maxval * (rtb_VectorConcatenate1[5] - -0.1) -
-                   Jacobian_tmp * rtb_VectorConcatenate1[3]) +
-                  wRotorSet_data_idx_3 * dummy_idx_0 * rtb_VectorConcatenate1[4])
-    * 0.002;
-  rtb_DataTypeConversion8_idx_1 = Iv - rtb_DataTypeConversion8_idx_1 *
-    dummy_idx_1;
-  uv_des_idx_1 += uDot_max * dummy_idx_1;
-  Jacobian[75] = ((uv_des_idx_1 * rtb_VectorConcatenate1[4] -
-                   rtb_DataTypeConversion8_idx_1 * (rtb_VectorConcatenate1[5] -
-    -0.1)) + maxval * psi * rtb_VectorConcatenate1[3]) * -0.002;
-  Jacobian[4] = 0.0;
-  Jacobian[13] = 0.0;
-  Jacobian[22] = 0.0;
-  Jacobian[31] = 0.0;
-  Jacobian[40] = 1.0;
-  Jacobian[49] = 0.0;
-  Jacobian[58] = (rtb_DataTypeConversion8_idx_1 * rtb_VectorConcatenate1[4] +
-                  uv_des_idx_1 * (rtb_VectorConcatenate1[5] - -0.1)) * -0.002;
-  uv_des_idx_1 = MuPrec * maxval;
-  uDot_max = maxval * dummy_idx_0;
-  rtb_DataTypeConversion8_idx_1 = psi * dummy_idx_1;
-  Jacobian[67] = ((uv_des_idx_1 * psi * (rtb_VectorConcatenate1[5] - -0.1) -
-                   rtb_DataTypeConversion8_idx_1 * rtb_VectorConcatenate1[3]) +
-                  uDot_max * psi * rtb_VectorConcatenate1[4]) * 0.002;
-  Jacobian[76] = ((errorVel_idx_0 * (rtb_VectorConcatenate1[5] - -0.1) -
-                   errorVel_idx_1 * rtb_VectorConcatenate1[4]) +
-                  wRotorSet_data_idx_3 * rtb_VectorConcatenate1[3]) * 0.002;
-  Jacobian[5] = 0.0;
-  Jacobian[14] = 0.0;
-  Jacobian[23] = 0.0;
-  Jacobian[32] = 0.0;
-  Jacobian[41] = 0.0;
-  Jacobian[50] = 1.0;
-  Jacobian[59] = (uv_des_idx_1 * rtb_VectorConcatenate1[4] - uDot_max *
-                  (rtb_VectorConcatenate1[5] - -0.1)) * 0.002;
-  Jacobian[68] = ((MuPrec * dummy_idx_1 * (rtb_VectorConcatenate1[5] - -0.1) +
-                   maxval * rtb_VectorConcatenate1[3]) + dummy_idx_0 *
-                  dummy_idx_1 * rtb_VectorConcatenate1[4]) * -0.002;
-  Jacobian[77] = 0.0;
-  Jacobian[6] = 0.0;
-  Jacobian[15] = 0.0;
-  Jacobian[24] = 0.0;
-  Jacobian[33] = 0.0;
-  Jacobian[42] = 0.0;
-  Jacobian[51] = 0.0;
-  Jacobian[60] = 1.0 - 0.002 * rtb_VectorConcatenate1[2] * dummy_idx_0 *
-    w_max_idx_0;
-  uv_des_idx_1 = rtb_VectorConcatenate1[2] * MuPrec;
-  errorVel_idx_0 = rtb_VectorConcatenate1[1] * dummy_idx_1;
-  Jacobian[69] = ((w_max_idx_0 * w_max_idx_0 + 1.0) * (uv_des_idx_1 +
-    errorVel_idx_0) + rtb_VectorConcatenate1[1] * maxval * w_max_idx_0) * 0.002;
-  Jacobian[78] = 0.0;
-  Jacobian[7] = 0.0;
-  Jacobian[16] = 0.0;
-  Jacobian[25] = 0.0;
-  Jacobian[34] = 0.0;
-  Jacobian[43] = 0.0;
-  Jacobian[52] = 0.0;
-  Jacobian_tmp_tmp = rtb_VectorConcatenate1[1] * dummy_idx_0;
-  errorVel_idx_1 = uv_des_idx_1 + Jacobian_tmp_tmp;
-  Jacobian[61] = errorVel_idx_1 * -0.002;
-  Jacobian[70] = 1.0;
-  Jacobian[79] = 0.0;
-  Jacobian[8] = 0.0;
-  Jacobian[17] = 0.0;
-  Jacobian[26] = 0.0;
-  Jacobian[35] = 0.0;
-  Jacobian[44] = 0.0;
-  Jacobian[53] = 0.0;
-  Jacobian_tmp_0 = (rtb_VectorConcatenate1[1] * MuPrec - rtb_VectorConcatenate1
-                    [2] * dummy_idx_0) * 0.002;
-  Jacobian[62] = Jacobian_tmp_0 / maxval;
-  Jacobian[71] = errorVel_idx_1 * (0.002 * dummy_idx_1) / (maxval * maxval);
-  Jacobian[80] = 1.0;
+  Jacobian_0[3] = 0.0;
+  Jacobian_0[12] = 0.0;
+  Jacobian_0[21] = 0.0;
+  Jacobian_0[30] = 1.0;
+  Jacobian_0[39] = 0.0;
+  Jacobian_0[48] = 0.0;
+  rtb_Product3 = std::cos(URControl_DW.x_e[6]);
+  Iu = std::sin(URControl_DW.x_e[8]);
+  dummy_idx_0 = std::cos(URControl_DW.x_e[8]);
+  rtb_DataTypeConversion8_idx_1 = std::sin(URControl_DW.x_e[6]);
+  rtb_DataTypeConversion8_idx_0 = std::sin(URControl_DW.x_e[7]);
+  rtb_Product2 = rtb_Product3 * dummy_idx_0;
+  rtb_DataTypeConversion8_idx_2 = rtb_DataTypeConversion8_idx_1 * Iu;
+  rtb_u2_idx_2 = rtb_Product3 * Iu;
+  rtb_u2_idx_1 = dummy_idx_0 * rtb_DataTypeConversion8_idx_1;
+  rtb_Uk1_o = rtb_Product2 * rtb_DataTypeConversion8_idx_0 +
+    rtb_DataTypeConversion8_idx_2;
+  Fset_idx_2 = rtb_u2_idx_2 - rtb_u2_idx_1 * rtb_DataTypeConversion8_idx_0;
+  Jacobian_0[57] = (rtb_Uk1_o * rtb_VectorConcatenate1[4] + Fset_idx_2 *
+                    (rtb_VectorConcatenate1[5] - -0.1)) * 0.002;
+  dHdx_tmp = dummy_idx_0 * rtb_Product1;
+  Jacobian_tmp = dummy_idx_0 * rtb_DataTypeConversion8_idx_0;
+  Jacobian_0[66] = ((rtb_Product2 * rtb_Product1 * (rtb_VectorConcatenate1[5] -
+    -0.1) - Jacobian_tmp * rtb_VectorConcatenate1[3]) + dHdx_tmp *
+                    rtb_DataTypeConversion8_idx_1 * rtb_VectorConcatenate1[4]) *
+    0.002;
+  rtb_u2_idx_2 = rtb_u2_idx_1 - rtb_u2_idx_2 * rtb_DataTypeConversion8_idx_0;
+  rtb_Product2 += rtb_DataTypeConversion8_idx_2 * rtb_DataTypeConversion8_idx_0;
+  Jacobian_0[75] = ((rtb_Product2 * rtb_VectorConcatenate1[4] - rtb_u2_idx_2 *
+                     (rtb_VectorConcatenate1[5] - -0.1)) + rtb_Product1 * Iu *
+                    rtb_VectorConcatenate1[3]) * -0.002;
+  Jacobian_0[4] = 0.0;
+  Jacobian_0[13] = 0.0;
+  Jacobian_0[22] = 0.0;
+  Jacobian_0[31] = 0.0;
+  Jacobian_0[40] = 1.0;
+  Jacobian_0[49] = 0.0;
+  Jacobian_0[58] = (rtb_u2_idx_2 * rtb_VectorConcatenate1[4] + rtb_Product2 *
+                    (rtb_VectorConcatenate1[5] - -0.1)) * -0.002;
+  rtb_Product2 = rtb_Product3 * rtb_Product1;
+  rtb_DataTypeConversion8_idx_2 = rtb_Product1 * rtb_DataTypeConversion8_idx_1;
+  rtb_u2_idx_2 = Iu * rtb_DataTypeConversion8_idx_0;
+  Jacobian_0[67] = ((rtb_Product2 * Iu * (rtb_VectorConcatenate1[5] - -0.1) -
+                     rtb_u2_idx_2 * rtb_VectorConcatenate1[3]) +
+                    rtb_DataTypeConversion8_idx_2 * Iu * rtb_VectorConcatenate1
+                    [4]) * 0.002;
+  Jacobian_0[76] = ((rtb_Uk1_o * (rtb_VectorConcatenate1[5] - -0.1) - Fset_idx_2
+                     * rtb_VectorConcatenate1[4]) + dHdx_tmp *
+                    rtb_VectorConcatenate1[3]) * 0.002;
+  Jacobian_0[5] = 0.0;
+  Jacobian_0[14] = 0.0;
+  Jacobian_0[23] = 0.0;
+  Jacobian_0[32] = 0.0;
+  Jacobian_0[41] = 0.0;
+  Jacobian_0[50] = 1.0;
+  Jacobian_0[59] = (rtb_Product2 * rtb_VectorConcatenate1[4] -
+                    rtb_DataTypeConversion8_idx_2 * (rtb_VectorConcatenate1[5] -
+    -0.1)) * 0.002;
+  Jacobian_0[68] = ((rtb_Product3 * rtb_DataTypeConversion8_idx_0 *
+                     (rtb_VectorConcatenate1[5] - -0.1) + rtb_Product1 *
+                     rtb_VectorConcatenate1[3]) + rtb_DataTypeConversion8_idx_1 *
+                    rtb_DataTypeConversion8_idx_0 * rtb_VectorConcatenate1[4]) *
+    -0.002;
+  Jacobian_0[77] = 0.0;
+  Jacobian_0[6] = 0.0;
+  Jacobian_0[15] = 0.0;
+  Jacobian_0[24] = 0.0;
+  Jacobian_0[33] = 0.0;
+  Jacobian_0[42] = 0.0;
+  Jacobian_0[51] = 0.0;
+  Jacobian_0[60] = 1.0 - 0.002 * rtb_VectorConcatenate1[2] *
+    rtb_DataTypeConversion8_idx_1 * w_min_idx_1;
+  rtb_Product2 = rtb_VectorConcatenate1[2] * rtb_Product3;
+  rtb_Uk1_o = rtb_VectorConcatenate1[1] * rtb_DataTypeConversion8_idx_0;
+  Jacobian_0[69] = ((w_min_idx_1 * w_min_idx_1 + 1.0) * (rtb_Product2 +
+    rtb_Uk1_o) + rtb_VectorConcatenate1[1] * rtb_Product1 * w_min_idx_1) * 0.002;
+  Jacobian_0[78] = 0.0;
+  Jacobian_0[7] = 0.0;
+  Jacobian_0[16] = 0.0;
+  Jacobian_0[25] = 0.0;
+  Jacobian_0[34] = 0.0;
+  Jacobian_0[43] = 0.0;
+  Jacobian_0[52] = 0.0;
+  Jacobian_tmp_tmp = rtb_VectorConcatenate1[1] * rtb_DataTypeConversion8_idx_1;
+  Fset_idx_2 = rtb_Product2 + Jacobian_tmp_tmp;
+  Jacobian_0[61] = Fset_idx_2 * -0.002;
+  Jacobian_0[70] = 1.0;
+  Jacobian_0[79] = 0.0;
+  Jacobian_0[8] = 0.0;
+  Jacobian_0[17] = 0.0;
+  Jacobian_0[26] = 0.0;
+  Jacobian_0[35] = 0.0;
+  Jacobian_0[44] = 0.0;
+  Jacobian_0[53] = 0.0;
+  Jacobian_tmp_0 = (rtb_VectorConcatenate1[1] * rtb_Product3 -
+                    rtb_VectorConcatenate1[2] * rtb_DataTypeConversion8_idx_1) *
+    0.002;
+  Jacobian_0[62] = Jacobian_tmp_0 / rtb_Product1;
+  Jacobian_0[71] = Fset_idx_2 * (0.002 * rtb_DataTypeConversion8_idx_0) /
+    (rtb_Product1 * rtb_Product1);
+  Jacobian_0[80] = 1.0;
 
   /* 'EKF_att_pos_state:3' dt = 0.002; */
   /* 'EKF_att_pos_state:8' vx = x(4); */
@@ -5682,93 +7226,110 @@ void URControlModelClass::step()
   /* 'EKF_att_pos_state:28'         -sin(theta)          , cos(theta)*sin(phi)                          , cos(theta)*cos(phi)                          ]; */
   /* 'EKF_att_pos_state:30' dPos = [vx;vy;vz]; */
   /* 'EKF_att_pos_state:31' dVel = R_IB*[ax-dax;ay-day;az-daz] + [0;0;9.8124]; */
-  tmp_0[0] = wRotorSet_data_idx_3;
-  tmp_0[3] = Jacobian_tmp * dummy_idx_0 - psi * MuPrec;
-  tmp_0[6] = Jacobian_tmp * MuPrec + psi * dummy_idx_0;
-  tmp_0[1] = psi * maxval;
-  tmp_0[4] = rtb_DataTypeConversion8_idx_1 * dummy_idx_0 + Iu * MuPrec;
-  tmp_0[7] = rtb_DataTypeConversion8_idx_1 * MuPrec - Iv;
-  tmp_0[2] = -dummy_idx_1;
-  tmp_0[5] = uDot_max;
-  tmp_0[8] = maxval * MuPrec;
-  for (r1 = 0; r1 < 3; r1++) {
-    rtb_omega[r1] = ((tmp_0[r1 + 3] * rtb_VectorConcatenate1[4] + tmp_0[r1] *
-                      rtb_VectorConcatenate1[3]) + tmp_0[r1 + 6] *
-                     (rtb_VectorConcatenate1[5] - -0.1)) + e[r1];
+  R_IB[0] = dHdx_tmp;
+  R_IB[3] = Jacobian_tmp * rtb_DataTypeConversion8_idx_1 - Iu * rtb_Product3;
+  R_IB[6] = Jacobian_tmp * rtb_Product3 + Iu * rtb_DataTypeConversion8_idx_1;
+  R_IB[1] = Iu * rtb_Product1;
+  R_IB[4] = rtb_u2_idx_2 * rtb_DataTypeConversion8_idx_1 + dummy_idx_0 *
+    rtb_Product3;
+  R_IB[7] = rtb_u2_idx_2 * rtb_Product3 - rtb_u2_idx_1;
+  R_IB[2] = -rtb_DataTypeConversion8_idx_0;
+  R_IB[5] = rtb_DataTypeConversion8_idx_2;
+  R_IB[8] = rtb_Product1 * rtb_Product3;
+  for (r2 = 0; r2 < 3; r2++) {
+    rtb_att[r2] = ((R_IB[r2 + 3] * rtb_VectorConcatenate1[4] + R_IB[r2] *
+                    rtb_VectorConcatenate1[3]) + R_IB[r2 + 6] *
+                   (rtb_VectorConcatenate1[5] - -0.1)) + e[r2];
   }
 
   /* 'EKF_att_pos_state:32' dphi = (p + tan(theta)*(q*sin(theta)+r*cos(phi))); */
   /* 'EKF_att_pos_state:33' dtheta = (q*cos(phi)-r*sin(phi)); */
   /* 'EKF_att_pos_state:34' dpsi = ((q*sin(phi)+r*cos(phi))/cos(theta)); */
   /* 'EKF_att_pos_state:36' x(1) = x(1) + dPos(1)*dt; */
-  rtb_xNew[0] = URControl_DW.x[3] * 0.002 + URControl_DW.x[0];
+  rtb_xNew[0] = URControl_DW.x_e[3] * 0.002 + URControl_DW.x_e[0];
 
   /* 'EKF_att_pos_state:37' x(2) = x(2) + dPos(2)*dt; */
-  rtb_xNew[1] = URControl_DW.x[4] * 0.002 + URControl_DW.x[1];
+  rtb_xNew[1] = URControl_DW.x_e[4] * 0.002 + URControl_DW.x_e[1];
 
   /* 'EKF_att_pos_state:38' x(3) = x(3) + dPos(3)*dt; */
-  rtb_xNew[2] = URControl_DW.x[5] * 0.002 + URControl_DW.x[2];
+  rtb_xNew[2] = URControl_DW.x_e[5] * 0.002 + URControl_DW.x_e[2];
 
   /* 'EKF_att_pos_state:39' x(4) = x(4) + dVel(1)*dt; */
-  rtb_xNew[3] = rtb_omega[0] * 0.002 + URControl_DW.x[3];
+  rtb_xNew[3] = rtb_att[0] * 0.002 + URControl_DW.x_e[3];
 
   /* 'EKF_att_pos_state:40' x(5) = x(5) + dVel(2)*dt; */
-  rtb_xNew[4] = rtb_omega[1] * 0.002 + URControl_DW.x[4];
+  rtb_xNew[4] = rtb_att[1] * 0.002 + URControl_DW.x_e[4];
 
   /* 'EKF_att_pos_state:41' x(6) = x(6) + dVel(3)*dt; */
-  rtb_xNew[5] = rtb_omega[2] * 0.002 + URControl_DW.x[5];
+  rtb_xNew[5] = rtb_att[2] * 0.002 + URControl_DW.x_e[5];
 
   /* 'EKF_att_pos_state:42' x(7) = x(7) + dphi*dt; */
-  rtb_xNew[6] = ((errorVel_idx_0 + uv_des_idx_1) * w_max_idx_0 +
-                 rtb_VectorConcatenate1[0]) * 0.002 + URControl_DW.x[6];
+  rtb_xNew[6] = ((rtb_Uk1_o + rtb_Product2) * w_min_idx_1 +
+                 rtb_VectorConcatenate1[0]) * 0.002 + URControl_DW.x_e[6];
 
   /* 'EKF_att_pos_state:43' x(8) = x(8) + dtheta*dt; */
-  rtb_xNew[7] = Jacobian_tmp_0 + URControl_DW.x[7];
+  rtb_xNew[7] = Jacobian_tmp_0 + URControl_DW.x_e[7];
 
   /* 'EKF_att_pos_state:44' x(9) = x(9) + dpsi*dt; */
-  rtb_xNew[8] = (Jacobian_tmp_tmp + uv_des_idx_1) / maxval * 0.002 +
-    URControl_DW.x[8];
-  for (r1 = 0; r1 < 9; r1++) {
-    for (r2 = 0; r2 < 9; r2++) {
-      rtemp = r2 + 9 * r1;
-      gain_0[rtemp] = 0.0;
-      for (r3 = 0; r3 < 9; r3++) {
-        gain_0[rtemp] = Jacobian[9 * r3 + r2] * URControl_DW.P[9 * r1 + r3] +
-          gain_0[9 * r1 + r2];
+  rtb_xNew[8] = (Jacobian_tmp_tmp + rtb_Product2) / rtb_Product1 * 0.002 +
+    URControl_DW.x_e[8];
+  for (r2 = 0; r2 < 9; r2++) {
+    for (r3 = 0; r3 < 9; r3++) {
+      rtemp = r3 + 9 * r2;
+      gain_1[rtemp] = 0.0;
+      for (i = 0; i < 9; i++) {
+        gain_1[rtemp] = Jacobian_0[9 * i + r3] * URControl_DW.P_n[9 * r2 + i] +
+          gain_1[9 * r2 + r3];
       }
     }
   }
 
-  for (r3 = 0; r3 < 9; r3++) {
-    /* DataStoreWrite: '<S23>/Data Store WriteP' incorporates:
-     *  Constant: '<S18>/Q'
-     *  MATLAB Function: '<S23>/Predict'
+  for (i = 0; i < 9; i++) {
+    /* DataStoreWrite: '<S39>/Data Store WriteP' incorporates:
+     *  Constant: '<S33>/Q'
+     *  MATLAB Function: '<S39>/Predict'
      */
-    for (r1 = 0; r1 < 9; r1++) {
-      uv_des_idx_1 = 0.0;
-      for (r2 = 0; r2 < 9; r2++) {
-        uv_des_idx_1 += gain_0[9 * r2 + r3] * Jacobian[9 * r2 + r1];
+    for (r2 = 0; r2 < 9; r2++) {
+      rtb_DataTypeConversion8_idx_0 = 0.0;
+      for (r3 = 0; r3 < 9; r3++) {
+        rtb_DataTypeConversion8_idx_0 += gain_1[9 * r3 + i] * Jacobian_0[9 * r3
+          + r2];
       }
 
-      URControl_DW.P[r3 + 9 * r1] = URControl_ConstP.Q_Value[9 * r1 + r3] +
-        uv_des_idx_1;
+      URControl_DW.P_n[i + 9 * r2] = URControl_ConstP.Q_Value_a[9 * r2 + i] +
+        rtb_DataTypeConversion8_idx_0;
     }
 
-    /* End of DataStoreWrite: '<S23>/Data Store WriteP' */
+    /* End of DataStoreWrite: '<S39>/Data Store WriteP' */
 
-    /* DataStoreWrite: '<S23>/Data Store WriteX' */
-    URControl_DW.x[r3] = rtb_xNew[r3];
+    /* DataStoreWrite: '<S39>/Data Store WriteX' */
+    URControl_DW.x_e[i] = rtb_xNew[i];
   }
 
-  /* End of Outputs for SubSystem: '<S18>/Predict' */
+  /* End of Outputs for SubSystem: '<S33>/Predict' */
 
   /* Outport: '<Root>/daq' incorporates:
    *  DataStoreRead: '<Root>/Data Store Read'
    */
   URControl_Y.daq = URControl_DW.DAQ;
 
-  /* Update for UnitDelay: '<S17>/UD' */
-  URControl_DW.UD_DSTATE = rtb_att_out_idx_2;
+  /* Update for Memory: '<S15>/Memory' */
+  URControl_DW.Memory_PreviousInput[0] = rtb_DataStoreRead_k[6];
+  URControl_DW.Memory_PreviousInput[1] = rtb_DataStoreRead_k[7];
+  URControl_DW.Memory_PreviousInput[2] = rtb_DataStoreRead_k[8];
+  URControl_DW.Memory_PreviousInput[3] = rtb_DataStoreRead_k[9];
+
+  /* Update for Delay: '<Root>/Delay' incorporates:
+   *  DataTypeConversion: '<Root>/Data Type Conversion10'
+   *  Inport: '<Root>/fail_flag'
+   */
+  for (i = 0; i < 999; i++) {
+    URControl_DW.Delay_DSTATE[i] = URControl_DW.Delay_DSTATE[i + 1];
+  }
+
+  URControl_DW.Delay_DSTATE[999] = URControl_U.fail_flag;
+
+  /* End of Update for Delay: '<Root>/Delay' */
 
   /* Update for DiscreteStateSpace: '<S3>/Discrete State-Space' */
   {
@@ -5786,13 +7347,29 @@ void URControlModelClass::step()
   /* Update for DiscreteStateSpace: '<S15>/Discrete State-Space' */
   {
     real_T xnew[3];
-    xnew[0] = (0.9)*URControl_DW.DiscreteStateSpace_DSTATE_a[0];
+    xnew[0] = (0.9)*URControl_DW.DiscreteStateSpace_DSTATE_i[0];
     xnew[0] += (0.1)*rtb_acc[0];
-    xnew[1] = (0.9)*URControl_DW.DiscreteStateSpace_DSTATE_a[1];
+    xnew[1] = (0.9)*URControl_DW.DiscreteStateSpace_DSTATE_i[1];
     xnew[1] += (0.1)*rtb_acc[1];
-    xnew[2] = (0.9)*URControl_DW.DiscreteStateSpace_DSTATE_a[2];
+    xnew[2] = (0.9)*URControl_DW.DiscreteStateSpace_DSTATE_i[2];
     xnew[2] += (0.1)*rtb_acc[2];
-    (void) memcpy(&URControl_DW.DiscreteStateSpace_DSTATE_a[0], xnew,
+    (void) memcpy(&URControl_DW.DiscreteStateSpace_DSTATE_i[0], xnew,
+                  sizeof(real_T)*3);
+  }
+
+  /* Update for UnitDelay: '<S32>/UD' */
+  URControl_DW.UD_DSTATE_p = rtb_fcn5;
+
+  /* Update for DiscreteStateSpace: '<S16>/Discrete State-Space' */
+  {
+    real_T xnew[3];
+    xnew[0] = (0.9)*URControl_DW.DiscreteStateSpace_DSTATE_n[0];
+    xnew[0] += (0.1)*rtb_acc[0];
+    xnew[1] = (0.9)*URControl_DW.DiscreteStateSpace_DSTATE_n[1];
+    xnew[1] += (0.1)*rtb_acc[1];
+    xnew[2] = (0.9)*URControl_DW.DiscreteStateSpace_DSTATE_n[2];
+    xnew[2] += (0.1)*rtb_acc[2];
+    (void) memcpy(&URControl_DW.DiscreteStateSpace_DSTATE_n[0], xnew,
                   sizeof(real_T)*3);
   }
 }
@@ -5808,6 +7385,10 @@ void URControlModelClass::initialize()
   /* initialize error status */
   rtmSetErrorStatus(getRTM(), (NULL));
 
+  /* block I/O */
+  (void) memset(((void *) &URControl_B), 0,
+                sizeof(B_URControl_T));
+
   /* states (dwork) */
   (void) memset((void *)&URControl_DW, 0,
                 sizeof(DW_URControl_T));
@@ -5821,10 +7402,19 @@ void URControlModelClass::initialize()
 
   /* Start for DataStoreMemory: '<S18>/DataStoreMemory - P' */
   memcpy(&URControl_DW.P[0], &URControl_ConstP.DataStoreMemoryP_InitialValue[0],
-         81U * sizeof(real_T));
+         100U * sizeof(real_T));
 
   /* Start for DataStoreMemory: '<S18>/DataStoreMemory - x' */
-  memset(&URControl_DW.x[0], 0, 9U * sizeof(real_T));
+  memcpy(&URControl_DW.x[0], &URControl_ConstP.DataStoreMemoryx_InitialValue[0],
+         10U * sizeof(real_T));
+
+  /* Start for DataStoreMemory: '<S33>/DataStoreMemory - P' */
+  memcpy(&URControl_DW.P_n[0],
+         &URControl_ConstP.DataStoreMemoryP_InitialValue_i[0], 81U * sizeof
+         (real_T));
+
+  /* Start for DataStoreMemory: '<S33>/DataStoreMemory - x' */
+  memset(&URControl_DW.x_e[0], 0, 9U * sizeof(real_T));
 
   /* Start for DataStoreMemory: '<Root>/Data Store Memory' */
   URControl_DW.DAQ = URControl_rtZdaqBus;
@@ -5832,8 +7422,14 @@ void URControlModelClass::initialize()
   /* Start for DataStoreMemory: '<Root>/Data Store Memory1' */
   URControl_DW.State = URControl_rtZstateBus;
 
-  /* InitializeConditions for UnitDelay: '<S17>/UD' */
-  URControl_DW.UD_DSTATE = 0.0;
+  /* InitializeConditions for Memory: '<S15>/Memory' */
+  URControl_DW.Memory_PreviousInput[0] = 0.0;
+  URControl_DW.Memory_PreviousInput[1] = 0.0;
+  URControl_DW.Memory_PreviousInput[2] = 0.0;
+  URControl_DW.Memory_PreviousInput[3] = 0.0;
+
+  /* InitializeConditions for Delay: '<Root>/Delay' */
+  memset(&URControl_DW.Delay_DSTATE[0], 0, 1000U * sizeof(real_T));
 
   /* InitializeConditions for DiscreteStateSpace: '<S3>/Discrete State-Space' */
   URControl_DW.DiscreteStateSpace_DSTATE[0] = (0.0);
@@ -5841,24 +7437,26 @@ void URControlModelClass::initialize()
   URControl_DW.DiscreteStateSpace_DSTATE[2] = (-1.0);
 
   /* InitializeConditions for DiscreteStateSpace: '<S15>/Discrete State-Space' */
-  URControl_DW.DiscreteStateSpace_DSTATE_a[0] = (0.0);
-  URControl_DW.DiscreteStateSpace_DSTATE_a[1] = (0.0);
-  URControl_DW.DiscreteStateSpace_DSTATE_a[2] = (0.0);
+  URControl_DW.DiscreteStateSpace_DSTATE_i[0] = (0.0);
+  URControl_DW.DiscreteStateSpace_DSTATE_i[1] = (0.0);
+  URControl_DW.DiscreteStateSpace_DSTATE_i[2] = (0.0);
 
-  /* SystemInitialize for MATLAB Function: '<S15>/unwrap2pi' */
-  URControl_DW.psi_last_not_empty = false;
+  /* InitializeConditions for UnitDelay: '<S32>/UD' */
+  URControl_DW.UD_DSTATE_p = 0.0;
 
-  /* :  N = 0; */
-  URControl_DW.N = 0.0;
+  /* InitializeConditions for DiscreteStateSpace: '<S16>/Discrete State-Space' */
+  URControl_DW.DiscreteStateSpace_DSTATE_n[0] = (0.0);
+  URControl_DW.DiscreteStateSpace_DSTATE_n[1] = (0.0);
+  URControl_DW.DiscreteStateSpace_DSTATE_n[2] = (0.0);
 
-  /* SystemInitialize for MATLAB Function: '<S15>/MATLAB Function' */
-  /* :  psi_last = 0; */
-  URControl_DW.psi_last_b = 0.0;
+  /* SystemInitialize for MATLAB Function: '<S15>/enableMeas' */
+  URControl_enableMeas_Init(&URControl_DW.sf_enableMeas);
 
   /* SystemInitialize for MATLAB Function: '<S5>/basic estimators' */
   URControl_DW.omegaFilter_not_empty = false;
   URControl_DW.posFilter_not_empty = false;
   URControl_DW.velFilter_not_empty = false;
+  URControl_DW.accFilter_not_empty = false;
 
   /* SystemInitialize for MATLAB Function: '<S2>/position control' */
   /* 'URpositionControl:3' errorInt = [0,0,0]; */
@@ -5876,6 +7474,7 @@ void URControlModelClass::initialize()
   URControl_DW.errorD_not_empty = false;
   URControl_DW.uvrDer_not_empty = false;
   URControl_DW.omegaDot_not_empty_l = false;
+  URControl_DW.wRotorFilter_not_empty = false;
 
   /* 'URControl_alloc:3' y_state_prev = [0,0,0,0]; */
   /* 'URControl_alloc:4' Fset_prev = [0;0;0;0]; */
@@ -5904,7 +7503,29 @@ void URControlModelClass::initialize()
   URControl_DW.errorInt[1] = 0.0;
   URControl_DW.errorInt[2] = 0.0;
 
+  /* SystemInitialize for MATLAB Function: '<S1>/MATLAB Function' */
   /* 'PIDMomentGen:4' error_prev = [0,0,0]; */
+  /* 'UROverrides:3' fallCount = 0; */
+  URControl_DW.fallCount = 0.0;
+
+  /* 'UROverrides:4' thrown = 0; */
+  URControl_DW.thrown = 0.0;
+
+  /* 'UROverrides:6' flipTime = 0; */
+  URControl_DW.flipTime = 0.0;
+
+  /* SystemInitialize for MATLAB Function: '<S16>/unwrap2pi' */
+  URControl_DW.psi_last_not_empty = false;
+
+  /* :  N = 0; */
+  URControl_DW.N = 0.0;
+
+  /* SystemInitialize for MATLAB Function: '<S16>/MATLAB Function' */
+  /* :  psi_last = 0; */
+  URControl_DW.psi_last_b = 0.0;
+
+  /* SystemInitialize for MATLAB Function: '<S16>/enableMeas' */
+  URControl_enableMeas_Init(&URControl_DW.sf_enableMeas_e);
 }
 
 /* Model terminate function */

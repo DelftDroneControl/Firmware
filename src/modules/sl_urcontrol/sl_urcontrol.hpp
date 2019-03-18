@@ -196,7 +196,9 @@ private:
 		(ParamFloat<px4::params::SL_SP_YAW>) _sl_yaw_sp,
 
 		// Params
-		
+		(ParamFloat<px4::params::SL_FAIL_DELAY>) _sl_fail_delay,
+		(ParamFloat<px4::params::SL_FAIL_WROT>) _sl_fail_wrot,
+	
 
 		// Estimation
 		(ParamInt<px4::params::SL_EST_USEEKF>) _sl_est_useekf,
@@ -236,14 +238,16 @@ private:
 		(ParamInt<px4::params::SL_ATT_ENABPREC>) _sl_attitude_enablePrec,
 		(ParamFloat<px4::params::SL_ATT_MAXPREC>) _sl_attitude_maxprecspeed,
 		(ParamFloat<px4::params::SL_ATT_MMARGIN>) _sl_attitude_mmargin,
+		(ParamInt<px4::params::SL_ATT_ENABTRAJ>) _sl_attitude_enabletraj,
+		(ParamFloat<px4::params::SL_ATT_ROTSPCOMP>) _sl_attitude_rotspeedcomp,
 
 		// Rate
 		(ParamInt<px4::params::SL_RDOT_MODE>) _sl_rate_mode,
 		(ParamInt<px4::params::SL_RDOT_MMODE>) _sl_rate_momentMode,
 
-		(ParamFloat<px4::params::SL_INDI_KPX>) _sl_ratedot_indi_kpx,
-		(ParamFloat<px4::params::SL_INDI_KPY>) _sl_ratedot_indi_kpy,
-		(ParamFloat<px4::params::SL_INDI_KPZ>) _sl_ratedot_indi_kpz,
+		// (ParamFloat<px4::params::SL_INDI_KPX>) _sl_ratedot_indi_kpx,
+		// (ParamFloat<px4::params::SL_INDI_KPY>) _sl_ratedot_indi_kpy,
+		// (ParamFloat<px4::params::SL_INDI_KPZ>) _sl_ratedot_indi_kpz,
 
 		(ParamFloat<px4::params::SL_RDOT_KPU>) _sl_ratedot_kpu,
 		(ParamFloat<px4::params::SL_RDOT_KPV>) _sl_ratedot_kpv,
@@ -256,13 +260,24 @@ private:
 		(ParamFloat<px4::params::SL_RDOT_KDR>) _sl_ratedot_kdr,
 		(ParamFloat<px4::params::SL_RDOT_DFILT>)  _sl_ratedot_derFilterT,
 		(ParamFloat<px4::params::SL_RDOT_UVDFILT>)  _sl_ratedot_uvrdesderFilterT,
+		(ParamFloat<px4::params::SL_RDOT_MAXINT>)  _sl_ratedot_maxInt,
 
-		(ParamFloat<px4::params::SL_MINDI_DFILT>) _sl_ratedot_mindi_derFiltT,
-		(ParamFloat<px4::params::SL_MINDI_MKPU>) _sl_ratedot_mindi_mkpu,
-		(ParamFloat<px4::params::SL_MINDI_MKPV>) _sl_ratedot_mindi_mkpv,
-		(ParamFloat<px4::params::SL_MINDI_MKPR>) _sl_ratedot_mindi_mkpr
+		(ParamFloat<px4::params::SL_RDOT_FTOT>) _sl_ratedot_ftot,
 
+		// (ParamFloat<px4::params::SL_MINDI_DFILT>) _sl_ratedot_mindi_derFiltT,
+		// (ParamFloat<px4::params::SL_MINDI_MKPU>) _sl_ratedot_mindi_mkpu,
+		// (ParamFloat<px4::params::SL_MINDI_MKPV>) _sl_ratedot_mindi_mkpv,
+		// (ParamFloat<px4::params::SL_MINDI_MKPR>) _sl_ratedot_mindi_mkpr
 
+		// OVERRIDES
+		(ParamInt<px4::params::SL_FLIP_MODE>) _sl_flip_mode,
+		(ParamFloat<px4::params::SL_FLIP_TIME>) _sl_flip_time,
+		(ParamFloat<px4::params::SL_FLIP_INTEX>) _sl_flip_intensityX,
+		(ParamFloat<px4::params::SL_FLIP_INTEY>) _sl_flip_intensityY,
+
+		(ParamInt<px4::params::SL_THROW_MODE>) _sl_throw_mode,
+		(ParamFloat<px4::params::SL_TRHOW_TIME>) _sl_throw_falltime,
+		(ParamFloat<px4::params::SL_THROW_THRESH>) _sl_throw_threshold
 		
 	)
 
