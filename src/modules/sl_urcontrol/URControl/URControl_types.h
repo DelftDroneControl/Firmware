@@ -7,9 +7,9 @@
  *
  * Code generation for model "URControl".
  *
- * Model version              : 1.847
+ * Model version              : 1.848
  * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C++ source code generated on : Wed Mar 13 14:35:40 2019
+ * C++ source code generated on : Mon Mar 18 14:47:59 2019
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -333,7 +333,7 @@ typedef struct {
 
 #endif                                 /*typedef_LPFilter_1_URControl_T*/
 
-/* Custom Type definition for MATLAB Function: '<S23>/Correct' */
+/* Custom Type definition for MATLAB Function: '<S22>/Correct' */
 #ifndef struct_tag_sZozwYUqIoF3KwkqeARQ8OE
 #define struct_tag_sZozwYUqIoF3KwkqeARQ8OE
 
@@ -356,7 +356,7 @@ typedef struct tag_sZozwYUqIoF3KwkqeARQ8OE sZozwYUqIoF3KwkqeARQ8OE_URCon_T;
 
 #endif                                 /*typedef_sZozwYUqIoF3KwkqeARQ8OE_URCon_T*/
 
-/* Custom Type definition for MATLAB Function: '<S25>/Predict' */
+/* Custom Type definition for MATLAB Function: '<S24>/Predict' */
 #ifndef struct_tag_sBhY6iGnb96DZXSV480ISLB
 #define struct_tag_sBhY6iGnb96DZXSV480ISLB
 
@@ -378,52 +378,6 @@ struct tag_sBhY6iGnb96DZXSV480ISLB
 typedef struct tag_sBhY6iGnb96DZXSV480ISLB sBhY6iGnb96DZXSV480ISLB_URCon_T;
 
 #endif                                 /*typedef_sBhY6iGnb96DZXSV480ISLB_URCon_T*/
-
-/* Custom Type definition for MATLAB Function: '<S37>/Correct' */
-#ifndef struct_tag_s3jUk3tcna9gJPVvGWgKhoB
-#define struct_tag_s3jUk3tcna9gJPVvGWgKhoB
-
-struct tag_s3jUk3tcna9gJPVvGWgKhoB
-{
-  char_T FcnName[15];
-  boolean_T IsSimulinkFcn;
-  real_T NumberOfExtraArgumentInports;
-  boolean_T HasJacobian;
-  char_T JacobianFcnName[24];
-  boolean_T HasAdditiveNoise;
-};
-
-#endif                                 /*struct_tag_s3jUk3tcna9gJPVvGWgKhoB*/
-
-#ifndef typedef_s3jUk3tcna9gJPVvGWgKhoB_URCon_T
-#define typedef_s3jUk3tcna9gJPVvGWgKhoB_URCon_T
-
-typedef struct tag_s3jUk3tcna9gJPVvGWgKhoB s3jUk3tcna9gJPVvGWgKhoB_URCon_T;
-
-#endif                                 /*typedef_s3jUk3tcna9gJPVvGWgKhoB_URCon_T*/
-
-/* Custom Type definition for MATLAB Function: '<S39>/Predict' */
-#ifndef struct_tag_sNpKm6MWgiM1uTq2HgBSpwD
-#define struct_tag_sNpKm6MWgiM1uTq2HgBSpwD
-
-struct tag_sNpKm6MWgiM1uTq2HgBSpwD
-{
-  char_T FcnName[17];
-  boolean_T IsSimulinkFcn;
-  real_T NumberOfExtraArgumentInports;
-  char_T JacobianFcnName[26];
-  real_T HasJacobian;
-  boolean_T HasAdditiveNoise;
-};
-
-#endif                                 /*struct_tag_sNpKm6MWgiM1uTq2HgBSpwD*/
-
-#ifndef typedef_sNpKm6MWgiM1uTq2HgBSpwD_URCon_T
-#define typedef_sNpKm6MWgiM1uTq2HgBSpwD_URCon_T
-
-typedef struct tag_sNpKm6MWgiM1uTq2HgBSpwD sNpKm6MWgiM1uTq2HgBSpwD_URCon_T;
-
-#endif                                 /*typedef_sNpKm6MWgiM1uTq2HgBSpwD_URCon_T*/
 
 /* Custom Type definition for MATLAB Function: '<S6>/control allocator' */
 #ifndef typedef_LPFilter_URControl_T

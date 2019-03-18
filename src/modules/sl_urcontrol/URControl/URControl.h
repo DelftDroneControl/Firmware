@@ -7,9 +7,9 @@
  *
  * Code generation for model "URControl".
  *
- * Model version              : 1.847
+ * Model version              : 1.848
  * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C++ source code generated on : Wed Mar 13 14:35:40 2019
+ * C++ source code generated on : Mon Mar 18 14:47:59 2019
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -49,21 +49,9 @@
 # define rtmSetErrorStatus(rtm, val)   ((rtm)->errorStatus = (val))
 #endif
 
-/* Block signals for system '<S15>/enableMeas' */
-typedef struct {
-  real_T enableMeas;                   /* '<S15>/enableMeas' */
-} B_enableMeas_URControl_T;
-
-/* Block states (default storage) for system '<S15>/enableMeas' */
-typedef struct {
-  real_T attPrev[3];                   /* '<S15>/enableMeas' */
-} DW_enableMeas_URControl_T;
-
 /* Block signals (default storage) */
 typedef struct {
   real_T att_ekfquat[3];               /* '<S15>/Flip1' */
-  B_enableMeas_URControl_T sf_enableMeas_e;/* '<S16>/enableMeas' */
-  B_enableMeas_URControl_T sf_enableMeas;/* '<S15>/enableMeas' */
 } B_URControl_T;
 
 /* Block states (default storage) for system '<Root>' */
@@ -83,21 +71,15 @@ typedef struct {
   real_T Delay_DSTATE[1000];           /* '<Root>/Delay' */
   real_T DiscreteStateSpace_DSTATE[3]; /* '<S3>/Discrete State-Space' */
   real_T DiscreteStateSpace_DSTATE_i[3];/* '<S15>/Discrete State-Space' */
-  real_T UD_DSTATE_p;                  /* '<S32>/UD' */
-  real_T DiscreteStateSpace_DSTATE_n[3];/* '<S16>/Discrete State-Space' */
   real_T Memory_PreviousInput[4];      /* '<S15>/Memory' */
-  real_T P[100];                       /* '<S18>/DataStoreMemory - P' */
-  real_T x[10];                        /* '<S18>/DataStoreMemory - x' */
-  real_T P_n[81];                      /* '<S33>/DataStoreMemory - P' */
-  real_T x_e[9];                       /* '<S33>/DataStoreMemory - x' */
+  real_T P[100];                       /* '<S17>/DataStoreMemory - P' */
+  real_T x[10];                        /* '<S17>/DataStoreMemory - x' */
   real_T y_state_prev[4];              /* '<S6>/control allocator' */
   real_T Fset_prev[4];                 /* '<S6>/control allocator' */
   real_T M_uvr_set[3];                 /* '<S6>/control allocator' */
   real_T du_last[4];                   /* '<S6>/control allocator' */
   real_T errorInt[3];                  /* '<S6>/control allocator' */
-  real_T psi_last;                     /* '<S16>/unwrap2pi' */
-  real_T N;                            /* '<S16>/unwrap2pi' */
-  real_T psi_last_b;                   /* '<S16>/MATLAB Function' */
+  real_T attPrev[3];                   /* '<S15>/enableMeas' */
   real_T errorInt_p[3];                /* '<S2>/position control' */
   real_T errorInt_b;                   /* '<S2>/altitude control' */
   real_T fallCount;                    /* '<S1>/MATLAB Function' */
@@ -113,9 +95,6 @@ typedef struct {
   boolean_T posFilter_not_empty;       /* '<S5>/basic estimators' */
   boolean_T velFilter_not_empty;       /* '<S5>/basic estimators' */
   boolean_T accFilter_not_empty;       /* '<S5>/basic estimators' */
-  boolean_T psi_last_not_empty;        /* '<S16>/unwrap2pi' */
-  DW_enableMeas_URControl_T sf_enableMeas_e;/* '<S16>/enableMeas' */
-  DW_enableMeas_URControl_T sf_enableMeas;/* '<S15>/enableMeas' */
 } DW_URControl_T;
 
 /* Constant parameters (default storage) */
@@ -136,39 +115,24 @@ typedef struct {
   struct_Zb0w9me7uxg4XlR9ZxoSnG pooled1;
 
   /* Expression: p.R{1}
-   * Referenced by: '<S18>/R1'
+   * Referenced by: '<S17>/R1'
    */
   real_T R1_Value[49];
 
   /* Expression: p.Q
-   * Referenced by: '<S18>/Q'
+   * Referenced by: '<S17>/Q'
    */
   real_T Q_Value[100];
 
   /* Expression: p.InitialCovariance
-   * Referenced by: '<S18>/DataStoreMemory - P'
+   * Referenced by: '<S17>/DataStoreMemory - P'
    */
   real_T DataStoreMemoryP_InitialValue[100];
 
   /* Expression: p.InitialState
-   * Referenced by: '<S18>/DataStoreMemory - x'
+   * Referenced by: '<S17>/DataStoreMemory - x'
    */
   real_T DataStoreMemoryx_InitialValue[10];
-
-  /* Expression: p.Q
-   * Referenced by: '<S33>/Q'
-   */
-  real_T Q_Value_a[81];
-
-  /* Expression: p.R{1}
-   * Referenced by: '<S33>/R1'
-   */
-  real_T R1_Value_a[36];
-
-  /* Expression: p.InitialCovariance
-   * Referenced by: '<S33>/DataStoreMemory - P'
-   */
-  real_T DataStoreMemoryP_InitialValue_i[81];
 } ConstP_URControl_T;
 
 /* External inputs (root inport signals with default storage) */
@@ -313,7 +277,6 @@ class URControlModelClass {
     const struct_Zb0w9me7uxg4XlR9ZxoSnG *b_par, real_T w_cmd[4]);
   void URControl_ekf_state_jacob(const real_T x[10], const real_T u[6], real_T
     A[100]);
-  void URControl_mrdivide_helper_e(real_T A[54], const real_T B[36]);
 };
 
 /*-
@@ -346,32 +309,21 @@ class URControlModelClass {
  * '<S13>'  : 'URControl/attitude controlller/attitude controller'
  * '<S14>'  : 'URControl/attitude controlller/yawRateControl'
  * '<S15>'  : 'URControl/estimators/EKFQuat'
- * '<S16>'  : 'URControl/estimators/EKF_att_pos'
- * '<S17>'  : 'URControl/estimators/basic estimators'
- * '<S18>'  : 'URControl/estimators/EKFQuat/Extended Kalman Filter'
- * '<S19>'  : 'URControl/estimators/EKFQuat/MATLAB Function'
- * '<S20>'  : 'URControl/estimators/EKFQuat/Quaternions to Rotation Angles'
- * '<S21>'  : 'URControl/estimators/EKFQuat/Rotation Angles to Quaternions'
- * '<S22>'  : 'URControl/estimators/EKFQuat/enableMeas'
- * '<S23>'  : 'URControl/estimators/EKFQuat/Extended Kalman Filter/Correct1'
- * '<S24>'  : 'URControl/estimators/EKFQuat/Extended Kalman Filter/Output'
- * '<S25>'  : 'URControl/estimators/EKFQuat/Extended Kalman Filter/Predict'
- * '<S26>'  : 'URControl/estimators/EKFQuat/Extended Kalman Filter/Correct1/Correct'
- * '<S27>'  : 'URControl/estimators/EKFQuat/Extended Kalman Filter/Predict/Predict'
- * '<S28>'  : 'URControl/estimators/EKFQuat/Quaternions to Rotation Angles/Angle Calculation'
- * '<S29>'  : 'URControl/estimators/EKFQuat/Quaternions to Rotation Angles/Quaternion Normalize'
- * '<S30>'  : 'URControl/estimators/EKFQuat/Quaternions to Rotation Angles/Quaternion Normalize/Quaternion Modulus'
- * '<S31>'  : 'URControl/estimators/EKFQuat/Quaternions to Rotation Angles/Quaternion Normalize/Quaternion Modulus/Quaternion Norm'
- * '<S32>'  : 'URControl/estimators/EKF_att_pos/Difference'
- * '<S33>'  : 'URControl/estimators/EKF_att_pos/Extended Kalman Filter'
- * '<S34>'  : 'URControl/estimators/EKF_att_pos/MATLAB Function'
- * '<S35>'  : 'URControl/estimators/EKF_att_pos/enableMeas'
- * '<S36>'  : 'URControl/estimators/EKF_att_pos/unwrap2pi'
- * '<S37>'  : 'URControl/estimators/EKF_att_pos/Extended Kalman Filter/Correct1'
- * '<S38>'  : 'URControl/estimators/EKF_att_pos/Extended Kalman Filter/Output'
- * '<S39>'  : 'URControl/estimators/EKF_att_pos/Extended Kalman Filter/Predict'
- * '<S40>'  : 'URControl/estimators/EKF_att_pos/Extended Kalman Filter/Correct1/Correct'
- * '<S41>'  : 'URControl/estimators/EKF_att_pos/Extended Kalman Filter/Predict/Predict'
- * '<S42>'  : 'URControl/rate controller/control allocator'
+ * '<S16>'  : 'URControl/estimators/basic estimators'
+ * '<S17>'  : 'URControl/estimators/EKFQuat/Extended Kalman Filter'
+ * '<S18>'  : 'URControl/estimators/EKFQuat/MATLAB Function'
+ * '<S19>'  : 'URControl/estimators/EKFQuat/Quaternions to Rotation Angles'
+ * '<S20>'  : 'URControl/estimators/EKFQuat/Rotation Angles to Quaternions'
+ * '<S21>'  : 'URControl/estimators/EKFQuat/enableMeas'
+ * '<S22>'  : 'URControl/estimators/EKFQuat/Extended Kalman Filter/Correct1'
+ * '<S23>'  : 'URControl/estimators/EKFQuat/Extended Kalman Filter/Output'
+ * '<S24>'  : 'URControl/estimators/EKFQuat/Extended Kalman Filter/Predict'
+ * '<S25>'  : 'URControl/estimators/EKFQuat/Extended Kalman Filter/Correct1/Correct'
+ * '<S26>'  : 'URControl/estimators/EKFQuat/Extended Kalman Filter/Predict/Predict'
+ * '<S27>'  : 'URControl/estimators/EKFQuat/Quaternions to Rotation Angles/Angle Calculation'
+ * '<S28>'  : 'URControl/estimators/EKFQuat/Quaternions to Rotation Angles/Quaternion Normalize'
+ * '<S29>'  : 'URControl/estimators/EKFQuat/Quaternions to Rotation Angles/Quaternion Normalize/Quaternion Modulus'
+ * '<S30>'  : 'URControl/estimators/EKFQuat/Quaternions to Rotation Angles/Quaternion Normalize/Quaternion Modulus/Quaternion Norm'
+ * '<S31>'  : 'URControl/rate controller/control allocator'
  */
 #endif                                 /* RTW_HEADER_URControl_h_ */
