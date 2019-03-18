@@ -160,12 +160,12 @@ SlPosDirectControl::parameters_updated()
 	PosDirectControlParams.t = _sl_torque_coeff.get();
 	PosDirectControlParams.rpm_feedback = _sl_rpm_feedback.get();
 	PosDirectControlParams.chi = _sl_chi.get();
-	PosDirectControlParams.Gg1 = _sl_gg1.get() / static_cast<float>(1000000.0);
-	PosDirectControlParams.Gg2 = _sl_gg2.get() / static_cast<float>(1000000.0);
-	PosDirectControlParams.Gp1 = _sl_gp1.get() / static_cast<float>(100000.0);
-	PosDirectControlParams.Gp2 = _sl_gp2.get() / static_cast<float>(100000.0);
-	PosDirectControlParams.Gq1 = _sl_gq1.get() / static_cast<float>(100000.0);
-	PosDirectControlParams.Gq2 = _sl_gq2.get() / static_cast<float>(100000.0);
+	// PosDirectControlParams.Gg1 = _sl_gg1.get() / static_cast<float>(1000000.0);
+	// PosDirectControlParams.Gg2 = _sl_gg2.get() / static_cast<float>(1000000.0);
+	// PosDirectControlParams.Gp1 = _sl_gp1.get() / static_cast<float>(100000.0);
+	// PosDirectControlParams.Gp2 = _sl_gp2.get() / static_cast<float>(100000.0);
+	// PosDirectControlParams.Gq1 = _sl_gq1.get() / static_cast<float>(100000.0);
+	// PosDirectControlParams.Gq2 = _sl_gq2.get() / static_cast<float>(100000.0);
 	
 	//PosDirectControlParams.indi_t = _sl_indi_filter_t.get();
 	
