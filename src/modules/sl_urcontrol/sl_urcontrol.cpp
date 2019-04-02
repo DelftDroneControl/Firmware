@@ -145,6 +145,8 @@ SlURControl::parameters_updated()
 	URControlParams.fail_wRot =  _sl_fail_wrot.get();
 
 	// Estimation
+	URControlParams.est_optiDx = _sl_est_optiDx.get();
+	URControlParams.est_optiDy = _sl_est_optiDy.get();
 	URControlParams.est_useEKF = _sl_est_useekf.get();
 	URControlParams.est_omegaFilterT = _sl_est_omegafiltert.get();
 	URControlParams.est_posFilterT = _sl_est_posfiltert.get();
@@ -177,11 +179,16 @@ SlURControl::parameters_updated()
 
 	// Attitude
 	URControlParams.attitude_rotKp = _sl_attitude_rotKp.get();
-	URControlParams.attitude_enablePrec = _sl_attitude_enablePrec.get();
+	URControlParams.attitude_precMode = _sl_attitude_precmode.get();
+	URControlParams.attitude_precAngle = _sl_attitude_precangle.get();
 	URControlParams.attitude_maxPrecSpeed = _sl_attitude_maxprecspeed.get();
 	URControlParams.attitude_MMargin = _sl_attitude_mmargin.get();
 	URControlParams.attitude_enableTraj = _sl_attitude_enabletraj.get();
 	URControlParams.attitude_rotSpeedComp = _sl_attitude_rotspeedcomp.get();
+
+	// Envelope
+	URControlParams.envp_enable = _sl_envp_enable.get();
+	URControlParams.envp_mode =   _sl_envp_mode.get();
 
 	// Rate
 	URControlParams.rate_mode = _sl_rate_mode.get();
@@ -205,6 +212,7 @@ SlURControl::parameters_updated()
 	URControlParams.rate_MPID_derFilterT = _sl_ratedot_derFilterT.get();
 	URControlParams.rate_MPID_uvrdesderFilterT = _sl_ratedot_uvrdesderFilterT.get();
 	URControlParams.rate_MPID_maxInt = _sl_ratedot_maxInt.get();
+	URControlParams.rate_MPID_precGain = _sl_ratedot_precGain.get();
 
 	URControlParams.rate_FtotGain = _sl_ratedot_ftot.get();
 
@@ -217,6 +225,7 @@ SlURControl::parameters_updated()
 	// Overrides
 	URControlParams.flip_mode = _sl_flip_mode.get();
 	URControlParams.flip_time = _sl_flip_time.get();
+	URControlParams.flip_upTime = _sl_flip_uptime.get();
 	URControlParams.flip_intensityX = _sl_flip_intensityX.get();
 	URControlParams.flip_intensityY = _sl_flip_intensityY.get();
 

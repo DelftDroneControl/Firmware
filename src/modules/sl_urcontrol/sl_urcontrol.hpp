@@ -201,6 +201,8 @@ private:
 	
 
 		// Estimation
+		(ParamFloat<px4::params::SL_EST_OPTIDX>) _sl_est_optiDx,
+		(ParamFloat<px4::params::SL_EST_OPTIDY>) _sl_est_optiDy,
 		(ParamInt<px4::params::SL_EST_USEEKF>) _sl_est_useekf,
 		(ParamFloat<px4::params::SL_EST_OMEGAFILT>) _sl_est_omegafiltert,
 		(ParamFloat<px4::params::SL_EST_POSFILT>) _sl_est_posfiltert,
@@ -235,11 +237,16 @@ private:
 		
 		// Attitude
 		(ParamFloat<px4::params::SL_ATT_ROTKP>) _sl_attitude_rotKp,
-		(ParamInt<px4::params::SL_ATT_ENABPREC>) _sl_attitude_enablePrec,
+		(ParamInt<px4::params::SL_ATT_PRECMODE>) _sl_attitude_precmode,
+		(ParamFloat<px4::params::SL_ATT_PRECANGLE>) _sl_attitude_precangle,
 		(ParamFloat<px4::params::SL_ATT_MAXPREC>) _sl_attitude_maxprecspeed,
 		(ParamFloat<px4::params::SL_ATT_MMARGIN>) _sl_attitude_mmargin,
 		(ParamInt<px4::params::SL_ATT_ENABTRAJ>) _sl_attitude_enabletraj,
 		(ParamFloat<px4::params::SL_ATT_ROTSPCOMP>) _sl_attitude_rotspeedcomp,
+
+		// Envelope
+		(ParamInt<px4::params::SL_ENVP_ENAB>) _sl_envp_enable,
+		(ParamInt<px4::params::SL_ENVP_MODE>) _sl_envp_mode,
 
 		// Rate
 		(ParamInt<px4::params::SL_RDOT_MODE>) _sl_rate_mode,
@@ -261,6 +268,7 @@ private:
 		(ParamFloat<px4::params::SL_RDOT_DFILT>)  _sl_ratedot_derFilterT,
 		(ParamFloat<px4::params::SL_RDOT_UVDFILT>)  _sl_ratedot_uvrdesderFilterT,
 		(ParamFloat<px4::params::SL_RDOT_MAXINT>)  _sl_ratedot_maxInt,
+		(ParamFloat<px4::params::SL_RDOT_PRECGAIN>)  _sl_ratedot_precGain,
 
 		(ParamFloat<px4::params::SL_RDOT_FTOT>) _sl_ratedot_ftot,
 
@@ -272,11 +280,12 @@ private:
 		// OVERRIDES
 		(ParamInt<px4::params::SL_FLIP_MODE>) _sl_flip_mode,
 		(ParamFloat<px4::params::SL_FLIP_TIME>) _sl_flip_time,
+		(ParamFloat<px4::params::SL_FLIP_UPTIME>) _sl_flip_uptime,
 		(ParamFloat<px4::params::SL_FLIP_INTEX>) _sl_flip_intensityX,
 		(ParamFloat<px4::params::SL_FLIP_INTEY>) _sl_flip_intensityY,
 
 		(ParamInt<px4::params::SL_THROW_MODE>) _sl_throw_mode,
-		(ParamFloat<px4::params::SL_TRHOW_TIME>) _sl_throw_falltime,
+		(ParamFloat<px4::params::SL_THROW_TIME>) _sl_throw_falltime,
 		(ParamFloat<px4::params::SL_THROW_THRESH>) _sl_throw_threshold
 		
 	)
