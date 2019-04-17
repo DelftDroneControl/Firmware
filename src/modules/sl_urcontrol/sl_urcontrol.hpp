@@ -220,6 +220,7 @@ private:
 		(ParamFloat<px4::params::SL_POS_KI_VELY>) _sl_pos_ki_vely,
 		(ParamFloat<px4::params::SL_POS_KI_VELZ>) _sl_pos_ki_velz,
 		(ParamFloat<px4::params::SL_POS_FAILGAIN>) _sl_pos_failGain,
+		(ParamFloat<px4::params::SL_POS_INTLIM>) _sl_pos_intlim,
 		
 
 		// Altitude
@@ -233,6 +234,7 @@ private:
 		(ParamFloat<px4::params::SL_YRC_KP_PSI>) _sl_yrc_Kp_psi,
 		(ParamFloat<px4::params::SL_YRC_RATECMD>) _sl_yrc_rateCmd,
 		(ParamInt<px4::params::SL_YRCFAIL_MODE>) _sl_yrcfail_mode,
+		(ParamFloat<px4::params::SL_YRCFAIL_MZG>) _sl_yrcfail_mzgain,
 		
 		
 		// Attitude
@@ -243,6 +245,7 @@ private:
 		(ParamFloat<px4::params::SL_ATT_MMARGIN>) _sl_attitude_mmargin,
 		(ParamInt<px4::params::SL_ATT_ENABTRAJ>) _sl_attitude_enabletraj,
 		(ParamFloat<px4::params::SL_ATT_ROTSPCOMP>) _sl_attitude_rotspeedcomp,
+		(ParamFloat<px4::params::SL_ATT_YRCCOMP>) _sl_attitude_yrcComp,
 
 		// Envelope
 		(ParamInt<px4::params::SL_ENVP_ENAB>) _sl_envp_enable,
@@ -252,9 +255,19 @@ private:
 		(ParamInt<px4::params::SL_RDOT_MODE>) _sl_rate_mode,
 		(ParamInt<px4::params::SL_RDOT_MMODE>) _sl_rate_momentMode,
 
-		// (ParamFloat<px4::params::SL_INDI_KPX>) _sl_ratedot_indi_kpx,
-		// (ParamFloat<px4::params::SL_INDI_KPY>) _sl_ratedot_indi_kpy,
-		// (ParamFloat<px4::params::SL_INDI_KPZ>) _sl_ratedot_indi_kpz,
+		(ParamFloat<px4::params::SL_INDI_KPX>) _sl_ratedot_indi_kpx,
+		(ParamFloat<px4::params::SL_INDI_KPY>) _sl_ratedot_indi_kpy,
+		(ParamFloat<px4::params::SL_INDI_KPZ>) _sl_ratedot_indi_kpz,
+		(ParamFloat<px4::params::SL_INDI_OMEDOTF>) _sl_ratedot_indi_omegaDotFilt,
+		(ParamFloat<px4::params::SL_INDI_ACCZF>) _sl_ratedot_indi_accZFilt,
+
+		(ParamFloat<px4::params::SL_INDI_ROLLEFF>) _sl_ratedot_indi_roll_eff,
+		(ParamFloat<px4::params::SL_INDI_PITCHEFF>) _sl_ratedot_indi_pitch_eff,
+		(ParamFloat<px4::params::SL_INDI_YAWEFF>) _sl_ratedot_indi_yaw_eff,
+		(ParamFloat<px4::params::SL_INDI_AZEFF>) _sl_ratedot_indi_az_eff,
+
+		(ParamFloat<px4::params::SL_INDI_DWMAX>) _sl_ratedot_qpindi_dwmax,
+		(ParamFloat<px4::params::SL_INDI_MINGAIN>) _sl_ratedot_qpindi_mingain,
 
 		(ParamFloat<px4::params::SL_RDOT_KPU>) _sl_ratedot_kpu,
 		(ParamFloat<px4::params::SL_RDOT_KPV>) _sl_ratedot_kpv,

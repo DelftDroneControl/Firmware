@@ -164,6 +164,7 @@ SlURControl::parameters_updated()
 	URControlParams.position_Ki_vel[1] = _sl_pos_ki_vely.get();
 	URControlParams.position_Ki_vel[2] = _sl_pos_ki_velz.get();
 	URControlParams.position_failGain = _sl_pos_failGain.get();
+	URControlParams.position_intLim = _sl_pos_intlim.get();
 
 	// Altitude
 	URControlParams.altitude_Kp_pos = _sl_alt_kp_pos.get();
@@ -176,6 +177,7 @@ SlURControl::parameters_updated()
 	URControlParams.YRC_Kp_psi = _sl_yrc_Kp_psi.get();
 	URControlParams.YRC_rateCmd = _sl_yrc_rateCmd.get();
 	URControlParams.YRCFail_mode = _sl_yrcfail_mode.get();
+	URControlParams.YRCFail_Kp_dMzGain = _sl_yrcfail_mzgain.get();
 
 	// Attitude
 	URControlParams.attitude_rotKp = _sl_attitude_rotKp.get();
@@ -185,6 +187,8 @@ SlURControl::parameters_updated()
 	URControlParams.attitude_MMargin = _sl_attitude_mmargin.get();
 	URControlParams.attitude_enableTraj = _sl_attitude_enabletraj.get();
 	URControlParams.attitude_rotSpeedComp = _sl_attitude_rotspeedcomp.get();
+	URControlParams.attitude_yrcComp = _sl_attitude_yrcComp.get();
+
 
 	// Envelope
 	URControlParams.envp_enable = _sl_envp_enable.get();
@@ -195,10 +199,21 @@ SlURControl::parameters_updated()
 	URControlParams.rate_momentMode = _sl_rate_momentMode.get();
 
 	// Rate - INDI
-	// URControlParams.rate_INDI_rateDotKp[0] = _sl_ratedot_indi_kpx.get();
-	// URControlParams.rate_INDI_rateDotKp[1] = _sl_ratedot_indi_kpy.get();
-	// URControlParams.rate_INDI_rateDotKp[2] = _sl_ratedot_indi_kpz.get();
-	
+	URControlParams.rate_INDI_rateDotKp[0] = _sl_ratedot_indi_kpx.get();
+	URControlParams.rate_INDI_rateDotKp[1] = _sl_ratedot_indi_kpy.get();
+	URControlParams.rate_INDI_rateDotKp[2] = _sl_ratedot_indi_kpz.get();
+	URControlParams.rate_INDI_omegaDotFilterT = _sl_ratedot_indi_omegaDotFilt.get();
+	URControlParams.rate_INDI_accZFilterT = _sl_ratedot_indi_accZFilt.get();
+
+	// Rate - QPINDI
+	URControlParams.rate_roll_eff = 	_sl_ratedot_indi_roll_eff.get();
+	URControlParams.rate_pitch_eff = 	_sl_ratedot_indi_pitch_eff.get();
+	URControlParams.rate_yaw_eff = 		_sl_ratedot_indi_yaw_eff.get();
+	URControlParams.rate_az_eff = 		_sl_ratedot_indi_az_eff.get();
+
+	URControlParams.rate_QPINDI_dwMax =   _sl_ratedot_qpindi_dwmax.get();
+	URControlParams.rate_QPINDI_minGain = _sl_ratedot_qpindi_mingain.get();
+
 	// Rate - MPID
 	URControlParams.rate_MPID_rateDotKp[0] = _sl_ratedot_kpu.get();
 	URControlParams.rate_MPID_rateDotKp[1] = _sl_ratedot_kpv.get();
