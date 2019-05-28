@@ -180,6 +180,7 @@ SlURControl::parameters_updated()
 	URControlParams.YRCFail_Kp_dMzGain = _sl_yrcfail_mzgain.get();
 
 	// Attitude
+	URControlParams.attitude_mode = _sl_attitude_mode.get();
 	URControlParams.attitude_rotKp = _sl_attitude_rotKp.get();
 	URControlParams.attitude_precMode = _sl_attitude_precmode.get();
 	URControlParams.attitude_precAngle = _sl_attitude_precangle.get();
@@ -248,6 +249,9 @@ SlURControl::parameters_updated()
 	URControlParams.throw_falltime = _sl_throw_falltime.get();
 	URControlParams.throw_threshold = _sl_throw_threshold.get();
 
+	// Others
+	URControlParams.fail_altProt = _sl_fail_altProt.get();
+	URControlParams.fail_altThresh = _sl_fail_altThresh.get();
 }
 
 void

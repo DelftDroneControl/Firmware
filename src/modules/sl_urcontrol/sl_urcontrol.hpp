@@ -238,6 +238,7 @@ private:
 		
 		
 		// Attitude
+		(ParamInt<px4::params::SL_ATT_MODE>) _sl_attitude_mode,
 		(ParamFloat<px4::params::SL_ATT_ROTKP>) _sl_attitude_rotKp,
 		(ParamInt<px4::params::SL_ATT_PRECMODE>) _sl_attitude_precmode,
 		(ParamFloat<px4::params::SL_ATT_PRECANGLE>) _sl_attitude_precangle,
@@ -299,8 +300,11 @@ private:
 
 		(ParamInt<px4::params::SL_THROW_MODE>) _sl_throw_mode,
 		(ParamFloat<px4::params::SL_THROW_TIME>) _sl_throw_falltime,
-		(ParamFloat<px4::params::SL_THROW_THRESH>) _sl_throw_threshold
+		(ParamFloat<px4::params::SL_THROW_THRESH>) _sl_throw_threshold,
 		
+		// Others
+		(ParamInt<px4::params::SL_FAIL_ALTPROT>) _sl_fail_altProt,
+		(ParamFloat<px4::params::SL_FAIL_ALTTHRE>) _sl_fail_altThresh
 	)
 
     struct debug_key_value_s dbg {};
