@@ -4,8 +4,10 @@ float32[3] att
 
 float32[3] rates
 
-float32[3] thrust_vec_sp
-
 float32 yaw_angle_sp
+
+float32[3] pos_sp
+float32[3] accel
+float32[3] pos
 
 # Reference: AttitudeControl.h
