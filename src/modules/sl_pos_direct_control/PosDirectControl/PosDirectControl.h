@@ -7,9 +7,9 @@
  *
  * Code generation for model "PosDirectControl".
  *
- * Model version              : 1.454
+ * Model version              : 1.479
  * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C++ source code generated on : Wed Jan  9 18:22:33 2019
+ * C++ source code generated on : Sat Jan 12 15:20:23 2019
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -22,7 +22,7 @@
 #define RTW_HEADER_PosDirectControl_h_
 #include <string.h>
 #include <cmath>
-#include <stddef.h>
+#include <math.h>
 #ifndef PosDirectControl_COMMON_INCLUDES_
 # define PosDirectControl_COMMON_INCLUDES_
 #include "rtwtypes.h"
@@ -49,21 +49,22 @@
 
 /* Block states (default storage) for system '<Root>' */
 typedef struct {
-  real_T DiscreteStateSpace_DSTATE[3]; /* '<S4>/Discrete State-Space' */
-  real_T Integrator_DSTATE;            /* '<S561>/Integrator' */
-  real_T Filter_DSTATE;                /* '<S543>/Filter' */
-  real_T psi_last;                     /* '<S4>/unwrap2pi' */
-  real_T N;                            /* '<S4>/unwrap2pi' */
-  boolean_T psi_last_not_empty;        /* '<S4>/unwrap2pi' */
+  real_T DiscreteStateSpace1_DSTATE[6];/* '<S3>/Discrete State-Space1' */
+  real_T UD_DSTATE[6];                 /* '<S9>/UD' */
+  real_T DiscreteStateSpace_DSTATE[3]; /* '<S3>/Discrete State-Space' */
+  real_T UD_DSTATE_b[3];               /* '<S8>/UD' */
+  real_T UD_DSTATE_br[3];              /* '<S7>/UD' */
+  real_T UD_DSTATE_g;                  /* '<S6>/UD' */
+  real_T DiscreteStateSpace2_DSTATE;   /* '<S3>/Discrete State-Space2' */
+  real_T UD_DSTATE_o;                  /* '<S5>/UD' */
+  real_T DiscreteStateSpace3_DSTATE[4];/* '<S3>/Discrete State-Space3' */
+  real_T DiscreteStateSpace4_DSTATE[3];/* '<S3>/Discrete State-Space4' */
+  real_T ActuatorDynamics_DSTATE[4];   /* '<S3>/ActuatorDynamics' */
+  real_T Memory_PreviousInput[4];      /* '<S3>/Memory' */
+  real_T psi_last;                     /* '<S3>/unwrap2pi' */
+  real_T N;                            /* '<S3>/unwrap2pi' */
+  boolean_T psi_last_not_empty;        /* '<S3>/unwrap2pi' */
 } DW_PosDirectControl_T;
-
-/* Constant parameters (default storage) */
-typedef struct {
-  /* Expression: posDirectControlParams
-   * Referenced by: '<S4>/indi1'
-   */
-  PosDirectControlParamsType indi1_posDirectControlParams;
-} ConstP_PosDirectControl_T;
 
 /* External inputs (root inport signals with default storage) */
 typedef struct {
@@ -86,10 +87,18 @@ typedef struct {
 /* Real-time Model Data Structure */
 struct tag_RTM_PosDirectControl_T {
   const char_T *errorStatus;
-};
 
-/* Constant parameters (default storage) */
-extern const ConstP_PosDirectControl_T PosDirectControl_ConstP;
+  /*
+   * Timing:
+   * The following substructure contains information regarding
+   * the timing information for the model.
+   */
+  struct {
+    struct {
+      uint8_T TID[2];
+    } TaskCounters;
+  } Timing;
+};
 
 /*
  * Exported Global Parameters
@@ -101,10 +110,12 @@ extern const ConstP_PosDirectControl_T PosDirectControl_ConstP;
  */
 extern PosDirectControlParamsType PosDirectControlParams;/* Variable: PosDirectControlParams
                                                           * Referenced by:
-                                                          *   '<S4>/Pos_x'
-                                                          *   '<S4>/Pos_y'
-                                                          *   '<S4>/Vel_x'
-                                                          *   '<S4>/Vel_y'
+                                                          *   '<S3>/indi'
+                                                          *   '<S3>/rpm_feedback'
+                                                          *   '<S3>/Pos_x'
+                                                          *   '<S3>/Pos_y'
+                                                          *   '<S3>/Vel_x'
+                                                          *   '<S3>/Vel_y'
                                                           */
 
 /* Class declaration for model PosDirectControl */
@@ -142,6 +153,27 @@ class PosDirectControlModelClass {
 
   /* Real-Time Model */
   RT_MODEL_PosDirectControl_T PosDirectControl_M;
+
+  /* private member function(s) for subsystem '<Root>'*/
+  void PosDirectControl_mldivide(const real_T A[9], const real_T B[3], real_T Y
+    [3]);
+  real_T PosDirectControl_xnrm2(int32_T n, const real_T x[16], int32_T ix0);
+  real_T PosDirectControl_xnrm2_g(int32_T n, const real_T x[4], int32_T ix0);
+  void PosDirectControl_xaxpy_lx(int32_T n, real_T a, const real_T x[4], int32_T
+    ix0, real_T y[16], int32_T iy0);
+  void PosDirectControl_xaxpy_l(int32_T n, real_T a, const real_T x[16], int32_T
+    ix0, real_T y[4], int32_T iy0);
+  real_T PosDirectControl_xdotc(int32_T n, const real_T x[16], int32_T ix0,
+    const real_T y[16], int32_T iy0);
+  void PosDirectControl_xaxpy(int32_T n, real_T a, int32_T ix0, real_T y[16],
+    int32_T iy0);
+  void PosDirectControl_xscal(real_T a, real_T x[16], int32_T ix0);
+  void PosDirectControl_xswap(real_T x[16], int32_T ix0, int32_T iy0);
+  void PosDirectControl_xrotg(real_T *a, real_T *b, real_T *c, real_T *s);
+  void PosDirectControl_xrot(real_T x[16], int32_T ix0, int32_T iy0, real_T c,
+    real_T s);
+  void PosDirectControl_svd(const real_T A[16], real_T U[16], real_T s[4],
+    real_T V[16]);
 };
 
 /*-
@@ -467,299 +499,8 @@ class PosDirectControlModelClass {
  * '<S306>' : 'PosDirectControl/Subsystem/indi/PD_z/preSat Signal/Feedback_Path'
  * '<S307>' : 'PosDirectControl/Subsystem/indi/PD_z/preSat Signal/Forward_Path'
  * '<S308>' : 'PosDirectControl/Subsystem/lqr/MATLAB Function1'
- * '<S309>' : 'PosDirectControl/Subsystem/lqr/PD_x1'
- * '<S310>' : 'PosDirectControl/Subsystem/lqr/PD_y1'
- * '<S311>' : 'PosDirectControl/Subsystem/lqr/PD_z'
- * '<S312>' : 'PosDirectControl/Subsystem/lqr/indi1'
- * '<S313>' : 'PosDirectControl/Subsystem/lqr/n_des from accel_sp'
- * '<S314>' : 'PosDirectControl/Subsystem/lqr/unwrap2pi'
- * '<S315>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Anti-windup'
- * '<S316>' : 'PosDirectControl/Subsystem/lqr/PD_x1/D Gain'
- * '<S317>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Filter'
- * '<S318>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Filter ICs'
- * '<S319>' : 'PosDirectControl/Subsystem/lqr/PD_x1/I Gain'
- * '<S320>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Ideal P Gain'
- * '<S321>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Ideal P Gain Fdbk'
- * '<S322>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Integrator'
- * '<S323>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Integrator ICs'
- * '<S324>' : 'PosDirectControl/Subsystem/lqr/PD_x1/N Copy'
- * '<S325>' : 'PosDirectControl/Subsystem/lqr/PD_x1/N Gain'
- * '<S326>' : 'PosDirectControl/Subsystem/lqr/PD_x1/P Copy'
- * '<S327>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Parallel P Gain'
- * '<S328>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Reset Signal'
- * '<S329>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Saturation'
- * '<S330>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Saturation Fdbk'
- * '<S331>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Sum'
- * '<S332>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Sum Fdbk'
- * '<S333>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Tracking Mode'
- * '<S334>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Tracking Mode Sum'
- * '<S335>' : 'PosDirectControl/Subsystem/lqr/PD_x1/postSat Signal'
- * '<S336>' : 'PosDirectControl/Subsystem/lqr/PD_x1/preSat Signal'
- * '<S337>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Anti-windup/Back Calculation'
- * '<S338>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Anti-windup/Cont. Clamping Ideal'
- * '<S339>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Anti-windup/Cont. Clamping Parallel'
- * '<S340>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Anti-windup/Disabled'
- * '<S341>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Anti-windup/Disc. Clamping Ideal'
- * '<S342>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Anti-windup/Disc. Clamping Parallel'
- * '<S343>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Anti-windup/Passthrough'
- * '<S344>' : 'PosDirectControl/Subsystem/lqr/PD_x1/D Gain/Disabled'
- * '<S345>' : 'PosDirectControl/Subsystem/lqr/PD_x1/D Gain/External Parameters'
- * '<S346>' : 'PosDirectControl/Subsystem/lqr/PD_x1/D Gain/Internal Parameters'
- * '<S347>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Filter/Cont. Filter'
- * '<S348>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Filter/Differentiator'
- * '<S349>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Filter/Disabled'
- * '<S350>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Filter/Disc. Backward Euler Filter'
- * '<S351>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Filter/Disc. Forward Euler Filter'
- * '<S352>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Filter/Disc. Trapezoidal Filter'
- * '<S353>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Filter ICs/Disabled'
- * '<S354>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Filter ICs/External IC'
- * '<S355>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Filter ICs/Internal IC - Differentiator'
- * '<S356>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Filter ICs/Internal IC - Filter'
- * '<S357>' : 'PosDirectControl/Subsystem/lqr/PD_x1/I Gain/Disabled'
- * '<S358>' : 'PosDirectControl/Subsystem/lqr/PD_x1/I Gain/External Parameters'
- * '<S359>' : 'PosDirectControl/Subsystem/lqr/PD_x1/I Gain/Internal Parameters'
- * '<S360>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Ideal P Gain/External Parameters'
- * '<S361>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Ideal P Gain/Internal Parameters'
- * '<S362>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Ideal P Gain/Passthrough'
- * '<S363>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Ideal P Gain Fdbk/Disabled'
- * '<S364>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Ideal P Gain Fdbk/External Parameters'
- * '<S365>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Ideal P Gain Fdbk/Internal Parameters'
- * '<S366>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Ideal P Gain Fdbk/Passthrough'
- * '<S367>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Integrator/Continuous'
- * '<S368>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Integrator/Disabled'
- * '<S369>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Integrator/Discrete'
- * '<S370>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Integrator ICs/Disabled'
- * '<S371>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Integrator ICs/External IC'
- * '<S372>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Integrator ICs/Internal IC'
- * '<S373>' : 'PosDirectControl/Subsystem/lqr/PD_x1/N Copy/Disabled'
- * '<S374>' : 'PosDirectControl/Subsystem/lqr/PD_x1/N Copy/Disabled wSignal Specification'
- * '<S375>' : 'PosDirectControl/Subsystem/lqr/PD_x1/N Copy/External Parameters'
- * '<S376>' : 'PosDirectControl/Subsystem/lqr/PD_x1/N Copy/Internal Parameters'
- * '<S377>' : 'PosDirectControl/Subsystem/lqr/PD_x1/N Gain/Disabled'
- * '<S378>' : 'PosDirectControl/Subsystem/lqr/PD_x1/N Gain/External Parameters'
- * '<S379>' : 'PosDirectControl/Subsystem/lqr/PD_x1/N Gain/Internal Parameters'
- * '<S380>' : 'PosDirectControl/Subsystem/lqr/PD_x1/N Gain/Passthrough'
- * '<S381>' : 'PosDirectControl/Subsystem/lqr/PD_x1/P Copy/Disabled'
- * '<S382>' : 'PosDirectControl/Subsystem/lqr/PD_x1/P Copy/External Parameters Ideal'
- * '<S383>' : 'PosDirectControl/Subsystem/lqr/PD_x1/P Copy/Internal Parameters Ideal'
- * '<S384>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Parallel P Gain/Disabled'
- * '<S385>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Parallel P Gain/External Parameters'
- * '<S386>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Parallel P Gain/Internal Parameters'
- * '<S387>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Parallel P Gain/Passthrough'
- * '<S388>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Reset Signal/Disabled'
- * '<S389>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Reset Signal/External Reset'
- * '<S390>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Saturation/Enabled'
- * '<S391>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Saturation/Passthrough'
- * '<S392>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Saturation Fdbk/Disabled'
- * '<S393>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Saturation Fdbk/Enabled'
- * '<S394>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Saturation Fdbk/Passthrough'
- * '<S395>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Sum/Passthrough_I'
- * '<S396>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Sum/Passthrough_P'
- * '<S397>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Sum/Sum_PD'
- * '<S398>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Sum/Sum_PI'
- * '<S399>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Sum/Sum_PID'
- * '<S400>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Sum Fdbk/Disabled'
- * '<S401>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Sum Fdbk/Enabled'
- * '<S402>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Sum Fdbk/Passthrough'
- * '<S403>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Tracking Mode/Disabled'
- * '<S404>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Tracking Mode/Enabled'
- * '<S405>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Tracking Mode Sum/Passthrough'
- * '<S406>' : 'PosDirectControl/Subsystem/lqr/PD_x1/Tracking Mode Sum/Tracking Mode'
- * '<S407>' : 'PosDirectControl/Subsystem/lqr/PD_x1/postSat Signal/Feedback_Path'
- * '<S408>' : 'PosDirectControl/Subsystem/lqr/PD_x1/postSat Signal/Forward_Path'
- * '<S409>' : 'PosDirectControl/Subsystem/lqr/PD_x1/preSat Signal/Feedback_Path'
- * '<S410>' : 'PosDirectControl/Subsystem/lqr/PD_x1/preSat Signal/Forward_Path'
- * '<S411>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Anti-windup'
- * '<S412>' : 'PosDirectControl/Subsystem/lqr/PD_y1/D Gain'
- * '<S413>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Filter'
- * '<S414>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Filter ICs'
- * '<S415>' : 'PosDirectControl/Subsystem/lqr/PD_y1/I Gain'
- * '<S416>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Ideal P Gain'
- * '<S417>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Ideal P Gain Fdbk'
- * '<S418>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Integrator'
- * '<S419>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Integrator ICs'
- * '<S420>' : 'PosDirectControl/Subsystem/lqr/PD_y1/N Copy'
- * '<S421>' : 'PosDirectControl/Subsystem/lqr/PD_y1/N Gain'
- * '<S422>' : 'PosDirectControl/Subsystem/lqr/PD_y1/P Copy'
- * '<S423>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Parallel P Gain'
- * '<S424>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Reset Signal'
- * '<S425>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Saturation'
- * '<S426>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Saturation Fdbk'
- * '<S427>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Sum'
- * '<S428>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Sum Fdbk'
- * '<S429>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Tracking Mode'
- * '<S430>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Tracking Mode Sum'
- * '<S431>' : 'PosDirectControl/Subsystem/lqr/PD_y1/postSat Signal'
- * '<S432>' : 'PosDirectControl/Subsystem/lqr/PD_y1/preSat Signal'
- * '<S433>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Anti-windup/Back Calculation'
- * '<S434>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Anti-windup/Cont. Clamping Ideal'
- * '<S435>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Anti-windup/Cont. Clamping Parallel'
- * '<S436>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Anti-windup/Disabled'
- * '<S437>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Anti-windup/Disc. Clamping Ideal'
- * '<S438>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Anti-windup/Disc. Clamping Parallel'
- * '<S439>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Anti-windup/Passthrough'
- * '<S440>' : 'PosDirectControl/Subsystem/lqr/PD_y1/D Gain/Disabled'
- * '<S441>' : 'PosDirectControl/Subsystem/lqr/PD_y1/D Gain/External Parameters'
- * '<S442>' : 'PosDirectControl/Subsystem/lqr/PD_y1/D Gain/Internal Parameters'
- * '<S443>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Filter/Cont. Filter'
- * '<S444>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Filter/Differentiator'
- * '<S445>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Filter/Disabled'
- * '<S446>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Filter/Disc. Backward Euler Filter'
- * '<S447>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Filter/Disc. Forward Euler Filter'
- * '<S448>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Filter/Disc. Trapezoidal Filter'
- * '<S449>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Filter ICs/Disabled'
- * '<S450>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Filter ICs/External IC'
- * '<S451>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Filter ICs/Internal IC - Differentiator'
- * '<S452>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Filter ICs/Internal IC - Filter'
- * '<S453>' : 'PosDirectControl/Subsystem/lqr/PD_y1/I Gain/Disabled'
- * '<S454>' : 'PosDirectControl/Subsystem/lqr/PD_y1/I Gain/External Parameters'
- * '<S455>' : 'PosDirectControl/Subsystem/lqr/PD_y1/I Gain/Internal Parameters'
- * '<S456>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Ideal P Gain/External Parameters'
- * '<S457>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Ideal P Gain/Internal Parameters'
- * '<S458>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Ideal P Gain/Passthrough'
- * '<S459>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Ideal P Gain Fdbk/Disabled'
- * '<S460>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Ideal P Gain Fdbk/External Parameters'
- * '<S461>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Ideal P Gain Fdbk/Internal Parameters'
- * '<S462>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Ideal P Gain Fdbk/Passthrough'
- * '<S463>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Integrator/Continuous'
- * '<S464>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Integrator/Disabled'
- * '<S465>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Integrator/Discrete'
- * '<S466>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Integrator ICs/Disabled'
- * '<S467>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Integrator ICs/External IC'
- * '<S468>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Integrator ICs/Internal IC'
- * '<S469>' : 'PosDirectControl/Subsystem/lqr/PD_y1/N Copy/Disabled'
- * '<S470>' : 'PosDirectControl/Subsystem/lqr/PD_y1/N Copy/Disabled wSignal Specification'
- * '<S471>' : 'PosDirectControl/Subsystem/lqr/PD_y1/N Copy/External Parameters'
- * '<S472>' : 'PosDirectControl/Subsystem/lqr/PD_y1/N Copy/Internal Parameters'
- * '<S473>' : 'PosDirectControl/Subsystem/lqr/PD_y1/N Gain/Disabled'
- * '<S474>' : 'PosDirectControl/Subsystem/lqr/PD_y1/N Gain/External Parameters'
- * '<S475>' : 'PosDirectControl/Subsystem/lqr/PD_y1/N Gain/Internal Parameters'
- * '<S476>' : 'PosDirectControl/Subsystem/lqr/PD_y1/N Gain/Passthrough'
- * '<S477>' : 'PosDirectControl/Subsystem/lqr/PD_y1/P Copy/Disabled'
- * '<S478>' : 'PosDirectControl/Subsystem/lqr/PD_y1/P Copy/External Parameters Ideal'
- * '<S479>' : 'PosDirectControl/Subsystem/lqr/PD_y1/P Copy/Internal Parameters Ideal'
- * '<S480>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Parallel P Gain/Disabled'
- * '<S481>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Parallel P Gain/External Parameters'
- * '<S482>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Parallel P Gain/Internal Parameters'
- * '<S483>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Parallel P Gain/Passthrough'
- * '<S484>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Reset Signal/Disabled'
- * '<S485>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Reset Signal/External Reset'
- * '<S486>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Saturation/Enabled'
- * '<S487>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Saturation/Passthrough'
- * '<S488>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Saturation Fdbk/Disabled'
- * '<S489>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Saturation Fdbk/Enabled'
- * '<S490>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Saturation Fdbk/Passthrough'
- * '<S491>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Sum/Passthrough_I'
- * '<S492>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Sum/Passthrough_P'
- * '<S493>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Sum/Sum_PD'
- * '<S494>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Sum/Sum_PI'
- * '<S495>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Sum/Sum_PID'
- * '<S496>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Sum Fdbk/Disabled'
- * '<S497>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Sum Fdbk/Enabled'
- * '<S498>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Sum Fdbk/Passthrough'
- * '<S499>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Tracking Mode/Disabled'
- * '<S500>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Tracking Mode/Enabled'
- * '<S501>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Tracking Mode Sum/Passthrough'
- * '<S502>' : 'PosDirectControl/Subsystem/lqr/PD_y1/Tracking Mode Sum/Tracking Mode'
- * '<S503>' : 'PosDirectControl/Subsystem/lqr/PD_y1/postSat Signal/Feedback_Path'
- * '<S504>' : 'PosDirectControl/Subsystem/lqr/PD_y1/postSat Signal/Forward_Path'
- * '<S505>' : 'PosDirectControl/Subsystem/lqr/PD_y1/preSat Signal/Feedback_Path'
- * '<S506>' : 'PosDirectControl/Subsystem/lqr/PD_y1/preSat Signal/Forward_Path'
- * '<S507>' : 'PosDirectControl/Subsystem/lqr/PD_z/Anti-windup'
- * '<S508>' : 'PosDirectControl/Subsystem/lqr/PD_z/D Gain'
- * '<S509>' : 'PosDirectControl/Subsystem/lqr/PD_z/Filter'
- * '<S510>' : 'PosDirectControl/Subsystem/lqr/PD_z/Filter ICs'
- * '<S511>' : 'PosDirectControl/Subsystem/lqr/PD_z/I Gain'
- * '<S512>' : 'PosDirectControl/Subsystem/lqr/PD_z/Ideal P Gain'
- * '<S513>' : 'PosDirectControl/Subsystem/lqr/PD_z/Ideal P Gain Fdbk'
- * '<S514>' : 'PosDirectControl/Subsystem/lqr/PD_z/Integrator'
- * '<S515>' : 'PosDirectControl/Subsystem/lqr/PD_z/Integrator ICs'
- * '<S516>' : 'PosDirectControl/Subsystem/lqr/PD_z/N Copy'
- * '<S517>' : 'PosDirectControl/Subsystem/lqr/PD_z/N Gain'
- * '<S518>' : 'PosDirectControl/Subsystem/lqr/PD_z/P Copy'
- * '<S519>' : 'PosDirectControl/Subsystem/lqr/PD_z/Parallel P Gain'
- * '<S520>' : 'PosDirectControl/Subsystem/lqr/PD_z/Reset Signal'
- * '<S521>' : 'PosDirectControl/Subsystem/lqr/PD_z/Saturation'
- * '<S522>' : 'PosDirectControl/Subsystem/lqr/PD_z/Saturation Fdbk'
- * '<S523>' : 'PosDirectControl/Subsystem/lqr/PD_z/Sum'
- * '<S524>' : 'PosDirectControl/Subsystem/lqr/PD_z/Sum Fdbk'
- * '<S525>' : 'PosDirectControl/Subsystem/lqr/PD_z/Tracking Mode'
- * '<S526>' : 'PosDirectControl/Subsystem/lqr/PD_z/Tracking Mode Sum'
- * '<S527>' : 'PosDirectControl/Subsystem/lqr/PD_z/postSat Signal'
- * '<S528>' : 'PosDirectControl/Subsystem/lqr/PD_z/preSat Signal'
- * '<S529>' : 'PosDirectControl/Subsystem/lqr/PD_z/Anti-windup/Back Calculation'
- * '<S530>' : 'PosDirectControl/Subsystem/lqr/PD_z/Anti-windup/Cont. Clamping Ideal'
- * '<S531>' : 'PosDirectControl/Subsystem/lqr/PD_z/Anti-windup/Cont. Clamping Parallel'
- * '<S532>' : 'PosDirectControl/Subsystem/lqr/PD_z/Anti-windup/Disabled'
- * '<S533>' : 'PosDirectControl/Subsystem/lqr/PD_z/Anti-windup/Disc. Clamping Ideal'
- * '<S534>' : 'PosDirectControl/Subsystem/lqr/PD_z/Anti-windup/Disc. Clamping Parallel'
- * '<S535>' : 'PosDirectControl/Subsystem/lqr/PD_z/Anti-windup/Passthrough'
- * '<S536>' : 'PosDirectControl/Subsystem/lqr/PD_z/D Gain/Disabled'
- * '<S537>' : 'PosDirectControl/Subsystem/lqr/PD_z/D Gain/External Parameters'
- * '<S538>' : 'PosDirectControl/Subsystem/lqr/PD_z/D Gain/Internal Parameters'
- * '<S539>' : 'PosDirectControl/Subsystem/lqr/PD_z/Filter/Cont. Filter'
- * '<S540>' : 'PosDirectControl/Subsystem/lqr/PD_z/Filter/Differentiator'
- * '<S541>' : 'PosDirectControl/Subsystem/lqr/PD_z/Filter/Disabled'
- * '<S542>' : 'PosDirectControl/Subsystem/lqr/PD_z/Filter/Disc. Backward Euler Filter'
- * '<S543>' : 'PosDirectControl/Subsystem/lqr/PD_z/Filter/Disc. Forward Euler Filter'
- * '<S544>' : 'PosDirectControl/Subsystem/lqr/PD_z/Filter/Disc. Trapezoidal Filter'
- * '<S545>' : 'PosDirectControl/Subsystem/lqr/PD_z/Filter ICs/Disabled'
- * '<S546>' : 'PosDirectControl/Subsystem/lqr/PD_z/Filter ICs/External IC'
- * '<S547>' : 'PosDirectControl/Subsystem/lqr/PD_z/Filter ICs/Internal IC - Differentiator'
- * '<S548>' : 'PosDirectControl/Subsystem/lqr/PD_z/Filter ICs/Internal IC - Filter'
- * '<S549>' : 'PosDirectControl/Subsystem/lqr/PD_z/I Gain/Disabled'
- * '<S550>' : 'PosDirectControl/Subsystem/lqr/PD_z/I Gain/External Parameters'
- * '<S551>' : 'PosDirectControl/Subsystem/lqr/PD_z/I Gain/Internal Parameters'
- * '<S552>' : 'PosDirectControl/Subsystem/lqr/PD_z/Ideal P Gain/External Parameters'
- * '<S553>' : 'PosDirectControl/Subsystem/lqr/PD_z/Ideal P Gain/Internal Parameters'
- * '<S554>' : 'PosDirectControl/Subsystem/lqr/PD_z/Ideal P Gain/Passthrough'
- * '<S555>' : 'PosDirectControl/Subsystem/lqr/PD_z/Ideal P Gain Fdbk/Disabled'
- * '<S556>' : 'PosDirectControl/Subsystem/lqr/PD_z/Ideal P Gain Fdbk/External Parameters'
- * '<S557>' : 'PosDirectControl/Subsystem/lqr/PD_z/Ideal P Gain Fdbk/Internal Parameters'
- * '<S558>' : 'PosDirectControl/Subsystem/lqr/PD_z/Ideal P Gain Fdbk/Passthrough'
- * '<S559>' : 'PosDirectControl/Subsystem/lqr/PD_z/Integrator/Continuous'
- * '<S560>' : 'PosDirectControl/Subsystem/lqr/PD_z/Integrator/Disabled'
- * '<S561>' : 'PosDirectControl/Subsystem/lqr/PD_z/Integrator/Discrete'
- * '<S562>' : 'PosDirectControl/Subsystem/lqr/PD_z/Integrator ICs/Disabled'
- * '<S563>' : 'PosDirectControl/Subsystem/lqr/PD_z/Integrator ICs/External IC'
- * '<S564>' : 'PosDirectControl/Subsystem/lqr/PD_z/Integrator ICs/Internal IC'
- * '<S565>' : 'PosDirectControl/Subsystem/lqr/PD_z/N Copy/Disabled'
- * '<S566>' : 'PosDirectControl/Subsystem/lqr/PD_z/N Copy/Disabled wSignal Specification'
- * '<S567>' : 'PosDirectControl/Subsystem/lqr/PD_z/N Copy/External Parameters'
- * '<S568>' : 'PosDirectControl/Subsystem/lqr/PD_z/N Copy/Internal Parameters'
- * '<S569>' : 'PosDirectControl/Subsystem/lqr/PD_z/N Gain/Disabled'
- * '<S570>' : 'PosDirectControl/Subsystem/lqr/PD_z/N Gain/External Parameters'
- * '<S571>' : 'PosDirectControl/Subsystem/lqr/PD_z/N Gain/Internal Parameters'
- * '<S572>' : 'PosDirectControl/Subsystem/lqr/PD_z/N Gain/Passthrough'
- * '<S573>' : 'PosDirectControl/Subsystem/lqr/PD_z/P Copy/Disabled'
- * '<S574>' : 'PosDirectControl/Subsystem/lqr/PD_z/P Copy/External Parameters Ideal'
- * '<S575>' : 'PosDirectControl/Subsystem/lqr/PD_z/P Copy/Internal Parameters Ideal'
- * '<S576>' : 'PosDirectControl/Subsystem/lqr/PD_z/Parallel P Gain/Disabled'
- * '<S577>' : 'PosDirectControl/Subsystem/lqr/PD_z/Parallel P Gain/External Parameters'
- * '<S578>' : 'PosDirectControl/Subsystem/lqr/PD_z/Parallel P Gain/Internal Parameters'
- * '<S579>' : 'PosDirectControl/Subsystem/lqr/PD_z/Parallel P Gain/Passthrough'
- * '<S580>' : 'PosDirectControl/Subsystem/lqr/PD_z/Reset Signal/Disabled'
- * '<S581>' : 'PosDirectControl/Subsystem/lqr/PD_z/Reset Signal/External Reset'
- * '<S582>' : 'PosDirectControl/Subsystem/lqr/PD_z/Saturation/Enabled'
- * '<S583>' : 'PosDirectControl/Subsystem/lqr/PD_z/Saturation/Passthrough'
- * '<S584>' : 'PosDirectControl/Subsystem/lqr/PD_z/Saturation Fdbk/Disabled'
- * '<S585>' : 'PosDirectControl/Subsystem/lqr/PD_z/Saturation Fdbk/Enabled'
- * '<S586>' : 'PosDirectControl/Subsystem/lqr/PD_z/Saturation Fdbk/Passthrough'
- * '<S587>' : 'PosDirectControl/Subsystem/lqr/PD_z/Sum/Passthrough_I'
- * '<S588>' : 'PosDirectControl/Subsystem/lqr/PD_z/Sum/Passthrough_P'
- * '<S589>' : 'PosDirectControl/Subsystem/lqr/PD_z/Sum/Sum_PD'
- * '<S590>' : 'PosDirectControl/Subsystem/lqr/PD_z/Sum/Sum_PI'
- * '<S591>' : 'PosDirectControl/Subsystem/lqr/PD_z/Sum/Sum_PID'
- * '<S592>' : 'PosDirectControl/Subsystem/lqr/PD_z/Sum Fdbk/Disabled'
- * '<S593>' : 'PosDirectControl/Subsystem/lqr/PD_z/Sum Fdbk/Enabled'
- * '<S594>' : 'PosDirectControl/Subsystem/lqr/PD_z/Sum Fdbk/Passthrough'
- * '<S595>' : 'PosDirectControl/Subsystem/lqr/PD_z/Tracking Mode/Disabled'
- * '<S596>' : 'PosDirectControl/Subsystem/lqr/PD_z/Tracking Mode/Enabled'
- * '<S597>' : 'PosDirectControl/Subsystem/lqr/PD_z/Tracking Mode Sum/Passthrough'
- * '<S598>' : 'PosDirectControl/Subsystem/lqr/PD_z/Tracking Mode Sum/Tracking Mode'
- * '<S599>' : 'PosDirectControl/Subsystem/lqr/PD_z/postSat Signal/Feedback_Path'
- * '<S600>' : 'PosDirectControl/Subsystem/lqr/PD_z/postSat Signal/Forward_Path'
- * '<S601>' : 'PosDirectControl/Subsystem/lqr/PD_z/preSat Signal/Feedback_Path'
- * '<S602>' : 'PosDirectControl/Subsystem/lqr/PD_z/preSat Signal/Forward_Path'
+ * '<S309>' : 'PosDirectControl/Subsystem/lqr/indi1'
+ * '<S310>' : 'PosDirectControl/Subsystem/lqr/n_des from accel_sp'
+ * '<S311>' : 'PosDirectControl/Subsystem/lqr/unwrap2pi'
  */
 #endif                                 /* RTW_HEADER_PosDirectControl_h_ */

@@ -7,9 +7,9 @@
  *
  * Code generation for model "PosDirectControl".
  *
- * Model version              : 1.454
+ * Model version              : 1.479
  * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C++ source code generated on : Wed Jan  9 18:22:33 2019
+ * C++ source code generated on : Sat Jan 12 15:20:23 2019
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
