@@ -71,6 +71,7 @@ set(msg_files
 	landing_target_innovations.msg
 	landing_target_pose.msg
 	led_control.msg
+	loe_detector_status.msg
 	log_message.msg
 	manual_control_setpoint.msg
 	mavlink_log.msg
