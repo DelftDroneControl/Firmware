@@ -248,6 +248,15 @@ SlURControl::parameters_updated()
 	URControlParams.throw_falltime = _sl_throw_falltime.get();
 	URControlParams.throw_threshold = _sl_throw_threshold.get();
 
+	//QPpredControl
+	URControlParams.Kp 	= _sl_qp_kp.get();
+	URControlParams.Kd 	= _sl_qp_kd.get();
+	URControlParams.kdr = _sl_qp_kdr.get();
+	URControlParams.th 	= _sl_qp_th.get();
+	URControlParams.p1 	= _sl_qp_thr_gain.get();
+	URControlParams.p2 	= _sl_qp_env_gain.get();
+	URControlParams.pr 	= _sl_qp_yaw_gain.get();
+	URControlParams.omega_max = _sl_qp_env_omega.get();
 }
 
 void

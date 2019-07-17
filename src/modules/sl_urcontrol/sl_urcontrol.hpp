@@ -299,8 +299,17 @@ private:
 
 		(ParamInt<px4::params::SL_THROW_MODE>) _sl_throw_mode,
 		(ParamFloat<px4::params::SL_THROW_TIME>) _sl_throw_falltime,
-		(ParamFloat<px4::params::SL_THROW_THRESH>) _sl_throw_threshold
-		
+		(ParamFloat<px4::params::SL_THROW_THRESH>) _sl_throw_threshold,
+
+		//QPpredControl
+		(ParamFloat<px4::params::SL_QP_KP>) _sl_qp_kp,
+		(ParamFloat<px4::params::SL_QP_KD>) _sl_qp_kd,
+		(ParamFloat<px4::params::SL_QP_KDR>) _sl_qp_kdr,
+		(ParamFloat<px4::params::SL_QP_TH>) _sl_qp_th,
+		(ParamFloat<px4::params::SL_QP_THR_GAIN>) _sl_qp_thr_gain,
+		(ParamFloat<px4::params::SL_QP_YAW_GAIN>) _sl_qp_yaw_gain,
+		(ParamFloat<px4::params::SL_QP_ENV_GAIN>) _sl_qp_env_gain,
+		(ParamFloat<px4::params::SL_QP_ENV_OMEGA>) _sl_qp_env_omega
 	)
 
     struct debug_key_value_s dbg {};
