@@ -7,9 +7,9 @@
  *
  * Code generation for model "URControl".
  *
- * Model version              : 1.848
+ * Model version              : 1.874
  * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C++ source code generated on : Mon Mar 18 14:47:59 2019
+ * C++ source code generated on : Wed Jul 17 14:39:49 2019
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -22,6 +22,22 @@
 #include "URControl_private.h"
 
 const daqBus URControl_rtZdaqBus = {
+  {
+    0.0, 0.0, 0.0 }
+  ,                                    /* pos */
+
+  {
+    0.0, 0.0, 0.0 }
+  ,                                    /* vel */
+
+  {
+    0.0, 0.0, 0.0 }
+  ,                                    /* acc */
+
+  {
+    0.0, 0.0, 0.0 }
+  ,                                    /* n */
+
   {
     0.0, 0.0, 0.0 }
   ,                                    /* omegaUV */
@@ -71,6 +87,10 @@ const daqBus URControl_rtZdaqBus = {
   {
     0.0, 0.0 }
   ,                                    /* uv_prec */
+
+  {
+    0.0, 0.0 }
+  ,                                    /* precAngle */
 
   {
     0.0, 0.0, 0.0 }
@@ -130,7 +150,15 @@ const daqBus URControl_rtZdaqBus = {
 
   {
     0.0, 0.0, 0.0 }
-  /* dM */
+  ,                                    /* dM */
+
+  {
+    0.0, 0.0, 0.0, 0.0 }
+  ,                                    /* inp */
+
+  {
+    0.0, 0.0, 0.0, 0.0 }
+  /* dw_lin */
 } ;                                    /* daqBus ground */
 
 const stateBus URControl_rtZstateBus = {
@@ -225,6 +253,7 @@ URControlParamsType URControlParams = {
   0.0014,
   0.0013,
   0.0025,
+  8.0e-6,
   0.00191049731745428,
   0.00191049731745428,
   0.14450346016618426,
@@ -233,12 +262,16 @@ URControlParamsType URControlParams = {
   0.0,
   300.0,
   -1.0,
+  1200.0,
+  0.0,
 
   { 0.70710678118654768, 0.70710678118654768, -0.53801602916367752,
     0.53801602916367752 },
+  0.0,
+  0.0,
   0.75,
-  0.85,
-  0.85,
+  0.5,
+  0.5,
   0.85,
   1.0,
 
@@ -246,21 +279,22 @@ URControlParamsType URControlParams = {
 
   { 0.1, 0.1, 0.1, 0.2, 0.2, 0.2, 0.2 },
   1.0,
-  0.52631578947368418,
-  0.35087719298245612,
+  0.61403508771929827,
+  0.26315789473684209,
 
   { 1.5, 1.5, 1.5 },
   4.0,
 
-  { 5.0, 5.0, 2.0 },
+  { 2.0, 2.0, 2.0 },
 
-  { 2.0, 2.0, 1.0 },
+  { 1.0, 1.0, 1.0 },
   0.2,
   0.5,
   -2.0,
   1.0,
   2.0,
   4.0,
+  2.0,
   15.0,
   15.0,
   0.5,
@@ -280,18 +314,22 @@ URControlParamsType URControlParams = {
   15.0,
   -0.5,
   -0.1,
+  1.0,
 
   { 0.0, 0.0, -1.0 },
-  2.0,
-  -15.0,
+  1.0,
+  -10.0,
   15.0,
   4.0,
   0.01,
   10.0,
-  1.0,
+  2.0,
+  -3.0,
   1.0,
   200.0,
   1.2217304763960306,
+  0.2,
+  1.0,
   1.0,
   1200.0,
   300.0,
@@ -300,19 +338,21 @@ URControlParamsType URControlParams = {
 
   { 0.171315, 0.171315, 0.171315, 0.171315 },
   0.05,
-  10.0,
-  2.0,
+  5.0,
+  3.0,
+  1.0,
   1.0,
 
-  { 170.0, 170.0, 30.0, -8.0, -170.0, 170.0, -30.0, -8.0, -170.0, -170.0, 30.0,
-    -8.0, 170.0, -170.0, -30.0, -8.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, -1.0, 0.0,
-    0.0, 0.0, 1.0, 0.0, 0.0, 0.0, -1.0, 0.0 },
+  { 150.0, 150.0, 100.0, -8.0, -150.0, 150.0, -100.0, -8.0, -150.0, -150.0,
+    100.0, -8.0, 150.0, -150.0, -100.0, -8.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, -1.0,
+    0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, -1.0, 0.0 },
 
   { 30.0, 30.0, 3.0 },
+  0.8,
   0.85,
-  0.85,
+  600.0,
 
-  { 50.0, 50.0, 5.0 },
+  { 30.0, 30.0, 3.0 },
 
   { 0.0, 0.0, 0.0 },
 
@@ -320,11 +360,31 @@ URControlParamsType URControlParams = {
   0.8,
   0.8,
   0.5,
+  0.0,
 
   { 40.0, 40.0, 2.0 },
   0.9,
 
   { 20.0, 20.0, 1.0 },
+  150.0,
+  150.0,
+  -50.0,
+  5.0,
+
+  { 0.0, 1.0, -1.0, -1.0, -1.0, 0.0, 1.0, -1.0, 0.0, -1.0, -1.0, -1.0, 1.0, 0.0,
+    1.0, -1.0 },
+
+  { 10000.0, 0.0, 0.0, 0.0, 0.0, 10000.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0,
+    0.0, 100.0 },
+
+  { 0.0001, 0.0, 0.0, 0.0, 0.0, 0.0001, 0.0, 0.0, 0.0, 0.0, 0.0001, 0.0, 0.0,
+    0.0, 0.0, 0.0001 },
+  200.0,
+
+  { 100.0, 100.0, 20.0, 20.0 },
+
+  { 30.0, 30.0, 10.0, 2.0 },
+  0.2,
 
   { 0.4, 0.4, 0.045 },
   10000.0,
@@ -333,13 +393,34 @@ URControlParamsType URControlParams = {
   4.0,
   0.0001,
   5.0,
-  0.0,
+  300.0,
+  20.0,
   0.1,
-  0.0,
   400.0,
+  50.0,
+  0.1,
+  1.0,
+  10.0,
+  10.0,
+  1.0,
+  5.0,
+  0.0,
+
+  { 0.7071, 0.7071, -0.538, 0.538 },
+  0,
+  0,
+  0.0,
+  0,
+  0.0,
+  0.13,
+  0.0,
+  300.0,
+  0.0,
   0.0,
   0.3,
-  4.0
+  4.0,
+  0.0,
+  -1.0
 } ;                                    /* Variable: URControlParams
                                         * Referenced by:
                                         *   '<Root>/delay'
@@ -404,7 +485,7 @@ real_T URControlModelClass::URControl_norm_d(const real_T x[4])
   return scale * std::sqrt(y);
 }
 
-/* Function for MATLAB Function: '<S22>/Correct' */
+/* Function for MATLAB Function: '<S23>/Correct' */
 void URControlModelClass::URControl_mrdivide_helper(real_T A[70], const real_T
   B[49])
 {
@@ -558,6 +639,86 @@ real_T rt_atan2d_snf(real_T u0, real_T u1)
   }
 
   return y;
+}
+
+/* Function for MATLAB Function: '<S5>/basic estimators' */
+void URControlModelClass::URControl_mod(const real_T x[3], real_T r[3])
+{
+  real_T b_r;
+  boolean_T rEQ0;
+  real_T q;
+  if ((!rtIsInf(x[0])) && (!rtIsNaN(x[0]))) {
+    if (x[0] == 0.0) {
+      b_r = 0.0;
+    } else {
+      b_r = std::fmod(x[0], 6.2831853071795862);
+      rEQ0 = (b_r == 0.0);
+      if (!rEQ0) {
+        q = std::abs(x[0] / 6.2831853071795862);
+        rEQ0 = (std::abs(q - std::floor(q + 0.5)) <= 2.2204460492503131E-16 * q);
+      }
+
+      if (rEQ0) {
+        b_r = 0.0;
+      } else {
+        if (x[0] < 0.0) {
+          b_r += 6.2831853071795862;
+        }
+      }
+    }
+  } else {
+    b_r = (rtNaN);
+  }
+
+  r[0] = b_r;
+  if ((!rtIsInf(x[1])) && (!rtIsNaN(x[1]))) {
+    if (x[1] == 0.0) {
+      b_r = 0.0;
+    } else {
+      b_r = std::fmod(x[1], 6.2831853071795862);
+      rEQ0 = (b_r == 0.0);
+      if (!rEQ0) {
+        q = std::abs(x[1] / 6.2831853071795862);
+        rEQ0 = (std::abs(q - std::floor(q + 0.5)) <= 2.2204460492503131E-16 * q);
+      }
+
+      if (rEQ0) {
+        b_r = 0.0;
+      } else {
+        if (x[1] < 0.0) {
+          b_r += 6.2831853071795862;
+        }
+      }
+    }
+  } else {
+    b_r = (rtNaN);
+  }
+
+  r[1] = b_r;
+  if ((!rtIsInf(x[2])) && (!rtIsNaN(x[2]))) {
+    if (x[2] == 0.0) {
+      b_r = 0.0;
+    } else {
+      b_r = std::fmod(x[2], 6.2831853071795862);
+      rEQ0 = (b_r == 0.0);
+      if (!rEQ0) {
+        q = std::abs(x[2] / 6.2831853071795862);
+        rEQ0 = (std::abs(q - std::floor(q + 0.5)) <= 2.2204460492503131E-16 * q);
+      }
+
+      if (rEQ0) {
+        b_r = 0.0;
+      } else {
+        if (x[2] < 0.0) {
+          b_r += 6.2831853071795862;
+        }
+      }
+    }
+  } else {
+    b_r = (rtNaN);
+  }
+
+  r[2] = b_r;
 }
 
 /*
@@ -744,6 +905,63 @@ real_T URControlModelClass::URControl_URTrajCalc(real_T theta0, real_T w0,
   }
 
   return t;
+}
+
+/*
+ * Function for MATLAB Function: '<S6>/control allocator'
+ * function obj = SimpleDerivative(filterT, initValue, maxLim, minLim)
+ */
+SimpleDerivative_URControl_T *URControlModelClass::
+  SimpleDerivative_SimpleDerivati(SimpleDerivative_URControl_T *obj, real_T
+  filterT, const real_T initValue[3], real_T maxLim, real_T minLim)
+{
+  SimpleDerivative_URControl_T *b_obj;
+  b_obj = obj;
+
+  /* 'SimpleDerivative:12' obj.filterHandle = LPFilter(filterT, initValue, maxLim, minLim); */
+  /* 'LPFilter:14' obj.filterT = filterT; */
+  obj->filterHandle.filterT = filterT;
+
+  /* 'LPFilter:15' obj.value = initValue; */
+  obj->filterHandle.value[0] = initValue[0];
+  obj->filterHandle.value[1] = initValue[1];
+  obj->filterHandle.value[2] = initValue[2];
+
+  /* 'LPFilter:16' obj.maxLim = maxLim; */
+  obj->filterHandle.maxLim = maxLim;
+
+  /* 'LPFilter:17' obj.minLim = minLim; */
+  obj->filterHandle.minLim = minLim;
+
+  /* 'SimpleDerivative:13' obj.prevValue = initValue; */
+  obj->prevValue[0] = initValue[0];
+  obj->prevValue[1] = initValue[1];
+  obj->prevValue[2] = initValue[2];
+  return b_obj;
+}
+
+/*
+ * Function for MATLAB Function: '<S6>/control allocator'
+ * function obj = LPFilter(filterT, initValue, maxLim, minLim)
+ */
+LPFilter_1_URControl_T *URControlModelClass::URControl_LPFilter_LPFilter
+  (LPFilter_1_URControl_T *obj, real_T filterT)
+{
+  LPFilter_1_URControl_T *b_obj;
+  b_obj = obj;
+
+  /* 'LPFilter:14' obj.filterT = filterT; */
+  obj->filterT = filterT;
+
+  /* 'LPFilter:15' obj.value = initValue; */
+  obj->value = 0.0;
+
+  /* 'LPFilter:16' obj.maxLim = maxLim; */
+  obj->maxLim = 30.0;
+
+  /* 'LPFilter:17' obj.minLim = minLim; */
+  obj->minLim = -30.0;
+  return b_obj;
 }
 
 /*
@@ -1423,15 +1641,968 @@ void URControlModelClass::URControl_mldivide(const real_T A_data[], const
 
 /*
  * Function for MATLAB Function: '<S6>/control allocator'
+ * function [x,y_state,iterSteps,optimal] = QPINDI(inp, G, K, K2, lowBound, highBound, y_state_init, par, URpar)
+ */
+void URControlModelClass::URControl_QPINDI(const real_T inp[4], const real_T G
+  [16], const real_T K[16], const real_T K2[16], const real_T lowBound[4], const
+  real_T highBound[4], real_T y_state_init[4], real_T x[4], real_T *iterSteps,
+  real_T *optimal)
+{
+  real_T H[16];
+  real_T c[4];
+  real_T b[8];
+  boolean_T indices[8];
+  int8_T A_eq_data[32];
+  int8_T AT_eq_data[32];
+  real_T xy_data[12];
+  real_T constraintError[8];
+  real_T count;
+  int8_T f_data[8];
+  int8_T g_data[8];
+  int8_T result_data[96];
+  boolean_T empty_non_axis_sizes;
+  real_T varargin_1_data[48];
+  int32_T idx;
+  real_T b_ex;
+  static const int8_T A[32] = { 1, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0,
+    0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0, -1 };
+
+  real_T H_tmp[16];
+  int32_T i;
+  real_T varargin_1_data_0[144];
+  real_T c_data[12];
+  int32_T loop_ub;
+  real_T H_tmp_0[16];
+  real_T inp_0[4];
+  int32_T xy_size;
+  int32_T varargin_1_size[2];
+  int32_T result_size_idx_1;
+  int8_T l2_idx_0;
+  int8_T l1_idx_1;
+  int32_T H_tmp_tmp;
+  int32_T H_tmp_tmp_0;
+  int32_T H_tmp_tmp_1;
+  int32_T H_tmp_tmp_2;
+  real_T tmp;
+  boolean_T tmp_0;
+  boolean_T guard1 = false;
+  boolean_T exitg1;
+  boolean_T exitg2;
+
+  /* 'QPINDI:13' x = [0;0;0;0]; */
+  /* 'QPINDI:14' y = [0;0;0;0]; */
+  /* 'QPINDI:16' H = 2*(G'*K*G + K2); */
+  for (i = 0; i < 4; i++) {
+    x[i] = 0.0;
+    for (loop_ub = 0; loop_ub < 4; loop_ub++) {
+      H_tmp_tmp = loop_ub << 2;
+      H_tmp_tmp_0 = i + H_tmp_tmp;
+      H_tmp[H_tmp_tmp_0] = 0.0;
+      H_tmp_tmp_1 = i << 2;
+      H_tmp_tmp_2 = H_tmp_tmp + i;
+      H_tmp[H_tmp_tmp_0] = H_tmp[H_tmp_tmp_2] + G[H_tmp_tmp_1] * K[H_tmp_tmp];
+      H_tmp[H_tmp_tmp_0] = G[H_tmp_tmp_1 + 1] * K[H_tmp_tmp + 1] +
+        H_tmp[H_tmp_tmp_2];
+      H_tmp[H_tmp_tmp_0] = G[H_tmp_tmp_1 + 2] * K[H_tmp_tmp + 2] +
+        H_tmp[H_tmp_tmp_2];
+      H_tmp[H_tmp_tmp_0] = G[H_tmp_tmp_1 + 3] * K[H_tmp_tmp + 3] +
+        H_tmp[H_tmp_tmp_2];
+    }
+
+    for (loop_ub = 0; loop_ub < 4; loop_ub++) {
+      H_tmp_tmp = loop_ub << 2;
+      H_tmp_0[i + H_tmp_tmp] = (((G[H_tmp_tmp + 1] * H_tmp[i + 4] + G[H_tmp_tmp]
+        * H_tmp[i]) + G[H_tmp_tmp + 2] * H_tmp[i + 8]) + G[H_tmp_tmp + 3] *
+        H_tmp[i + 12]) + K2[H_tmp_tmp + i];
+    }
+  }
+
+  for (loop_ub = 0; loop_ub < 16; loop_ub++) {
+    H[loop_ub] = 2.0 * H_tmp_0[loop_ub];
+  }
+
+  /* 'QPINDI:17' c = -(G'*K*inp + (inp'*K*G)'); */
+  for (loop_ub = 0; loop_ub < 4; loop_ub++) {
+    H_tmp_tmp = loop_ub << 2;
+    count = K[H_tmp_tmp + 3] * inp[3] + (K[H_tmp_tmp + 2] * inp[2] +
+      (K[H_tmp_tmp + 1] * inp[1] + K[H_tmp_tmp] * inp[0]));
+    inp_0[loop_ub] = count;
+  }
+
+  /* 'QPINDI:20' A = [1,0,0,0;... */
+  /* 'QPINDI:21'      0,1,0,0;... */
+  /* 'QPINDI:22'      0,0,1,0;... */
+  /* 'QPINDI:23'      0,0,0,1;... */
+  /* 'QPINDI:24'      -1,0,0,0;... */
+  /* 'QPINDI:25'      0,-1,0,0;... */
+  /* 'QPINDI:26'      0,0,-1,0;... */
+  /* 'QPINDI:27'      0,0,0,-1]; */
+  /* 'QPINDI:29' b = [highBound;-lowBound]; */
+  for (i = 0; i < 4; i++) {
+    H_tmp_tmp = i << 2;
+    count = G[H_tmp_tmp + 3] * inp_0[3] + (G[H_tmp_tmp + 2] * inp_0[2] +
+      (G[H_tmp_tmp + 1] * inp_0[1] + G[H_tmp_tmp] * inp_0[0]));
+    c[i] = -((((H_tmp[i + 4] * inp[1] + H_tmp[i] * inp[0]) + H_tmp[i + 8] * inp
+               [2]) + H_tmp[i + 12] * inp[3]) + count);
+    b[i] = highBound[i];
+    b[i + 4] = -lowBound[i];
+  }
+
+  /* 'QPINDI:32' y_state = y_state_init; */
+  /* 'QPINDI:33' solution = 0; */
+  i = 0;
+
+  /* 'QPINDI:34' iterSteps = 0; */
+  *iterSteps = 0.0;
+
+  /* 'QPINDI:36' for iter = 1:10 */
+  H_tmp_tmp = 0;
+  exitg1 = false;
+  while ((!exitg1) && (H_tmp_tmp < 10)) {
+    /* 'QPINDI:37' iterSteps = iterSteps +1; */
+    (*iterSteps)++;
+
+    /* 'QPINDI:47' indices = [(y_state == 1), (y_state == -1)]; */
+    indices[0] = (y_state_init[0] == 1.0);
+    indices[4] = (y_state_init[0] == -1.0);
+    indices[1] = (y_state_init[1] == 1.0);
+    indices[5] = (y_state_init[1] == -1.0);
+    indices[2] = (y_state_init[2] == 1.0);
+    indices[6] = (y_state_init[2] == -1.0);
+    indices[3] = (y_state_init[3] == 1.0);
+    indices[7] = (y_state_init[3] == -1.0);
+
+    /* 'QPINDI:48' b_eq = b(indices); */
+    /* 'QPINDI:49' A_eq = A(indices,:); */
+    H_tmp_tmp_1 = 0;
+    for (xy_size = 0; xy_size < 8; xy_size++) {
+      if (indices[xy_size]) {
+        H_tmp_tmp_1++;
+      }
+    }
+
+    H_tmp_tmp_2 = H_tmp_tmp_1;
+    H_tmp_tmp_1 = 0;
+    for (xy_size = 0; xy_size < 8; xy_size++) {
+      if (indices[xy_size]) {
+        f_data[H_tmp_tmp_1] = (int8_T)(xy_size + 1);
+        H_tmp_tmp_1++;
+      }
+    }
+
+    for (loop_ub = 0; loop_ub < H_tmp_tmp_2; loop_ub++) {
+      A_eq_data[loop_ub] = A[f_data[loop_ub] - 1];
+    }
+
+    for (loop_ub = 0; loop_ub < H_tmp_tmp_2; loop_ub++) {
+      A_eq_data[loop_ub + H_tmp_tmp_2] = A[f_data[loop_ub] + 7];
+    }
+
+    for (loop_ub = 0; loop_ub < H_tmp_tmp_2; loop_ub++) {
+      A_eq_data[loop_ub + (H_tmp_tmp_2 << 1)] = A[f_data[loop_ub] + 15];
+    }
+
+    for (loop_ub = 0; loop_ub < H_tmp_tmp_2; loop_ub++) {
+      A_eq_data[loop_ub + H_tmp_tmp_2 * 3] = A[f_data[loop_ub] + 23];
+    }
+
+    /* 'QPINDI:50' AT_eq = transpose(A_eq); */
+    for (loop_ub = 0; loop_ub < H_tmp_tmp_2; loop_ub++) {
+      H_tmp_tmp_0 = loop_ub << 2;
+      AT_eq_data[H_tmp_tmp_0] = A_eq_data[loop_ub];
+      AT_eq_data[1 + H_tmp_tmp_0] = A_eq_data[loop_ub + H_tmp_tmp_2];
+      AT_eq_data[2 + H_tmp_tmp_0] = A_eq_data[(H_tmp_tmp_2 << 1) + loop_ub];
+      AT_eq_data[3 + H_tmp_tmp_0] = A_eq_data[H_tmp_tmp_2 * 3 + loop_ub];
+    }
+
+    /* 'QPINDI:52' if isempty(A_eq) */
+    if (H_tmp_tmp_2 == 0) {
+      /* 'QPINDI:53' l1=[0,0]; */
+      /* 'QPINDI:54' l2=[0,0]; */
+      l2_idx_0 = 0;
+      l1_idx_1 = 0;
+    } else {
+      /* 'QPINDI:55' else */
+      /* 'QPINDI:56' l1=size(AT_eq); */
+      l1_idx_1 = (int8_T)H_tmp_tmp_2;
+
+      /* 'QPINDI:57' l2=size(A_eq); */
+      l2_idx_0 = (int8_T)H_tmp_tmp_2;
+    }
+
+    /* 'QPINDI:61' D = [H,AT_eq;A_eq,zeros(l2(1),l1(2))]; */
+    if (H_tmp_tmp_2 != 0) {
+      H_tmp_tmp_1 = H_tmp_tmp_2;
+    } else if ((l2_idx_0 != 0) && (l1_idx_1 != 0)) {
+      H_tmp_tmp_1 = l2_idx_0;
+    } else {
+      H_tmp_tmp_1 = 0;
+      if (l2_idx_0 > 0) {
+        H_tmp_tmp_1 = l2_idx_0;
+      }
+    }
+
+    empty_non_axis_sizes = (H_tmp_tmp_1 == 0);
+    if (empty_non_axis_sizes || (H_tmp_tmp_2 != 0)) {
+      xy_size = 4;
+    } else {
+      xy_size = 0;
+    }
+
+    if (empty_non_axis_sizes || ((l2_idx_0 != 0) && (l1_idx_1 != 0))) {
+      idx = l1_idx_1;
+    } else {
+      idx = 0;
+    }
+
+    H_tmp_tmp_0 = H_tmp_tmp_1;
+    result_size_idx_1 = xy_size + idx;
+    xy_size *= H_tmp_tmp_1;
+    loop_ub = H_tmp_tmp_1 * idx - 1;
+    if (0 <= xy_size - 1) {
+      memcpy(&result_data[0], &A_eq_data[0], xy_size * sizeof(int8_T));
+    }
+
+    if (0 <= loop_ub) {
+      memset(&result_data[xy_size], 0, (((loop_ub + xy_size) - xy_size) + 1) *
+             sizeof(int8_T));
+    }
+
+    idx = 4 + H_tmp_tmp_2;
+    xy_size = (H_tmp_tmp_2 << 2) - 1;
+    memcpy(&varargin_1_data[0], &H[0], sizeof(real_T) << 4U);
+    for (loop_ub = 0; loop_ub <= xy_size; loop_ub++) {
+      varargin_1_data[loop_ub + 16] = AT_eq_data[loop_ub];
+    }
+
+    /* 'QPINDI:62' d = [-c;b_eq]; */
+    H_tmp_tmp_1 = 0;
+    for (xy_size = 0; xy_size < 8; xy_size++) {
+      if (indices[xy_size]) {
+        H_tmp_tmp_1++;
+      }
+    }
+
+    H_tmp_tmp_2 = H_tmp_tmp_1;
+    H_tmp_tmp_1 = 0;
+    for (xy_size = 0; xy_size < 8; xy_size++) {
+      if (indices[xy_size]) {
+        g_data[H_tmp_tmp_1] = (int8_T)(xy_size + 1);
+        H_tmp_tmp_1++;
+      }
+    }
+
+    /* 'QPINDI:63' xy = D\d; */
+    if ((H_tmp_tmp_0 == 0) || (result_size_idx_1 == 0)) {
+      H_tmp_tmp_0 = 0;
+    }
+
+    varargin_1_size[0] = 4 + H_tmp_tmp_0;
+    varargin_1_size[1] = idx;
+    for (loop_ub = 0; loop_ub < idx; loop_ub++) {
+      for (H_tmp_tmp_1 = 0; H_tmp_tmp_1 < 4; H_tmp_tmp_1++) {
+        varargin_1_data_0[H_tmp_tmp_1 + varargin_1_size[0] * loop_ub] =
+          varargin_1_data[(loop_ub << 2) + H_tmp_tmp_1];
+      }
+    }
+
+    for (loop_ub = 0; loop_ub < idx; loop_ub++) {
+      for (H_tmp_tmp_1 = 0; H_tmp_tmp_1 < H_tmp_tmp_0; H_tmp_tmp_1++) {
+        varargin_1_data_0[(H_tmp_tmp_1 + varargin_1_size[0] * loop_ub) + 4] =
+          result_data[H_tmp_tmp_0 * loop_ub + H_tmp_tmp_1];
+      }
+    }
+
+    H_tmp_tmp_0 = 4 + H_tmp_tmp_2;
+    c_data[0] = -c[0];
+    c_data[1] = -c[1];
+    c_data[2] = -c[2];
+    c_data[3] = -c[3];
+    for (loop_ub = 0; loop_ub < H_tmp_tmp_2; loop_ub++) {
+      c_data[loop_ub + 4] = b[g_data[loop_ub] - 1];
+    }
+
+    URControl_mldivide(varargin_1_data_0, varargin_1_size, c_data, &H_tmp_tmp_0,
+                       xy_data, &xy_size);
+
+    /* 'QPINDI:64' x = xy(1:4); */
+    x[0] = xy_data[0];
+    x[1] = xy_data[1];
+    x[2] = xy_data[2];
+    x[3] = xy_data[3];
+
+    /* 'QPINDI:65' y = xy(5:length(xy)); */
+    if (5 > xy_size) {
+      H_tmp_tmp_1 = 0;
+      xy_size = 0;
+    } else {
+      H_tmp_tmp_1 = 4;
+    }
+
+    /* 'QPINDI:68' constraintError = A*x - b; */
+    for (loop_ub = 0; loop_ub < 8; loop_ub++) {
+      constraintError[loop_ub] = ((((real_T)A[loop_ub + 8] * x[1] + (real_T)
+        A[loop_ub] * x[0]) + (real_T)A[loop_ub + 16] * x[2]) + (real_T)A[loop_ub
+        + 24] * x[3]) - b[loop_ub];
+    }
+
+    /* 'QPINDI:70' constraintOK = (max(constraintError) <= 0.001); */
+    tmp_0 = rtIsNaN(constraintError[0]);
+    if (!tmp_0) {
+      idx = 1;
+    } else {
+      idx = 0;
+      H_tmp_tmp_0 = 2;
+      exitg2 = false;
+      while ((!exitg2) && (H_tmp_tmp_0 < 9)) {
+        if (!rtIsNaN(constraintError[H_tmp_tmp_0 - 1])) {
+          idx = H_tmp_tmp_0;
+          exitg2 = true;
+        } else {
+          H_tmp_tmp_0++;
+        }
+      }
+    }
+
+    if (idx == 0) {
+      count = constraintError[0];
+    } else {
+      count = constraintError[idx - 1];
+      while (idx + 1 < 9) {
+        if (count < constraintError[idx]) {
+          count = constraintError[idx];
+        }
+
+        idx++;
+      }
+    }
+
+    /* 'QPINDI:71' yMultipOK = (isempty(y) || min(y) >= 0); */
+    loop_ub = xy_size - H_tmp_tmp_1;
+    if (loop_ub == 0) {
+      empty_non_axis_sizes = true;
+    } else {
+      if (loop_ub <= 2) {
+        if (loop_ub == 1) {
+          b_ex = xy_data[H_tmp_tmp_1];
+        } else {
+          b_ex = xy_data[H_tmp_tmp_1 + 1];
+          if ((xy_data[H_tmp_tmp_1] > b_ex) || (rtIsNaN(xy_data[H_tmp_tmp_1]) &&
+               (!rtIsNaN(b_ex)))) {
+          } else {
+            b_ex = xy_data[H_tmp_tmp_1];
+          }
+        }
+      } else {
+        if (!rtIsNaN(xy_data[H_tmp_tmp_1])) {
+          idx = 0;
+        } else {
+          idx = -1;
+          H_tmp_tmp_0 = 2;
+          exitg2 = false;
+          while ((!exitg2) && (H_tmp_tmp_0 <= loop_ub)) {
+            if (!rtIsNaN(xy_data[(H_tmp_tmp_1 + H_tmp_tmp_0) - 1])) {
+              idx = H_tmp_tmp_0 - 1;
+              exitg2 = true;
+            } else {
+              H_tmp_tmp_0++;
+            }
+          }
+        }
+
+        if (idx + 1 == 0) {
+          b_ex = xy_data[H_tmp_tmp_1];
+        } else {
+          b_ex = xy_data[H_tmp_tmp_1 + idx];
+          while (idx + 2 <= loop_ub) {
+            tmp = xy_data[(H_tmp_tmp_1 + idx) + 1];
+            if (b_ex > tmp) {
+              b_ex = tmp;
+            }
+
+            idx++;
+          }
+        }
+      }
+
+      if (b_ex >= 0.0) {
+        empty_non_axis_sizes = true;
+      } else {
+        empty_non_axis_sizes = false;
+      }
+    }
+
+    /* 'QPINDI:73' if constraintOK && yMultipOK */
+    if ((count <= 0.001) && empty_non_axis_sizes) {
+      /* 'QPINDI:74' solution = 1; */
+      i = 1;
+      exitg1 = true;
+    } else {
+      /* 'QPINDI:76' else */
+      /* 'QPINDI:77' if isempty(y) || min(y) >= 0.0 */
+      guard1 = false;
+      if (loop_ub == 0) {
+        guard1 = true;
+      } else {
+        if (loop_ub <= 2) {
+          if (loop_ub == 1) {
+            count = xy_data[H_tmp_tmp_1];
+          } else if ((xy_data[H_tmp_tmp_1] > xy_data[H_tmp_tmp_1 + 1]) ||
+                     (rtIsNaN(xy_data[H_tmp_tmp_1]) && (!rtIsNaN
+                       (xy_data[H_tmp_tmp_1 + 1])))) {
+            count = xy_data[H_tmp_tmp_1 + 1];
+          } else {
+            count = xy_data[H_tmp_tmp_1];
+          }
+        } else {
+          if (!rtIsNaN(xy_data[H_tmp_tmp_1])) {
+            idx = 0;
+          } else {
+            idx = -1;
+            H_tmp_tmp_0 = 2;
+            exitg2 = false;
+            while ((!exitg2) && (H_tmp_tmp_0 <= loop_ub)) {
+              if (!rtIsNaN(xy_data[(H_tmp_tmp_1 + H_tmp_tmp_0) - 1])) {
+                idx = H_tmp_tmp_0 - 1;
+                exitg2 = true;
+              } else {
+                H_tmp_tmp_0++;
+              }
+            }
+          }
+
+          if (idx + 1 == 0) {
+            count = xy_data[H_tmp_tmp_1];
+          } else {
+            count = xy_data[H_tmp_tmp_1 + idx];
+            while (idx + 2 <= loop_ub) {
+              tmp = xy_data[(H_tmp_tmp_1 + idx) + 1];
+              if (count > tmp) {
+                count = tmp;
+              }
+
+              idx++;
+            }
+          }
+        }
+
+        if (count >= 0.0) {
+          guard1 = true;
+        } else {
+          /* 'QPINDI:85' else */
+          /* 'QPINDI:87' [~,index] = min(y); */
+          if (loop_ub <= 2) {
+            if (loop_ub == 1) {
+              idx = 1;
+            } else if ((xy_data[H_tmp_tmp_1] > xy_data[H_tmp_tmp_1 + 1]) ||
+                       (rtIsNaN(xy_data[H_tmp_tmp_1]) && (!rtIsNaN
+                         (xy_data[H_tmp_tmp_1 + 1])))) {
+              idx = 2;
+            } else {
+              idx = 1;
+            }
+          } else {
+            if (!rtIsNaN(xy_data[H_tmp_tmp_1])) {
+              idx = 1;
+            } else {
+              idx = 0;
+              H_tmp_tmp_0 = 2;
+              exitg2 = false;
+              while ((!exitg2) && (H_tmp_tmp_0 <= loop_ub)) {
+                if (!rtIsNaN(xy_data[(H_tmp_tmp_1 + H_tmp_tmp_0) - 1])) {
+                  idx = H_tmp_tmp_0;
+                  exitg2 = true;
+                } else {
+                  H_tmp_tmp_0++;
+                }
+              }
+            }
+
+            if (idx == 0) {
+              idx = 1;
+            } else {
+              count = xy_data[(H_tmp_tmp_1 + idx) - 1];
+              for (H_tmp_tmp_0 = idx - 1; H_tmp_tmp_0 + 2 <= loop_ub;
+                   H_tmp_tmp_0++) {
+                tmp = xy_data[(H_tmp_tmp_1 + H_tmp_tmp_0) + 1];
+                if (count > tmp) {
+                  count = tmp;
+                  idx = H_tmp_tmp_0 + 2;
+                }
+              }
+            }
+          }
+
+          /* 'QPINDI:87' ~ */
+          /* 'QPINDI:88' count = 0; */
+          /* 'QPINDI:89' for i=1:4 */
+          /* 'QPINDI:90' count = count + abs(y_state(i)); */
+          count = std::abs(y_state_init[0]);
+
+          /* 'QPINDI:91' if count == index */
+          if (count == idx) {
+            /* 'QPINDI:92' y_state(i) = 0; */
+            y_state_init[0] = 0.0;
+          }
+
+          /* 'QPINDI:90' count = count + abs(y_state(i)); */
+          count += std::abs(y_state_init[1]);
+
+          /* 'QPINDI:91' if count == index */
+          if (count == idx) {
+            /* 'QPINDI:92' y_state(i) = 0; */
+            y_state_init[1] = 0.0;
+          }
+
+          /* 'QPINDI:90' count = count + abs(y_state(i)); */
+          count += std::abs(y_state_init[2]);
+
+          /* 'QPINDI:91' if count == index */
+          if (count == idx) {
+            /* 'QPINDI:92' y_state(i) = 0; */
+            y_state_init[2] = 0.0;
+          }
+
+          /* 'QPINDI:90' count = count + abs(y_state(i)); */
+          count += std::abs(y_state_init[3]);
+
+          /* 'QPINDI:91' if count == index */
+          if (count == idx) {
+            /* 'QPINDI:92' y_state(i) = 0; */
+            y_state_init[3] = 0.0;
+          }
+        }
+      }
+
+      if (guard1) {
+        /* 'QPINDI:79' [~,index] = max(constraintError); */
+        if (!tmp_0) {
+          H_tmp_tmp_1 = 1;
+        } else {
+          H_tmp_tmp_1 = 0;
+          xy_size = 2;
+          exitg2 = false;
+          while ((!exitg2) && (xy_size < 9)) {
+            if (!rtIsNaN(constraintError[xy_size - 1])) {
+              H_tmp_tmp_1 = xy_size;
+              exitg2 = true;
+            } else {
+              xy_size++;
+            }
+          }
+        }
+
+        if (H_tmp_tmp_1 == 0) {
+          H_tmp_tmp_1 = 1;
+        } else {
+          count = constraintError[H_tmp_tmp_1 - 1];
+          for (xy_size = H_tmp_tmp_1; xy_size + 1 < 9; xy_size++) {
+            if (count < constraintError[xy_size]) {
+              count = constraintError[xy_size];
+              H_tmp_tmp_1 = xy_size + 1;
+            }
+          }
+        }
+
+        /* 'QPINDI:79' ~ */
+        /* 'QPINDI:80' if index < 5 */
+        if (H_tmp_tmp_1 < 5) {
+          /* 'QPINDI:81' y_state(index) = 1; */
+          y_state_init[H_tmp_tmp_1 - 1] = 1.0;
+        } else {
+          /* 'QPINDI:82' else */
+          /* 'QPINDI:83' y_state(index-4) = -1; */
+          y_state_init[H_tmp_tmp_1 - 5] = -1.0;
+        }
+      }
+
+      H_tmp_tmp++;
+    }
+  }
+
+  /* 'QPINDI:101' optimal = solution; */
+  *optimal = i;
+}
+
+/*
+ * Function for MATLAB Function: '<S6>/control allocator'
+ * function [M_uvr, daq] = INDIMomentGen(state, daq, uvr_des, M_uvr_set_prev, URpar, par)
+ */
+void URControlModelClass::URControl_INDIMomentGen(const real_T state_wRotor[4],
+  const real_T state_omegaUV[3], const real_T state_omegafUV[3], daqBus *daq,
+  const real_T uvr_des[3], real_T URpar_k0, real_T URpar_t0, real_T URpar_s,
+  real_T URpar_est_omegaFilterT, const real_T URpar_rate_MINDI_rateDotKp[3],
+  real_T URpar_rate_MINDI_derFilterT, const real_T URpar_rate_MINDI_MKp[3],
+  real_T b_par_freq, real_T M_uvr[3])
+{
+  real_T Fset;
+  real_T Fset_idx_1;
+  real_T Fset_idx_0;
+  real_T Fset_idx_2;
+
+  /* 'INDIMomentGen:3' if isempty(omegaDot) */
+  if (!URControl_DW.omegaDot_not_empty_l) {
+    /* 'INDIMomentGen:3' omegaDot = SimpleDerivative(URpar.rate_MINDI_derFilterT, [0,0,0], 300, -300); */
+    /* 'SimpleDerivative:12' obj.filterHandle = LPFilter(filterT, initValue, maxLim, minLim); */
+    /* 'LPFilter:14' obj.filterT = filterT; */
+    URControl_DW.omegaDot_p.filterHandle.filterT = URpar_rate_MINDI_derFilterT;
+
+    /* 'LPFilter:15' obj.value = initValue; */
+    /* 'LPFilter:16' obj.maxLim = maxLim; */
+    URControl_DW.omegaDot_p.filterHandle.maxLim = 300.0;
+
+    /* 'LPFilter:17' obj.minLim = minLim; */
+    URControl_DW.omegaDot_p.filterHandle.minLim = -300.0;
+
+    /* 'SimpleDerivative:13' obj.prevValue = initValue; */
+    URControl_DW.omegaDot_p.filterHandle.value[0] = 0.0;
+    URControl_DW.omegaDot_p.prevValue[0] = 0.0;
+    URControl_DW.omegaDot_p.filterHandle.value[1] = 0.0;
+    URControl_DW.omegaDot_p.prevValue[1] = 0.0;
+    URControl_DW.omegaDot_p.filterHandle.value[2] = 0.0;
+    URControl_DW.omegaDot_p.prevValue[2] = 0.0;
+    URControl_DW.omegaDot_not_empty_l = true;
+  }
+
+  /* 'INDIMomentGen:4' if isempty(wRotorFilter) */
+  if (!URControl_DW.wRotorFilter_not_empty) {
+    /* 'INDIMomentGen:4' wRotorFilter = LPFilter(URpar.est_omegaFilterT, [0,0,0,0], 1200, 0); */
+    /* 'LPFilter:14' obj.filterT = filterT; */
+    URControl_DW.wRotorFilter.filterT = URpar_est_omegaFilterT;
+
+    /* 'LPFilter:15' obj.value = initValue; */
+    URControl_DW.wRotorFilter.value[0] = 0.0;
+    URControl_DW.wRotorFilter.value[1] = 0.0;
+    URControl_DW.wRotorFilter.value[2] = 0.0;
+    URControl_DW.wRotorFilter.value[3] = 0.0;
+
+    /* 'LPFilter:16' obj.maxLim = maxLim; */
+    URControl_DW.wRotorFilter.maxLim = 1200.0;
+
+    /* 'LPFilter:17' obj.minLim = minLim; */
+    URControl_DW.wRotorFilter.minLim = 0.0;
+    URControl_DW.wRotorFilter_not_empty = true;
+  }
+
+  /* 'INDIMomentGen:6' wRotorFilter.updateFilterT(URpar.rate_MINDI_derFilterT); */
+  /* 'LPFilter:26' obj.filterT = filterT; */
+  URControl_DW.wRotorFilter.filterT = URpar_rate_MINDI_derFilterT;
+
+  /* 'INDIMomentGen:7' wRotorFilter.update(state.wRotor); */
+  /* 'LPFilter:21' obj.value = obj.value*obj.filterT + newValue*(1 - obj.filterT); */
+  /* 'LPFilter:22' obj.value = max(min(obj.value,obj.maxLim),obj.minLim); */
+  URControl_DW.wRotorFilter.value[0] = (1.0 - URControl_DW.wRotorFilter.filterT)
+    * state_wRotor[0] + URControl_DW.wRotorFilter.value[0] *
+    URControl_DW.wRotorFilter.filterT;
+  if ((URControl_DW.wRotorFilter.value[0] < URControl_DW.wRotorFilter.maxLim) ||
+      rtIsNaN(URControl_DW.wRotorFilter.maxLim)) {
+    Fset_idx_0 = URControl_DW.wRotorFilter.value[0];
+  } else {
+    Fset_idx_0 = URControl_DW.wRotorFilter.maxLim;
+  }
+
+  if ((Fset_idx_0 > URControl_DW.wRotorFilter.minLim) || rtIsNaN
+      (URControl_DW.wRotorFilter.minLim)) {
+    URControl_DW.wRotorFilter.value[0] = Fset_idx_0;
+  } else {
+    URControl_DW.wRotorFilter.value[0] = URControl_DW.wRotorFilter.minLim;
+  }
+
+  URControl_DW.wRotorFilter.value[1] = (1.0 - URControl_DW.wRotorFilter.filterT)
+    * state_wRotor[1] + URControl_DW.wRotorFilter.value[1] *
+    URControl_DW.wRotorFilter.filterT;
+  if ((URControl_DW.wRotorFilter.value[1] < URControl_DW.wRotorFilter.maxLim) ||
+      rtIsNaN(URControl_DW.wRotorFilter.maxLim)) {
+    Fset_idx_0 = URControl_DW.wRotorFilter.value[1];
+  } else {
+    Fset_idx_0 = URControl_DW.wRotorFilter.maxLim;
+  }
+
+  if ((Fset_idx_0 > URControl_DW.wRotorFilter.minLim) || rtIsNaN
+      (URControl_DW.wRotorFilter.minLim)) {
+    URControl_DW.wRotorFilter.value[1] = Fset_idx_0;
+  } else {
+    URControl_DW.wRotorFilter.value[1] = URControl_DW.wRotorFilter.minLim;
+  }
+
+  URControl_DW.wRotorFilter.value[2] = (1.0 - URControl_DW.wRotorFilter.filterT)
+    * state_wRotor[2] + URControl_DW.wRotorFilter.value[2] *
+    URControl_DW.wRotorFilter.filterT;
+  if ((URControl_DW.wRotorFilter.value[2] < URControl_DW.wRotorFilter.maxLim) ||
+      rtIsNaN(URControl_DW.wRotorFilter.maxLim)) {
+    Fset_idx_0 = URControl_DW.wRotorFilter.value[2];
+  } else {
+    Fset_idx_0 = URControl_DW.wRotorFilter.maxLim;
+  }
+
+  if ((Fset_idx_0 > URControl_DW.wRotorFilter.minLim) || rtIsNaN
+      (URControl_DW.wRotorFilter.minLim)) {
+    URControl_DW.wRotorFilter.value[2] = Fset_idx_0;
+  } else {
+    URControl_DW.wRotorFilter.value[2] = URControl_DW.wRotorFilter.minLim;
+  }
+
+  URControl_DW.wRotorFilter.value[3] = (1.0 - URControl_DW.wRotorFilter.filterT)
+    * state_wRotor[3] + URControl_DW.wRotorFilter.value[3] *
+    URControl_DW.wRotorFilter.filterT;
+  if ((URControl_DW.wRotorFilter.value[3] < URControl_DW.wRotorFilter.maxLim) ||
+      rtIsNaN(URControl_DW.wRotorFilter.maxLim)) {
+    Fset_idx_0 = URControl_DW.wRotorFilter.value[3];
+  } else {
+    Fset_idx_0 = URControl_DW.wRotorFilter.maxLim;
+  }
+
+  if ((Fset_idx_0 > URControl_DW.wRotorFilter.minLim) || rtIsNaN
+      (URControl_DW.wRotorFilter.minLim)) {
+    URControl_DW.wRotorFilter.value[3] = Fset_idx_0;
+  } else {
+    URControl_DW.wRotorFilter.value[3] = URControl_DW.wRotorFilter.minLim;
+  }
+
+  /* 'INDIMomentGen:9' Fset = wRotorFilter.value.^2*URpar.k0; */
+  Fset_idx_0 = URControl_DW.wRotorFilter.value[0] *
+    URControl_DW.wRotorFilter.value[0] * URpar_k0;
+  Fset_idx_1 = URControl_DW.wRotorFilter.value[1] *
+    URControl_DW.wRotorFilter.value[1] * URpar_k0;
+  Fset_idx_2 = URControl_DW.wRotorFilter.value[2] *
+    URControl_DW.wRotorFilter.value[2] * URpar_k0;
+  Fset = URControl_DW.wRotorFilter.value[3] * URControl_DW.wRotorFilter.value[3]
+    * URpar_k0;
+
+  /* 'INDIMomentGen:11' M_uvr_prev = zeros(3,1); */
+  /* 'INDIMomentGen:12' M_uvr_prev(1) = (Fset(4) - Fset(2))*URpar.s; */
+  M_uvr[0] = (Fset - Fset_idx_1) * URpar_s;
+
+  /* 'INDIMomentGen:13' M_uvr_prev(2) = (Fset(1) - Fset(3))*URpar.s; */
+  M_uvr[1] = (Fset_idx_0 - Fset_idx_2) * URpar_s;
+
+  /* 'INDIMomentGen:14' M_uvr_prev(3) = (Fset(1) - Fset(2) + Fset(3) - Fset(4))*URpar.t0/URpar.k0; */
+  M_uvr[2] = (((Fset_idx_0 - Fset_idx_1) + Fset_idx_2) - Fset) * URpar_t0 /
+    URpar_k0;
+
+  /* 'INDIMomentGen:17' error1 = uvr_des' - state.omegafUV; */
+  /* 'INDIMomentGen:19' uvrDot_des = error1.*URpar.rate_MINDI_rateDotKp; */
+  Fset_idx_0 = (uvr_des[0] - state_omegafUV[0]) * URpar_rate_MINDI_rateDotKp[0];
+  Fset_idx_1 = (uvr_des[1] - state_omegafUV[1]) * URpar_rate_MINDI_rateDotKp[1];
+  Fset_idx_2 = (uvr_des[2] - state_omegafUV[2]) * URpar_rate_MINDI_rateDotKp[2];
+
+  /* 'INDIMomentGen:22' omegaDot.updateFilterT(URpar.rate_MINDI_derFilterT); */
+  /* 'SimpleDerivative:23' obj.filterHandle.updateFilterT(filterT); */
+  /* 'LPFilter:26' obj.filterT = filterT; */
+  URControl_DW.omegaDot_p.filterHandle.filterT = URpar_rate_MINDI_derFilterT;
+
+  /* 'INDIMomentGen:23' omegaDot.update(state.omegaUV, 1/par.freq); */
+  URContr_SimpleDerivative_update(&URControl_DW.omegaDot_p, state_omegaUV, 1.0 /
+    b_par_freq);
+
+  /* 'INDIMomentGen:25' error2 = uvrDot_des - omegaDot.derValue; */
+  /* 'INDIMomentGen:27' dM = error2.*URpar.rate_MINDI_MKp*1e-4; */
+  /* 'INDIMomentGen:29' M_uvr = M_uvr_prev + dM'; */
+  /* 'INDIMomentGen:31' daq.uvrDot_des = uvrDot_des; */
+  /* 'INDIMomentGen:32' daq.omegaDot = omegaDot.derValue; */
+  /* 'INDIMomentGen:33' daq.dM = dM; */
+  Fset = (Fset_idx_0 - URControl_DW.omegaDot_p.derValue[0]) *
+    URpar_rate_MINDI_MKp[0] * 0.0001;
+  daq->uvrDot_des[0] = Fset_idx_0;
+  daq->omegaDot[0] = URControl_DW.omegaDot_p.derValue[0];
+  daq->dM[0] = Fset;
+  M_uvr[0] += Fset;
+  Fset = (Fset_idx_1 - URControl_DW.omegaDot_p.derValue[1]) *
+    URpar_rate_MINDI_MKp[1] * 0.0001;
+  daq->uvrDot_des[1] = Fset_idx_1;
+  daq->omegaDot[1] = URControl_DW.omegaDot_p.derValue[1];
+  daq->dM[1] = Fset;
+  M_uvr[1] += Fset;
+  Fset = (Fset_idx_2 - URControl_DW.omegaDot_p.derValue[2]) *
+    URpar_rate_MINDI_MKp[2] * 0.0001;
+  daq->uvrDot_des[2] = Fset_idx_2;
+  daq->omegaDot[2] = URControl_DW.omegaDot_p.derValue[2];
+  daq->dM[2] = Fset;
+  M_uvr[2] += Fset;
+}
+
+/*
+ * Function for MATLAB Function: '<S6>/control allocator'
+ * function [M_uvr, daq] = PIDMomentGen(state, daq, uvr_des, URpar, par)
+ */
+void URControlModelClass::URControl_PIDMomentGen(const real_T state_omegaUV[3],
+  const real_T state_omegafUV[3], daqBus *daq, const real_T uvr_des[3], real_T
+  URpar_Iz, real_T URpar_Iu, real_T URpar_Iv, const real_T
+  URpar_rate_MPID_rateDotKp[3], const real_T URpar_rate_MPID_rateDotKi[3], const
+  real_T URpar_rate_MPID_rateDotKd[3], real_T URpar_rate_MPID_derFilterT, real_T
+  URpar_rate_MPID_uvrdesderFilter, real_T URpar_rate_MPID_maxInt, real_T
+  URpar_rate_MPID_precGain, real_T b_par_freq, real_T M_uvr[3])
+{
+  real_T intLim;
+  real_T uvr_des_0[3];
+  real_T errorf;
+  real_T uvr_des_dot_idx_0;
+  real_T errorf_idx_0;
+  real_T uvr_des_dot_idx_1;
+  real_T errorf_idx_1;
+  real_T uvr_des_dot_idx_2;
+  boolean_T tmp;
+
+  /* 'PIDMomentGen:3' if isempty(errorInt) */
+  /* 'PIDMomentGen:4' if isempty(error_prev) */
+  /* 'PIDMomentGen:6' if isempty(errorD) */
+  if (!URControl_DW.errorD_not_empty) {
+    /* 'PIDMomentGen:6' errorD = SimpleDerivative(URpar.rate_MPID_derFilterT,[0,0,0], 200, -200); */
+    /* 'SimpleDerivative:12' obj.filterHandle = LPFilter(filterT, initValue, maxLim, minLim); */
+    /* 'LPFilter:14' obj.filterT = filterT; */
+    URControl_DW.errorD.filterHandle.filterT = URpar_rate_MPID_derFilterT;
+
+    /* 'LPFilter:15' obj.value = initValue; */
+    /* 'LPFilter:16' obj.maxLim = maxLim; */
+    URControl_DW.errorD.filterHandle.maxLim = 200.0;
+
+    /* 'LPFilter:17' obj.minLim = minLim; */
+    URControl_DW.errorD.filterHandle.minLim = -200.0;
+
+    /* 'SimpleDerivative:13' obj.prevValue = initValue; */
+    URControl_DW.errorD.filterHandle.value[0] = 0.0;
+    URControl_DW.errorD.prevValue[0] = 0.0;
+    URControl_DW.errorD.filterHandle.value[1] = 0.0;
+    URControl_DW.errorD.prevValue[1] = 0.0;
+    URControl_DW.errorD.filterHandle.value[2] = 0.0;
+    URControl_DW.errorD.prevValue[2] = 0.0;
+    URControl_DW.errorD_not_empty = true;
+  }
+
+  /* 'PIDMomentGen:7' if isempty(uvrDer) */
+  if (!URControl_DW.uvrDer_not_empty) {
+    /* 'PIDMomentGen:7' uvrDer = SimpleDerivative(URpar.rate_MPID_uvrdesderFilterT,[0,0,0], 200, -200); */
+    /* 'SimpleDerivative:12' obj.filterHandle = LPFilter(filterT, initValue, maxLim, minLim); */
+    /* 'LPFilter:14' obj.filterT = filterT; */
+    URControl_DW.uvrDer.filterHandle.filterT = URpar_rate_MPID_uvrdesderFilter;
+
+    /* 'LPFilter:15' obj.value = initValue; */
+    /* 'LPFilter:16' obj.maxLim = maxLim; */
+    URControl_DW.uvrDer.filterHandle.maxLim = 200.0;
+
+    /* 'LPFilter:17' obj.minLim = minLim; */
+    URControl_DW.uvrDer.filterHandle.minLim = -200.0;
+
+    /* 'SimpleDerivative:13' obj.prevValue = initValue; */
+    URControl_DW.uvrDer.filterHandle.value[0] = 0.0;
+    URControl_DW.uvrDer.prevValue[0] = 0.0;
+    URControl_DW.uvrDer.filterHandle.value[1] = 0.0;
+    URControl_DW.uvrDer.prevValue[1] = 0.0;
+    URControl_DW.uvrDer.filterHandle.value[2] = 0.0;
+    URControl_DW.uvrDer.prevValue[2] = 0.0;
+    URControl_DW.uvrDer_not_empty = true;
+  }
+
+  /* 'PIDMomentGen:10' errorf = uvr_des' - state.omegafUV; */
+  /* 'PIDMomentGen:11' error = uvr_des' - state.omegaUV; */
+  /* 'PIDMomentGen:12' errorInt = errorInt + errorf/par.freq; */
+  /* 'PIDMomentGen:13' intLim = URpar.rate_MPID_maxInt * 1e-3; */
+  intLim = URpar_rate_MPID_maxInt * 0.001;
+
+  /* 'PIDMomentGen:14' errorInt = max(min(errorInt,intLim),-intLim); */
+  errorf = uvr_des[0] - state_omegafUV[0];
+  URControl_DW.errorInt[0] += errorf / b_par_freq;
+  tmp = rtIsNaN(intLim);
+  if ((URControl_DW.errorInt[0] < intLim) || tmp) {
+    uvr_des_dot_idx_0 = URControl_DW.errorInt[0];
+  } else {
+    uvr_des_dot_idx_0 = intLim;
+  }
+
+  errorf_idx_0 = errorf;
+  errorf = uvr_des[1] - state_omegafUV[1];
+  URControl_DW.errorInt[1] += errorf / b_par_freq;
+  if ((URControl_DW.errorInt[1] < intLim) || tmp) {
+    uvr_des_dot_idx_1 = URControl_DW.errorInt[1];
+  } else {
+    uvr_des_dot_idx_1 = intLim;
+  }
+
+  errorf_idx_1 = errorf;
+  errorf = uvr_des[2] - state_omegafUV[2];
+  URControl_DW.errorInt[2] += errorf / b_par_freq;
+  if ((URControl_DW.errorInt[2] < intLim) || tmp) {
+    uvr_des_dot_idx_2 = URControl_DW.errorInt[2];
+  } else {
+    uvr_des_dot_idx_2 = intLim;
+  }
+
+  /* 'PIDMomentGen:16' errorD.filterHandle.filterT = URpar.rate_MPID_derFilterT; */
+  URControl_DW.errorD.filterHandle.filterT = URpar_rate_MPID_derFilterT;
+
+  /* 'PIDMomentGen:17' errorD.update(error,1/par.freq) */
+  tmp = rtIsNaN(-intLim);
+  if ((uvr_des_dot_idx_0 > -intLim) || tmp) {
+    URControl_DW.errorInt[0] = uvr_des_dot_idx_0;
+  } else {
+    URControl_DW.errorInt[0] = -intLim;
+  }
+
+  uvr_des_0[0] = uvr_des[0] - state_omegaUV[0];
+  if ((uvr_des_dot_idx_1 > -intLim) || tmp) {
+    URControl_DW.errorInt[1] = uvr_des_dot_idx_1;
+  } else {
+    URControl_DW.errorInt[1] = -intLim;
+  }
+
+  uvr_des_0[1] = uvr_des[1] - state_omegaUV[1];
+  if ((uvr_des_dot_idx_2 > -intLim) || tmp) {
+    URControl_DW.errorInt[2] = uvr_des_dot_idx_2;
+  } else {
+    URControl_DW.errorInt[2] = -intLim;
+  }
+
+  uvr_des_0[2] = uvr_des[2] - state_omegaUV[2];
+  URContr_SimpleDerivative_update(&URControl_DW.errorD, uvr_des_0, 1.0 /
+    b_par_freq);
+
+  /* 'PIDMomentGen:19' uvrDer.filterHandle.filterT = URpar.rate_MPID_uvrdesderFilterT; */
+  URControl_DW.uvrDer.filterHandle.filterT = URpar_rate_MPID_uvrdesderFilter;
+
+  /* 'PIDMomentGen:20' uvrDer.update(uvr_des', 1/par.freq); */
+  URContr_SimpleDerivative_update(&URControl_DW.uvrDer, uvr_des, 1.0 /
+    b_par_freq);
+
+  /* 'PIDMomentGen:21' uvr_des_dot = uvrDer.derValue; */
+  /* 'PIDMomentGen:23' uvrDot_des = errorf.*URpar.rate_MPID_rateDotKp + errorInt.*URpar.rate_MPID_rateDotKi + errorD.derValue.*URpar.rate_MPID_rateDotKd + uvr_des_dot; */
+  /* 'PIDMomentGen:26' M_uvr = uvrDot_des'.*[URpar.Iu; URpar.Iv; URpar.Iz]; */
+  /* 'PIDMomentGen:29' M_prec = [state.omegafUV(2)*state.omegafUV(3)*(URpar.Iv - URpar.Iz); */
+  /* 'PIDMomentGen:30'           state.omegafUV(1)*state.omegafUV(3)*(URpar.Iz - URpar.Iu); */
+  /* 'PIDMomentGen:31'           0]; */
+  /* 'PIDMomentGen:33' M_uvr = M_uvr - URpar.rate_MPID_precGain*M_prec; */
+  /* 'PIDMomentGen:35' daq.uvrDot_des = uvrDot_des; */
+  intLim = ((errorf_idx_0 * URpar_rate_MPID_rateDotKp[0] +
+             URControl_DW.errorInt[0] * URpar_rate_MPID_rateDotKi[0]) +
+            URControl_DW.errorD.derValue[0] * URpar_rate_MPID_rateDotKd[0]) +
+    URControl_DW.uvrDer.derValue[0];
+  M_uvr[0] = intLim * URpar_Iu - state_omegafUV[1] * state_omegafUV[2] *
+    (URpar_Iv - URpar_Iz) * URpar_rate_MPID_precGain;
+  daq->uvrDot_des[0] = intLim;
+  intLim = ((errorf_idx_1 * URpar_rate_MPID_rateDotKp[1] +
+             URControl_DW.errorInt[1] * URpar_rate_MPID_rateDotKi[1]) +
+            URControl_DW.errorD.derValue[1] * URpar_rate_MPID_rateDotKd[1]) +
+    URControl_DW.uvrDer.derValue[1];
+  M_uvr[1] = intLim * URpar_Iv - state_omegafUV[0] * state_omegafUV[2] *
+    (URpar_Iz - URpar_Iu) * URpar_rate_MPID_precGain;
+  daq->uvrDot_des[1] = intLim;
+  intLim = ((errorf * URpar_rate_MPID_rateDotKp[2] + URControl_DW.errorInt[2] *
+             URpar_rate_MPID_rateDotKi[2]) + URControl_DW.errorD.derValue[2] *
+            URpar_rate_MPID_rateDotKd[2]) + URControl_DW.uvrDer.derValue[2];
+  M_uvr[2] = intLim * URpar_Iz - URpar_rate_MPID_precGain * 0.0;
+  daq->uvrDot_des[2] = intLim;
+}
+
+/*
+ * Function for MATLAB Function: '<S6>/control allocator'
  * function [x,y_state,iterSteps,optimal] = controlAllocQPQuick(refStruct, FMax, FMin, gainStruct, y_state_init, par, URpar)
  */
 void URControlModelClass::URControl_controlAllocQPQuick(real_T refStruct_MuRef,
   real_T refStruct_MvRef, real_T refStruct_MzRef, real_T refStruct_FtotRef,
   const real_T FMax[4], const real_T FMin[4], real_T gainStruct_MuGain, real_T
   gainStruct_MvGain, real_T gainStruct_FtotGain, real_T gainStruct_FGain, real_T
-  gainStruct_MzGain, real_T y_state_init[4], const struct_Zb0w9me7uxg4XlR9ZxoSnG
-  *b_par, real_T URpar_rate_maxIter, real_T x[4], real_T *iterSteps, real_T
-  *optimal)
+  gainStruct_MzGain, real_T y_state_init[4], real_T b_par_URC_k0, real_T
+  b_par_URC_t0, real_T b_par_URC_s, real_T URpar_rate_maxIter, real_T x[4],
+  real_T *iterSteps, real_T *optimal)
 {
   real_T H[16];
   real_T b[8];
@@ -1521,8 +2692,8 @@ void URControlModelClass::URControl_controlAllocQPQuick(real_T refStruct_MuRef,
 
   /* 'controlAllocQPQuick:25' H = zeros(4,4); */
   /* 'controlAllocQPQuick:26' H(1,1) = 2*(MvGain*s^2 + MzGain*(t0/k0)^2 + FtotGain + FGain/FMax(1)); */
-  c_idx_0 = b_par->URC.t0 / b_par->URC.k0;
-  c_idx_1 = b_par->URC.s * b_par->URC.s;
+  c_idx_0 = b_par_URC_t0 / b_par_URC_k0;
+  c_idx_1 = b_par_URC_s * b_par_URC_s;
   H[0] = (((c_idx_1 * gainStruct_MvGain + c_idx_0 * c_idx_0 * gainStruct_MzGain)
            + gainStruct_FtotGain) + gainStruct_FGain / count) * 2.0;
 
@@ -1569,8 +2740,8 @@ void URControlModelClass::URControl_controlAllocQPQuick(real_T refStruct_MuRef,
   H[7] = H[13];
 
   /* 'controlAllocQPQuick:40' H(3,3) = 2*(MvGain*s^2 + MzGain*(t0/k0)^2 + FtotGain + FGain/FMax(3)); */
-  H[10] = (((b_par->URC.s * b_par->URC.s * gainStruct_MvGain + c_idx_0 * c_idx_0
-             * gainStruct_MzGain) + gainStruct_FtotGain) + gainStruct_FGain /
+  H[10] = (((b_par_URC_s * b_par_URC_s * gainStruct_MvGain + c_idx_0 * c_idx_0 *
+             gainStruct_MzGain) + gainStruct_FtotGain) + gainStruct_FGain /
            z1_idx_2) * 2.0;
 
   /* 'controlAllocQPQuick:41' H(3,4) = -2*MzGain*(t0/k0)^2 + FtotGain*2; */
@@ -1582,28 +2753,28 @@ void URControlModelClass::URControl_controlAllocQPQuick(real_T refStruct_MuRef,
     2.0;
 
   /* 'controlAllocQPQuick:44' H(4,4) = 2*(MuGain*s^2 + MzGain*(t0/k0)^2 + FtotGain + FGain/FMax(4)); */
-  H[15] = (((b_par->URC.s * b_par->URC.s * gainStruct_MuGain + c_idx_0 * c_idx_0
-             * gainStruct_MzGain) + gainStruct_FtotGain) + gainStruct_FGain /
+  H[15] = (((b_par_URC_s * b_par_URC_s * gainStruct_MuGain + c_idx_0 * c_idx_0 *
+             gainStruct_MzGain) + gainStruct_FtotGain) + gainStruct_FGain /
            z1_idx_3) * 2.0;
 
   /* 'controlAllocQPQuick:47' c = zeros(4,1); */
   /* 'controlAllocQPQuick:49' c(1,1) = -2*MvGain*MvRef*s - 2*t0/k0*MzRef*MzGain - 2*FtotGain*FtotRef; */
-  c_idx_3 = 2.0 * b_par->URC.t0 / b_par->URC.k0 * refStruct_MzRef *
+  c_idx_3 = 2.0 * b_par_URC_t0 / b_par_URC_k0 * refStruct_MzRef *
     gainStruct_MzGain;
   c_idx_0_tmp = 2.0 * gainStruct_FtotGain * refStruct_FtotRef;
-  c_idx_0 = (-2.0 * gainStruct_MvGain * refStruct_MvRef * b_par->URC.s - c_idx_3)
+  c_idx_0 = (-2.0 * gainStruct_MvGain * refStruct_MvRef * b_par_URC_s - c_idx_3)
     - c_idx_0_tmp;
 
   /* 'controlAllocQPQuick:50' c(2,1) = 2*MuGain*MuRef*s + 2*t0/k0*MzRef*MzGain - 2*FtotGain*FtotRef; */
-  c_idx_1 = (c_idx_3 + 2.0 * gainStruct_MuGain * refStruct_MuRef * b_par->URC.s)
+  c_idx_1 = (c_idx_3 + 2.0 * gainStruct_MuGain * refStruct_MuRef * b_par_URC_s)
     - c_idx_0_tmp;
 
   /* 'controlAllocQPQuick:51' c(3,1) = 2*MvGain*MvRef*s - 2*t0/k0*MzRef*MzGain - 2*FtotGain*FtotRef; */
-  c_idx_2 = (2.0 * gainStruct_MvGain * refStruct_MvRef * b_par->URC.s - c_idx_3)
+  c_idx_2 = (2.0 * gainStruct_MvGain * refStruct_MvRef * b_par_URC_s - c_idx_3)
     - c_idx_0_tmp;
 
   /* 'controlAllocQPQuick:52' c(4,1) = -2*MuGain*MuRef*s + 2*t0/k0*MzRef*MzGain - 2*FtotGain*FtotRef; */
-  c_idx_3 = (c_idx_3 + -2.0 * gainStruct_MuGain * refStruct_MuRef * b_par->URC.s)
+  c_idx_3 = (c_idx_3 + -2.0 * gainStruct_MuGain * refStruct_MuRef * b_par_URC_s)
     - c_idx_0_tmp;
 
   /* 'controlAllocQPQuick:55' A = [1,0,0,0;... */
@@ -2098,6 +3269,21 @@ void URControlModelClass::URControl_controlAllocQPQuick(real_T refStruct_MuRef,
 
   /* 'controlAllocQPQuick:136' optimal = solution; */
   *optimal = solution;
+}
+
+/* Function for MATLAB Function: '<S6>/control allocator' */
+void URControlModelClass::URControl_sqrt(real_T x[4])
+{
+  x[0] = std::sqrt(x[0]);
+  x[1] = std::sqrt(x[1]);
+  x[2] = std::sqrt(x[2]);
+  x[3] = std::sqrt(x[3]);
+}
+
+/* Function for MATLAB Function: '<S6>/control allocator' */
+real_T URControlModelClass::URControl_sum(const real_T x[4])
+{
+  return ((x[0] + x[1]) + x[2]) + x[3];
 }
 
 /* Function for MATLAB Function: '<S6>/control allocator' */
@@ -3070,8 +4256,7 @@ void URControlModelClass::URControl_pinv(const real_T A[16], real_T X[16])
  */
 void URControlModelClass::URControl_URINDI_allocator(real_T act_fail_id, const
   real_T Omega_f_dot[3], real_T accel_z_f, const real_T v[4], real_T G[32],
-  const real_T w_f[4], const struct_Zb0w9me7uxg4XlR9ZxoSnG *b_par, real_T w_cmd
-  [4])
+  const real_T w_f[4], real_T b_par_w_max, real_T b_par_w_min, real_T w_cmd[4])
 {
   real_T G1[16];
   boolean_T fail_flag;
@@ -3082,7 +4267,6 @@ void URControlModelClass::URControl_URINDI_allocator(real_T act_fail_id, const
   int32_T b_data[2];
   boolean_T tf;
   boolean_T p;
-  boolean_T x[4];
   int8_T ii_data[4];
   int32_T idx;
   int32_T b_ii;
@@ -3227,26 +4411,19 @@ void URControlModelClass::URControl_URINDI_allocator(real_T act_fail_id, const
   }
 
   /* 'URINDI_allocator:66' w_cmd = w_f + du; */
+  w_cmd[0] = w_f[0] + du[0];
+  w_cmd[1] = w_f[1] + du[1];
+  w_cmd[2] = w_f[2] + du[2];
+  w_cmd[3] = w_f[3] + du[3];
+
   /* 'URINDI_allocator:69' w_max = par.w_max; */
   /* 'URINDI_allocator:70' w_min = par.w_min; */
   /* 'URINDI_allocator:72' i_up = find(w_cmd>=w_max); */
-  du_0 = w_f[0] + du[0];
-  x[0] = (du_0 >= b_par->w_max);
-  w_cmd[0] = du_0;
-  du_0 = w_f[1] + du[1];
-  x[1] = (du_0 >= b_par->w_max);
-  w_cmd[1] = du_0;
-  du_0 = w_f[2] + du[2];
-  x[2] = (du_0 >= b_par->w_max);
-  w_cmd[2] = du_0;
-  du_0 = w_f[3] + du[3];
-  x[3] = (du_0 >= b_par->w_max);
-  w_cmd[3] = du_0;
   idx = 0;
   b_ii = 0;
   exitg1 = false;
   while ((!exitg1) && (b_ii < 4)) {
-    if (x[b_ii]) {
+    if (w_cmd[b_ii] >= b_par_w_max) {
       idx++;
       ii_data[idx - 1] = (int8_T)(b_ii + 1);
       if (idx >= 4) {
@@ -3269,15 +4446,11 @@ void URControlModelClass::URControl_URINDI_allocator(real_T act_fail_id, const
   }
 
   /* 'URINDI_allocator:73' i_down = find(w_cmd<w_min); */
-  x[0] = (w_cmd[0] < b_par->w_min);
-  x[1] = (w_cmd[1] < b_par->w_min);
-  x[2] = (w_cmd[2] < b_par->w_min);
-  x[3] = (du_0 < b_par->w_min);
   idx = 0;
   b_ii = 0;
   exitg1 = false;
   while ((!exitg1) && (b_ii < 4)) {
-    if (x[b_ii]) {
+    if (w_cmd[b_ii] < b_par_w_min) {
       idx++;
       ii_data[idx - 1] = (int8_T)(b_ii + 1);
       if (idx >= 4) {
@@ -3297,23 +4470,23 @@ void URControlModelClass::URControl_URINDI_allocator(real_T act_fail_id, const
   /* 'URINDI_allocator:75' du(i_up) = w_max - w_f(i_up); */
   for (b_ii = 0; b_ii < fail_id_vec_size_idx_1; b_ii++) {
     du_tmp = i_up_data[b_ii] - 1;
-    du[du_tmp] = b_par->w_max - w_f[du_tmp];
+    du[du_tmp] = b_par_w_max - w_f[du_tmp];
   }
 
   /* 'URINDI_allocator:76' du(i_down) =  w_min - w_f(i_down); */
   for (b_ii = 0; b_ii < idx; b_ii++) {
     du_tmp = ii_data[b_ii] - 1;
-    du[du_tmp] = b_par->w_min - w_f[du_tmp];
+    du[du_tmp] = b_par_w_min - w_f[du_tmp];
   }
 
   /* 'URINDI_allocator:78' w_cmd(i_up) = w_max; */
   for (b_ii = 0; b_ii < fail_id_vec_size_idx_1; b_ii++) {
-    w_cmd[i_up_data[b_ii] - 1] = b_par->w_max;
+    w_cmd[i_up_data[b_ii] - 1] = b_par_w_max;
   }
 
   /* 'URINDI_allocator:79' w_cmd(i_down) = w_min; */
   for (b_ii = 0; b_ii < idx; b_ii++) {
-    w_cmd[ii_data[b_ii] - 1] = b_par->w_min;
+    w_cmd[ii_data[b_ii] - 1] = b_par_w_min;
   }
 
   /* 'URINDI_allocator:81' du_last = du; */
@@ -3324,7 +4497,7 @@ void URControlModelClass::URControl_URINDI_allocator(real_T act_fail_id, const
 }
 
 /*
- * Function for MATLAB Function: '<S24>/Predict'
+ * Function for MATLAB Function: '<S25>/Predict'
  * function A = ekf_state_jacob(x,u)
  */
 void URControlModelClass::URControl_ekf_state_jacob(const real_T x[10], const
@@ -3541,62 +4714,69 @@ void URControlModelClass::step()
   real_T rtb_accs_filter[3];
   real_T rtb_n_des[3];
   real_T rtb_DiscreteStateSpace[3];
-  real_T errorSum;
   real_T R_IB[9];
   real_T FMin[4];
-  boolean_T rEQ0;
   int32_T r2;
   int32_T r3;
   int32_T rtemp;
-  real_T Iu;
+  real_T Mv_max;
+  real_T uDot2_min;
+  real_T vDot2_min;
   static const int8_T b[3] = { 0, 0, -1 };
 
-  real_T errorVel[3];
   real_T b_z1[2];
-  real_T z1[4];
+  real_T K[16];
+  real_T dHdx[70];
   real_T zEstimated[7];
+  real_T qconj[4];
+  real_T dummy[4];
   real_T gain[70];
-  static const int8_T b_0[70] = { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 1 };
+  static const int8_T b_0[10] = { 0, 0, 0, 0, 0, 0, 1, 0, 0, 0 };
 
-  static const int8_T a[70] = { 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
-    1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
-    0, 1 };
+  static const int8_T c[10] = { 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 };
+
+  static const int8_T d[10] = { 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 };
+
+  static const int8_T e[10] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 };
 
   real_T Jacobian[100];
+  real_T rtb_pos[3];
   real_T rtb_omega[3];
-  real_T rtb_TmpSignalConversionAtSFun_h[4];
+  real_T rtb_att[3];
   int32_T i;
   real_T rtb_enableMeas;
   real_T rtb_DataStoreRead_k[10];
-  real_T rtb_Product2;
-  real_T rtb_Product1;
   real_T rtb_yawTarget;
   real_T rtb_xNew[10];
   real_T rtb_TmpSignalConversionAtSFunct[6];
-  real_T tmp[32];
-  real_T rtb_att_0[3];
-  real_T a_0[49];
-  real_T rtb_TmpSignalConversionAtSFun_j[4];
+  real_T tmp[16];
+  real_T qconj_0[4];
+  real_T b_z1_0[4];
+  real_T tmp_0[32];
+  real_T errorVel[3];
+  real_T dHdx_0[49];
   real_T rtb_TmpSignalConversionAtSFun_0[4];
-  real_T a_1[70];
+  real_T dHdx_1[70];
   real_T rtb_pos_0[7];
   real_T rtb_pos_1[7];
+  int16_T tmp_1[16];
   real_T Jacobian_0[100];
-  uint32_T tmp_0;
-  real_T rtb_DataTypeConversion8_idx_0;
+  uint32_T tmp_2;
+  real_T rtb_TmpSignalConversionAtSFun_1;
+  real_T rtb_TmpSignalConversionAtSFun_2;
+  real_T rtb_TmpSignalConversionAtSFun_3;
+  real_T rtb_TmpSignalConversionAtSFun_4;
   real_T rtb_DataTypeConversion8_idx_1;
-  real_T rtb_DataTypeConversion8_idx_2;
-  real_T dummy_idx_0;
-  real_T rtb_att_idx_2;
-  real_T rtb_att_idx_1;
-  real_T w_min_idx_1;
-  real_T Fset_idx_2;
-  int32_T a_tmp;
-  boolean_T tmp_1;
+  real_T rtb_DataTypeConversion8_idx_0;
+  real_T errorVel_idx_2;
+  real_T errorVel_idx_1;
+  real_T errorVel_idx_0;
+  real_T tmp_3;
+  real_T u0;
+  real_T Iu_tmp;
+  boolean_T tmp_4;
+  boolean_T tmp_5;
+  real_T rtb_Product2_tmp;
 
   /* DataTypeConversion: '<Root>/Data Type Conversion1' incorporates:
    *  Inport: '<Root>/accs'
@@ -3614,7 +4794,7 @@ void URControlModelClass::step()
   rtb_omega[0] = URControl_U.rates[0];
 
   /* BusCreator: '<S5>/BusConversion_InsertedFor_basic estimators_at_inport_0' */
-  errorVel[0] = rtb_DiscreteStateSpace[0];
+  errorVel_idx_0 = rtb_DiscreteStateSpace[0];
 
   /* DataTypeConversion: '<Root>/Data Type Conversion1' incorporates:
    *  Inport: '<Root>/accs'
@@ -3632,7 +4812,7 @@ void URControlModelClass::step()
   rtb_omega[1] = URControl_U.rates[1];
 
   /* BusCreator: '<S5>/BusConversion_InsertedFor_basic estimators_at_inport_0' */
-  errorVel[1] = rtb_DiscreteStateSpace[1];
+  errorVel_idx_1 = rtb_DiscreteStateSpace[1];
 
   /* DataTypeConversion: '<Root>/Data Type Conversion1' incorporates:
    *  Inport: '<Root>/accs'
@@ -3650,7 +4830,7 @@ void URControlModelClass::step()
   rtb_omega[2] = URControl_U.rates[2];
 
   /* BusCreator: '<S5>/BusConversion_InsertedFor_basic estimators_at_inport_0' */
-  errorVel[2] = rtb_DiscreteStateSpace[2];
+  errorVel_idx_2 = rtb_DiscreteStateSpace[2];
 
   /* DSPFlip: '<S15>/Flip' incorporates:
    *  DataTypeConversion: '<Root>/Data Type Conversion6'
@@ -3661,70 +4841,72 @@ void URControlModelClass::step()
   rtb_DiscreteStateSpace[1] = URControl_U.att[1];
   rtb_DiscreteStateSpace[1] = URControl_U.att[1];
 
-  /* Gain: '<S20>/1//2' */
+  /* Gain: '<S21>/1//2' */
   rtb_enableMeas = 0.5 * rtb_DiscreteStateSpace[0];
 
-  /* Trigonometry: '<S20>/sincos' */
+  /* Trigonometry: '<S21>/sincos' */
   rtb_DiscreteStateSpace[0] = std::sin(rtb_enableMeas);
   rtb_enableMeas = std::cos(rtb_enableMeas);
 
-  /* Fcn: '<S20>/q0' */
-  w_min_idx_1 = rtb_enableMeas;
+  /* Fcn: '<S21>/q0' */
+  tmp_3 = rtb_enableMeas;
 
-  /* Trigonometry: '<S20>/sincos' */
+  /* Trigonometry: '<S21>/sincos' */
   rtb_DataTypeConversion8_idx_0 = rtb_enableMeas;
 
-  /* Gain: '<S20>/1//2' */
+  /* Gain: '<S21>/1//2' */
   rtb_enableMeas = 0.5 * rtb_DiscreteStateSpace[1];
 
-  /* Trigonometry: '<S20>/sincos' */
+  /* Trigonometry: '<S21>/sincos' */
   rtb_DiscreteStateSpace[1] = std::sin(rtb_enableMeas);
   rtb_enableMeas = std::cos(rtb_enableMeas);
 
-  /* Fcn: '<S20>/q0' */
-  Iu = rtb_enableMeas;
+  /* Fcn: '<S21>/q0' */
+  rtb_TmpSignalConversionAtSFun_4 = rtb_enableMeas;
 
-  /* Trigonometry: '<S20>/sincos' */
+  /* Trigonometry: '<S21>/sincos' */
   rtb_DataTypeConversion8_idx_1 = rtb_enableMeas;
 
-  /* Gain: '<S20>/1//2' */
+  /* Gain: '<S21>/1//2' */
   rtb_enableMeas = 0.5 * rtb_DiscreteStateSpace[2];
 
-  /* Trigonometry: '<S20>/sincos' */
+  /* Trigonometry: '<S21>/sincos' */
   rtb_DiscreteStateSpace[2] = std::sin(rtb_enableMeas);
   rtb_enableMeas = std::cos(rtb_enableMeas);
 
-  /* Fcn: '<S20>/q0' incorporates:
-   *  Fcn: '<S20>/q1'
+  /* Fcn: '<S21>/q0' incorporates:
+   *  Fcn: '<S21>/q1'
    */
-  errorSum = rtb_DiscreteStateSpace[0] * rtb_DiscreteStateSpace[1];
+  rtb_TmpSignalConversionAtSFun_3 = rtb_DiscreteStateSpace[0] *
+    rtb_DiscreteStateSpace[1];
 
-  /* SignalConversion: '<S18>/TmpSignal ConversionAt SFunction Inport1' incorporates:
-   *  Fcn: '<S20>/q0'
-   *  Fcn: '<S20>/q1'
+  /* SignalConversion: '<S19>/TmpSignal ConversionAt SFunction Inport1' incorporates:
+   *  Fcn: '<S21>/q0'
+   *  Fcn: '<S21>/q1'
    *  MATLAB Function: '<S15>/MATLAB Function'
    */
-  rtb_TmpSignalConversionAtSFun_h[0] = w_min_idx_1 * Iu * rtb_enableMeas +
-    errorSum * rtb_DiscreteStateSpace[2];
-  rtb_TmpSignalConversionAtSFun_h[1] = rtb_DataTypeConversion8_idx_0 *
-    rtb_DataTypeConversion8_idx_1 * rtb_DiscreteStateSpace[2] - errorSum *
-    rtb_enableMeas;
+  rtb_TmpSignalConversionAtSFun_4 = tmp_3 * rtb_TmpSignalConversionAtSFun_4 *
+    rtb_enableMeas + rtb_TmpSignalConversionAtSFun_3 * rtb_DiscreteStateSpace[2];
+  rtb_TmpSignalConversionAtSFun_3 = rtb_DataTypeConversion8_idx_0 *
+    rtb_DataTypeConversion8_idx_1 * rtb_DiscreteStateSpace[2] -
+    rtb_TmpSignalConversionAtSFun_3 * rtb_enableMeas;
 
-  /* Fcn: '<S20>/q2' incorporates:
-   *  Fcn: '<S20>/q3'
+  /* Fcn: '<S21>/q2' incorporates:
+   *  Fcn: '<S21>/q3'
    */
-  errorSum = rtb_DiscreteStateSpace[0] * rtb_DataTypeConversion8_idx_1;
-  w_min_idx_1 = rtb_DataTypeConversion8_idx_0 * rtb_DiscreteStateSpace[1];
+  rtb_TmpSignalConversionAtSFun_1 = rtb_DiscreteStateSpace[0] *
+    rtb_DataTypeConversion8_idx_1;
+  rtb_DataTypeConversion8_idx_0 *= rtb_DiscreteStateSpace[1];
 
-  /* SignalConversion: '<S18>/TmpSignal ConversionAt SFunction Inport1' incorporates:
-   *  Fcn: '<S20>/q2'
-   *  Fcn: '<S20>/q3'
+  /* SignalConversion: '<S19>/TmpSignal ConversionAt SFunction Inport1' incorporates:
+   *  Fcn: '<S21>/q2'
+   *  Fcn: '<S21>/q3'
    *  MATLAB Function: '<S15>/MATLAB Function'
    */
-  rtb_TmpSignalConversionAtSFun_h[2] = w_min_idx_1 * rtb_enableMeas + errorSum *
-    rtb_DiscreteStateSpace[2];
-  rtb_TmpSignalConversionAtSFun_h[3] = errorSum * rtb_enableMeas - w_min_idx_1 *
-    rtb_DiscreteStateSpace[2];
+  rtb_TmpSignalConversionAtSFun_2 = rtb_DataTypeConversion8_idx_0 *
+    rtb_enableMeas + rtb_TmpSignalConversionAtSFun_1 * rtb_DiscreteStateSpace[2];
+  rtb_TmpSignalConversionAtSFun_1 = rtb_TmpSignalConversionAtSFun_1 *
+    rtb_enableMeas - rtb_DataTypeConversion8_idx_0 * rtb_DiscreteStateSpace[2];
 
   /* MATLAB Function: '<S15>/MATLAB Function' incorporates:
    *  Memory: '<S15>/Memory'
@@ -3732,29 +4914,29 @@ void URControlModelClass::step()
   /* :  error1 = norm(qMeas - qState); */
   /* :  error2 = norm(-qMeas - qState); */
   /* :  if error1 > error2 */
-  rtb_TmpSignalConversionAtSFun_j[0] = rtb_TmpSignalConversionAtSFun_h[0] -
+  rtb_TmpSignalConversionAtSFun_0[0] = rtb_TmpSignalConversionAtSFun_4 -
     URControl_DW.Memory_PreviousInput[0];
-  rtb_TmpSignalConversionAtSFun_0[0] = -rtb_TmpSignalConversionAtSFun_h[0] -
+  dummy[0] = -rtb_TmpSignalConversionAtSFun_4 -
     URControl_DW.Memory_PreviousInput[0];
-  rtb_TmpSignalConversionAtSFun_j[1] = rtb_TmpSignalConversionAtSFun_h[1] -
+  rtb_TmpSignalConversionAtSFun_0[1] = rtb_TmpSignalConversionAtSFun_3 -
     URControl_DW.Memory_PreviousInput[1];
-  rtb_TmpSignalConversionAtSFun_0[1] = -rtb_TmpSignalConversionAtSFun_h[1] -
+  dummy[1] = -rtb_TmpSignalConversionAtSFun_3 -
     URControl_DW.Memory_PreviousInput[1];
-  rtb_TmpSignalConversionAtSFun_j[2] = rtb_TmpSignalConversionAtSFun_h[2] -
+  rtb_TmpSignalConversionAtSFun_0[2] = rtb_TmpSignalConversionAtSFun_2 -
     URControl_DW.Memory_PreviousInput[2];
-  rtb_TmpSignalConversionAtSFun_0[2] = -rtb_TmpSignalConversionAtSFun_h[2] -
+  dummy[2] = -rtb_TmpSignalConversionAtSFun_2 -
     URControl_DW.Memory_PreviousInput[2];
-  rtb_TmpSignalConversionAtSFun_j[3] = rtb_TmpSignalConversionAtSFun_h[3] -
+  rtb_TmpSignalConversionAtSFun_0[3] = rtb_TmpSignalConversionAtSFun_1 -
     URControl_DW.Memory_PreviousInput[3];
-  rtb_TmpSignalConversionAtSFun_0[3] = -rtb_TmpSignalConversionAtSFun_h[3] -
+  dummy[3] = -rtb_TmpSignalConversionAtSFun_1 -
     URControl_DW.Memory_PreviousInput[3];
-  if (URControl_norm_d(rtb_TmpSignalConversionAtSFun_j) > URControl_norm_d
-      (rtb_TmpSignalConversionAtSFun_0)) {
+  if (URControl_norm_d(rtb_TmpSignalConversionAtSFun_0) > URControl_norm_d(dummy))
+  {
     /* :  q = -qMeas; */
-    rtb_TmpSignalConversionAtSFun_h[0] = -rtb_TmpSignalConversionAtSFun_h[0];
-    rtb_TmpSignalConversionAtSFun_h[1] = -rtb_TmpSignalConversionAtSFun_h[1];
-    rtb_TmpSignalConversionAtSFun_h[2] = -rtb_TmpSignalConversionAtSFun_h[2];
-    rtb_TmpSignalConversionAtSFun_h[3] = -rtb_TmpSignalConversionAtSFun_h[3];
+    rtb_TmpSignalConversionAtSFun_4 = -rtb_TmpSignalConversionAtSFun_4;
+    rtb_TmpSignalConversionAtSFun_3 = -rtb_TmpSignalConversionAtSFun_3;
+    rtb_TmpSignalConversionAtSFun_2 = -rtb_TmpSignalConversionAtSFun_2;
+    rtb_TmpSignalConversionAtSFun_1 = -rtb_TmpSignalConversionAtSFun_1;
   } else {
     /* :  else */
     /* :  q = qMeas; */
@@ -3788,15 +4970,15 @@ void URControlModelClass::step()
 
   /* End of MATLAB Function: '<S15>/enableMeas' */
 
-  /* Outputs for Enabled SubSystem: '<S17>/Correct1' incorporates:
-   *  EnablePort: '<S22>/Enable'
+  /* Outputs for Enabled SubSystem: '<S18>/Correct1' incorporates:
+   *  EnablePort: '<S23>/Enable'
    */
-  /* DataTypeConversion: '<S17>/DataTypeConversion_Enable1' */
+  /* DataTypeConversion: '<S18>/DataTypeConversion_Enable1' */
   if (rtb_enableMeas != 0.0) {
-    /* MATLAB Function: '<S22>/Correct' incorporates:
-     *  Constant: '<S17>/R1'
-     *  DataStoreRead: '<S22>/Data Store ReadP'
-     *  DataStoreRead: '<S22>/Data Store ReadX'
+    /* MATLAB Function: '<S23>/Correct' incorporates:
+     *  Constant: '<S18>/R1'
+     *  DataStoreRead: '<S23>/Data Store ReadP'
+     *  DataStoreRead: '<S23>/Data Store ReadX'
      */
     /* :  if pM.IsSimulinkFcn */
     /* :  else */
@@ -3804,202 +4986,313 @@ void URControlModelClass::step()
     /* :  if pM.HasJacobian */
     /* :  MeasurementJacobianFcnH = str2func(pM.JacobianFcnName); */
     /* :  switch pM.NumberOfExtraArgumentInports */
-    /* :  case 0 */
-    /* :  extraArgs = {}; */
+    /* :  case 1 */
+    /* :  extraArgs = {uMeas}; */
     /* :  xNew = zeros(size(x),'like',x); */
     /* :  if pM.HasAdditiveNoise */
     /* :  [xNew,P] = matlabshared.tracking.internal.EKFCorrectorAdditive.correct(... */
     /* :          yMeas,R,x,P,MeasurementFcnH,MeasurementJacobianFcnH,extraArgs{:}); */
+    /* 'ekf_meas_jacob:13' posx = x(1); */
+    /* 'ekf_meas_jacob:14' posy = x(2); */
+    /* 'ekf_meas_jacob:15' posz = x(3); */
+    /* 'ekf_meas_jacob:17' q1 = x(7); */
+    /* 'ekf_meas_jacob:18' q2 = x(8); */
+    /* 'ekf_meas_jacob:19' q3 = x(9); */
+    /* 'ekf_meas_jacob:20' q4 = x(10); */
+    /* 'ekf_meas_jacob:22' dx = u(1); */
+    /* 'ekf_meas_jacob:23' dy = u(2); */
+    /* 'ekf_meas_jacob:24' dz = u(3); */
+    /* 'ekf_meas_jacob:26' B = ... */
+    /* 'ekf_meas_jacob:27' [ 1, 0, 0, 0, 0, 0, 2*dx*q1 - 2*dy*q4 + 2*dz*q3, 2*dx*q2 + 2*dy*q3 + 2*dz*q4, 2*dy*q2 - 2*dx*q3 + 2*dz*q1, 2*dz*q2 - 2*dy*q1 - 2*dx*q4; */
+    /* 'ekf_meas_jacob:28'  0, 1, 0, 0, 0, 0, 2*dx*q4 + 2*dy*q1 - 2*dz*q2, 2*dx*q3 - 2*dy*q2 - 2*dz*q1, 2*dx*q2 + 2*dy*q3 + 2*dz*q4, 2*dx*q1 - 2*dy*q4 + 2*dz*q3; */
+    /* 'ekf_meas_jacob:29'  0, 0, 1, 0, 0, 0, 2*dy*q2 - 2*dx*q3 + 2*dz*q1, 2*dx*q4 + 2*dy*q1 - 2*dz*q2, 2*dy*q4 - 2*dx*q1 - 2*dz*q3, 2*dx*q2 + 2*dy*q3 + 2*dz*q4; */
+    /* 'ekf_meas_jacob:30'  0, 0, 0, 0, 0, 0,                           1,                           0,                           0,                           0; */
+    /* 'ekf_meas_jacob:31'  0, 0, 0, 0, 0, 0,                           0,                           1,                           0,                           0; */
+    /* 'ekf_meas_jacob:32'  0, 0, 0, 0, 0, 0,                           0,                           0,                           1,                           0; */
+    /* 'ekf_meas_jacob:33'  0, 0, 0, 0, 0, 0,                           0,                           0,                           0,                           1]; */
+    dHdx[0] = 1.0;
+    dHdx[7] = 0.0;
+    dHdx[14] = 0.0;
+    dHdx[21] = 0.0;
+    dHdx[28] = 0.0;
+    dHdx[35] = 0.0;
+    rtb_enableMeas = (0.0 * URControl_DW.x[6] - 0.0 * URControl_DW.x[9]) + 0.0 *
+      URControl_DW.x[8];
+    dHdx[42] = rtb_enableMeas;
+    rtb_DataTypeConversion8_idx_0 = (0.0 * URControl_DW.x[7] + 0.0 *
+      URControl_DW.x[8]) + 0.0 * URControl_DW.x[9];
+    dHdx[49] = rtb_DataTypeConversion8_idx_0;
+    tmp_3 = (0.0 * URControl_DW.x[7] - 0.0 * URControl_DW.x[8]) + 0.0 *
+      URControl_DW.x[6];
+    dHdx[56] = tmp_3;
+    dHdx[63] = (0.0 * URControl_DW.x[7] - 0.0 * URControl_DW.x[6]) - 0.0 *
+      URControl_DW.x[9];
+    dHdx[1] = 0.0;
+    dHdx[8] = 1.0;
+    dHdx[15] = 0.0;
+    dHdx[22] = 0.0;
+    dHdx[29] = 0.0;
+    dHdx[36] = 0.0;
+    rtb_DataTypeConversion8_idx_1 = (0.0 * URControl_DW.x[9] + 0.0 *
+      URControl_DW.x[6]) - 0.0 * URControl_DW.x[7];
+    dHdx[43] = rtb_DataTypeConversion8_idx_1;
+    dHdx[50] = (0.0 * URControl_DW.x[8] - 0.0 * URControl_DW.x[7]) - 0.0 *
+      URControl_DW.x[6];
+    dHdx[57] = rtb_DataTypeConversion8_idx_0;
+    dHdx[64] = rtb_enableMeas;
+    dHdx[2] = 0.0;
+    dHdx[9] = 0.0;
+    dHdx[16] = 1.0;
+    dHdx[23] = 0.0;
+    dHdx[30] = 0.0;
+    dHdx[37] = 0.0;
+    dHdx[44] = tmp_3;
+    dHdx[51] = rtb_DataTypeConversion8_idx_1;
+    dHdx[58] = (0.0 * URControl_DW.x[9] - 0.0 * URControl_DW.x[6]) - 0.0 *
+      URControl_DW.x[8];
+    dHdx[65] = rtb_DataTypeConversion8_idx_0;
+    for (r2 = 0; r2 < 10; r2++) {
+      dHdx[3 + 7 * r2] = b_0[r2];
+      dHdx[4 + 7 * r2] = c[r2];
+      dHdx[5 + 7 * r2] = d[r2];
+      dHdx[6 + 7 * r2] = e[r2];
+    }
+
     /* 'ekf_meas_func:3' y = zeros(7,1); */
-    /* 'ekf_meas_func:5' px = x(1); */
-    /* 'ekf_meas_func:6' py = x(2); */
-    /* 'ekf_meas_func:7' pz = x(3); */
+    /* 'ekf_meas_func:5' posx = x(1); */
+    /* 'ekf_meas_func:6' posy = x(2); */
+    /* 'ekf_meas_func:7' posz = x(3); */
     /* 'ekf_meas_func:9' q = x(7:10); */
-    /* 'ekf_meas_func:11' y(1) = px; */
-    zEstimated[0] = URControl_DW.x[0];
+    /* 'ekf_meas_func:11' dx = u(1); */
+    /* 'ekf_meas_func:12' dy = u(2); */
+    /* 'ekf_meas_func:13' dz = u(3); */
+    /* 'ekf_meas_func:15' dPos = quatRot(q', [dx, dy, dz]); */
+    /* 'quatRot:3' qconj = [ q(:,1)  -q(:,2:4) ]; */
+    /* 'quatRot:5' dummy = HProduct(HProduct(q,[0,vector]),qconj); */
+    /* 'quatRot:14' vec = [v1(:,1).*v2(:,2) v1(:,1).*v2(:,3) v1(:,1).*v2(:,4)] + ... */
+    /* 'quatRot:15'          [v2(:,1).*v1(:,2) v2(:,1).*v1(:,3) v2(:,1).*v1(:,4)]+... */
+    /* 'quatRot:16'          [ v1(:,3).*v2(:,4)-v1(:,4).*v2(:,3) ... */
+    /* 'quatRot:17'            v1(:,4).*v2(:,2)-v1(:,2).*v2(:,4) ... */
+    /* 'quatRot:18'            v1(:,2).*v2(:,3)-v1(:,3).*v2(:,2)]; */
+    /* 'quatRot:22' scalar = v1(:,1).*v2(:,1) - v1(:,2).*v2(:,2) - ... */
+    /* 'quatRot:23'              v1(:,3).*v2(:,3) - v1(:,4).*v2(:,4); */
+    /* 'quatRot:25' qout = [scalar  vec]; */
+    FMin[0] = ((URControl_DW.x[6] * 0.0 - URControl_DW.x[7] * 0.0) -
+               URControl_DW.x[8] * 0.0) - URControl_DW.x[9] * 0.0;
+    FMin[1] = (URControl_DW.x[6] * 0.0 + 0.0 * URControl_DW.x[7]) +
+      (URControl_DW.x[8] * 0.0 - URControl_DW.x[9] * 0.0);
+    FMin[2] = (URControl_DW.x[6] * 0.0 + 0.0 * URControl_DW.x[8]) +
+      (URControl_DW.x[9] * 0.0 - URControl_DW.x[7] * 0.0);
+    FMin[3] = (URControl_DW.x[6] * 0.0 + 0.0 * URControl_DW.x[9]) +
+      (URControl_DW.x[7] * 0.0 - URControl_DW.x[8] * 0.0);
 
-    /* 'ekf_meas_func:12' y(2) = py; */
-    zEstimated[1] = URControl_DW.x[1];
+    /* 'quatRot:14' vec = [v1(:,1).*v2(:,2) v1(:,1).*v2(:,3) v1(:,1).*v2(:,4)] + ... */
+    /* 'quatRot:15'          [v2(:,1).*v1(:,2) v2(:,1).*v1(:,3) v2(:,1).*v1(:,4)]+... */
+    /* 'quatRot:16'          [ v1(:,3).*v2(:,4)-v1(:,4).*v2(:,3) ... */
+    /* 'quatRot:17'            v1(:,4).*v2(:,2)-v1(:,2).*v2(:,4) ... */
+    /* 'quatRot:18'            v1(:,2).*v2(:,3)-v1(:,3).*v2(:,2)]; */
+    /* 'quatRot:22' scalar = v1(:,1).*v2(:,1) - v1(:,2).*v2(:,2) - ... */
+    /* 'quatRot:23'              v1(:,3).*v2(:,3) - v1(:,4).*v2(:,4); */
+    /* 'quatRot:25' qout = [scalar  vec]; */
+    /* 'quatRot:6' r = dummy(2:4); */
+    /* 'ekf_meas_func:17' y(1) = posx + dPos(1); */
+    zEstimated[0] = ((FMin[0] * -URControl_DW.x[7] + URControl_DW.x[6] * FMin[1])
+                     + (FMin[2] * -URControl_DW.x[9] - FMin[3] *
+                        -URControl_DW.x[8])) + URControl_DW.x[0];
 
-    /* 'ekf_meas_func:13' y(3) = pz; */
-    zEstimated[2] = URControl_DW.x[2];
+    /* 'ekf_meas_func:18' y(2) = posy + dPos(2); */
+    zEstimated[1] = ((FMin[0] * -URControl_DW.x[8] + URControl_DW.x[6] * FMin[2])
+                     + (FMin[3] * -URControl_DW.x[7] - FMin[1] *
+                        -URControl_DW.x[9])) + URControl_DW.x[1];
 
-    /* 'ekf_meas_func:14' y(4:7) = q; */
+    /* 'ekf_meas_func:19' y(3) = posz + dPos(3); */
+    zEstimated[2] = ((FMin[0] * -URControl_DW.x[9] + URControl_DW.x[6] * FMin[3])
+                     + (FMin[1] * -URControl_DW.x[8] - FMin[2] *
+                        -URControl_DW.x[7])) + URControl_DW.x[2];
+
+    /* 'ekf_meas_func:21' y(4:7) = q; */
     zEstimated[3] = URControl_DW.x[6];
     zEstimated[4] = URControl_DW.x[7];
     zEstimated[5] = URControl_DW.x[8];
     zEstimated[6] = URControl_DW.x[9];
+    for (r2 = 0; r2 < 10; r2++) {
+      for (r3 = 0; r3 < 7; r3++) {
+        rtemp = r2 + 10 * r3;
+        gain[rtemp] = 0.0;
+        for (i = 0; i < 10; i++) {
+          gain[rtemp] = URControl_DW.P[10 * i + r2] * dHdx[7 * i + r3] + gain[10
+            * r3 + r2];
+        }
+      }
+    }
+
     for (r2 = 0; r2 < 7; r2++) {
       for (r3 = 0; r3 < 10; r3++) {
-        rtemp = r3 + 10 * r2;
-        gain[rtemp] = 0.0;
-        a_tmp = r2 + 7 * r3;
-        a_1[a_tmp] = 0.0;
+        rtemp = r2 + 7 * r3;
+        dHdx_1[rtemp] = 0.0;
         for (i = 0; i < 10; i++) {
-          gain[rtemp] = URControl_DW.P[10 * i + r3] * (real_T)b_0[10 * r2 + i] +
-            gain[10 * r2 + r3];
-          a_1[a_tmp] = (real_T)a[7 * i + r2] * URControl_DW.P[10 * r3 + i] +
-            a_1[7 * r3 + r2];
+          dHdx_1[rtemp] = dHdx[7 * i + r2] * URControl_DW.P[10 * r3 + i] +
+            dHdx_1[7 * r3 + r2];
         }
       }
 
       for (r3 = 0; r3 < 7; r3++) {
-        rtb_DataTypeConversion8_idx_0 = 0.0;
+        tmp_3 = 0.0;
         for (i = 0; i < 10; i++) {
-          rtb_DataTypeConversion8_idx_0 += a_1[7 * i + r2] * (real_T)b_0[10 * r3
-            + i];
+          tmp_3 += dHdx_1[7 * i + r2] * dHdx[7 * i + r3];
         }
 
-        a_0[r2 + 7 * r3] = URControl_ConstP.R1_Value[7 * r3 + r2] +
-          rtb_DataTypeConversion8_idx_0;
+        dHdx_0[r2 + 7 * r3] = URControl_ConstP.R1_Value[7 * r3 + r2] + tmp_3;
       }
     }
 
-    URControl_mrdivide_helper(gain, a_0);
+    URControl_mrdivide_helper(gain, dHdx_0);
     for (r2 = 0; r2 < 10; r2++) {
       for (r3 = 0; r3 < 10; r3++) {
         rtemp = r2 + 10 * r3;
         Jacobian[rtemp] = 0.0;
         for (i = 0; i < 7; i++) {
-          Jacobian[rtemp] = gain[10 * i + r2] * (real_T)a[7 * r3 + i] +
-            Jacobian[10 * r3 + r2];
+          Jacobian[rtemp] = gain[10 * i + r2] * dHdx[7 * r3 + i] + Jacobian[10 *
+            r3 + r2];
         }
       }
 
       for (r3 = 0; r3 < 10; r3++) {
-        rtb_DataTypeConversion8_idx_0 = 0.0;
+        tmp_3 = 0.0;
         for (i = 0; i < 10; i++) {
-          rtb_DataTypeConversion8_idx_0 += Jacobian[10 * i + r2] *
-            URControl_DW.P[10 * r3 + i];
+          tmp_3 += Jacobian[10 * i + r2] * URControl_DW.P[10 * r3 + i];
         }
 
-        Jacobian_0[r2 + 10 * r3] = URControl_DW.P[10 * r3 + r2] -
-          rtb_DataTypeConversion8_idx_0;
+        Jacobian_0[r2 + 10 * r3] = URControl_DW.P[10 * r3 + r2] - tmp_3;
       }
     }
 
-    /* DataStoreWrite: '<S22>/Data Store WriteP' */
+    /* DataStoreWrite: '<S23>/Data Store WriteP' */
     memcpy(&URControl_DW.P[0], &Jacobian_0[0], 100U * sizeof(real_T));
 
-    /* SignalConversion: '<S25>/TmpSignal ConversionAt SFunction Inport3' incorporates:
+    /* SignalConversion: '<S26>/TmpSignal ConversionAt SFunction Inport3' incorporates:
      *  DataTypeConversion: '<Root>/Data Type Conversion4'
      *  Inport: '<Root>/pos'
-     *  MATLAB Function: '<S22>/Correct'
+     *  MATLAB Function: '<S23>/Correct'
      */
     rtb_pos_0[0] = URControl_U.pos[0];
     rtb_pos_0[1] = URControl_U.pos[1];
     rtb_pos_0[2] = URControl_U.pos[2];
-    rtb_pos_0[3] = rtb_TmpSignalConversionAtSFun_h[0];
-    rtb_pos_0[4] = rtb_TmpSignalConversionAtSFun_h[1];
-    rtb_pos_0[5] = rtb_TmpSignalConversionAtSFun_h[2];
-    rtb_pos_0[6] = rtb_TmpSignalConversionAtSFun_h[3];
+    rtb_pos_0[3] = rtb_TmpSignalConversionAtSFun_4;
+    rtb_pos_0[4] = rtb_TmpSignalConversionAtSFun_3;
+    rtb_pos_0[5] = rtb_TmpSignalConversionAtSFun_2;
+    rtb_pos_0[6] = rtb_TmpSignalConversionAtSFun_1;
 
-    /* MATLAB Function: '<S22>/Correct' incorporates:
-     *  SignalConversion: '<S25>/TmpSignal ConversionAt SFunction Inport3'
+    /* MATLAB Function: '<S23>/Correct' incorporates:
+     *  SignalConversion: '<S26>/TmpSignal ConversionAt SFunction Inport3'
      */
     for (r2 = 0; r2 < 7; r2++) {
       rtb_pos_1[r2] = rtb_pos_0[r2] - zEstimated[r2];
     }
 
-    /* DataStoreWrite: '<S22>/Data Store WriteX' incorporates:
-     *  DataStoreRead: '<S22>/Data Store ReadX'
-     *  MATLAB Function: '<S22>/Correct'
+    /* DataStoreWrite: '<S23>/Data Store WriteX' incorporates:
+     *  DataStoreRead: '<S23>/Data Store ReadX'
+     *  MATLAB Function: '<S23>/Correct'
      */
     for (r2 = 0; r2 < 10; r2++) {
-      rtb_DataTypeConversion8_idx_0 = 0.0;
+      tmp_3 = 0.0;
       for (r3 = 0; r3 < 7; r3++) {
-        rtb_DataTypeConversion8_idx_0 += gain[10 * r3 + r2] * rtb_pos_1[r3];
+        tmp_3 += gain[10 * r3 + r2] * rtb_pos_1[r3];
       }
 
-      URControl_DW.x[r2] += rtb_DataTypeConversion8_idx_0;
+      URControl_DW.x[r2] += tmp_3;
     }
 
-    /* End of DataStoreWrite: '<S22>/Data Store WriteX' */
+    /* End of DataStoreWrite: '<S23>/Data Store WriteX' */
   }
 
-  /* End of DataTypeConversion: '<S17>/DataTypeConversion_Enable1' */
-  /* End of Outputs for SubSystem: '<S17>/Correct1' */
+  /* End of DataTypeConversion: '<S18>/DataTypeConversion_Enable1' */
+  /* End of Outputs for SubSystem: '<S18>/Correct1' */
 
-  /* Outputs for Atomic SubSystem: '<S17>/Output' */
-  /* DataStoreRead: '<S23>/Data Store Read' */
+  /* Outputs for Atomic SubSystem: '<S18>/Output' */
+  /* DataStoreRead: '<S24>/Data Store Read' */
   memcpy(&rtb_DataStoreRead_k[0], &URControl_DW.x[0], 10U * sizeof(real_T));
 
-  /* Sqrt: '<S29>/sqrt' incorporates:
-   *  DataStoreRead: '<S23>/Data Store Read'
-   *  Product: '<S30>/Product'
-   *  Product: '<S30>/Product1'
-   *  Product: '<S30>/Product2'
-   *  Product: '<S30>/Product3'
-   *  Sum: '<S30>/Sum'
+  /* Sqrt: '<S30>/sqrt' incorporates:
+   *  DataStoreRead: '<S24>/Data Store Read'
+   *  Product: '<S31>/Product'
+   *  Product: '<S31>/Product1'
+   *  Product: '<S31>/Product2'
+   *  Product: '<S31>/Product3'
+   *  Sum: '<S31>/Sum'
    */
   rtb_enableMeas = std::sqrt(((URControl_DW.x[6] * URControl_DW.x[6] +
     URControl_DW.x[7] * URControl_DW.x[7]) + URControl_DW.x[8] * URControl_DW.x
     [8]) + URControl_DW.x[9] * URControl_DW.x[9]);
 
-  /* Product: '<S28>/Product' incorporates:
-   *  DataStoreRead: '<S23>/Data Store Read'
+  /* Product: '<S29>/Product' incorporates:
+   *  DataStoreRead: '<S24>/Data Store Read'
    */
-  errorSum = URControl_DW.x[6] / rtb_enableMeas;
+  rtb_TmpSignalConversionAtSFun_4 = URControl_DW.x[6] / rtb_enableMeas;
 
-  /* Product: '<S28>/Product1' incorporates:
-   *  DataStoreRead: '<S23>/Data Store Read'
+  /* Product: '<S29>/Product1' incorporates:
+   *  DataStoreRead: '<S24>/Data Store Read'
    */
-  rtb_Product1 = URControl_DW.x[7] / rtb_enableMeas;
+  rtb_TmpSignalConversionAtSFun_2 = URControl_DW.x[7] / rtb_enableMeas;
 
-  /* Product: '<S28>/Product2' incorporates:
-   *  DataStoreRead: '<S23>/Data Store Read'
+  /* Product: '<S29>/Product2' incorporates:
+   *  DataStoreRead: '<S24>/Data Store Read'
    */
-  rtb_Product2 = URControl_DW.x[8] / rtb_enableMeas;
+  rtb_DataTypeConversion8_idx_0 = URControl_DW.x[8] / rtb_enableMeas;
 
-  /* Product: '<S28>/Product3' incorporates:
-   *  DataStoreRead: '<S23>/Data Store Read'
+  /* Product: '<S29>/Product3' incorporates:
+   *  DataStoreRead: '<S24>/Data Store Read'
    */
   rtb_enableMeas = URControl_DW.x[9] / rtb_enableMeas;
 
-  /* End of Outputs for SubSystem: '<S17>/Output' */
+  /* End of Outputs for SubSystem: '<S18>/Output' */
 
-  /* Fcn: '<S19>/fcn2' incorporates:
-   *  Fcn: '<S19>/fcn5'
+  /* Fcn: '<S20>/fcn2' incorporates:
+   *  Fcn: '<S20>/fcn5'
    */
-  w_min_idx_1 = errorSum * errorSum;
-  Iu = rtb_Product1 * rtb_Product1;
-  dummy_idx_0 = rtb_Product2 * rtb_Product2;
-  rtb_DataTypeConversion8_idx_0 = rtb_enableMeas * rtb_enableMeas;
+  rtb_TmpSignalConversionAtSFun_3 = rtb_TmpSignalConversionAtSFun_4 *
+    rtb_TmpSignalConversionAtSFun_4;
+  rtb_TmpSignalConversionAtSFun_1 = rtb_TmpSignalConversionAtSFun_2 *
+    rtb_TmpSignalConversionAtSFun_2;
+  tmp_3 = rtb_DataTypeConversion8_idx_0 * rtb_DataTypeConversion8_idx_0;
+  vDot2_min = rtb_enableMeas * rtb_enableMeas;
 
   /* DSPFlip: '<S15>/Flip1' incorporates:
-   *  Fcn: '<S19>/fcn1'
-   *  Fcn: '<S19>/fcn2'
-   *  Trigonometry: '<S27>/Trigonometric Function1'
+   *  Fcn: '<S20>/fcn1'
+   *  Fcn: '<S20>/fcn2'
+   *  Trigonometry: '<S28>/Trigonometric Function1'
    */
-  URControl_B.att_ekfquat[2] = rt_atan2d_snf((rtb_Product1 * rtb_Product2 +
-    errorSum * rtb_enableMeas) * 2.0, ((w_min_idx_1 + Iu) - dummy_idx_0) -
-    rtb_DataTypeConversion8_idx_0);
+  URControl_B.att_ekfquat[2] = rt_atan2d_snf((rtb_TmpSignalConversionAtSFun_2 *
+    rtb_DataTypeConversion8_idx_0 + rtb_TmpSignalConversionAtSFun_4 *
+    rtb_enableMeas) * 2.0, ((rtb_TmpSignalConversionAtSFun_3 +
+    rtb_TmpSignalConversionAtSFun_1) - tmp_3) - vDot2_min);
 
-  /* Fcn: '<S19>/fcn3' */
-  rtb_yawTarget = (rtb_Product1 * rtb_enableMeas - errorSum * rtb_Product2) *
-    -2.0;
+  /* Fcn: '<S20>/fcn3' */
+  u0 = (rtb_TmpSignalConversionAtSFun_2 * rtb_enableMeas -
+        rtb_TmpSignalConversionAtSFun_4 * rtb_DataTypeConversion8_idx_0) * -2.0;
 
-  /* Trigonometry: '<S27>/trigFcn' */
-  if (rtb_yawTarget > 1.0) {
-    rtb_yawTarget = 1.0;
+  /* Trigonometry: '<S28>/trigFcn' */
+  if (u0 > 1.0) {
+    u0 = 1.0;
   } else {
-    if (rtb_yawTarget < -1.0) {
-      rtb_yawTarget = -1.0;
+    if (u0 < -1.0) {
+      u0 = -1.0;
     }
   }
 
-  rtb_DataTypeConversion8_idx_1 = std::asin(rtb_yawTarget);
+  rtb_DataTypeConversion8_idx_1 = std::asin(u0);
 
-  /* End of Trigonometry: '<S27>/trigFcn' */
+  /* End of Trigonometry: '<S28>/trigFcn' */
 
   /* DSPFlip: '<S15>/Flip1' incorporates:
-   *  Fcn: '<S19>/fcn4'
-   *  Fcn: '<S19>/fcn5'
-   *  Trigonometry: '<S27>/Trigonometric Function3'
+   *  Fcn: '<S20>/fcn4'
+   *  Fcn: '<S20>/fcn5'
+   *  Trigonometry: '<S28>/Trigonometric Function3'
    */
-  URControl_B.att_ekfquat[0] = rt_atan2d_snf((rtb_Product2 * rtb_enableMeas +
-    errorSum * rtb_Product1) * 2.0, ((w_min_idx_1 - Iu) - dummy_idx_0) +
-    rtb_DataTypeConversion8_idx_0);
+  URControl_B.att_ekfquat[0] = rt_atan2d_snf((rtb_DataTypeConversion8_idx_0 *
+    rtb_enableMeas + rtb_TmpSignalConversionAtSFun_4 *
+    rtb_TmpSignalConversionAtSFun_2) * 2.0, ((rtb_TmpSignalConversionAtSFun_3 -
+    rtb_TmpSignalConversionAtSFun_1) - tmp_3) + vDot2_min);
   URControl_B.att_ekfquat[1] = rtb_DataTypeConversion8_idx_1;
   URControl_B.att_ekfquat[1] = rtb_DataTypeConversion8_idx_1;
 
@@ -4008,35 +5301,31 @@ void URControlModelClass::step()
    *  DataTypeConversion: '<Root>/Data Type Conversion10'
    *  Inport: '<Root>/fail_flag'
    */
-  rtb_DataTypeConversion8_idx_0 = std::floor(URControlParams.fail_delay * 500.0);
-  if ((rtb_DataTypeConversion8_idx_0 < 1.0) || rtIsNaN
-      (rtb_DataTypeConversion8_idx_0)) {
+  tmp_3 = std::floor(URControlParams.fail_delay * 500.0);
+  if ((tmp_3 < 1.0) || rtIsNaN(tmp_3)) {
     rtb_enableMeas = URControl_U.fail_flag;
   } else {
-    if (rtb_DataTypeConversion8_idx_0 > 1000.0) {
-      tmp_0 = 1000U;
+    if (tmp_3 > 1000.0) {
+      tmp_2 = 1000U;
     } else {
-      if (rtIsNaN(rtb_DataTypeConversion8_idx_0) || rtIsInf
-          (rtb_DataTypeConversion8_idx_0)) {
-        rtb_DataTypeConversion8_idx_0 = 0.0;
+      if (rtIsNaN(tmp_3) || rtIsInf(tmp_3)) {
+        tmp_3 = 0.0;
       } else {
-        rtb_DataTypeConversion8_idx_0 = std::fmod(rtb_DataTypeConversion8_idx_0,
-          4.294967296E+9);
+        tmp_3 = std::fmod(tmp_3, 4.294967296E+9);
       }
 
-      tmp_0 = rtb_DataTypeConversion8_idx_0 < 0.0 ? (uint32_T)-(int32_T)
-        (uint32_T)-rtb_DataTypeConversion8_idx_0 : (uint32_T)
-        rtb_DataTypeConversion8_idx_0;
+      tmp_2 = tmp_3 < 0.0 ? (uint32_T)-(int32_T)(uint32_T)-tmp_3 : (uint32_T)
+        tmp_3;
     }
 
-    rtb_enableMeas = URControl_DW.Delay_DSTATE[1000U - tmp_0];
+    rtb_enableMeas = URControl_DW.Delay_DSTATE[1000U - tmp_2];
   }
 
   /* End of Delay: '<Root>/Delay' */
 
   /* MATLAB Function: '<S5>/basic estimators' incorporates:
    *  BusCreator: '<S5>/BusConversion_InsertedFor_basic estimators_at_inport_0'
-   *  DataStoreRead: '<S23>/Data Store Read'
+   *  DataStoreRead: '<S24>/Data Store Read'
    *  DataTypeConversion: '<Root>/Data Type Conversion4'
    *  DataTypeConversion: '<Root>/Data Type Conversion5'
    *  DataTypeConversion: '<Root>/Data Type Conversion6'
@@ -4131,122 +5420,45 @@ void URControlModelClass::step()
 
   /* 'UREstimators:9' if URpar.est_useEKF == 1 */
   if (URControlParams.est_useEKF == 1.0) {
-    /* Outputs for Atomic SubSystem: '<S17>/Output' */
+    /* Outputs for Atomic SubSystem: '<S18>/Output' */
     /* 'UREstimators:10' state.vel = vel_est'; */
     /* 'UREstimators:11' state.pos = pos_est'; */
     /* 'UREstimators:12' state.att = (mod(att_est + pi, 2*pi) - pi)'; */
     URControl_DW.State.vel[0] = URControl_DW.x[3];
     URControl_DW.State.pos[0] = URControl_DW.x[0];
 
-    /* End of Outputs for SubSystem: '<S17>/Output' */
-    if ((!rtIsInf(URControl_B.att_ekfquat[0] + 3.1415926535897931)) && (!rtIsNaN
-         (URControl_B.att_ekfquat[0] + 3.1415926535897931))) {
-      if (URControl_B.att_ekfquat[0] + 3.1415926535897931 == 0.0) {
-        errorSum = 0.0;
-      } else {
-        errorSum = std::fmod(URControl_B.att_ekfquat[0] + 3.1415926535897931,
-                             6.2831853071795862);
-        rEQ0 = (errorSum == 0.0);
-        if (!rEQ0) {
-          rtb_Product1 = std::abs((URControl_B.att_ekfquat[0] +
-            3.1415926535897931) / 6.2831853071795862);
-          rEQ0 = (std::abs(rtb_Product1 - std::floor(rtb_Product1 + 0.5)) <=
-                  2.2204460492503131E-16 * rtb_Product1);
-        }
+    /* End of Outputs for SubSystem: '<S18>/Output' */
+    errorVel[0] = URControl_B.att_ekfquat[0] + 3.1415926535897931;
 
-        if (rEQ0) {
-          errorSum = 0.0;
-        } else {
-          if (URControl_B.att_ekfquat[0] + 3.1415926535897931 < 0.0) {
-            errorSum += 6.2831853071795862;
-          }
-        }
-      }
-    } else {
-      errorSum = (rtNaN);
-    }
-
-    URControl_DW.State.att[0] = errorSum - 3.1415926535897931;
-
-    /* Outputs for Atomic SubSystem: '<S17>/Output' */
+    /* Outputs for Atomic SubSystem: '<S18>/Output' */
     URControl_DW.State.vel[1] = URControl_DW.x[4];
     URControl_DW.State.pos[1] = URControl_DW.x[1];
 
-    /* End of Outputs for SubSystem: '<S17>/Output' */
-    if ((!rtIsInf(URControl_B.att_ekfquat[1] + 3.1415926535897931)) && (!rtIsNaN
-         (URControl_B.att_ekfquat[1] + 3.1415926535897931))) {
-      if (URControl_B.att_ekfquat[1] + 3.1415926535897931 == 0.0) {
-        errorSum = 0.0;
-      } else {
-        errorSum = std::fmod(URControl_B.att_ekfquat[1] + 3.1415926535897931,
-                             6.2831853071795862);
-        rEQ0 = (errorSum == 0.0);
-        if (!rEQ0) {
-          rtb_Product1 = std::abs((URControl_B.att_ekfquat[1] +
-            3.1415926535897931) / 6.2831853071795862);
-          rEQ0 = (std::abs(rtb_Product1 - std::floor(rtb_Product1 + 0.5)) <=
-                  2.2204460492503131E-16 * rtb_Product1);
-        }
+    /* End of Outputs for SubSystem: '<S18>/Output' */
+    errorVel[1] = URControl_B.att_ekfquat[1] + 3.1415926535897931;
 
-        if (rEQ0) {
-          errorSum = 0.0;
-        } else {
-          if (URControl_B.att_ekfquat[1] + 3.1415926535897931 < 0.0) {
-            errorSum += 6.2831853071795862;
-          }
-        }
-      }
-    } else {
-      errorSum = (rtNaN);
-    }
-
-    URControl_DW.State.att[1] = errorSum - 3.1415926535897931;
-
-    /* Outputs for Atomic SubSystem: '<S17>/Output' */
+    /* Outputs for Atomic SubSystem: '<S18>/Output' */
     URControl_DW.State.vel[2] = URControl_DW.x[5];
     URControl_DW.State.pos[2] = URControl_DW.x[2];
 
-    /* End of Outputs for SubSystem: '<S17>/Output' */
-    if ((!rtIsInf(URControl_B.att_ekfquat[2] + 3.1415926535897931)) && (!rtIsNaN
-         (URControl_B.att_ekfquat[2] + 3.1415926535897931))) {
-      if (URControl_B.att_ekfquat[2] + 3.1415926535897931 == 0.0) {
-        errorSum = 0.0;
-      } else {
-        errorSum = std::fmod(URControl_B.att_ekfquat[2] + 3.1415926535897931,
-                             6.2831853071795862);
-        rEQ0 = (errorSum == 0.0);
-        if (!rEQ0) {
-          rtb_Product1 = std::abs((URControl_B.att_ekfquat[2] +
-            3.1415926535897931) / 6.2831853071795862);
-          rEQ0 = (std::abs(rtb_Product1 - std::floor(rtb_Product1 + 0.5)) <=
-                  2.2204460492503131E-16 * rtb_Product1);
-        }
-
-        if (rEQ0) {
-          errorSum = 0.0;
-        } else {
-          if (URControl_B.att_ekfquat[2] + 3.1415926535897931 < 0.0) {
-            errorSum += 6.2831853071795862;
-          }
-        }
-      }
-    } else {
-      errorSum = (rtNaN);
-    }
-
-    URControl_DW.State.att[2] = errorSum - 3.1415926535897931;
+    /* End of Outputs for SubSystem: '<S18>/Output' */
+    errorVel[2] = URControl_B.att_ekfquat[2] + 3.1415926535897931;
+    URControl_mod(errorVel, rtb_att);
+    URControl_DW.State.att[0] = rtb_att[0] - 3.1415926535897931;
+    URControl_DW.State.att[1] = rtb_att[1] - 3.1415926535897931;
+    URControl_DW.State.att[2] = rtb_att[2] - 3.1415926535897931;
   } else {
     /* 'UREstimators:13' else */
     /* 'UREstimators:14' state.vel = sensors.vel; */
     /* 'UREstimators:15' state.pos = sensors.pos; */
     /* 'UREstimators:16' state.att = sensors.att; */
-    URControl_DW.State.vel[0] = errorVel[0];
+    URControl_DW.State.vel[0] = errorVel_idx_0;
     URControl_DW.State.pos[0] = URControl_U.pos[0];
     URControl_DW.State.att[0] = URControl_U.att[0];
-    URControl_DW.State.vel[1] = errorVel[1];
+    URControl_DW.State.vel[1] = errorVel_idx_1;
     URControl_DW.State.pos[1] = URControl_U.pos[1];
     URControl_DW.State.att[1] = URControl_U.att[1];
-    URControl_DW.State.vel[2] = errorVel[2];
+    URControl_DW.State.vel[2] = errorVel_idx_2;
     URControl_DW.State.pos[2] = URControl_U.pos[2];
     URControl_DW.State.att[2] = URControl_U.att[2];
   }
@@ -4320,39 +5532,42 @@ void URControlModelClass::step()
   /* 'UREstimators:44' R_IB = [cos(theta)*cos(psi)                             , cos(theta)*sin(psi)                               , -sin(theta); */
   /* 'UREstimators:45'         sin(phi)*sin(theta)*cos(psi)-cos(phi)*sin(psi)  , sin(phi)*sin(theta)*sin(psi)+cos(phi)*cos(psi)    , sin(phi)*cos(theta); */
   /* 'UREstimators:46'         cos(phi)*sin(theta)*cos(psi)+sin(phi)*sin(psi)  , cos(phi)*sin(theta)*sin(psi)-sin(phi)*cos(psi)    , cos(phi)*cos(theta)]; */
-  errorSum = std::cos(URControl_DW.State.att[1]);
-  w_min_idx_1 = std::cos(URControl_DW.State.att[2]);
-  R_IB[0] = errorSum * w_min_idx_1;
-  Iu = std::sin(URControl_DW.State.att[2]);
-  R_IB[3] = errorSum * Iu;
-  rtb_Product1 = std::sin(URControl_DW.State.att[1]);
-  R_IB[6] = -rtb_Product1;
-  dummy_idx_0 = std::sin(URControl_DW.State.att[0]);
-  rtb_DataTypeConversion8_idx_1 = dummy_idx_0 * rtb_Product1;
-  rtb_DataTypeConversion8_idx_0 = std::cos(URControl_DW.State.att[0]);
-  R_IB[1] = rtb_DataTypeConversion8_idx_1 * w_min_idx_1 -
-    rtb_DataTypeConversion8_idx_0 * Iu;
-  R_IB[4] = rtb_DataTypeConversion8_idx_1 * Iu + rtb_DataTypeConversion8_idx_0 *
-    w_min_idx_1;
-  R_IB[7] = dummy_idx_0 * errorSum;
-  rtb_Product1 *= rtb_DataTypeConversion8_idx_0;
-  R_IB[2] = rtb_Product1 * w_min_idx_1 + dummy_idx_0 * Iu;
-  R_IB[5] = rtb_Product1 * Iu - dummy_idx_0 * w_min_idx_1;
-  R_IB[8] = rtb_DataTypeConversion8_idx_0 * errorSum;
+  rtb_TmpSignalConversionAtSFun_3 = std::cos(URControl_DW.State.att[1]);
+  rtb_TmpSignalConversionAtSFun_4 = std::cos(URControl_DW.State.att[2]);
+  R_IB[0] = rtb_TmpSignalConversionAtSFun_3 * rtb_TmpSignalConversionAtSFun_4;
+  rtb_TmpSignalConversionAtSFun_1 = std::sin(URControl_DW.State.att[2]);
+  R_IB[3] = rtb_TmpSignalConversionAtSFun_3 * rtb_TmpSignalConversionAtSFun_1;
+  rtb_TmpSignalConversionAtSFun_2 = std::sin(URControl_DW.State.att[1]);
+  R_IB[6] = -rtb_TmpSignalConversionAtSFun_2;
+  rtb_DataTypeConversion8_idx_0 = std::sin(URControl_DW.State.att[0]);
+  errorVel_idx_0 = rtb_DataTypeConversion8_idx_0 *
+    rtb_TmpSignalConversionAtSFun_2;
+  tmp_3 = std::cos(URControl_DW.State.att[0]);
+  R_IB[1] = errorVel_idx_0 * rtb_TmpSignalConversionAtSFun_4 - tmp_3 *
+    rtb_TmpSignalConversionAtSFun_1;
+  R_IB[4] = errorVel_idx_0 * rtb_TmpSignalConversionAtSFun_1 + tmp_3 *
+    rtb_TmpSignalConversionAtSFun_4;
+  R_IB[7] = rtb_DataTypeConversion8_idx_0 * rtb_TmpSignalConversionAtSFun_3;
+  rtb_TmpSignalConversionAtSFun_2 *= tmp_3;
+  R_IB[2] = rtb_TmpSignalConversionAtSFun_2 * rtb_TmpSignalConversionAtSFun_4 +
+    rtb_DataTypeConversion8_idx_0 * rtb_TmpSignalConversionAtSFun_1;
+  R_IB[5] = rtb_TmpSignalConversionAtSFun_2 * rtb_TmpSignalConversionAtSFun_1 -
+    rtb_DataTypeConversion8_idx_0 * rtb_TmpSignalConversionAtSFun_4;
+  R_IB[8] = tmp_3 * rtb_TmpSignalConversionAtSFun_3;
 
   /* 'UREstimators:48' state.n = (R_IB\[0;0;-1])'; */
   i = 0;
   r2 = 1;
   r3 = 2;
-  rtb_Product2 = std::abs(R_IB[0]);
-  rtb_Product1 = std::abs(R_IB[1]);
-  if (rtb_Product1 > rtb_Product2) {
-    rtb_Product2 = rtb_Product1;
+  rtb_DataTypeConversion8_idx_0 = std::abs(R_IB[0]);
+  rtb_TmpSignalConversionAtSFun_2 = std::abs(R_IB[1]);
+  if (rtb_TmpSignalConversionAtSFun_2 > rtb_DataTypeConversion8_idx_0) {
+    rtb_DataTypeConversion8_idx_0 = rtb_TmpSignalConversionAtSFun_2;
     i = 1;
     r2 = 0;
   }
 
-  if (std::abs(R_IB[2]) > rtb_Product2) {
+  if (std::abs(R_IB[2]) > rtb_DataTypeConversion8_idx_0) {
     i = 2;
     r2 = 1;
     r3 = 0;
@@ -4373,15 +5588,14 @@ void URControlModelClass::step()
   R_IB[3 + r3] /= R_IB[3 + r2];
   R_IB[6 + r3] -= R_IB[3 + r3] * R_IB[6 + r2];
   rtb_DataTypeConversion8_idx_1 = (real_T)b[r2] - (real_T)b[i] * R_IB[r2];
-  rtb_DataTypeConversion8_idx_2 = (((real_T)b[r3] - (real_T)b[i] * R_IB[r3]) -
-    R_IB[3 + r3] * rtb_DataTypeConversion8_idx_1) / R_IB[6 + r3];
-  rtb_DataTypeConversion8_idx_1 -= R_IB[6 + r2] * rtb_DataTypeConversion8_idx_2;
+  errorVel_idx_0 = (((real_T)b[r3] - (real_T)b[i] * R_IB[r3]) - R_IB[3 + r3] *
+                    rtb_DataTypeConversion8_idx_1) / R_IB[6 + r3];
+  rtb_DataTypeConversion8_idx_1 -= R_IB[6 + r2] * errorVel_idx_0;
   rtb_DataTypeConversion8_idx_1 /= R_IB[3 + r2];
-  URControl_DW.State.n[0] = (((real_T)b[i] - R_IB[6 + i] *
-    rtb_DataTypeConversion8_idx_2) - R_IB[3 + i] * rtb_DataTypeConversion8_idx_1)
-    / R_IB[i];
+  URControl_DW.State.n[0] = (((real_T)b[i] - R_IB[6 + i] * errorVel_idx_0) -
+    R_IB[3 + i] * rtb_DataTypeConversion8_idx_1) / R_IB[i];
   URControl_DW.State.n[1] = rtb_DataTypeConversion8_idx_1;
-  URControl_DW.State.n[2] = rtb_DataTypeConversion8_idx_2;
+  URControl_DW.State.n[2] = errorVel_idx_0;
 
   /* 'UREstimators:53' dummy = par.URC.R_xy_uv*[state.omega(1); state.omega(2)]; */
   /* 'UREstimators:54' uRot = dummy(1); */
@@ -4409,36 +5623,36 @@ void URControlModelClass::step()
 
   /* 'UREstimators:62' FMax = URpar.envp_FMax; */
   /* 'UREstimators:63' FMin = URpar.envp_FMin; */
-  rtb_TmpSignalConversionAtSFun_h[0] = URControlParams.envp_FMax[0];
+  qconj[0] = URControlParams.envp_FMax[0];
   FMin[0] = URControlParams.envp_FMin[0];
-  rtb_TmpSignalConversionAtSFun_h[1] = URControlParams.envp_FMax[1];
+  qconj[1] = URControlParams.envp_FMax[1];
   FMin[1] = URControlParams.envp_FMin[1];
-  rtb_TmpSignalConversionAtSFun_h[2] = URControlParams.envp_FMax[2];
+  qconj[2] = URControlParams.envp_FMax[2];
   FMin[2] = URControlParams.envp_FMin[2];
-  rtb_TmpSignalConversionAtSFun_h[3] = URControlParams.envp_FMax[3];
+  qconj[3] = URControlParams.envp_FMax[3];
   FMin[3] = URControlParams.envp_FMin[3];
 
   /* 'UREstimators:64' if fail_id > 0 */
   if (rtb_enableMeas > 0.0) {
     /* 'UREstimators:65' FMax(fail_id) = URpar.fail_wRot^2*URpar.k0; */
-    errorSum = URControlParams.fail_wRot * URControlParams.fail_wRot *
-      URControlParams.k0;
+    rtb_TmpSignalConversionAtSFun_2 = URControlParams.fail_wRot *
+      URControlParams.fail_wRot * URControlParams.k0;
     r2 = (int32_T)rtb_enableMeas - 1;
-    rtb_TmpSignalConversionAtSFun_h[r2] = errorSum;
+    qconj[r2] = rtb_TmpSignalConversionAtSFun_2;
 
     /* 'UREstimators:66' FMin(fail_id) = URpar.fail_wRot^2*URpar.k0; */
-    FMin[r2] = errorSum;
+    FMin[r2] = rtb_TmpSignalConversionAtSFun_2;
   }
 
   /* 'UREstimators:68' state.FMax = FMax; */
   /* 'UREstimators:69' state.FMin = FMin; */
-  URControl_DW.State.FMax[0] = rtb_TmpSignalConversionAtSFun_h[0];
+  URControl_DW.State.FMax[0] = qconj[0];
   URControl_DW.State.FMin[0] = FMin[0];
-  URControl_DW.State.FMax[1] = rtb_TmpSignalConversionAtSFun_h[1];
+  URControl_DW.State.FMax[1] = qconj[1];
   URControl_DW.State.FMin[1] = FMin[1];
-  URControl_DW.State.FMax[2] = rtb_TmpSignalConversionAtSFun_h[2];
+  URControl_DW.State.FMax[2] = qconj[2];
   URControl_DW.State.FMin[2] = FMin[2];
-  URControl_DW.State.FMax[3] = rtb_TmpSignalConversionAtSFun_h[3];
+  URControl_DW.State.FMax[3] = qconj[3];
   URControl_DW.State.FMin[3] = FMin[3];
 
   /* 'UREstimators:71' state.fail_id = fail_id; */
@@ -4446,295 +5660,649 @@ void URControlModelClass::step()
 
   /* 'UREstimators:74' [uvDot_max, uvDot_min, uv_max, uv_min] = UREnvelopCalc(state, URpar); */
   /* 'UREnvelopCalc:3' s = sqrt(URpar.l^2 + URpar.b^2); */
-  w_min_idx_1 = std::sqrt(URControlParams.l * URControlParams.l +
-    URControlParams.b * URControlParams.b);
+  rtb_TmpSignalConversionAtSFun_3 = std::sqrt(URControlParams.l *
+    URControlParams.l + URControlParams.b * URControlParams.b);
 
   /* 'UREnvelopCalc:4' r = state.omega(3); */
   /* 'UREnvelopCalc:7' Mu_max = (-state.FMin(2) + state.FMax(4))*s; */
+  errorVel_idx_1 = (-FMin[1] + qconj[3]) * rtb_TmpSignalConversionAtSFun_3;
+
   /* 'UREnvelopCalc:8' Mu_min = (-state.FMax(2) + state.FMin(4))*s; */
+  errorVel_idx_2 = (-qconj[1] + FMin[3]) * rtb_TmpSignalConversionAtSFun_3;
+
   /* 'UREnvelopCalc:9' Mv_max = (state.FMax(1) - state.FMin(3))*s; */
+  Mv_max = (qconj[0] - FMin[2]) * rtb_TmpSignalConversionAtSFun_3;
+
   /* 'UREnvelopCalc:10' Mv_min = (state.FMin(1) - state.FMax(3))*s; */
+  rtb_TmpSignalConversionAtSFun_1 = (FMin[0] - qconj[2]) *
+    rtb_TmpSignalConversionAtSFun_3;
+
   /* 'UREnvelopCalc:13' Iu = sqrt(URpar.Ix^2 + URpar.Iy^2); */
-  rtb_enableMeas = std::sqrt(URControlParams.Ix * URControlParams.Ix +
-    URControlParams.Iy * URControlParams.Iy);
+  Iu_tmp = std::sqrt(URControlParams.Ix * URControlParams.Ix +
+                     URControlParams.Iy * URControlParams.Iy);
 
   /* 'UREnvelopCalc:14' Iv = sqrt(URpar.Ix^2 + URpar.Iy^2); */
   /* 'UREnvelopCalc:17' MuPrec = state.omegafUV(2)*r*(Iv - URpar.Iz); */
-  errorSum = URControl_DW.State.omegafUV[1] * URControl_DW.State.omega[2] *
-    (rtb_enableMeas - URControlParams.Iz);
+  rtb_TmpSignalConversionAtSFun_4 = URControl_DW.State.omegafUV[1] *
+    URControl_DW.State.omega[2] * (Iu_tmp - URControlParams.Iz);
 
   /* 'UREnvelopCalc:18' MvPrec = state.omegafUV(1)*r*(URpar.Iz - Iu); */
-  rtb_Product1 = URControl_DW.State.omegafUV[0] * URControl_DW.State.omega[2] *
-    (URControlParams.Iz - rtb_enableMeas);
+  rtb_Product2_tmp = URControlParams.Iz - Iu_tmp;
+  rtb_DataTypeConversion8_idx_0 = URControl_DW.State.omegafUV[0] *
+    URControl_DW.State.omega[2] * rtb_Product2_tmp;
 
   /* 'UREnvelopCalc:21' uDot_max = (MuPrec + Mu_max)/Iu; */
-  rtb_Product2 = ((-FMin[1] + rtb_TmpSignalConversionAtSFun_h[3]) * w_min_idx_1
-                  + errorSum) / rtb_enableMeas;
+  rtb_enableMeas = (rtb_TmpSignalConversionAtSFun_4 + errorVel_idx_1) / Iu_tmp;
 
   /* 'UREnvelopCalc:22' uDot_min = (MuPrec + Mu_min)/Iu; */
-  errorSum = ((-rtb_TmpSignalConversionAtSFun_h[1] + FMin[3]) * w_min_idx_1 +
-              errorSum) / rtb_enableMeas;
+  rtb_TmpSignalConversionAtSFun_4 = (rtb_TmpSignalConversionAtSFun_4 +
+    errorVel_idx_2) / Iu_tmp;
 
   /* 'UREnvelopCalc:24' vDot_max = (MvPrec + Mv_max)/Iv; */
-  Iu = ((rtb_TmpSignalConversionAtSFun_h[0] - FMin[2]) * w_min_idx_1 +
-        rtb_Product1) / rtb_enableMeas;
+  rtb_TmpSignalConversionAtSFun_2 = (rtb_DataTypeConversion8_idx_0 + Mv_max) /
+    Iu_tmp;
 
   /* 'UREnvelopCalc:25' vDot_min = (MvPrec + Mv_min)/Iv; */
-  rtb_enableMeas = ((FMin[0] - rtb_TmpSignalConversionAtSFun_h[2]) * w_min_idx_1
-                    + rtb_Product1) / rtb_enableMeas;
+  rtb_DataTypeConversion8_idx_0 = (rtb_DataTypeConversion8_idx_0 +
+    rtb_TmpSignalConversionAtSFun_1) / Iu_tmp;
 
   /* 'UREnvelopCalc:28' dt = URpar.envp_timeHorz; */
-  /* 'UREnvelopCalc:30' u_max = state.omegafUV(1) + max(uDot_max,URpar.envp_minDeviation)*dt; */
-  /* 'UREnvelopCalc:31' u_min = state.omegafUV(1) + min(uDot_min,-URpar.envp_minDeviation)*dt; */
-  /* 'UREnvelopCalc:33' v_max = state.omegafUV(2) + max(vDot_max,URpar.envp_minDeviation)*dt; */
-  /* 'UREnvelopCalc:34' v_min = state.omegafUV(2) + min(vDot_min,-URpar.envp_minDeviation)*dt; */
-  /* 'UREnvelopCalc:37' uvDot_max = [uDot_max; vDot_max]; */
-  /* 'UREnvelopCalc:38' uvDot_min = [uDot_min; vDot_min]; */
-  /* 'UREnvelopCalc:39' uv_min = [u_min; v_min]; */
-  /* 'UREnvelopCalc:40' uv_max = [u_max; v_max]; */
+  /* 'UREnvelopCalc:30' if URpar.envp_mode == 1 */
+  if (URControlParams.envp_mode == 1.0) {
+    /* 'UREnvelopCalc:33' u_max = state.omegafUV(1) + max(uDot_max,URpar.envp_minDeviation)*dt; */
+    if ((rtb_enableMeas > URControlParams.envp_minDeviation) || rtIsNaN
+        (URControlParams.envp_minDeviation)) {
+      rtb_TmpSignalConversionAtSFun_1 = rtb_enableMeas;
+    } else {
+      rtb_TmpSignalConversionAtSFun_1 = URControlParams.envp_minDeviation;
+    }
+
+    errorVel_idx_0 = rtb_TmpSignalConversionAtSFun_1 *
+      URControlParams.envp_timeHorz + URControl_DW.State.omegafUV[0];
+
+    /* 'UREnvelopCalc:34' u_min = state.omegafUV(1) + min(uDot_min,-URpar.envp_minDeviation)*dt; */
+    if ((rtb_TmpSignalConversionAtSFun_4 < -URControlParams.envp_minDeviation) ||
+        rtIsNaN(-URControlParams.envp_minDeviation)) {
+      rtb_yawTarget = rtb_TmpSignalConversionAtSFun_4;
+    } else {
+      rtb_yawTarget = -URControlParams.envp_minDeviation;
+    }
+
+    rtb_TmpSignalConversionAtSFun_1 = rtb_yawTarget *
+      URControlParams.envp_timeHorz + URControl_DW.State.omegafUV[0];
+
+    /* 'UREnvelopCalc:36' v_max = state.omegafUV(2) + max(vDot_max,URpar.envp_minDeviation)*dt; */
+    if ((rtb_TmpSignalConversionAtSFun_2 > URControlParams.envp_minDeviation) ||
+        rtIsNaN(URControlParams.envp_minDeviation)) {
+      tmp_3 = rtb_TmpSignalConversionAtSFun_2;
+    } else {
+      tmp_3 = URControlParams.envp_minDeviation;
+    }
+
+    rtb_DataTypeConversion8_idx_1 = tmp_3 * URControlParams.envp_timeHorz +
+      URControl_DW.State.omegafUV[1];
+
+    /* 'UREnvelopCalc:37' v_min = state.omegafUV(2) + min(vDot_min,-URpar.envp_minDeviation)*dt; */
+    if ((rtb_DataTypeConversion8_idx_0 < -URControlParams.envp_minDeviation) ||
+        rtIsNaN(-URControlParams.envp_minDeviation)) {
+      tmp_3 = rtb_DataTypeConversion8_idx_0;
+    } else {
+      tmp_3 = -URControlParams.envp_minDeviation;
+    }
+
+    rtb_yawTarget = tmp_3 * URControlParams.envp_timeHorz +
+      URControl_DW.State.omegafUV[1];
+  } else if (URControlParams.envp_mode == 2.0) {
+    /* 'UREnvelopCalc:39' elseif URpar.envp_mode == 2 */
+    /* 'UREnvelopCalc:42' uDot2_max = max(uDot_max,URpar.envp_minDeviation); */
+    if ((rtb_enableMeas > URControlParams.envp_minDeviation) || rtIsNaN
+        (URControlParams.envp_minDeviation)) {
+      rtb_DataTypeConversion8_idx_1 = rtb_enableMeas;
+    } else {
+      rtb_DataTypeConversion8_idx_1 = URControlParams.envp_minDeviation;
+    }
+
+    /* 'UREnvelopCalc:43' uDot2_min = min(uDot_min,-URpar.envp_minDeviation); */
+    if ((rtb_TmpSignalConversionAtSFun_4 < -URControlParams.envp_minDeviation) ||
+        rtIsNaN(-URControlParams.envp_minDeviation)) {
+      uDot2_min = rtb_TmpSignalConversionAtSFun_4;
+    } else {
+      uDot2_min = -URControlParams.envp_minDeviation;
+    }
+
+    /* 'UREnvelopCalc:45' u_max = max(state.omegafUV(1) + min(uDot2_max, -uDot2_min)*dt,0); */
+    if ((rtb_DataTypeConversion8_idx_1 < -uDot2_min) || rtIsNaN(-uDot2_min)) {
+      errorVel_idx_0 = rtb_DataTypeConversion8_idx_1;
+    } else {
+      errorVel_idx_0 = -uDot2_min;
+    }
+
+    errorVel_idx_0 = errorVel_idx_0 * URControlParams.envp_timeHorz +
+      URControl_DW.State.omegafUV[0];
+    if (!(errorVel_idx_0 > 0.0)) {
+      errorVel_idx_0 = 0.0;
+    }
+
+    /* 'UREnvelopCalc:46' u_min = min(state.omegafUV(1) + max(uDot2_min, -uDot2_max)*dt,0); */
+    if ((!(uDot2_min > -rtb_DataTypeConversion8_idx_1)) && (!rtIsNaN
+         (-rtb_DataTypeConversion8_idx_1))) {
+      uDot2_min = -rtb_DataTypeConversion8_idx_1;
+    }
+
+    rtb_TmpSignalConversionAtSFun_1 = uDot2_min * URControlParams.envp_timeHorz
+      + URControl_DW.State.omegafUV[0];
+    if (!(rtb_TmpSignalConversionAtSFun_1 < 0.0)) {
+      rtb_TmpSignalConversionAtSFun_1 = 0.0;
+    }
+
+    /* 'UREnvelopCalc:48' vDot2_max = max(vDot_max,URpar.envp_minDeviation); */
+    if ((rtb_TmpSignalConversionAtSFun_2 > URControlParams.envp_minDeviation) ||
+        rtIsNaN(URControlParams.envp_minDeviation)) {
+      rtb_yawTarget = rtb_TmpSignalConversionAtSFun_2;
+    } else {
+      rtb_yawTarget = URControlParams.envp_minDeviation;
+    }
+
+    /* 'UREnvelopCalc:49' vDot2_min = min(vDot_min,-URpar.envp_minDeviation); */
+    if ((rtb_DataTypeConversion8_idx_0 < -URControlParams.envp_minDeviation) ||
+        rtIsNaN(-URControlParams.envp_minDeviation)) {
+      vDot2_min = rtb_DataTypeConversion8_idx_0;
+    } else {
+      vDot2_min = -URControlParams.envp_minDeviation;
+    }
+
+    /* 'UREnvelopCalc:51' v_max = max(state.omegafUV(2) + min(vDot2_max, -vDot2_min)*dt,0); */
+    if ((rtb_yawTarget < -vDot2_min) || rtIsNaN(-vDot2_min)) {
+      tmp_3 = rtb_yawTarget;
+    } else {
+      tmp_3 = -vDot2_min;
+    }
+
+    rtb_DataTypeConversion8_idx_1 = tmp_3 * URControlParams.envp_timeHorz +
+      URControl_DW.State.omegafUV[1];
+    if (!(rtb_DataTypeConversion8_idx_1 > 0.0)) {
+      rtb_DataTypeConversion8_idx_1 = 0.0;
+    }
+
+    /* 'UREnvelopCalc:52' v_min = min(state.omegafUV(2) + max(vDot2_min, -vDot2_max)*dt,0); */
+    if ((!(vDot2_min > -rtb_yawTarget)) && (!rtIsNaN(-rtb_yawTarget))) {
+      vDot2_min = -rtb_yawTarget;
+    }
+
+    rtb_yawTarget = vDot2_min * URControlParams.envp_timeHorz +
+      URControl_DW.State.omegafUV[1];
+    if (!(rtb_yawTarget < 0.0)) {
+      rtb_yawTarget = 0.0;
+    }
+  } else if (URControlParams.envp_mode == 3.0) {
+    /* 'UREnvelopCalc:54' elseif URpar.envp_mode == 3 */
+    /* 'UREnvelopCalc:57' uDot2_max = max(uDot_max,URpar.envp_minDeviation); */
+    tmp_4 = rtIsNaN(URControlParams.envp_minDeviation);
+    if ((rtb_enableMeas > URControlParams.envp_minDeviation) || tmp_4) {
+      rtb_DataTypeConversion8_idx_1 = rtb_enableMeas;
+    } else {
+      rtb_DataTypeConversion8_idx_1 = URControlParams.envp_minDeviation;
+    }
+
+    /* 'UREnvelopCalc:58' uDot2_min = min(uDot_min,-URpar.envp_minDeviation); */
+    tmp_5 = rtIsNaN(-URControlParams.envp_minDeviation);
+    if ((rtb_TmpSignalConversionAtSFun_4 < -URControlParams.envp_minDeviation) ||
+        tmp_5) {
+      uDot2_min = rtb_TmpSignalConversionAtSFun_4;
+    } else {
+      uDot2_min = -URControlParams.envp_minDeviation;
+    }
+
+    /* 'UREnvelopCalc:60' u_max = max(state.omegafUV(1) + min(uDot2_max, -uDot2_min)*dt,0); */
+    /* 'UREnvelopCalc:61' u_min = min(state.omegafUV(1) + max(uDot2_min, -uDot2_max)*dt,0); */
+    /* 'UREnvelopCalc:63' vDot2_max = max(vDot_max,URpar.envp_minDeviation); */
+    if ((rtb_TmpSignalConversionAtSFun_2 > URControlParams.envp_minDeviation) ||
+        tmp_4) {
+      rtb_yawTarget = rtb_TmpSignalConversionAtSFun_2;
+    } else {
+      rtb_yawTarget = URControlParams.envp_minDeviation;
+    }
+
+    /* 'UREnvelopCalc:64' vDot2_min = min(vDot_min,-URpar.envp_minDeviation); */
+    if ((rtb_DataTypeConversion8_idx_0 < -URControlParams.envp_minDeviation) ||
+        tmp_5) {
+      vDot2_min = rtb_DataTypeConversion8_idx_0;
+    } else {
+      vDot2_min = -URControlParams.envp_minDeviation;
+    }
+
+    /* 'UREnvelopCalc:66' v_max = max(state.omegafUV(2) + min(vDot2_max, -vDot2_min)*dt,0); */
+    /* 'UREnvelopCalc:67' v_min = min(state.omegafUV(2) + max(vDot2_min, -vDot2_max)*dt,0); */
+    /* 'UREnvelopCalc:70' if abs(r) < 1e-3 */
+    u0 = std::abs(URControl_DW.State.omega[2]);
+    if (u0 < 0.001) {
+      /* 'UREnvelopCalc:71' rTemp = URpar.attitude_yawThreshold; */
+      errorVel_idx_0 = URControlParams.attitude_yawThreshold;
+    } else {
+      /* 'UREnvelopCalc:72' else */
+      /* 'UREnvelopCalc:73' rTemp = sign(r)*max(abs(r), URpar.attitude_yawThreshold); */
+      if (URControl_DW.State.omega[2] < 0.0) {
+        tmp_3 = -1.0;
+      } else if (URControl_DW.State.omega[2] > 0.0) {
+        tmp_3 = 1.0;
+      } else if (URControl_DW.State.omega[2] == 0.0) {
+        tmp_3 = 0.0;
+      } else {
+        tmp_3 = (rtNaN);
+      }
+
+      if ((!(u0 > URControlParams.attitude_yawThreshold)) && (!rtIsNaN
+           (URControlParams.attitude_yawThreshold))) {
+        u0 = URControlParams.attitude_yawThreshold;
+      }
+
+      errorVel_idx_0 = tmp_3 * u0;
+    }
+
+    /* 'UREnvelopCalc:76' u_prec_lim1 = -max(Mv_max,0)/(rTemp*(URpar.Iz - Iu)); */
+    if (!(Mv_max > 0.0)) {
+      Mv_max = 0.0;
+    }
+
+    tmp_3 = rtb_Product2_tmp * errorVel_idx_0;
+    Mv_max = -Mv_max / tmp_3;
+
+    /* 'UREnvelopCalc:77' u_prec_lim2 = -min(Mv_min,0)/(rTemp*(URpar.Iz - Iu)); */
+    if (!(rtb_TmpSignalConversionAtSFun_1 < 0.0)) {
+      rtb_TmpSignalConversionAtSFun_1 = 0.0;
+    }
+
+    rtb_TmpSignalConversionAtSFun_1 = -rtb_TmpSignalConversionAtSFun_1 / tmp_3;
+
+    /* 'UREnvelopCalc:79' v_prec_lim1 = -max(Mu_max,0)/(rTemp*(Iv - URpar.Iz)); */
+    if (!(errorVel_idx_1 > 0.0)) {
+      errorVel_idx_1 = 0.0;
+    }
+
+    errorVel_idx_0 *= Iu_tmp - URControlParams.Iz;
+    errorVel_idx_1 = -errorVel_idx_1 / errorVel_idx_0;
+
+    /* 'UREnvelopCalc:80' v_prec_lim2 = -min(Mu_min,0)/(rTemp*(Iv - URpar.Iz)); */
+    if (!(errorVel_idx_2 < 0.0)) {
+      errorVel_idx_2 = 0.0;
+    }
+
+    errorVel_idx_2 = -errorVel_idx_2 / errorVel_idx_0;
+
+    /* 'UREnvelopCalc:82' u_max = min(u_max, max(u_prec_lim1, u_prec_lim2)); */
+    if ((rtb_DataTypeConversion8_idx_1 < -uDot2_min) || rtIsNaN(-uDot2_min)) {
+      errorVel_idx_0 = rtb_DataTypeConversion8_idx_1;
+    } else {
+      errorVel_idx_0 = -uDot2_min;
+    }
+
+    u0 = errorVel_idx_0 * URControlParams.envp_timeHorz +
+      URControl_DW.State.omegafUV[0];
+    if (!(u0 > 0.0)) {
+      u0 = 0.0;
+    }
+
+    tmp_4 = rtIsNaN(rtb_TmpSignalConversionAtSFun_1);
+    if ((Mv_max > rtb_TmpSignalConversionAtSFun_1) || tmp_4) {
+      errorVel_idx_0 = Mv_max;
+    } else {
+      errorVel_idx_0 = rtb_TmpSignalConversionAtSFun_1;
+    }
+
+    if ((u0 < errorVel_idx_0) || rtIsNaN(errorVel_idx_0)) {
+      errorVel_idx_0 = u0;
+    }
+
+    /* 'UREnvelopCalc:83' u_min = max(u_min, min(u_prec_lim1, u_prec_lim2)); */
+    if ((!(uDot2_min > -rtb_DataTypeConversion8_idx_1)) && (!rtIsNaN
+         (-rtb_DataTypeConversion8_idx_1))) {
+      uDot2_min = -rtb_DataTypeConversion8_idx_1;
+    }
+
+    u0 = uDot2_min * URControlParams.envp_timeHorz +
+      URControl_DW.State.omegafUV[0];
+    if (!(u0 < 0.0)) {
+      u0 = 0.0;
+    }
+
+    if ((Mv_max < rtb_TmpSignalConversionAtSFun_1) || tmp_4) {
+      rtb_TmpSignalConversionAtSFun_1 = Mv_max;
+    }
+
+    if ((u0 > rtb_TmpSignalConversionAtSFun_1) || rtIsNaN
+        (rtb_TmpSignalConversionAtSFun_1)) {
+      rtb_TmpSignalConversionAtSFun_1 = u0;
+    }
+
+    /* 'UREnvelopCalc:85' v_max = min(v_max, max(v_prec_lim1, v_prec_lim2)); */
+    if ((rtb_yawTarget < -vDot2_min) || rtIsNaN(-vDot2_min)) {
+      tmp_3 = rtb_yawTarget;
+    } else {
+      tmp_3 = -vDot2_min;
+    }
+
+    u0 = tmp_3 * URControlParams.envp_timeHorz + URControl_DW.State.omegafUV[1];
+    if (!(u0 > 0.0)) {
+      u0 = 0.0;
+    }
+
+    tmp_4 = rtIsNaN(errorVel_idx_2);
+    if ((errorVel_idx_1 > errorVel_idx_2) || tmp_4) {
+      rtb_DataTypeConversion8_idx_1 = errorVel_idx_1;
+    } else {
+      rtb_DataTypeConversion8_idx_1 = errorVel_idx_2;
+    }
+
+    if ((u0 < rtb_DataTypeConversion8_idx_1) || rtIsNaN
+        (rtb_DataTypeConversion8_idx_1)) {
+      rtb_DataTypeConversion8_idx_1 = u0;
+    }
+
+    /* 'UREnvelopCalc:86' v_min = max(v_min, min(v_prec_lim1, v_prec_lim2)); */
+    if ((!(vDot2_min > -rtb_yawTarget)) && (!rtIsNaN(-rtb_yawTarget))) {
+      vDot2_min = -rtb_yawTarget;
+    }
+
+    rtb_yawTarget = vDot2_min * URControlParams.envp_timeHorz +
+      URControl_DW.State.omegafUV[1];
+    if (!(rtb_yawTarget < 0.0)) {
+      rtb_yawTarget = 0.0;
+    }
+
+    if ((errorVel_idx_1 < errorVel_idx_2) || tmp_4) {
+      errorVel_idx_2 = errorVel_idx_1;
+    }
+
+    if ((!(rtb_yawTarget > errorVel_idx_2)) && (!rtIsNaN(errorVel_idx_2))) {
+      rtb_yawTarget = errorVel_idx_2;
+    }
+  } else {
+    /* 'UREnvelopCalc:88' else */
+    /* 'UREnvelopCalc:89' u_max = 0; */
+    errorVel_idx_0 = 0.0;
+
+    /* 'UREnvelopCalc:89' u_min = 0; */
+    rtb_TmpSignalConversionAtSFun_1 = 0.0;
+
+    /* 'UREnvelopCalc:89' v_max = 0; */
+    rtb_DataTypeConversion8_idx_1 = 0.0;
+
+    /* 'UREnvelopCalc:89' v_min = 0; */
+    rtb_yawTarget = 0.0;
+  }
+
+  /* 'UREnvelopCalc:93' uvDot_max = [uDot_max; vDot_max]; */
+  /* 'UREnvelopCalc:94' uvDot_min = [uDot_min; vDot_min]; */
+  /* 'UREnvelopCalc:95' uv_min = [u_min; v_min]; */
+  /* 'UREnvelopCalc:96' uv_max = [u_max; v_max]; */
   /* 'UREstimators:75' state.uvDot_max = uvDot_max; */
-  URControl_DW.State.uvDot_max[0] = rtb_Product2;
-  URControl_DW.State.uvDot_max[1] = Iu;
+  URControl_DW.State.uvDot_max[0] = rtb_enableMeas;
+  URControl_DW.State.uvDot_max[1] = rtb_TmpSignalConversionAtSFun_2;
 
   /* 'UREstimators:76' state.uvDot_min = uvDot_min; */
-  URControl_DW.State.uvDot_min[0] = errorSum;
-  URControl_DW.State.uvDot_min[1] = rtb_enableMeas;
+  URControl_DW.State.uvDot_min[0] = rtb_TmpSignalConversionAtSFun_4;
+  URControl_DW.State.uvDot_min[1] = rtb_DataTypeConversion8_idx_0;
 
   /* 'UREstimators:77' state.uv_max = uv_max; */
-  rEQ0 = rtIsNaN(URControlParams.envp_minDeviation);
-  if ((rtb_Product2 > URControlParams.envp_minDeviation) || rEQ0) {
-    rtb_Product1 = rtb_Product2;
-  } else {
-    rtb_Product1 = URControlParams.envp_minDeviation;
-  }
-
-  URControl_DW.State.uv_max[0] = rtb_Product1 * URControlParams.envp_timeHorz +
-    URControl_DW.State.omegafUV[0];
-  if ((Iu > URControlParams.envp_minDeviation) || rEQ0) {
-    rtb_Product1 = Iu;
-  } else {
-    rtb_Product1 = URControlParams.envp_minDeviation;
-  }
-
-  URControl_DW.State.uv_max[1] = rtb_Product1 * URControlParams.envp_timeHorz +
-    URControl_DW.State.omegafUV[1];
+  URControl_DW.State.uv_max[0] = errorVel_idx_0;
+  URControl_DW.State.uv_max[1] = rtb_DataTypeConversion8_idx_1;
 
   /* 'UREstimators:78' state.uv_min = uv_min; */
-  tmp_1 = rtIsNaN(-URControlParams.envp_minDeviation);
-  if ((errorSum < -URControlParams.envp_minDeviation) || tmp_1) {
-    rtb_Product1 = errorSum;
-  } else {
-    rtb_Product1 = -URControlParams.envp_minDeviation;
-  }
+  URControl_DW.State.uv_min[0] = rtb_TmpSignalConversionAtSFun_1;
+  URControl_DW.State.uv_min[1] = rtb_yawTarget;
 
-  URControl_DW.State.uv_min[0] = rtb_Product1 * URControlParams.envp_timeHorz +
-    URControl_DW.State.omegafUV[0];
-  if ((rtb_enableMeas < -URControlParams.envp_minDeviation) || tmp_1) {
-    rtb_Product1 = rtb_enableMeas;
-  } else {
-    rtb_Product1 = -URControlParams.envp_minDeviation;
-  }
-
-  URControl_DW.State.uv_min[1] = rtb_Product1 * URControlParams.envp_timeHorz +
-    URControl_DW.State.omegafUV[1];
-
-  /* 'UREstimators:81' daq.omegaUV = state.omegaUV; */
-  /* 'UREstimators:82' daq.omegafUV = state.omegafUV; */
+  /* 'UREstimators:81' daq.pos = state.pos; */
+  /* 'UREstimators:82' daq.vel = state.vel; */
+  /* 'UREstimators:83' daq.acc = state.att; */
+  /* 'UREstimators:84' daq.n = state.n; */
+  /* 'UREstimators:86' daq.omegaUV = state.omegaUV; */
+  /* 'UREstimators:87' daq.omegafUV = state.omegafUV; */
+  URControl_DW.DAQ.pos[0] = URControl_DW.State.pos[0];
+  URControl_DW.DAQ.vel[0] = URControl_DW.State.vel[0];
+  URControl_DW.DAQ.acc[0] = URControl_DW.State.att[0];
+  URControl_DW.DAQ.n[0] = URControl_DW.State.n[0];
   URControl_DW.DAQ.omegaUV[0] = URControl_DW.State.omegaUV[0];
   URControl_DW.DAQ.omegafUV[0] = URControl_DW.State.omegafUV[0];
+  URControl_DW.DAQ.pos[1] = URControl_DW.State.pos[1];
+  URControl_DW.DAQ.vel[1] = URControl_DW.State.vel[1];
+  URControl_DW.DAQ.acc[1] = URControl_DW.State.att[1];
+  URControl_DW.DAQ.n[1] = URControl_DW.State.n[1];
   URControl_DW.DAQ.omegaUV[1] = URControl_DW.State.omegaUV[1];
   URControl_DW.DAQ.omegafUV[1] = URControl_DW.State.omegafUV[1];
+  URControl_DW.DAQ.pos[2] = URControl_DW.State.pos[2];
+  URControl_DW.DAQ.vel[2] = URControl_DW.State.vel[2];
+  URControl_DW.DAQ.acc[2] = URControl_DW.State.att[2];
+  URControl_DW.DAQ.n[2] = URControl_DW.State.n[2];
   URControl_DW.DAQ.omegaUV[2] = URControl_DW.State.omegaUV[2];
   URControl_DW.DAQ.omegafUV[2] = URControl_DW.State.omegafUV[2];
 
-  /* 'UREstimators:83' daq.FMax = state.FMax; */
-  /* 'UREstimators:84' daq.FMin = state.FMin; */
-  URControl_DW.DAQ.FMax[0] = rtb_TmpSignalConversionAtSFun_h[0];
+  /* 'UREstimators:88' daq.FMax = state.FMax; */
+  /* 'UREstimators:89' daq.FMin = state.FMin; */
+  URControl_DW.DAQ.FMax[0] = qconj[0];
   URControl_DW.DAQ.FMin[0] = FMin[0];
-  URControl_DW.DAQ.FMax[1] = rtb_TmpSignalConversionAtSFun_h[1];
+  URControl_DW.DAQ.FMax[1] = qconj[1];
   URControl_DW.DAQ.FMin[1] = FMin[1];
-  URControl_DW.DAQ.FMax[2] = rtb_TmpSignalConversionAtSFun_h[2];
+  URControl_DW.DAQ.FMax[2] = qconj[2];
   URControl_DW.DAQ.FMin[2] = FMin[2];
-  URControl_DW.DAQ.FMax[3] = rtb_TmpSignalConversionAtSFun_h[3];
+  URControl_DW.DAQ.FMax[3] = qconj[3];
   URControl_DW.DAQ.FMin[3] = FMin[3];
 
-  /* 'UREstimators:85' daq.uvDot_max = state.uvDot_max; */
-  URControl_DW.DAQ.uvDot_max[0] = rtb_Product2;
-  URControl_DW.DAQ.uvDot_max[1] = Iu;
+  /* 'UREstimators:90' daq.uvDot_max = state.uvDot_max; */
+  URControl_DW.DAQ.uvDot_max[0] = rtb_enableMeas;
+  URControl_DW.DAQ.uvDot_max[1] = rtb_TmpSignalConversionAtSFun_2;
 
-  /* 'UREstimators:86' daq.uvDot_min = state.uvDot_min; */
-  URControl_DW.DAQ.uvDot_min[0] = errorSum;
-  URControl_DW.DAQ.uvDot_min[1] = rtb_enableMeas;
+  /* 'UREstimators:91' daq.uvDot_min = state.uvDot_min; */
+  URControl_DW.DAQ.uvDot_min[0] = rtb_TmpSignalConversionAtSFun_4;
+  URControl_DW.DAQ.uvDot_min[1] = rtb_DataTypeConversion8_idx_0;
 
-  /* 'UREstimators:87' daq.uv_max = state.uv_max; */
-  if ((!(rtb_Product2 > URControlParams.envp_minDeviation)) && (!rEQ0)) {
-    rtb_Product2 = URControlParams.envp_minDeviation;
-  }
+  /* 'UREstimators:92' daq.uv_max = state.uv_max; */
+  URControl_DW.DAQ.uv_max[0] = errorVel_idx_0;
+  URControl_DW.DAQ.uv_max[1] = rtb_DataTypeConversion8_idx_1;
 
-  URControl_DW.DAQ.uv_max[0] = rtb_Product2 * URControlParams.envp_timeHorz +
-    URControl_DW.State.omegafUV[0];
-  if ((!(Iu > URControlParams.envp_minDeviation)) && (!rEQ0)) {
-    Iu = URControlParams.envp_minDeviation;
-  }
-
-  URControl_DW.DAQ.uv_max[1] = Iu * URControlParams.envp_timeHorz +
-    URControl_DW.State.omegafUV[1];
-
-  /* 'UREstimators:88' daq.uv_min = state.uv_min; */
-  if ((!(errorSum < -URControlParams.envp_minDeviation)) && (!tmp_1)) {
-    errorSum = -URControlParams.envp_minDeviation;
-  }
-
-  URControl_DW.DAQ.uv_min[0] = errorSum * URControlParams.envp_timeHorz +
-    URControl_DW.State.omegafUV[0];
-  if ((!(rtb_enableMeas < -URControlParams.envp_minDeviation)) && (!tmp_1)) {
-    rtb_enableMeas = -URControlParams.envp_minDeviation;
-  }
-
-  URControl_DW.DAQ.uv_min[1] = rtb_enableMeas * URControlParams.envp_timeHorz +
-    URControl_DW.State.omegafUV[1];
+  /* 'UREstimators:93' daq.uv_min = state.uv_min; */
+  URControl_DW.DAQ.uv_min[0] = rtb_TmpSignalConversionAtSFun_1;
+  URControl_DW.DAQ.uv_min[1] = rtb_yawTarget;
 
   /* MATLAB Function: '<S3>/Precession' incorporates:
    *  MATLAB Function: '<S5>/basic estimators'
    */
   /* :  stateOut = State; */
-  /* :  [uv_prec, DAQ] = URGenPrecession(state, DAQ, par, URControlParams); */
+  /* :  [uv_prec, precAngle, DAQ] = URGenPrecession(state, DAQ, par, URControlParams); */
   /* 'URGenPrecession:3' s = sqrt(URpar.l^2 + URpar.b^2); */
   /* 'URGenPrecession:4' r = state.omegaf(3); */
   /* 'URGenPrecession:7' Mu_max = (-state.FMin(2) + state.FMax(4))*s; */
-  errorSum = (-URControl_DW.State.FMin[1] + URControl_DW.State.FMax[3]) *
-    w_min_idx_1;
+  errorVel_idx_1 = (-URControl_DW.State.FMin[1] + URControl_DW.State.FMax[3]) *
+    rtb_TmpSignalConversionAtSFun_3;
 
   /* 'URGenPrecession:8' Mu_min = (-state.FMax(2) + state.FMin(4))*s; */
-  rtb_Product2 = (-URControl_DW.State.FMax[1] + URControl_DW.State.FMin[3]) *
-    w_min_idx_1;
+  errorVel_idx_2 = (-URControl_DW.State.FMax[1] + URControl_DW.State.FMin[3]) *
+    rtb_TmpSignalConversionAtSFun_3;
 
   /* 'URGenPrecession:9' Mv_max = (state.FMax(1) - state.FMin(3))*s; */
-  rtb_Product1 = (URControl_DW.State.FMax[0] - URControl_DW.State.FMin[2]) *
-    w_min_idx_1;
+  Mv_max = (URControl_DW.State.FMax[0] - URControl_DW.State.FMin[2]) *
+    rtb_TmpSignalConversionAtSFun_3;
 
   /* 'URGenPrecession:10' Mv_min = (state.FMin(1) - state.FMax(3))*s; */
-  rtb_enableMeas = (URControl_DW.State.FMin[0] - URControl_DW.State.FMax[2]) *
-    w_min_idx_1;
+  rtb_TmpSignalConversionAtSFun_1 = (URControl_DW.State.FMin[0] -
+    URControl_DW.State.FMax[2]) * rtb_TmpSignalConversionAtSFun_3;
 
   /* 'URGenPrecession:12' MMargin = URpar.attitude_MMargin; */
   /* 'URGenPrecession:15' if Mu_max < MMargin */
-  if (errorSum < URControlParams.attitude_MMargin) {
+  if (errorVel_idx_1 < URControlParams.attitude_MMargin) {
     /* 'URGenPrecession:16' MuPrec = MMargin - Mu_max; */
-    errorSum = URControlParams.attitude_MMargin - errorSum;
-  } else if (rtb_Product2 > -URControlParams.attitude_MMargin) {
+    rtb_TmpSignalConversionAtSFun_4 = URControlParams.attitude_MMargin -
+      errorVel_idx_1;
+  } else if (errorVel_idx_2 > -URControlParams.attitude_MMargin) {
     /* 'URGenPrecession:17' elseif Mu_min > -MMargin */
     /* 'URGenPrecession:18' MuPrec = -MMargin - Mu_min; */
-    errorSum = -URControlParams.attitude_MMargin - rtb_Product2;
+    rtb_TmpSignalConversionAtSFun_4 = -URControlParams.attitude_MMargin -
+      errorVel_idx_2;
   } else {
     /* 'URGenPrecession:19' else */
     /* 'URGenPrecession:20' MuPrec = 0; */
-    errorSum = 0.0;
+    rtb_TmpSignalConversionAtSFun_4 = 0.0;
   }
 
   /* 'URGenPrecession:24' if Mv_max < MMargin */
-  if (rtb_Product1 < URControlParams.attitude_MMargin) {
+  if (Mv_max < URControlParams.attitude_MMargin) {
     /* 'URGenPrecession:25' MvPrec = MMargin - Mv_max; */
-    rtb_Product1 = URControlParams.attitude_MMargin - rtb_Product1;
-  } else if (rtb_enableMeas > -URControlParams.attitude_MMargin) {
+    rtb_DataTypeConversion8_idx_0 = URControlParams.attitude_MMargin - Mv_max;
+  } else if (rtb_TmpSignalConversionAtSFun_1 > -URControlParams.attitude_MMargin)
+  {
     /* 'URGenPrecession:26' elseif Mv_min > -MMargin */
     /* 'URGenPrecession:27' MvPrec = -MMargin - Mv_min; */
-    rtb_Product1 = -URControlParams.attitude_MMargin - rtb_enableMeas;
+    rtb_DataTypeConversion8_idx_0 = -URControlParams.attitude_MMargin -
+      rtb_TmpSignalConversionAtSFun_1;
   } else {
     /* 'URGenPrecession:28' else */
     /* 'URGenPrecession:29' MvPrec = 0; */
-    rtb_Product1 = 0.0;
+    rtb_DataTypeConversion8_idx_0 = 0.0;
   }
 
   /* 'URGenPrecession:32' Iu = sqrt(URpar.Ix^2 + URpar.Iy^2); */
   /* 'URGenPrecession:33' Iv = sqrt(URpar.Ix^2 + URpar.Iy^2); */
   /* 'URGenPrecession:38' if abs(r) < URpar.attitude_yawThreshold */
-  rtb_DataTypeConversion8_idx_0 = std::abs(URControl_DW.State.omegaf[2]);
-  if (rtb_DataTypeConversion8_idx_0 < URControlParams.attitude_yawThreshold) {
+  tmp_3 = std::abs(URControl_DW.State.omegaf[2]);
+  if (tmp_3 < URControlParams.attitude_yawThreshold) {
     /* 'URGenPrecession:39' rTemp = sign(r)*URpar.attitude_yawThreshold; */
     if (URControl_DW.State.omegaf[2] < 0.0) {
-      rtb_Product2 = -1.0;
+      errorVel_idx_1 = -1.0;
     } else if (URControl_DW.State.omegaf[2] > 0.0) {
-      rtb_Product2 = 1.0;
+      errorVel_idx_1 = 1.0;
     } else if (URControl_DW.State.omegaf[2] == 0.0) {
-      rtb_Product2 = 0.0;
+      errorVel_idx_1 = 0.0;
     } else {
-      rtb_Product2 = (rtNaN);
+      errorVel_idx_1 = (rtNaN);
     }
 
-    rtb_Product2 *= URControlParams.attitude_yawThreshold;
+    errorVel_idx_0 = errorVel_idx_1 * URControlParams.attitude_yawThreshold;
 
     /* 'URGenPrecession:40' gain = 1 - (URpar.attitude_yawThreshold - abs(r))/URpar.attitude_yawThreshold; */
     /* 'URGenPrecession:41' gain = max(min(gain,1),0); */
-    rtb_yawTarget = 1.0 - (URControlParams.attitude_yawThreshold -
-      rtb_DataTypeConversion8_idx_0) / URControlParams.attitude_yawThreshold;
-    if (!(rtb_yawTarget < 1.0)) {
-      rtb_yawTarget = 1.0;
+    rtb_TmpSignalConversionAtSFun_2 = 1.0 -
+      (URControlParams.attitude_yawThreshold - tmp_3) /
+      URControlParams.attitude_yawThreshold;
+    if (!(rtb_TmpSignalConversionAtSFun_2 < 1.0)) {
+      rtb_TmpSignalConversionAtSFun_2 = 1.0;
     }
 
-    if (!(rtb_yawTarget > 0.0)) {
-      rtb_yawTarget = 0.0;
+    if (!(rtb_TmpSignalConversionAtSFun_2 > 0.0)) {
+      rtb_TmpSignalConversionAtSFun_2 = 0.0;
     }
 
     /* 'URGenPrecession:42' u_prec = (MvPrec/(rTemp*(URpar.Iz - Iu)))*gain; */
-    rtb_enableMeas = rtb_Product1 / ((URControlParams.Iz - std::sqrt
-      (URControlParams.Ix * URControlParams.Ix + URControlParams.Iy *
-       URControlParams.Iy)) * rtb_Product2) * rtb_yawTarget;
+    rtb_enableMeas = rtb_DataTypeConversion8_idx_0 / ((URControlParams.Iz - std::
+      sqrt(URControlParams.Ix * URControlParams.Ix + URControlParams.Iy *
+           URControlParams.Iy)) * errorVel_idx_0) *
+      rtb_TmpSignalConversionAtSFun_2;
 
     /* 'URGenPrecession:43' v_prec = (MuPrec/(rTemp*(Iv - URpar.Iz)))*gain; */
-    errorSum = errorSum / ((std::sqrt(URControlParams.Ix * URControlParams.Ix +
-      URControlParams.Iy * URControlParams.Iy) - URControlParams.Iz) *
-      rtb_Product2) * rtb_yawTarget;
+    rtb_TmpSignalConversionAtSFun_4 = rtb_TmpSignalConversionAtSFun_4 / ((std::
+      sqrt(URControlParams.Ix * URControlParams.Ix + URControlParams.Iy *
+           URControlParams.Iy) - URControlParams.Iz) * errorVel_idx_0) *
+      rtb_TmpSignalConversionAtSFun_2;
   } else {
     /* 'URGenPrecession:44' else */
     /* 'URGenPrecession:45' u_prec = MvPrec/(r*(URpar.Iz - Iu)); */
-    rtb_enableMeas = rtb_Product1 / ((URControlParams.Iz - std::sqrt
-      (URControlParams.Ix * URControlParams.Ix + URControlParams.Iy *
-       URControlParams.Iy)) * URControl_DW.State.omegaf[2]);
+    rtb_enableMeas = rtb_DataTypeConversion8_idx_0 / ((URControlParams.Iz - std::
+      sqrt(URControlParams.Ix * URControlParams.Ix + URControlParams.Iy *
+           URControlParams.Iy)) * URControl_DW.State.omegaf[2]);
 
     /* 'URGenPrecession:46' v_prec = MuPrec/(r*(Iv - URpar.Iz)); */
-    errorSum /= (std::sqrt(URControlParams.Ix * URControlParams.Ix +
-      URControlParams.Iy * URControlParams.Iy) - URControlParams.Iz) *
-      URControl_DW.State.omegaf[2];
+    rtb_TmpSignalConversionAtSFun_4 /= (std::sqrt(URControlParams.Ix *
+      URControlParams.Ix + URControlParams.Iy * URControlParams.Iy) -
+      URControlParams.Iz) * URControl_DW.State.omegaf[2];
   }
 
   /* 'URGenPrecession:49' u_prec = max(min(u_prec,URpar.attitude_maxPrecSpeed),-URpar.attitude_maxPrecSpeed); */
-  rEQ0 = rtIsNaN(URControlParams.attitude_maxPrecSpeed);
-  if ((!(rtb_enableMeas < URControlParams.attitude_maxPrecSpeed)) && (!rEQ0)) {
+  tmp_4 = rtIsNaN(URControlParams.attitude_maxPrecSpeed);
+  if ((!(rtb_enableMeas < URControlParams.attitude_maxPrecSpeed)) && (!tmp_4)) {
     rtb_enableMeas = URControlParams.attitude_maxPrecSpeed;
   }
 
-  tmp_1 = rtIsNaN(-URControlParams.attitude_maxPrecSpeed);
-  if ((!(rtb_enableMeas > -URControlParams.attitude_maxPrecSpeed)) && (!tmp_1))
+  tmp_5 = rtIsNaN(-URControlParams.attitude_maxPrecSpeed);
+  if ((!(rtb_enableMeas > -URControlParams.attitude_maxPrecSpeed)) && (!tmp_5))
   {
     rtb_enableMeas = -URControlParams.attitude_maxPrecSpeed;
   }
 
   /* 'URGenPrecession:50' v_prec = max(min(v_prec,URpar.attitude_maxPrecSpeed),-URpar.attitude_maxPrecSpeed); */
-  if ((!(errorSum < URControlParams.attitude_maxPrecSpeed)) && (!rEQ0)) {
-    errorSum = URControlParams.attitude_maxPrecSpeed;
+  if ((!(rtb_TmpSignalConversionAtSFun_4 < URControlParams.attitude_maxPrecSpeed))
+      && (!tmp_4)) {
+    rtb_TmpSignalConversionAtSFun_4 = URControlParams.attitude_maxPrecSpeed;
   }
 
-  if ((!(errorSum > -URControlParams.attitude_maxPrecSpeed)) && (!tmp_1)) {
-    errorSum = -URControlParams.attitude_maxPrecSpeed;
+  if ((!(rtb_TmpSignalConversionAtSFun_4 >
+         -URControlParams.attitude_maxPrecSpeed)) && (!tmp_5)) {
+    rtb_TmpSignalConversionAtSFun_4 = -URControlParams.attitude_maxPrecSpeed;
   }
 
-  /* 'URGenPrecession:52' if URpar.attitude_enablePrec == 0 */
-  if (URControlParams.attitude_enablePrec == 0.0) {
-    /* 'URGenPrecession:53' u_prec = 0; */
+  /* 'URGenPrecession:52' u_precAngle = 0; */
+  rtb_TmpSignalConversionAtSFun_2 = 0.0;
+
+  /* 'URGenPrecession:52' v_precAngle = 0; */
+  rtb_DataTypeConversion8_idx_0 = 0.0;
+
+  /* 'URGenPrecession:54' if URpar.attitude_precMode == 2 */
+  if (URControlParams.attitude_precMode == 2.0) {
+    /* 'URGenPrecession:56' u_precAngle = sign(v_prec)*URpar.attitude_precAngle/180*pi; */
+    if (rtb_TmpSignalConversionAtSFun_4 < 0.0) {
+      rtb_yawTarget = -1.0;
+    } else if (rtb_TmpSignalConversionAtSFun_4 > 0.0) {
+      rtb_yawTarget = 1.0;
+    } else if (rtb_TmpSignalConversionAtSFun_4 == 0.0) {
+      rtb_yawTarget = 0.0;
+    } else {
+      rtb_yawTarget = (rtNaN);
+    }
+
+    rtb_TmpSignalConversionAtSFun_2 = rtb_yawTarget *
+      URControlParams.attitude_precAngle / 180.0 * 3.1415926535897931;
+
+    /* 'URGenPrecession:57' v_precAngle = sign(u_prec)*URpar.attitude_precAngle/180*pi; */
+    if (rtb_enableMeas < 0.0) {
+      rtb_TmpSignalConversionAtSFun_1 = -1.0;
+    } else if (rtb_enableMeas > 0.0) {
+      rtb_TmpSignalConversionAtSFun_1 = 1.0;
+    } else if (rtb_enableMeas == 0.0) {
+      rtb_TmpSignalConversionAtSFun_1 = 0.0;
+    } else {
+      rtb_TmpSignalConversionAtSFun_1 = (rtNaN);
+    }
+
+    rtb_DataTypeConversion8_idx_0 = rtb_TmpSignalConversionAtSFun_1 *
+      URControlParams.attitude_precAngle / 180.0 * 3.1415926535897931;
+  }
+
+  /* 'URGenPrecession:60' if URpar.attitude_precMode == 0 */
+  if (URControlParams.attitude_precMode == 0.0) {
+    /* 'URGenPrecession:62' u_prec = 0; */
     rtb_enableMeas = 0.0;
 
-    /* 'URGenPrecession:53' v_prec = 0; */
-    errorSum = 0.0;
+    /* 'URGenPrecession:62' v_prec = 0; */
+    rtb_TmpSignalConversionAtSFun_4 = 0.0;
+
+    /* 'URGenPrecession:63' u_precAngle = 0; */
+    rtb_TmpSignalConversionAtSFun_2 = 0.0;
+
+    /* 'URGenPrecession:63' v_precAngle = 0; */
+    rtb_DataTypeConversion8_idx_0 = 0.0;
   }
 
-  /* 'URGenPrecession:56' uv_prec = [u_prec; v_prec]; */
-  dummy_idx_0 = rtb_enableMeas;
-  rtb_DataTypeConversion8_idx_1 = errorSum;
+  /* 'URGenPrecession:66' uv_prec = [u_prec; v_prec]; */
+  vDot2_min = rtb_enableMeas;
+  Mv_max = rtb_TmpSignalConversionAtSFun_4;
 
-  /* 'URGenPrecession:59' daq.uv_prec = uv_prec; */
+  /* 'URGenPrecession:68' precAngle = [u_precAngle; v_precAngle]; */
+  rtb_DataTypeConversion8_idx_1 = rtb_TmpSignalConversionAtSFun_2;
+  uDot2_min = rtb_DataTypeConversion8_idx_0;
+
+  /* 'URGenPrecession:71' daq.uv_prec = uv_prec; */
+  /* 'URGenPrecession:72' daq.precAngle = precAngle; */
   URControl_DW.DAQ.uv_prec[0] = rtb_enableMeas;
-  URControl_DW.DAQ.uv_prec[1] = errorSum;
+  URControl_DW.DAQ.precAngle[0] = rtb_TmpSignalConversionAtSFun_2;
+  URControl_DW.DAQ.uv_prec[1] = rtb_TmpSignalConversionAtSFun_4;
+  URControl_DW.DAQ.precAngle[1] = rtb_DataTypeConversion8_idx_0;
 
   /* MATLAB Function: '<S3>/yawRateControl' incorporates:
    *  MATLAB Function: '<S5>/basic estimators'
@@ -4743,9 +6311,9 @@ void URControlModelClass::step()
   /* 'URFailureYawRateControl:4' w_max = ones(4,1)*par.wRotorMax; */
   /* 'URFailureYawRateControl:5' w_min = ones(4,1)*par.wRotorMin; */
   FMin[0] = 1200.0;
-  w_min_idx_1 = 0.0;
+  rtb_TmpSignalConversionAtSFun_3 = 0.0;
   FMin[2] = 1200.0;
-  Iu = 0.0;
+  rtb_TmpSignalConversionAtSFun_1 = 0.0;
 
   /* 'URFailureYawRateControl:6' MzGain = URpar.rate_MzGain; */
   rtb_enableMeas = URControlParams.rate_MzGain;
@@ -4758,46 +6326,48 @@ void URControlModelClass::step()
     /* 'URFailureYawRateControl:13' errorGain = (state.n(3) - URpar.YRCFail_nLim2)/(URpar.YRCFail_nLim1 - URpar.YRCFail_nLim2); */
     /* 'URFailureYawRateControl:14' errorGain = max(min(errorGain,1),0); */
     /* 'URFailureYawRateControl:16' error = (r*yawDirection - URpar.YRCFail_yawRateTarget)*errorGain; */
-    rtb_yawTarget = (URControl_DW.State.n[2] - URControlParams.YRCFail_nLim2) /
+    u0 = (URControl_DW.State.n[2] - URControlParams.YRCFail_nLim2) /
       (URControlParams.YRCFail_nLim1 - URControlParams.YRCFail_nLim2);
-    if (!(rtb_yawTarget < 1.0)) {
-      rtb_yawTarget = 1.0;
+    if (!(u0 < 1.0)) {
+      u0 = 1.0;
     }
 
-    if (!(rtb_yawTarget > 0.0)) {
-      rtb_yawTarget = 0.0;
+    if (!(u0 > 0.0)) {
+      u0 = 0.0;
     }
 
-    errorSum = (URControl_DW.State.omegaf[2] * rt_powd_snf(-1.0,
-      URControl_DW.State.fail_id) - URControlParams.YRCFail_yawRateTarget) *
-      rtb_yawTarget;
+    rtb_TmpSignalConversionAtSFun_4 = (URControl_DW.State.omegaf[2] *
+      rt_powd_snf(-1.0, URControl_DW.State.fail_id) -
+      URControlParams.YRCFail_yawRateTarget) * u0;
 
     /* 'URFailureYawRateControl:18' if URpar.YRCFail_mode == 1 */
     if (URControlParams.YRCFail_mode == 1.0) {
       /* 'URFailureYawRateControl:19' dw = -error*URpar.YRCFail_Kp_dw; */
       /* 'URFailureYawRateControl:21' lim = par.wRotorMax - par.wRotorMin; */
       /* 'URFailureYawRateControl:22' dw = max(min(dw, lim), 0); */
-      errorSum = -errorSum * URControlParams.YRCFail_Kp_dw;
-      if (!(errorSum < 1200.0)) {
-        errorSum = 1200.0;
+      rtb_TmpSignalConversionAtSFun_4 = -rtb_TmpSignalConversionAtSFun_4 *
+        URControlParams.YRCFail_Kp_dw;
+      if (!(rtb_TmpSignalConversionAtSFun_4 < 1200.0)) {
+        rtb_TmpSignalConversionAtSFun_4 = 1200.0;
       }
 
-      if (!(errorSum > 0.0)) {
-        errorSum = 0.0;
+      if (!(rtb_TmpSignalConversionAtSFun_4 > 0.0)) {
+        rtb_TmpSignalConversionAtSFun_4 = 0.0;
       }
 
       /* 'URFailureYawRateControl:25' w_max = w_max - [dw; 0; dw; 0]; */
       /* 'URFailureYawRateControl:26' w_min = w_min + [0; dw; 0; dw]; */
-      FMin[0] = 1200.0 - errorSum;
-      w_min_idx_1 = errorSum;
-      FMin[2] = 1200.0 - errorSum;
-      Iu = errorSum;
+      FMin[0] = 1200.0 - rtb_TmpSignalConversionAtSFun_4;
+      rtb_TmpSignalConversionAtSFun_3 = rtb_TmpSignalConversionAtSFun_4;
+      FMin[2] = 1200.0 - rtb_TmpSignalConversionAtSFun_4;
+      rtb_TmpSignalConversionAtSFun_1 = rtb_TmpSignalConversionAtSFun_4;
     } else {
       if (URControlParams.YRCFail_mode == 2.0) {
         /* 'URFailureYawRateControl:28' elseif URpar.YRCFail_mode == 2 */
         /* 'URFailureYawRateControl:29' dMzGain = -error*URpar.YRCFail_Kp_dMzGain; */
         /* 'URFailureYawRateControl:30' dMzGain = max(dMzGain,0); */
-        rtb_enableMeas = -errorSum * URControlParams.YRCFail_Kp_dMzGain;
+        rtb_enableMeas = -rtb_TmpSignalConversionAtSFun_4 *
+          URControlParams.YRCFail_Kp_dMzGain;
         if (!(rtb_enableMeas > 0.0)) {
           rtb_enableMeas = 0.0;
         }
@@ -4819,194 +6389,201 @@ void URControlModelClass::step()
   /* 'URpositionControl:6' if state.fail_id > 0 */
   if (URControl_DW.State.fail_id > 0.0) {
     /* 'URpositionControl:8' maxAngle = URpar.position_maxAngleFailure; */
-    errorSum = URControlParams.position_maxAngleFailure;
+    rtb_TmpSignalConversionAtSFun_2 = URControlParams.position_maxAngleFailure;
 
     /* 'URpositionControl:9' overallGain = URpar.position_failGain; */
-    rtb_Product1 = URControlParams.position_failGain;
+    rtb_TmpSignalConversionAtSFun_4 = URControlParams.position_failGain;
   } else {
     /* 'URpositionControl:10' else */
     /* 'URpositionControl:11' maxAngle = URpar.position_maxAngle; */
-    errorSum = URControlParams.position_maxAngle;
+    rtb_TmpSignalConversionAtSFun_2 = URControlParams.position_maxAngle;
 
     /* 'URpositionControl:12' overallGain = 1; */
-    rtb_Product1 = 1.0;
+    rtb_TmpSignalConversionAtSFun_4 = 1.0;
   }
 
   /* 'URpositionControl:16' errorPos = [inputs.xTarget, inputs.yTarget, inputs.zTarget]  - state.posf; */
   /* 'URpositionControl:17' velTarget = URpar.position_Kp_pos.*errorPos*overallGain; */
-  rtb_DataTypeConversion8_idx_2 = (URControl_U.pos_sp[0] -
-    URControl_DW.State.posf[0]) * URControlParams.position_Kp_pos[0] *
-    rtb_Product1;
-  rtb_att_idx_1 = (URControl_U.pos_sp[1] - URControl_DW.State.posf[1]) *
-    URControlParams.position_Kp_pos[1] * rtb_Product1;
-  rtb_att_idx_2 = (URControl_U.pos_sp[2] - URControl_DW.State.posf[2]) *
-    URControlParams.position_Kp_pos[2] * rtb_Product1;
-
   /* 'URpositionControl:18' maxVel = URpar.position_maxVel; */
   /* 'URpositionControl:19' velTarget = max(min(velTarget,maxVel),-maxVel); */
-  rEQ0 = rtIsNaN(URControlParams.position_maxVel);
-  if ((rtb_DataTypeConversion8_idx_2 < URControlParams.position_maxVel) || rEQ0)
-  {
-    rtb_omega[0] = rtb_DataTypeConversion8_idx_2;
+  u0 = (URControl_U.pos_sp[0] - URControl_DW.State.posf[0]) *
+    URControlParams.position_Kp_pos[0] * rtb_TmpSignalConversionAtSFun_4;
+  tmp_4 = rtIsNaN(URControlParams.position_maxVel);
+  if ((u0 < URControlParams.position_maxVel) || tmp_4) {
+    rtb_att[0] = u0;
   } else {
-    rtb_omega[0] = URControlParams.position_maxVel;
+    rtb_att[0] = URControlParams.position_maxVel;
   }
 
-  if ((rtb_att_idx_1 < URControlParams.position_maxVel) || rEQ0) {
-    rtb_omega[1] = rtb_att_idx_1;
+  u0 = (URControl_U.pos_sp[1] - URControl_DW.State.posf[1]) *
+    URControlParams.position_Kp_pos[1] * rtb_TmpSignalConversionAtSFun_4;
+  if ((u0 < URControlParams.position_maxVel) || tmp_4) {
+    rtb_att[1] = u0;
   } else {
-    rtb_omega[1] = URControlParams.position_maxVel;
+    rtb_att[1] = URControlParams.position_maxVel;
   }
 
-  if ((rtb_att_idx_2 < URControlParams.position_maxVel) || rEQ0) {
-    rtb_omega[2] = rtb_att_idx_2;
+  u0 = (URControl_U.pos_sp[2] - URControl_DW.State.posf[2]) *
+    URControlParams.position_Kp_pos[2] * rtb_TmpSignalConversionAtSFun_4;
+  if ((u0 < URControlParams.position_maxVel) || tmp_4) {
+    rtb_att[2] = u0;
   } else {
-    rtb_omega[2] = URControlParams.position_maxVel;
+    rtb_att[2] = URControlParams.position_maxVel;
   }
 
   /* 'URpositionControl:22' errorVel = velTarget - state.velf; */
   /* 'URpositionControl:23' errorInt = errorInt + errorVel/par.freq; */
-  rEQ0 = rtIsNaN(-URControlParams.position_maxVel);
-  if ((rtb_omega[0] > -URControlParams.position_maxVel) || rEQ0) {
-    rtb_att_idx_2 = rtb_omega[0];
+  tmp_4 = rtIsNaN(-URControlParams.position_maxVel);
+  if ((rtb_att[0] > -URControlParams.position_maxVel) || tmp_4) {
+    tmp_3 = rtb_att[0];
   } else {
-    rtb_att_idx_2 = -URControlParams.position_maxVel;
+    tmp_3 = -URControlParams.position_maxVel;
   }
 
-  rtb_DataTypeConversion8_idx_2 = rtb_att_idx_2 - URControl_DW.State.velf[0];
-  URControl_DW.errorInt_p[0] += rtb_DataTypeConversion8_idx_2 / 500.0;
-  URControl_DW.DAQ.velTarget[0] = rtb_att_idx_2;
-  errorVel[0] = rtb_DataTypeConversion8_idx_2;
-  if ((rtb_omega[1] > -URControlParams.position_maxVel) || rEQ0) {
-    rtb_att_idx_2 = rtb_omega[1];
+  rtb_DataTypeConversion8_idx_0 = tmp_3 - URControl_DW.State.velf[0];
+  URControl_DW.errorInt_p[0] += rtb_DataTypeConversion8_idx_0 / 500.0;
+  rtb_pos[0] = tmp_3;
+  errorVel_idx_0 = rtb_DataTypeConversion8_idx_0;
+  if ((rtb_att[1] > -URControlParams.position_maxVel) || tmp_4) {
+    tmp_3 = rtb_att[1];
   } else {
-    rtb_att_idx_2 = -URControlParams.position_maxVel;
+    tmp_3 = -URControlParams.position_maxVel;
   }
 
-  rtb_DataTypeConversion8_idx_2 = rtb_att_idx_2 - URControl_DW.State.velf[1];
-  URControl_DW.errorInt_p[1] += rtb_DataTypeConversion8_idx_2 / 500.0;
-  URControl_DW.DAQ.velTarget[1] = rtb_att_idx_2;
-  errorVel[1] = rtb_DataTypeConversion8_idx_2;
-  if ((rtb_omega[2] > -URControlParams.position_maxVel) || rEQ0) {
-    rtb_att_idx_2 = rtb_omega[2];
+  rtb_DataTypeConversion8_idx_0 = tmp_3 - URControl_DW.State.velf[1];
+  URControl_DW.errorInt_p[1] += rtb_DataTypeConversion8_idx_0 / 500.0;
+  rtb_pos[1] = tmp_3;
+  errorVel_idx_1 = rtb_DataTypeConversion8_idx_0;
+  if ((rtb_att[2] > -URControlParams.position_maxVel) || tmp_4) {
+    tmp_3 = rtb_att[2];
   } else {
-    rtb_att_idx_2 = -URControlParams.position_maxVel;
+    tmp_3 = -URControlParams.position_maxVel;
   }
 
-  rtb_DataTypeConversion8_idx_2 = rtb_att_idx_2 - URControl_DW.State.velf[2];
-  URControl_DW.errorInt_p[2] += rtb_DataTypeConversion8_idx_2 / 500.0;
+  rtb_DataTypeConversion8_idx_0 = tmp_3 - URControl_DW.State.velf[2];
+  URControl_DW.errorInt_p[2] += rtb_DataTypeConversion8_idx_0 / 500.0;
 
   /* 'URpositionControl:24' intLim = URpar.position_intLim; */
   /* 'URpositionControl:25' errorInt = max(min(errorInt,intLim),-intLim); */
-  rEQ0 = rtIsNaN(URControlParams.position_intLim);
-  if ((URControl_DW.errorInt_p[0] < URControlParams.position_intLim) || rEQ0) {
-    rtb_DataTypeConversion8_idx_0 = URControl_DW.errorInt_p[0];
+  tmp_4 = rtIsNaN(URControlParams.position_intLim);
+  if ((URControl_DW.errorInt_p[0] < URControlParams.position_intLim) || tmp_4) {
+    errorVel_idx_2 = URControl_DW.errorInt_p[0];
   } else {
-    rtb_DataTypeConversion8_idx_0 = URControlParams.position_intLim;
+    errorVel_idx_2 = URControlParams.position_intLim;
   }
 
-  if ((URControl_DW.errorInt_p[1] < URControlParams.position_intLim) || rEQ0) {
-    rtb_Product2 = URControl_DW.errorInt_p[1];
-  } else {
-    rtb_Product2 = URControlParams.position_intLim;
-  }
-
-  if ((URControl_DW.errorInt_p[2] < URControlParams.position_intLim) || rEQ0) {
-    rtb_yawTarget = URControl_DW.errorInt_p[2];
+  if ((URControl_DW.errorInt_p[1] < URControlParams.position_intLim) || tmp_4) {
+    rtb_yawTarget = URControl_DW.errorInt_p[1];
   } else {
     rtb_yawTarget = URControlParams.position_intLim;
   }
 
-  /* 'URpositionControl:28' a_ref = URpar.position_Kp_vel.*errorVel*overallGain + URpar.position_Ki_vel.*errorInt; */
-  rEQ0 = rtIsNaN(-URControlParams.position_intLim);
-  if ((rtb_DataTypeConversion8_idx_0 > -URControlParams.position_intLim) || rEQ0)
-  {
-    URControl_DW.errorInt_p[0] = rtb_DataTypeConversion8_idx_0;
+  if ((URControl_DW.errorInt_p[2] < URControlParams.position_intLim) || tmp_4) {
+    u0 = URControl_DW.errorInt_p[2];
+  } else {
+    u0 = URControlParams.position_intLim;
+  }
+
+  /* 'URpositionControl:28' a_ref = URpar.position_Kp_vel.*errorVel*overallGain + URpar.position_Ki_vel.*errorInt*overallGain; */
+  tmp_4 = rtIsNaN(-URControlParams.position_intLim);
+  if ((errorVel_idx_2 > -URControlParams.position_intLim) || tmp_4) {
+    URControl_DW.errorInt_p[0] = errorVel_idx_2;
   } else {
     URControl_DW.errorInt_p[0] = -URControlParams.position_intLim;
   }
 
-  errorVel[0] = URControlParams.position_Kp_vel[0] * errorVel[0] * rtb_Product1
-    + URControlParams.position_Ki_vel[0] * URControl_DW.errorInt_p[0];
-  if ((rtb_Product2 > -URControlParams.position_intLim) || rEQ0) {
-    URControl_DW.errorInt_p[1] = rtb_Product2;
+  errorVel_idx_0 = URControlParams.position_Kp_vel[0] * errorVel_idx_0 *
+    rtb_TmpSignalConversionAtSFun_4 + URControlParams.position_Ki_vel[0] *
+    URControl_DW.errorInt_p[0] * rtb_TmpSignalConversionAtSFun_4;
+  if ((rtb_yawTarget > -URControlParams.position_intLim) || tmp_4) {
+    URControl_DW.errorInt_p[1] = rtb_yawTarget;
   } else {
     URControl_DW.errorInt_p[1] = -URControlParams.position_intLim;
   }
 
-  errorVel[1] = URControlParams.position_Kp_vel[1] * errorVel[1] * rtb_Product1
-    + URControlParams.position_Ki_vel[1] * URControl_DW.errorInt_p[1];
-  if ((rtb_yawTarget > -URControlParams.position_intLim) || rEQ0) {
-    URControl_DW.errorInt_p[2] = rtb_yawTarget;
+  errorVel_idx_1 = URControlParams.position_Kp_vel[1] * errorVel_idx_1 *
+    rtb_TmpSignalConversionAtSFun_4 + URControlParams.position_Ki_vel[1] *
+    URControl_DW.errorInt_p[1] * rtb_TmpSignalConversionAtSFun_4;
+  if ((u0 > -URControlParams.position_intLim) || tmp_4) {
+    URControl_DW.errorInt_p[2] = u0;
   } else {
     URControl_DW.errorInt_p[2] = -URControlParams.position_intLim;
   }
 
-  rtb_DataTypeConversion8_idx_2 = URControlParams.position_Kp_vel[2] *
-    rtb_DataTypeConversion8_idx_2 * rtb_Product1 +
-    URControlParams.position_Ki_vel[2] * URControl_DW.errorInt_p[2];
+  rtb_DataTypeConversion8_idx_0 = URControlParams.position_Kp_vel[2] *
+    rtb_DataTypeConversion8_idx_0 * rtb_TmpSignalConversionAtSFun_4 +
+    URControlParams.position_Ki_vel[2] * URControl_DW.errorInt_p[2] *
+    rtb_TmpSignalConversionAtSFun_4;
 
   /* 'URpositionControl:30' a_ref(3) = a_ref(3) - par.g; */
   /* 'URpositionControl:31' a_ref(3) = min(a_ref(3), par.URC.position_maxAref); */
-  if (rtb_DataTypeConversion8_idx_2 - 9.81 < -2.0) {
-    rtb_DataTypeConversion8_idx_0 = rtb_DataTypeConversion8_idx_2 - 9.81;
+  if (rtb_DataTypeConversion8_idx_0 - 9.81 < -2.0) {
+    errorVel_idx_2 = rtb_DataTypeConversion8_idx_0 - 9.81;
   } else {
-    rtb_DataTypeConversion8_idx_0 = -2.0;
+    errorVel_idx_2 = -2.0;
   }
 
   /* 'URpositionControl:34' maxLateral = abs(par.g*tan(maxAngle)); */
   /* 'URpositionControl:35' latRatio = sqrt(a_ref(1)^2 + a_ref(2)^2)/maxLateral; */
-  errorSum = std::sqrt(errorVel[0] * errorVel[0] + errorVel[1] * errorVel[1]) /
-    std::abs(9.81 * std::tan(errorSum));
+  rtb_TmpSignalConversionAtSFun_4 = std::sqrt(errorVel_idx_0 * errorVel_idx_0 +
+    errorVel_idx_1 * errorVel_idx_1) / std::abs(9.81 * std::tan
+    (rtb_TmpSignalConversionAtSFun_2));
 
   /* 'URpositionControl:36' a_ref(1) = a_ref(1)/(max(latRatio,1)); */
-  if (errorSum > 1.0) {
-    rtb_Product1 = errorSum;
+  if (rtb_TmpSignalConversionAtSFun_4 > 1.0) {
+    rtb_yawTarget = rtb_TmpSignalConversionAtSFun_4;
   } else {
-    rtb_Product1 = 1.0;
-    errorSum = 1.0;
+    rtb_yawTarget = 1.0;
+    rtb_TmpSignalConversionAtSFun_4 = 1.0;
   }
 
-  errorVel[0] /= rtb_Product1;
+  errorVel_idx_0 /= rtb_yawTarget;
 
   /* 'URpositionControl:37' a_ref(2) = a_ref(2)/(max(latRatio,1)); */
-  errorVel[1] /= errorSum;
+  errorVel_idx_1 /= rtb_TmpSignalConversionAtSFun_4;
 
   /* 'URpositionControl:43' n_des = a_ref/norm(a_ref); */
-  rtb_Product1 = 3.3121686421112381E-170;
-  rtb_Product2 = std::abs(errorVel[0]);
-  if (rtb_Product2 > 3.3121686421112381E-170) {
-    errorSum = 1.0;
-    rtb_Product1 = rtb_Product2;
+  rtb_TmpSignalConversionAtSFun_4 = 3.3121686421112381E-170;
+  rtb_DataTypeConversion8_idx_0 = std::abs(errorVel_idx_0);
+  if (rtb_DataTypeConversion8_idx_0 > 3.3121686421112381E-170) {
+    rtb_TmpSignalConversionAtSFun_2 = 1.0;
+    rtb_TmpSignalConversionAtSFun_4 = rtb_DataTypeConversion8_idx_0;
   } else {
-    rtb_yawTarget = rtb_Product2 / 3.3121686421112381E-170;
-    errorSum = rtb_yawTarget * rtb_yawTarget;
+    rtb_yawTarget = rtb_DataTypeConversion8_idx_0 / 3.3121686421112381E-170;
+    rtb_TmpSignalConversionAtSFun_2 = rtb_yawTarget * rtb_yawTarget;
   }
 
-  rtb_Product2 = std::abs(errorVel[1]);
-  if (rtb_Product2 > rtb_Product1) {
-    rtb_yawTarget = rtb_Product1 / rtb_Product2;
-    errorSum = errorSum * rtb_yawTarget * rtb_yawTarget + 1.0;
-    rtb_Product1 = rtb_Product2;
+  rtb_DataTypeConversion8_idx_0 = std::abs(errorVel_idx_1);
+  if (rtb_DataTypeConversion8_idx_0 > rtb_TmpSignalConversionAtSFun_4) {
+    rtb_yawTarget = rtb_TmpSignalConversionAtSFun_4 /
+      rtb_DataTypeConversion8_idx_0;
+    rtb_TmpSignalConversionAtSFun_2 = rtb_TmpSignalConversionAtSFun_2 *
+      rtb_yawTarget * rtb_yawTarget + 1.0;
+    rtb_TmpSignalConversionAtSFun_4 = rtb_DataTypeConversion8_idx_0;
   } else {
-    rtb_yawTarget = rtb_Product2 / rtb_Product1;
-    errorSum += rtb_yawTarget * rtb_yawTarget;
+    rtb_yawTarget = rtb_DataTypeConversion8_idx_0 /
+      rtb_TmpSignalConversionAtSFun_4;
+    rtb_TmpSignalConversionAtSFun_2 += rtb_yawTarget * rtb_yawTarget;
   }
 
-  rtb_Product2 = std::abs(rtb_DataTypeConversion8_idx_0);
-  if (rtb_Product2 > rtb_Product1) {
-    rtb_yawTarget = rtb_Product1 / rtb_Product2;
-    errorSum = errorSum * rtb_yawTarget * rtb_yawTarget + 1.0;
-    rtb_Product1 = rtb_Product2;
+  rtb_DataTypeConversion8_idx_0 = std::abs(errorVel_idx_2);
+  if (rtb_DataTypeConversion8_idx_0 > rtb_TmpSignalConversionAtSFun_4) {
+    rtb_yawTarget = rtb_TmpSignalConversionAtSFun_4 /
+      rtb_DataTypeConversion8_idx_0;
+    rtb_TmpSignalConversionAtSFun_2 = rtb_TmpSignalConversionAtSFun_2 *
+      rtb_yawTarget * rtb_yawTarget + 1.0;
+    rtb_TmpSignalConversionAtSFun_4 = rtb_DataTypeConversion8_idx_0;
   } else {
-    rtb_yawTarget = rtb_Product2 / rtb_Product1;
-    errorSum += rtb_yawTarget * rtb_yawTarget;
+    rtb_yawTarget = rtb_DataTypeConversion8_idx_0 /
+      rtb_TmpSignalConversionAtSFun_4;
+    rtb_TmpSignalConversionAtSFun_2 += rtb_yawTarget * rtb_yawTarget;
   }
 
-  errorSum = rtb_Product1 * std::sqrt(errorSum);
-  rtb_n_des[0] = errorVel[0] / errorSum;
-  rtb_n_des[1] = errorVel[1] / errorSum;
-  rtb_n_des[2] = rtb_DataTypeConversion8_idx_0 / errorSum;
+  rtb_TmpSignalConversionAtSFun_2 = rtb_TmpSignalConversionAtSFun_4 * std::sqrt
+    (rtb_TmpSignalConversionAtSFun_2);
+  rtb_n_des[0] = errorVel_idx_0 / rtb_TmpSignalConversionAtSFun_2;
+  rtb_n_des[1] = errorVel_idx_1 / rtb_TmpSignalConversionAtSFun_2;
+  rtb_n_des[2] = errorVel_idx_2 / rtb_TmpSignalConversionAtSFun_2;
 
   /* 'URpositionControl:45' if URpar.position_enable == 0 */
   if (URControlParams.position_enable == 0.0) {
@@ -5019,12 +6596,14 @@ void URControlModelClass::step()
   /* 'URpositionControl:50' daq.velTarget = velTarget; */
   /* 'URpositionControl:51' daq.a_ref = a_ref; */
   /* 'URpositionControl:52' daq.n_des = n_des; */
-  URControl_DW.DAQ.a_ref[0] = errorVel[0];
+  URControl_DW.DAQ.velTarget[0] = rtb_pos[0];
+  URControl_DW.DAQ.a_ref[0] = errorVel_idx_0;
   URControl_DW.DAQ.n_des[0] = rtb_n_des[0];
-  URControl_DW.DAQ.a_ref[1] = errorVel[1];
+  URControl_DW.DAQ.velTarget[1] = rtb_pos[1];
+  URControl_DW.DAQ.a_ref[1] = errorVel_idx_1;
   URControl_DW.DAQ.n_des[1] = rtb_n_des[1];
-  URControl_DW.DAQ.velTarget[2] = rtb_att_idx_2;
-  URControl_DW.DAQ.a_ref[2] = rtb_DataTypeConversion8_idx_0;
+  URControl_DW.DAQ.velTarget[2] = tmp_3;
+  URControl_DW.DAQ.a_ref[2] = errorVel_idx_2;
   URControl_DW.DAQ.n_des[2] = rtb_n_des[2];
 
   /* End of MATLAB Function: '<S2>/position control' */
@@ -5046,44 +6625,49 @@ void URControlModelClass::step()
   /* 'URYawControl:3' psiError = inputs.yawTarget - state.att(3); */
   /* 'URYawControl:4' psi_dot_cmd = psiError*URpar.YRC_Kp_psi; */
   /* 'URYawControl:6' r_cmd = psi_dot_cmd*cos(state.att(1))*cos(state.att(2))-sin(state.att(1))*state.omegaf(2); */
-  rtb_Product1 = std::cos(URControl_DW.State.att[1]);
-  rtb_DataTypeConversion8_idx_2 = std::sin(URControl_DW.State.att[0]);
-  rtb_att_idx_2 = std::cos(URControl_DW.State.att[0]);
-  errorSum = (URControl_U.yaw_sp - URControl_DW.State.att[2]) *
-    URControlParams.YRC_Kp_psi * rtb_att_idx_2 * rtb_Product1 -
-    rtb_DataTypeConversion8_idx_2 * URControl_DW.State.omegaf[1];
+  rtb_TmpSignalConversionAtSFun_2 = std::cos(URControl_DW.State.att[1]);
+  rtb_DataTypeConversion8_idx_0 = std::sin(URControl_DW.State.att[0]);
+  errorVel_idx_0 = std::cos(URControl_DW.State.att[0]);
+  rtb_TmpSignalConversionAtSFun_4 = (URControl_U.yaw_sp -
+    URControl_DW.State.att[2]) * URControlParams.YRC_Kp_psi * errorVel_idx_0 *
+    rtb_TmpSignalConversionAtSFun_2 - rtb_DataTypeConversion8_idx_0 *
+    URControl_DW.State.omegaf[1];
 
   /* 'URYawControl:8' if URpar.YRC_mode == 2 */
   if (URControlParams.YRC_mode == 2.0) {
     /* 'URYawControl:9' r_cmd = URpar.YRC_rateCmd; */
-    errorSum = URControlParams.YRC_rateCmd;
+    rtb_TmpSignalConversionAtSFun_4 = URControlParams.YRC_rateCmd;
   }
 
   /* 'URYawControl:13' if state.fail_id > 0 */
   if (URControl_DW.State.fail_id > 0.0) {
     /* 'URYawControl:14' yawDirection = (-1)^(state.fail_id); */
     /* 'URYawControl:15' r_cmd = yawDirection*URpar.YRC_r_cmd_fail; */
-    errorSum = rt_powd_snf(-1.0, URControl_DW.State.fail_id) *
-      URControlParams.YRC_r_cmd_fail;
+    rtb_TmpSignalConversionAtSFun_4 = rt_powd_snf(-1.0,
+      URControl_DW.State.fail_id) * URControlParams.YRC_r_cmd_fail;
   }
 
   /* 'URYawControl:19' if URpar.YRC_enable == 0 */
   if (URControlParams.YRC_enable == 0.0) {
     /* 'URYawControl:20' r_cmd = 0; */
-    errorSum = 0.0;
+    rtb_TmpSignalConversionAtSFun_4 = 0.0;
   }
 
   /* 'URYawControl:25' daq.r_cmd = r_cmd; */
-  URControl_DW.DAQ.r_cmd = errorSum;
+  URControl_DW.DAQ.r_cmd = rtb_TmpSignalConversionAtSFun_4;
 
   /* MATLAB Function: '<S3>/attitude controller' incorporates:
    *  MATLAB Function: '<S2>/yaw rate control'
    *  MATLAB Function: '<S3>/yawRateControl'
    *  MATLAB Function: '<S5>/basic estimators'
    */
-  /* :  [pqr_des, uvr_des, w_max, w_min, MzGain, DAQ] = URAttitudeController(state, DAQ, uv_prec, w_min, w_max, MzGain, nd_i,ndi_dot,r_cmd,par,URControlParams); */
-  /* 'URAttitudeController:4' primAxis = URpar.attitude_primary_axis; */
-  /* 'URAttitudeController:6' [uv_attCtrl, rotVec, daq] = URAngleControl(daq, nd_i, primAxis, state, par, URpar); */
+  /* :  [pqr_des, uvr_des, w_max, w_min, MzGain, DAQ] = URAttitudeController(state, DAQ, uv_prec, precAngle, w_min, w_max, MzGain, nd_i,ndi_dot,r_cmd,par,URControlParams); */
+  /* 'URAttitudeController:7' primAxis = [-sin(precAngle(2)), sin(precAngle(1)), -1*cos(precAngle(1))*cos(precAngle(2))]; */
+  rtb_pos[0] = -std::sin(uDot2_min);
+  rtb_pos[1] = std::sin(rtb_DataTypeConversion8_idx_1);
+  rtb_pos[2] = -std::cos(rtb_DataTypeConversion8_idx_1) * std::cos(uDot2_min);
+
+  /* 'URAttitudeController:9' [uv_attCtrl, rotVec, daq] = URAngleControl(daq, nd_i, primAxis, state, par, URpar); */
   /* 'URAngleControl:3' phi = state.att(1); */
   /* 'URAngleControl:4' theta = state.att(2); */
   /* 'URAngleControl:5' psi = state.att(3); */
@@ -5091,173 +6675,179 @@ void URControlModelClass::step()
   /* 'URAngleControl:9'         sin(phi)*sin(theta)*cos(psi)-cos(phi)*sin(psi) sin(phi)*sin(theta)*sin(psi)+cos(phi)*cos(psi) sin(phi)*cos(theta); */
   /* 'URAngleControl:10'         cos(phi)*sin(theta)*cos(psi)+sin(phi)*sin(psi) cos(phi)*sin(theta)*sin(psi)-sin(phi)*cos(psi) cos(phi)*cos(theta)]; */
   /* 'URAngleControl:13' h = R_BI*nd_i; */
-  rtb_DataTypeConversion8_idx_0 = std::cos(URControl_DW.State.att[2]);
-  R_IB[0] = rtb_Product1 * rtb_DataTypeConversion8_idx_0;
-  rtb_Product2 = std::sin(URControl_DW.State.att[2]);
-  R_IB[3] = rtb_Product1 * rtb_Product2;
-  rtb_att_idx_1 = std::sin(URControl_DW.State.att[1]);
-  R_IB[6] = -rtb_att_idx_1;
-  rtb_yawTarget = rtb_DataTypeConversion8_idx_2 * rtb_att_idx_1;
-  R_IB[1] = rtb_yawTarget * rtb_DataTypeConversion8_idx_0 - rtb_att_idx_2 *
-    rtb_Product2;
-  R_IB[4] = rtb_yawTarget * rtb_Product2 + rtb_att_idx_2 *
-    rtb_DataTypeConversion8_idx_0;
-  R_IB[7] = rtb_DataTypeConversion8_idx_2 * rtb_Product1;
-  rtb_att_idx_1 *= rtb_att_idx_2;
-  R_IB[2] = rtb_att_idx_1 * rtb_DataTypeConversion8_idx_0 +
-    rtb_DataTypeConversion8_idx_2 * rtb_Product2;
-  R_IB[5] = rtb_att_idx_1 * rtb_Product2 - rtb_DataTypeConversion8_idx_2 *
-    rtb_DataTypeConversion8_idx_0;
-  R_IB[8] = rtb_att_idx_2 * rtb_Product1;
+  tmp_3 = std::cos(URControl_DW.State.att[2]);
+  R_IB[0] = rtb_TmpSignalConversionAtSFun_2 * tmp_3;
+  errorVel_idx_1 = std::sin(URControl_DW.State.att[2]);
+  R_IB[3] = rtb_TmpSignalConversionAtSFun_2 * errorVel_idx_1;
+  errorVel_idx_2 = std::sin(URControl_DW.State.att[1]);
+  R_IB[6] = -errorVel_idx_2;
+  rtb_DataTypeConversion8_idx_1 = rtb_DataTypeConversion8_idx_0 * errorVel_idx_2;
+  R_IB[1] = rtb_DataTypeConversion8_idx_1 * tmp_3 - errorVel_idx_0 *
+    errorVel_idx_1;
+  R_IB[4] = rtb_DataTypeConversion8_idx_1 * errorVel_idx_1 + errorVel_idx_0 *
+    tmp_3;
+  R_IB[7] = rtb_DataTypeConversion8_idx_0 * rtb_TmpSignalConversionAtSFun_2;
+  errorVel_idx_2 *= errorVel_idx_0;
+  R_IB[2] = errorVel_idx_2 * tmp_3 + rtb_DataTypeConversion8_idx_0 *
+    errorVel_idx_1;
+  R_IB[5] = errorVel_idx_2 * errorVel_idx_1 - rtb_DataTypeConversion8_idx_0 *
+    tmp_3;
+  R_IB[8] = errorVel_idx_0 * rtb_TmpSignalConversionAtSFun_2;
   for (r2 = 0; r2 < 3; r2++) {
-    rtb_omega[r2] = R_IB[r2 + 6] * rtb_n_des[2] + (R_IB[r2 + 3] * rtb_n_des[1] +
+    rtb_att[r2] = R_IB[r2 + 6] * rtb_n_des[2] + (R_IB[r2 + 3] * rtb_n_des[1] +
       R_IB[r2] * rtb_n_des[0]);
   }
 
   /* 'URAngleControl:15' h_uv = [par.URC.R_xy_uv*h(1:2); h(3)]; */
-  rtb_DataTypeConversion8_idx_2 = URControl_ConstP.pooled1.URC.R_xy_uv[0] *
-    rtb_omega[0] + URControl_ConstP.pooled1.URC.R_xy_uv[2] * rtb_omega[1];
-  rtb_Product1 = URControl_ConstP.pooled1.URC.R_xy_uv[1] * rtb_omega[0] +
-    URControl_ConstP.pooled1.URC.R_xy_uv[3] * rtb_omega[1];
+  errorVel_idx_0 = URControl_ConstP.pooled1.URC.R_xy_uv[0] * rtb_att[0] +
+    URControl_ConstP.pooled1.URC.R_xy_uv[2] * rtb_att[1];
+  errorVel_idx_1 = URControl_ConstP.pooled1.URC.R_xy_uv[1] * rtb_att[0] +
+    URControl_ConstP.pooled1.URC.R_xy_uv[3] * rtb_att[1];
 
   /* 'URAngleControl:17' n = primAxis; */
   /* 'URAngleControl:20' currRotVec = [state.omegaUV(1); state.omegaUV(2); 0]; */
   /* 'URAngleControl:23' totAngle = atan2(norm(cross(h_uv,n)),dot(h_uv,n)); */
-  rtb_att_idx_2 = rtb_Product1 * URControlParams.attitude_primary_axis[2] -
-    rtb_omega[2] * URControlParams.attitude_primary_axis[1];
-  rtb_att_0[0] = rtb_att_idx_2;
-  rtb_att_idx_1 = rtb_omega[2] * URControlParams.attitude_primary_axis[0] -
-    rtb_DataTypeConversion8_idx_2 * URControlParams.attitude_primary_axis[2];
-  rtb_att_0[1] = rtb_att_idx_1;
-  rtb_DataTypeConversion8_idx_0 = rtb_DataTypeConversion8_idx_2 *
-    URControlParams.attitude_primary_axis[1] - rtb_Product1 *
-    URControlParams.attitude_primary_axis[0];
-  rtb_att_0[2] = rtb_DataTypeConversion8_idx_0;
-  rtb_Product1 = rt_atan2d_snf(URControl_norm(rtb_att_0),
-    (rtb_DataTypeConversion8_idx_2 * URControlParams.attitude_primary_axis[0] +
-     rtb_Product1 * URControlParams.attitude_primary_axis[1]) + rtb_omega[2] *
-    URControlParams.attitude_primary_axis[2]);
+  errorVel_idx_2 = errorVel_idx_1 * rtb_pos[2] - rtb_att[2] * rtb_pos[1];
+  errorVel[0] = errorVel_idx_2;
+  rtb_DataTypeConversion8_idx_1 = rtb_att[2] * rtb_pos[0] - errorVel_idx_0 *
+    rtb_pos[2];
+  errorVel[1] = rtb_DataTypeConversion8_idx_1;
+  tmp_3 = errorVel_idx_0 * rtb_pos[1] - errorVel_idx_1 * rtb_pos[0];
+  errorVel[2] = tmp_3;
+  rtb_TmpSignalConversionAtSFun_2 = rt_atan2d_snf(URControl_norm(errorVel),
+    (errorVel_idx_0 * rtb_pos[0] + errorVel_idx_1 * rtb_pos[1]) + rtb_att[2] *
+    rtb_pos[2]);
 
   /* 'URAngleControl:26' rotVec3 = cross(h_uv,n); */
-  errorVel[0] = rtb_att_idx_2;
-  errorVel[1] = rtb_att_idx_1;
-  errorVel[2] = rtb_DataTypeConversion8_idx_0;
+  rtb_omega[0] = errorVel_idx_2;
+  rtb_omega[1] = rtb_DataTypeConversion8_idx_1;
+  rtb_omega[2] = tmp_3;
 
   /* 'URAngleControl:27' rotVec3 = rotVec3/max(abs(norm(rotVec3)),0.001); */
-  rtb_Product2 = std::abs(URControl_norm(errorVel));
-  if (!(rtb_Product2 > 0.001)) {
-    rtb_Product2 = 0.001;
+  rtb_DataTypeConversion8_idx_0 = std::abs(URControl_norm(rtb_omega));
+  if (!(rtb_DataTypeConversion8_idx_0 > 0.001)) {
+    rtb_DataTypeConversion8_idx_0 = 0.001;
   }
 
-  errorVel[0] = rtb_att_idx_2 / rtb_Product2;
-  errorVel[1] = rtb_att_idx_1 / rtb_Product2;
+  rtb_omega[0] = errorVel_idx_2 / rtb_DataTypeConversion8_idx_0;
+  rtb_omega[1] = rtb_DataTypeConversion8_idx_1 / rtb_DataTypeConversion8_idx_0;
 
   /* 'URAngleControl:28' rotVec = rotVec3(1:2); */
-  rtb_att_idx_1 = errorVel[0];
-  rtb_DataTypeConversion8_idx_2 = errorVel[1];
+  rtb_DataTypeConversion8_idx_1 = rtb_omega[0];
+  uDot2_min = rtb_omega[1];
 
   /* 'URAngleControl:30' speedAroundVec = dot(currRotVec, rotVec3); */
-  rtb_yawTarget = (URControl_DW.State.omegaUV[0] * errorVel[0] +
-                   URControl_DW.State.omegaUV[1] * errorVel[1]) +
-    rtb_DataTypeConversion8_idx_0 / rtb_Product2 * 0.0;
+  rtb_yawTarget = (URControl_DW.State.omegaUV[0] * rtb_omega[0] +
+                   URControl_DW.State.omegaUV[1] * rtb_omega[1]) + tmp_3 /
+    rtb_DataTypeConversion8_idx_0 * 0.0;
 
   /* 'URAngleControl:32' if par.URC.attitude_enableTraj == 1 && totAngle > par.URC.attitude_trajThreshold */
-  if (rtb_Product1 > 1.2217304763960306) {
+  if (rtb_TmpSignalConversionAtSFun_2 > 1.2217304763960306) {
     /* 'URAngleControl:33' tNormal = URTrajCalc(totAngle, -speedAroundVec, URpar.attitude_rotSpeedComp); */
-    rtb_Product2 = URControl_URTrajCalc(rtb_Product1, -rtb_yawTarget,
-      URControlParams.attitude_rotSpeedComp);
+    rtb_DataTypeConversion8_idx_0 = URControl_URTrajCalc
+      (rtb_TmpSignalConversionAtSFun_2, -rtb_yawTarget,
+       URControlParams.attitude_rotSpeedComp);
 
     /* 'URAngleControl:34' tReverse = URTrajCalc(2*pi - totAngle, speedAroundVec, URpar.attitude_rotSpeedComp); */
-    rtb_yawTarget = URControl_URTrajCalc(6.2831853071795862 - rtb_Product1,
-      rtb_yawTarget, URControlParams.attitude_rotSpeedComp);
+    rtb_yawTarget = URControl_URTrajCalc(6.2831853071795862 -
+      rtb_TmpSignalConversionAtSFun_2, rtb_yawTarget,
+      URControlParams.attitude_rotSpeedComp);
 
     /* 'URAngleControl:36' if tNormal > 0 && tReverse > 0 */
-    if ((rtb_Product2 > 0.0) && (rtb_yawTarget > 0.0) && (rtb_Product2 >
-         rtb_yawTarget)) {
+    if ((rtb_DataTypeConversion8_idx_0 > 0.0) && (rtb_yawTarget > 0.0) &&
+        (rtb_DataTypeConversion8_idx_0 > rtb_yawTarget)) {
       /* 'URAngleControl:37' if tNormal > tReverse */
       /* 'URAngleControl:38' rotVec = -rotVec; */
-      rtb_att_idx_1 = -errorVel[0];
-      rtb_DataTypeConversion8_idx_2 = -errorVel[1];
+      rtb_DataTypeConversion8_idx_1 = -rtb_omega[0];
+      uDot2_min = -rtb_omega[1];
     }
   }
 
   /* 'URAngleControl:43' rotAction = abs(totAngle)*URpar.attitude_rotKp; */
-  rtb_Product1 = std::abs(rtb_Product1) * URControlParams.attitude_rotKp;
+  rtb_TmpSignalConversionAtSFun_2 = std::abs(rtb_TmpSignalConversionAtSFun_2) *
+    URControlParams.attitude_rotKp;
 
   /* 'URAngleControl:45' uv_attCtrl = [rotVec(1); rotVec(2)]*rotAction; */
-  rtb_yawTarget = rtb_att_idx_1 * rtb_Product1;
-  Fset_idx_2 = rtb_DataTypeConversion8_idx_2 * rtb_Product1;
+  /* 'URAngleControl:50' uv_yrcComp = -[h_uv(1); h_uv(2)]*state.omegaUV(3)*URpar.attitude_yrcComp; */
+  /* 'URAngleControl:52' uv_attCtrl = uv_attCtrl + uv_yrcComp; */
+  /* 'URAttitudeController:12' uv_des_raw = (uv_prec + uv_attCtrl); */
+  errorVel_idx_0 = -errorVel_idx_0 * URControl_DW.State.omegaUV[2] *
+    URControlParams.attitude_yrcComp + rtb_DataTypeConversion8_idx_1 *
+    rtb_TmpSignalConversionAtSFun_2;
+  URControl_DW.DAQ.uv_attCtrl[0] = errorVel_idx_0;
+  vDot2_min += errorVel_idx_0;
+  errorVel_idx_0 = -errorVel_idx_1 * URControl_DW.State.omegaUV[2] *
+    URControlParams.attitude_yrcComp + uDot2_min *
+    rtb_TmpSignalConversionAtSFun_2;
+  rtb_DataTypeConversion8_idx_0 = Mv_max + errorVel_idx_0;
 
-  /* 'URAttitudeController:9' uv_des_raw = (uv_prec + uv_attCtrl); */
-  dummy_idx_0 += rtb_yawTarget;
-  rtb_DataTypeConversion8_idx_1 += Fset_idx_2;
-
-  /* 'URAttitudeController:16' if URpar.envp_envelopeProt == 1 */
-  if (URControlParams.envp_envelopeProt == 1.0) {
-    /* 'URAttitudeController:17' uv_des = min(max(uv_des_raw, state.uv_min), state.uv_max); */
-    if ((dummy_idx_0 > URControl_DW.State.uv_min[0]) || rtIsNaN
+  /* 'URAttitudeController:19' if URpar.envp_enable == 1 */
+  if (URControlParams.envp_enable == 1.0) {
+    /* 'URAttitudeController:20' uv_des = min(max(uv_des_raw, state.uv_min), state.uv_max); */
+    if ((vDot2_min > URControl_DW.State.uv_min[0]) || rtIsNaN
         (URControl_DW.State.uv_min[0])) {
-      rtb_DataTypeConversion8_idx_2 = dummy_idx_0;
+      uDot2_min = vDot2_min;
     } else {
-      rtb_DataTypeConversion8_idx_2 = URControl_DW.State.uv_min[0];
+      uDot2_min = URControl_DW.State.uv_min[0];
     }
 
-    if ((rtb_DataTypeConversion8_idx_2 < URControl_DW.State.uv_max[0]) ||
-        rtIsNaN(URControl_DW.State.uv_max[0])) {
-      rtb_att_idx_1 = rtb_DataTypeConversion8_idx_2;
+    if ((uDot2_min < URControl_DW.State.uv_max[0]) || rtIsNaN
+        (URControl_DW.State.uv_max[0])) {
+      rtb_DataTypeConversion8_idx_1 = uDot2_min;
     } else {
-      rtb_att_idx_1 = URControl_DW.State.uv_max[0];
+      rtb_DataTypeConversion8_idx_1 = URControl_DW.State.uv_max[0];
     }
 
-    if ((rtb_DataTypeConversion8_idx_1 > URControl_DW.State.uv_min[1]) ||
+    if ((rtb_DataTypeConversion8_idx_0 > URControl_DW.State.uv_min[1]) ||
         rtIsNaN(URControl_DW.State.uv_min[1])) {
-      rtb_DataTypeConversion8_idx_2 = rtb_DataTypeConversion8_idx_1;
+      uDot2_min = rtb_DataTypeConversion8_idx_0;
     } else {
-      rtb_DataTypeConversion8_idx_2 = URControl_DW.State.uv_min[1];
+      uDot2_min = URControl_DW.State.uv_min[1];
     }
 
-    if ((!(rtb_DataTypeConversion8_idx_2 < URControl_DW.State.uv_max[1])) &&
-        (!rtIsNaN(URControl_DW.State.uv_max[1]))) {
-      rtb_DataTypeConversion8_idx_2 = URControl_DW.State.uv_max[1];
+    if ((!(uDot2_min < URControl_DW.State.uv_max[1])) && (!rtIsNaN
+         (URControl_DW.State.uv_max[1]))) {
+      uDot2_min = URControl_DW.State.uv_max[1];
     }
   } else {
-    /* 'URAttitudeController:18' else */
-    /* 'URAttitudeController:19' uv_des = uv_des_raw; */
-    rtb_att_idx_1 = dummy_idx_0;
-    rtb_DataTypeConversion8_idx_2 = rtb_DataTypeConversion8_idx_1;
+    /* 'URAttitudeController:21' else */
+    /* 'URAttitudeController:22' uv_des = uv_des_raw; */
+    rtb_DataTypeConversion8_idx_1 = vDot2_min;
+    uDot2_min = rtb_DataTypeConversion8_idx_0;
   }
 
-  /* 'URAttitudeController:23' uv_des = max(min(uv_des,URpar.attitude_maxuv_des),-URpar.attitude_maxuv_des); */
-  rEQ0 = rtIsNaN(URControlParams.attitude_maxuv_des);
-  if ((!(rtb_att_idx_1 < URControlParams.attitude_maxuv_des)) && (!rEQ0)) {
-    rtb_att_idx_1 = URControlParams.attitude_maxuv_des;
+  /* 'URAttitudeController:26' uv_des = max(min(uv_des,URpar.attitude_maxuv_des),-URpar.attitude_maxuv_des); */
+  tmp_4 = rtIsNaN(URControlParams.attitude_maxuv_des);
+  if ((!(rtb_DataTypeConversion8_idx_1 < URControlParams.attitude_maxuv_des)) &&
+      (!tmp_4)) {
+    rtb_DataTypeConversion8_idx_1 = URControlParams.attitude_maxuv_des;
   }
 
-  tmp_1 = rtIsNaN(-URControlParams.attitude_maxuv_des);
-  if ((rtb_att_idx_1 > -URControlParams.attitude_maxuv_des) || tmp_1) {
-    rtb_DataTypeConversion8_idx_0 = rtb_att_idx_1;
-    b_z1[0] = rtb_att_idx_1;
+  tmp_5 = rtIsNaN(-URControlParams.attitude_maxuv_des);
+  if ((rtb_DataTypeConversion8_idx_1 > -URControlParams.attitude_maxuv_des) ||
+      tmp_5) {
+    errorVel_idx_2 = rtb_DataTypeConversion8_idx_1;
+    b_z1[0] = rtb_DataTypeConversion8_idx_1;
   } else {
-    rtb_DataTypeConversion8_idx_0 = -URControlParams.attitude_maxuv_des;
+    errorVel_idx_2 = -URControlParams.attitude_maxuv_des;
     b_z1[0] = -URControlParams.attitude_maxuv_des;
   }
 
-  if ((rtb_DataTypeConversion8_idx_2 < URControlParams.attitude_maxuv_des) ||
-      rEQ0) {
-    rtb_att_idx_1 = rtb_DataTypeConversion8_idx_2;
+  if ((uDot2_min < URControlParams.attitude_maxuv_des) || tmp_4) {
+    rtb_DataTypeConversion8_idx_1 = uDot2_min;
   } else {
-    rtb_att_idx_1 = URControlParams.attitude_maxuv_des;
+    rtb_DataTypeConversion8_idx_1 = URControlParams.attitude_maxuv_des;
   }
 
-  if ((rtb_att_idx_1 > -URControlParams.attitude_maxuv_des) || tmp_1) {
-    rtb_Product2 = rtb_att_idx_1;
-    b_z1[1] = rtb_att_idx_1;
+  if ((rtb_DataTypeConversion8_idx_1 > -URControlParams.attitude_maxuv_des) ||
+      tmp_5) {
+    b_z1[1] = rtb_DataTypeConversion8_idx_1;
   } else {
-    rtb_Product2 = -URControlParams.attitude_maxuv_des;
+    rtb_DataTypeConversion8_idx_1 = -URControlParams.attitude_maxuv_des;
     b_z1[1] = -URControlParams.attitude_maxuv_des;
   }
 
-  /* 'URAttitudeController:26' pq_des = par.URC.R_xy_uv\uv_des; */
+  /* 'URAttitudeController:29' pq_des = par.URC.R_xy_uv\uv_des; */
   if (std::abs(URControl_ConstP.pooled1.URC.R_xy_uv[1]) > std::abs
       (URControl_ConstP.pooled1.URC.R_xy_uv[0])) {
     i = 1;
@@ -5267,53 +6857,52 @@ void URControlModelClass::step()
     r2 = 1;
   }
 
-  rtb_Product1 = URControl_ConstP.pooled1.URC.R_xy_uv[r2] /
+  rtb_TmpSignalConversionAtSFun_2 = URControl_ConstP.pooled1.URC.R_xy_uv[r2] /
     URControl_ConstP.pooled1.URC.R_xy_uv[i];
-  rtb_att_idx_2 = URControl_ConstP.pooled1.URC.R_xy_uv[2 + i];
-  rtb_DataTypeConversion8_idx_2 = (b_z1[r2] - b_z1[i] * rtb_Product1) /
-    (URControl_ConstP.pooled1.URC.R_xy_uv[2 + r2] - rtb_att_idx_2 * rtb_Product1);
-  rtb_att_idx_1 = (b_z1[i] - rtb_att_idx_2 * rtb_DataTypeConversion8_idx_2) /
-    URControl_ConstP.pooled1.URC.R_xy_uv[i];
+  tmp_3 = URControl_ConstP.pooled1.URC.R_xy_uv[2 + i];
+  uDot2_min = (b_z1[r2] - b_z1[i] * rtb_TmpSignalConversionAtSFun_2) /
+    (URControl_ConstP.pooled1.URC.R_xy_uv[2 + r2] - tmp_3 *
+     rtb_TmpSignalConversionAtSFun_2);
 
-  /* 'URAttitudeController:28' pqr_des = [pq_des; r_cmd]; */
-  rtb_att_idx_2 = errorSum;
+  /* 'URAttitudeController:31' pqr_des = [pq_des; r_cmd]; */
+  rtb_pos[2] = rtb_TmpSignalConversionAtSFun_4;
 
-  /* 'URAttitudeController:29' uvr_des = [uv_des; r_cmd]; */
-  rtb_omega[0] = rtb_DataTypeConversion8_idx_0;
-  rtb_omega[1] = rtb_Product2;
-  rtb_omega[2] = errorSum;
+  /* 'URAttitudeController:32' uvr_des = [uv_des; r_cmd]; */
+  rtb_att[0] = errorVel_idx_2;
+  rtb_att[1] = rtb_DataTypeConversion8_idx_1;
+  rtb_att[2] = rtb_TmpSignalConversionAtSFun_4;
 
-  /* 'URAttitudeController:32' daq.pqr_des = pqr_des; */
-  /* 'URAttitudeController:33' daq.uvr_des = uvr_des; */
-  URControl_DW.DAQ.pqr_des[0] = rtb_att_idx_1;
+  /* 'URAttitudeController:35' daq.pqr_des = pqr_des; */
+  /* 'URAttitudeController:36' daq.uvr_des = uvr_des; */
+  tmp_3 = (b_z1[i] - tmp_3 * uDot2_min) / URControl_ConstP.pooled1.URC.R_xy_uv[i];
+  URControl_DW.DAQ.pqr_des[0] = tmp_3;
   URControl_DW.DAQ.uvr_des[0] = b_z1[0];
-  URControl_DW.DAQ.pqr_des[1] = rtb_DataTypeConversion8_idx_2;
+  URControl_DW.DAQ.pqr_des[1] = uDot2_min;
   URControl_DW.DAQ.uvr_des[1] = b_z1[1];
-  URControl_DW.DAQ.pqr_des[2] = errorSum;
-  URControl_DW.DAQ.uvr_des[2] = errorSum;
+  URControl_DW.DAQ.pqr_des[2] = rtb_TmpSignalConversionAtSFun_4;
+  URControl_DW.DAQ.uvr_des[2] = rtb_TmpSignalConversionAtSFun_4;
 
-  /* 'URAttitudeController:34' daq.uv_des_raw = uv_des_raw; */
-  /* 'URAttitudeController:35' daq.uv_des = uv_des; */
-  /* 'URAttitudeController:36' daq.uv_attCtrl = uv_attCtrl; */
-  URControl_DW.DAQ.uv_des_raw[0] = dummy_idx_0;
-  URControl_DW.DAQ.uv_des[0] = rtb_DataTypeConversion8_idx_0;
-  URControl_DW.DAQ.uv_attCtrl[0] = rtb_yawTarget;
-  URControl_DW.DAQ.uv_des_raw[1] = rtb_DataTypeConversion8_idx_1;
-  URControl_DW.DAQ.uv_des[1] = rtb_Product2;
-  URControl_DW.DAQ.uv_attCtrl[1] = Fset_idx_2;
+  /* 'URAttitudeController:37' daq.uv_des_raw = uv_des_raw; */
+  /* 'URAttitudeController:38' daq.uv_des = uv_des; */
+  /* 'URAttitudeController:39' daq.uv_attCtrl = uv_attCtrl; */
+  URControl_DW.DAQ.uv_des_raw[0] = vDot2_min;
+  URControl_DW.DAQ.uv_des[0] = errorVel_idx_2;
+  URControl_DW.DAQ.uv_des_raw[1] = rtb_DataTypeConversion8_idx_0;
+  URControl_DW.DAQ.uv_des[1] = rtb_DataTypeConversion8_idx_1;
+  URControl_DW.DAQ.uv_attCtrl[1] = errorVel_idx_0;
 
-  /* 'URAttitudeController:37' daq.w_max = w_max; */
-  /* 'URAttitudeController:38' daq.w_min = w_min; */
+  /* 'URAttitudeController:40' daq.w_max = w_max; */
+  /* 'URAttitudeController:41' daq.w_min = w_min; */
   URControl_DW.DAQ.w_max[0] = FMin[0];
   URControl_DW.DAQ.w_min[0] = 0.0;
   URControl_DW.DAQ.w_max[1] = 1200.0;
-  URControl_DW.DAQ.w_min[1] = w_min_idx_1;
+  URControl_DW.DAQ.w_min[1] = rtb_TmpSignalConversionAtSFun_3;
   URControl_DW.DAQ.w_max[2] = FMin[2];
   URControl_DW.DAQ.w_min[2] = 0.0;
   URControl_DW.DAQ.w_max[3] = 1200.0;
-  URControl_DW.DAQ.w_min[3] = Iu;
+  URControl_DW.DAQ.w_min[3] = rtb_TmpSignalConversionAtSFun_1;
 
-  /* 'URAttitudeController:39' daq.MzGain = MzGain; */
+  /* 'URAttitudeController:42' daq.MzGain = MzGain; */
   URControl_DW.DAQ.MzGain = rtb_enableMeas;
 
   /* MATLAB Function: '<S2>/altitude control' incorporates:
@@ -5325,121 +6914,134 @@ void URControlModelClass::step()
   /* 'URAltitudeControl:3' if isempty(errorInt) */
   /* 'URAltitudeControl:6' errorPos = inputs.zTarget  - state.pos(3); */
   /* 'URAltitudeControl:7' velTarget = URpar.altitude_Kp_pos.*errorPos; */
-  /* 'URAltitudeControl:8' maxVel = URpar.altitude_maxVel; */
-  /* 'URAltitudeControl:9' velTarget = max(min(velTarget,maxVel),-maxVel); */
-  /* 'URAltitudeControl:13' errorVel = velTarget - state.vel(3); */
-  rtb_yawTarget = (URControl_U.pos_sp[2] - URControl_DW.State.pos[2]) *
+  /* 'URAltitudeControl:8' if state.fail_id > 0 */
+  if (URControl_DW.State.fail_id > 0.0) {
+    /* 'URAltitudeControl:9' maxVel = URpar.altitude_maxVelFail; */
+    rtb_TmpSignalConversionAtSFun_4 = URControlParams.altitude_maxVelFail;
+  } else {
+    /* 'URAltitudeControl:10' else */
+    /* 'URAltitudeControl:11' maxVel = URpar.altitude_maxVel; */
+    rtb_TmpSignalConversionAtSFun_4 = URControlParams.altitude_maxVel;
+  }
+
+  /* 'URAltitudeControl:13' velTarget = max(min(velTarget,maxVel),-maxVel); */
+  /* 'URAltitudeControl:17' errorVel = velTarget - state.vel(3); */
+  u0 = (URControl_U.pos_sp[2] - URControl_DW.State.pos[2]) *
     URControlParams.altitude_Kp_pos;
-  if ((!(rtb_yawTarget < URControlParams.altitude_maxVel)) && (!rtIsNaN
-       (URControlParams.altitude_maxVel))) {
-    rtb_yawTarget = URControlParams.altitude_maxVel;
+  if ((!(u0 < rtb_TmpSignalConversionAtSFun_4)) && (!rtIsNaN
+       (rtb_TmpSignalConversionAtSFun_4))) {
+    u0 = rtb_TmpSignalConversionAtSFun_4;
   }
 
-  if ((!(rtb_yawTarget > -URControlParams.altitude_maxVel)) && (!rtIsNaN
-       (-URControlParams.altitude_maxVel))) {
-    rtb_yawTarget = -URControlParams.altitude_maxVel;
+  if ((!(u0 > -rtb_TmpSignalConversionAtSFun_4)) && (!rtIsNaN
+       (-rtb_TmpSignalConversionAtSFun_4))) {
+    u0 = -rtb_TmpSignalConversionAtSFun_4;
   }
 
-  errorSum = rtb_yawTarget - URControl_DW.State.vel[2];
+  rtb_TmpSignalConversionAtSFun_4 = u0 - URControl_DW.State.vel[2];
 
-  /* 'URAltitudeControl:14' errorInt = errorInt + errorVel/par.freq; */
-  URControl_DW.errorInt_b += errorSum / 500.0;
+  /* 'URAltitudeControl:18' errorInt = errorInt + errorVel/par.freq; */
+  URControl_DW.errorInt_b += rtb_TmpSignalConversionAtSFun_4 / 500.0;
 
-  /* 'URAltitudeControl:15' intLim = URpar.altitude_intLim; */
-  /* 'URAltitudeControl:16' errorInt = max(min(errorInt,intLim),-intLim); */
+  /* 'URAltitudeControl:19' intLim = URpar.altitude_intLim; */
+  /* 'URAltitudeControl:20' errorInt = max(min(errorInt,intLim),-intLim); */
   if ((URControl_DW.errorInt_b < URControlParams.altitude_intLim) || rtIsNaN
       (URControlParams.altitude_intLim)) {
-    rtb_yawTarget = URControl_DW.errorInt_b;
+    u0 = URControl_DW.errorInt_b;
   } else {
-    rtb_yawTarget = URControlParams.altitude_intLim;
+    u0 = URControlParams.altitude_intLim;
   }
 
-  if ((rtb_yawTarget > -URControlParams.altitude_intLim) || rtIsNaN
+  if ((u0 > -URControlParams.altitude_intLim) || rtIsNaN
       (-URControlParams.altitude_intLim)) {
-    URControl_DW.errorInt_b = rtb_yawTarget;
+    URControl_DW.errorInt_b = u0;
   } else {
     URControl_DW.errorInt_b = -URControlParams.altitude_intLim;
   }
 
-  /* 'URAltitudeControl:19' az_ref = URpar.altitude_Kp_vel.*errorVel + URpar.altitude_Ki_vel.*errorInt; */
-  /* 'URAltitudeControl:20' peakAngle = URpar.altitude_peakAngle; */
-  /* 'URAltitudeControl:24' multiFactor = 1/(cos(max(min(state.att(1),peakAngle),-peakAngle))*cos(max(min(state.att(2),peakAngle),-peakAngle))); */
-  /* 'URAltitudeControl:25' Ftot_ref = -(az_ref - par.g)*par.mass*multiFactor; */
-  /* 'URAltitudeControl:26' Ftot_ref = max(Ftot_ref,0); */
-  rEQ0 = rtIsNaN(URControlParams.altitude_peakAngle);
-  if ((URControl_DW.State.att[0] < URControlParams.altitude_peakAngle) || rEQ0)
+  /* 'URAltitudeControl:23' az_ref = URpar.altitude_Kp_vel.*errorVel + URpar.altitude_Ki_vel.*errorInt; */
+  /* 'URAltitudeControl:24' peakAngle = URpar.altitude_peakAngle; */
+  /* 'URAltitudeControl:28' multiFactor = 1/(cos(max(min(state.att(1),peakAngle),-peakAngle))*cos(max(min(state.att(2),peakAngle),-peakAngle))); */
+  /* 'URAltitudeControl:29' Ftot_ref = -(az_ref - par.g)*par.mass*multiFactor; */
+  /* 'URAltitudeControl:30' Ftot_ref = max(Ftot_ref,0); */
+  tmp_4 = rtIsNaN(URControlParams.altitude_peakAngle);
+  if ((URControl_DW.State.att[1] < URControlParams.altitude_peakAngle) || tmp_4)
   {
-    rtb_yawTarget = URControl_DW.State.att[0];
+    u0 = URControl_DW.State.att[1];
   } else {
-    rtb_yawTarget = URControlParams.altitude_peakAngle;
+    u0 = URControlParams.altitude_peakAngle;
   }
 
-  if ((URControl_DW.State.att[1] < URControlParams.altitude_peakAngle) || rEQ0)
+  if ((URControl_DW.State.att[0] < URControlParams.altitude_peakAngle) || tmp_4)
   {
-    rtb_Product1 = URControl_DW.State.att[1];
+    rtb_TmpSignalConversionAtSFun_2 = URControl_DW.State.att[0];
   } else {
-    rtb_Product1 = URControlParams.altitude_peakAngle;
+    rtb_TmpSignalConversionAtSFun_2 = URControlParams.altitude_peakAngle;
   }
 
-  rEQ0 = rtIsNaN(-URControlParams.altitude_peakAngle);
-  if ((!(rtb_yawTarget > -URControlParams.altitude_peakAngle)) && (!rEQ0)) {
-    rtb_yawTarget = -URControlParams.altitude_peakAngle;
+  tmp_4 = rtIsNaN(-URControlParams.altitude_peakAngle);
+  if ((!(rtb_TmpSignalConversionAtSFun_2 > -URControlParams.altitude_peakAngle))
+      && (!tmp_4)) {
+    rtb_TmpSignalConversionAtSFun_2 = -URControlParams.altitude_peakAngle;
   }
 
-  if ((!(rtb_Product1 > -URControlParams.altitude_peakAngle)) && (!rEQ0)) {
-    rtb_Product1 = -URControlParams.altitude_peakAngle;
+  if ((!(u0 > -URControlParams.altitude_peakAngle)) && (!tmp_4)) {
+    u0 = -URControlParams.altitude_peakAngle;
   }
 
-  rtb_Product1 = -((URControlParams.altitude_Kp_vel * errorSum +
-                    URControlParams.altitude_Ki_vel * URControl_DW.errorInt_b) -
-                   9.81) * 0.374 * (1.0 / (std::cos(rtb_yawTarget) * std::cos
-    (rtb_Product1)));
-  if (!(rtb_Product1 > 0.0)) {
-    rtb_Product1 = 0.0;
+  rtb_TmpSignalConversionAtSFun_4 = -((URControlParams.altitude_Kp_vel *
+    rtb_TmpSignalConversionAtSFun_4 + URControlParams.altitude_Ki_vel *
+    URControl_DW.errorInt_b) - 9.81) * 0.374 * (1.0 / (std::cos
+    (rtb_TmpSignalConversionAtSFun_2) * std::cos(u0)));
+  if (!(rtb_TmpSignalConversionAtSFun_4 > 0.0)) {
+    rtb_TmpSignalConversionAtSFun_4 = 0.0;
   }
 
-  /* 'URAltitudeControl:27' maxAngle = max(abs(state.att(1)),abs(state.att(2))); */
-  rtb_yawTarget = std::abs(URControl_DW.State.att[0]);
-  errorSum = std::abs(URControl_DW.State.att[1]);
-  if ((rtb_yawTarget > errorSum) || rtIsNaN(errorSum)) {
-    errorSum = rtb_yawTarget;
+  /* 'URAltitudeControl:31' maxAngle = max(abs(state.att(1)),abs(state.att(2))); */
+  u0 = std::abs(URControl_DW.State.att[0]);
+  rtb_TmpSignalConversionAtSFun_2 = std::abs(URControl_DW.State.att[1]);
+  if ((u0 > rtb_TmpSignalConversionAtSFun_2) || rtIsNaN
+      (rtb_TmpSignalConversionAtSFun_2)) {
+    rtb_TmpSignalConversionAtSFun_2 = u0;
   }
 
-  /* 'URAltitudeControl:28' if maxAngle > URpar.altitude_peakAngle */
-  if (errorSum > URControlParams.altitude_peakAngle) {
-    /* 'URAltitudeControl:30' redFactor = 1 - (maxAngle - URpar.altitude_peakAngle)/(URpar.altitude_LOCAngle - URpar.altitude_peakAngle); */
-    /* 'URAltitudeControl:31' redFactor = max(min(redFactor,1),0); */
-    /* 'URAltitudeControl:32' Ftot_ref = Ftot_ref*redFactor; */
-    rtb_yawTarget = 1.0 - (errorSum - URControlParams.altitude_peakAngle) /
+  /* 'URAltitudeControl:32' if maxAngle > URpar.altitude_peakAngle */
+  if (rtb_TmpSignalConversionAtSFun_2 > URControlParams.altitude_peakAngle) {
+    /* 'URAltitudeControl:34' redFactor = 1 - (maxAngle - URpar.altitude_peakAngle)/(URpar.altitude_LOCAngle - URpar.altitude_peakAngle); */
+    /* 'URAltitudeControl:35' redFactor = max(min(redFactor,1),0); */
+    /* 'URAltitudeControl:36' Ftot_ref = Ftot_ref*redFactor; */
+    u0 = 1.0 - (rtb_TmpSignalConversionAtSFun_2 -
+                URControlParams.altitude_peakAngle) /
       (URControlParams.altitude_LOCAngle - URControlParams.altitude_peakAngle);
-    if (!(rtb_yawTarget < 1.0)) {
-      rtb_yawTarget = 1.0;
+    if (!(u0 < 1.0)) {
+      u0 = 1.0;
     }
 
-    if (!(rtb_yawTarget > 0.0)) {
-      rtb_yawTarget = 0.0;
+    if (!(u0 > 0.0)) {
+      u0 = 0.0;
     }
 
-    rtb_Product1 *= rtb_yawTarget;
+    rtb_TmpSignalConversionAtSFun_4 *= u0;
   }
 
-  /* 'URAltitudeControl:38' maxFtot = sum(state.FMax)*URpar.altitude_maxFPerc; */
-  /* 'URAltitudeControl:39' Ftot_ref = min(Ftot_ref,maxFtot); */
-  errorSum = (((URControl_DW.State.FMax[0] + URControl_DW.State.FMax[1]) +
-               URControl_DW.State.FMax[2]) + URControl_DW.State.FMax[3]) *
-    URControlParams.altitude_maxFPerc;
-  if ((!(rtb_Product1 < errorSum)) && (!rtIsNaN(errorSum))) {
-    rtb_Product1 = errorSum;
+  /* 'URAltitudeControl:42' maxFtot = sum(state.FMax)*URpar.altitude_maxFPerc; */
+  /* 'URAltitudeControl:43' Ftot_ref = min(Ftot_ref,maxFtot); */
+  rtb_TmpSignalConversionAtSFun_2 = (((URControl_DW.State.FMax[0] +
+    URControl_DW.State.FMax[1]) + URControl_DW.State.FMax[2]) +
+    URControl_DW.State.FMax[3]) * URControlParams.altitude_maxFPerc;
+  if ((!(rtb_TmpSignalConversionAtSFun_4 < rtb_TmpSignalConversionAtSFun_2)) &&
+      (!rtIsNaN(rtb_TmpSignalConversionAtSFun_2))) {
+    rtb_TmpSignalConversionAtSFun_4 = rtb_TmpSignalConversionAtSFun_2;
   }
 
-  /* 'URAltitudeControl:41' if URpar.altitude_enable == 0 */
+  /* 'URAltitudeControl:45' if URpar.altitude_enable == 0 */
   if (URControlParams.altitude_enable == 0.0) {
-    /* 'URAltitudeControl:42' Ftot_ref = par.g*par.mass; */
-    rtb_Product1 = 3.66894;
+    /* 'URAltitudeControl:46' Ftot_ref = par.g*par.mass; */
+    rtb_TmpSignalConversionAtSFun_4 = 3.66894;
   }
 
-  /* 'URAltitudeControl:46' daq.Ftot_ref = Ftot_ref; */
-  URControl_DW.DAQ.Ftot_ref = rtb_Product1;
+  /* 'URAltitudeControl:50' daq.Ftot_ref = Ftot_ref; */
+  URControl_DW.DAQ.Ftot_ref = rtb_TmpSignalConversionAtSFun_4;
 
   /* MATLAB Function: '<S6>/control allocator' incorporates:
    *  Inport: '<Root>/fail_flag'
@@ -5455,720 +7057,717 @@ void URControlModelClass::step()
   /* 'URControl_alloc:6' if isempty(omegaDot) */
   if (!URControl_DW.omegaDot_not_empty) {
     /* 'URControl_alloc:6' omegaDot = SimpleDerivative(URpar.rate_INDI_omegaDotFilterT, [0,0,0], 300, -300); */
-    /* 'SimpleDerivative:12' obj.filterHandle = LPFilter(filterT, initValue, maxLim, minLim); */
-    /* 'LPFilter:14' obj.filterT = filterT; */
-    URControl_DW.omegaDot.filterHandle.filterT =
-      URControlParams.rate_INDI_omegaDotFilterT;
-
-    /* 'LPFilter:15' obj.value = initValue; */
-    /* 'LPFilter:16' obj.maxLim = maxLim; */
-    URControl_DW.omegaDot.filterHandle.maxLim = 300.0;
-
-    /* 'LPFilter:17' obj.minLim = minLim; */
-    URControl_DW.omegaDot.filterHandle.minLim = -300.0;
-
-    /* 'SimpleDerivative:13' obj.prevValue = initValue; */
-    URControl_DW.omegaDot.filterHandle.value[0] = 0.0;
-    URControl_DW.omegaDot.prevValue[0] = 0.0;
-    URControl_DW.omegaDot.filterHandle.value[1] = 0.0;
-    URControl_DW.omegaDot.prevValue[1] = 0.0;
-    URControl_DW.omegaDot.filterHandle.value[2] = 0.0;
-    URControl_DW.omegaDot.prevValue[2] = 0.0;
+    errorVel[0] = 0.0;
+    errorVel[1] = 0.0;
+    errorVel[2] = 0.0;
+    SimpleDerivative_SimpleDerivati(&URControl_DW.omegaDot,
+      URControlParams.rate_INDI_omegaDotFilterT, errorVel, 300.0, -300.0);
     URControl_DW.omegaDot_not_empty = true;
   }
 
   /* 'URControl_alloc:7' if isempty(accZFilt) */
   if (!URControl_DW.accZFilt_not_empty) {
     /* 'URControl_alloc:7' accZFilt = LPFilter(URpar.rate_INDI_accZFilterT, 0, 30, -30); */
-    /* 'LPFilter:14' obj.filterT = filterT; */
-    URControl_DW.accZFilt.filterT = URControlParams.rate_INDI_accZFilterT;
-
-    /* 'LPFilter:15' obj.value = initValue; */
-    URControl_DW.accZFilt.value = 0.0;
-
-    /* 'LPFilter:16' obj.maxLim = maxLim; */
-    URControl_DW.accZFilt.maxLim = 30.0;
-
-    /* 'LPFilter:17' obj.minLim = minLim; */
-    URControl_DW.accZFilt.minLim = -30.0;
+    URControl_LPFilter_LPFilter(&URControl_DW.accZFilt,
+      URControlParams.rate_INDI_accZFilterT);
     URControl_DW.accZFilt_not_empty = true;
   }
 
   /* 'URControl_alloc:9' wRotorSet = [0;0;0;0]; */
-  rtb_TmpSignalConversionAtSFun_h[0] = 0.0;
-  rtb_TmpSignalConversionAtSFun_h[1] = 0.0;
-  rtb_TmpSignalConversionAtSFun_h[2] = 0.0;
-  rtb_TmpSignalConversionAtSFun_h[3] = 0.0;
+  qconj[0] = 0.0;
+  qconj[1] = 0.0;
+  qconj[2] = 0.0;
+  qconj[3] = 0.0;
 
   /* 'URControl_alloc:11' if URpar.rate_mode == 1 */
   if (URControlParams.rate_mode == 1.0) {
     /* 'URControl_alloc:13' error = pqr_des - state.omegaf'; */
     /* 'URControl_alloc:14' pqr_des_dot = error.*URpar.rate_INDI_rateDotKp'; */
-    dummy_idx_0 = (rtb_att_idx_1 - URControl_DW.State.omegaf[0]) *
+    rtb_pos[0] = (tmp_3 - URControl_DW.State.omegaf[0]) *
       URControlParams.rate_INDI_rateDotKp[0];
-    rtb_Product2 = (rtb_DataTypeConversion8_idx_2 - URControl_DW.State.omegaf[1])
-      * URControlParams.rate_INDI_rateDotKp[1];
-    rtb_DataTypeConversion8_idx_2 = (rtb_att_idx_2 - URControl_DW.State.omegaf[2])
-      * URControlParams.rate_INDI_rateDotKp[2];
+    rtb_pos[1] = (uDot2_min - URControl_DW.State.omegaf[1]) *
+      URControlParams.rate_INDI_rateDotKp[1];
+    tmp_3 = (rtb_pos[2] - URControl_DW.State.omegaf[2]) *
+      URControlParams.rate_INDI_rateDotKp[2];
 
     /* 'URControl_alloc:15' acc_z_des = -Ftot_ref/URpar.mass; */
     /* 'URControl_alloc:16' v = [pqr_des_dot; acc_z_des]; */
-    /* 'URControl_alloc:18' omegaDot.update(state.omega, 1/par.freq); */
+    /* 'URControl_alloc:18' omegaDot.updateFilterT(URpar.rate_INDI_omegaDotFilterT); */
+    /* 'SimpleDerivative:23' obj.filterHandle.updateFilterT(filterT); */
+    /* 'LPFilter:26' obj.filterT = filterT; */
+    URControl_DW.omegaDot.filterHandle.filterT =
+      URControlParams.rate_INDI_omegaDotFilterT;
+
+    /* 'URControl_alloc:19' omegaDot.update(state.omega, 1/par.freq); */
     URContr_SimpleDerivative_update(&URControl_DW.omegaDot,
       URControl_DW.State.omega, 0.002);
 
-    /* 'URControl_alloc:19' accZFilt.update(state.acc(3)); */
+    /* 'URControl_alloc:20' accZFilt.updateFilterT(URpar.rate_INDI_accZFilterT); */
+    /* 'LPFilter:26' obj.filterT = filterT; */
+    URControl_DW.accZFilt.filterT = URControlParams.rate_INDI_accZFilterT;
+
+    /* 'URControl_alloc:21' accZFilt.update(state.acc(3)); */
     /* 'LPFilter:21' obj.value = obj.value*obj.filterT + newValue*(1 - obj.filterT); */
     URControl_DW.accZFilt.value = (1.0 - URControl_DW.accZFilt.filterT) *
       URControl_DW.State.acc[2] + URControl_DW.accZFilt.value *
       URControl_DW.accZFilt.filterT;
 
     /* 'LPFilter:22' obj.value = max(min(obj.value,obj.maxLim),obj.minLim); */
-    if ((URControl_DW.accZFilt.value < URControl_DW.accZFilt.maxLim) || rtIsNaN
-        (URControl_DW.accZFilt.maxLim)) {
-      rtb_DataTypeConversion8_idx_0 = URControl_DW.accZFilt.value;
-    } else {
-      rtb_DataTypeConversion8_idx_0 = URControl_DW.accZFilt.maxLim;
+    rtb_enableMeas = URControl_DW.accZFilt.value;
+    rtb_TmpSignalConversionAtSFun_2 = URControl_DW.accZFilt.maxLim;
+    rtb_DataTypeConversion8_idx_0 = URControl_DW.accZFilt.minLim;
+    if ((rtb_enableMeas < rtb_TmpSignalConversionAtSFun_2) || rtIsNaN
+        (rtb_TmpSignalConversionAtSFun_2)) {
+      rtb_TmpSignalConversionAtSFun_2 = rtb_enableMeas;
     }
 
-    if ((rtb_DataTypeConversion8_idx_0 > URControl_DW.accZFilt.minLim) ||
-        rtIsNaN(URControl_DW.accZFilt.minLim)) {
+    if ((rtb_TmpSignalConversionAtSFun_2 > rtb_DataTypeConversion8_idx_0) ||
+        rtIsNaN(rtb_DataTypeConversion8_idx_0)) {
+      URControl_DW.accZFilt.value = rtb_TmpSignalConversionAtSFun_2;
+    } else {
       URControl_DW.accZFilt.value = rtb_DataTypeConversion8_idx_0;
-    } else {
-      URControl_DW.accZFilt.value = URControl_DW.accZFilt.minLim;
     }
 
-    /* 'URControl_alloc:21' [w_cmd]  = URINDI_allocator(state.fail_id, omegaDot.derValue', accZFilt.value, v, URpar.rate_INDI_G, [], state.wRotor', par); */
-    rtb_TmpSignalConversionAtSFun_j[0] = dummy_idx_0;
-    rtb_TmpSignalConversionAtSFun_j[1] = rtb_Product2;
-    rtb_TmpSignalConversionAtSFun_j[2] = rtb_DataTypeConversion8_idx_2;
-    rtb_TmpSignalConversionAtSFun_j[3] = -rtb_Product1 / URControlParams.mass;
-    memcpy(&tmp[0], &URControlParams.rate_INDI_G[0], sizeof(real_T) << 5U);
-    URControl_URINDI_allocator(URControl_DW.State.fail_id,
-      URControl_DW.omegaDot.derValue, URControl_DW.accZFilt.value,
-      rtb_TmpSignalConversionAtSFun_j, tmp, URControl_DW.State.wRotor,
-      &URControl_ConstP.pooled1, rtb_TmpSignalConversionAtSFun_h);
+    /* 'URControl_alloc:23' [w_cmd]  = URINDI_allocator(state.fail_id, omegaDot.derValue', accZFilt.value, v, URpar.rate_INDI_G, [], state.wRotor', par); */
+    errorVel[0] = URControl_DW.omegaDot.derValue[0];
+    errorVel[1] = URControl_DW.omegaDot.derValue[1];
+    errorVel[2] = URControl_DW.omegaDot.derValue[2];
+    rtb_TmpSignalConversionAtSFun_0[0] = rtb_pos[0];
+    rtb_TmpSignalConversionAtSFun_0[1] = rtb_pos[1];
+    rtb_TmpSignalConversionAtSFun_0[2] = tmp_3;
+    rtb_TmpSignalConversionAtSFun_0[3] = -rtb_TmpSignalConversionAtSFun_4 /
+      URControlParams.mass;
+    memcpy(&tmp_0[0], &URControlParams.rate_INDI_G[0], sizeof(real_T) << 5U);
+    URControl_URINDI_allocator(URControl_DW.State.fail_id, errorVel,
+      URControl_DW.accZFilt.value, rtb_TmpSignalConversionAtSFun_0, tmp_0,
+      URControl_DW.State.wRotor, 1256.0, 300.0, qconj);
 
-    /* 'URControl_alloc:23' wRotorSet = w_cmd; */
-    /* 'URControl_alloc:25' daq.pqr_des_dot = pqr_des_dot; */
-    /* 'URControl_alloc:26' daq.omegaDot = omegaDot.derValue; */
-    URControl_DW.DAQ.pqr_des_dot[0] = dummy_idx_0;
+    /* 'URControl_alloc:25' wRotorSet = w_cmd; */
+    /* 'URControl_alloc:27' daq.pqr_des_dot = pqr_des_dot; */
+    URControl_DW.DAQ.pqr_des_dot[0] = rtb_pos[0];
+    URControl_DW.DAQ.pqr_des_dot[1] = rtb_pos[1];
+    URControl_DW.DAQ.pqr_des_dot[2] = tmp_3;
+
+    /* 'URControl_alloc:28' daq.omegaDot = omegaDot.derValue; */
     URControl_DW.DAQ.omegaDot[0] = URControl_DW.omegaDot.derValue[0];
-    URControl_DW.DAQ.pqr_des_dot[1] = rtb_Product2;
     URControl_DW.DAQ.omegaDot[1] = URControl_DW.omegaDot.derValue[1];
-    URControl_DW.DAQ.pqr_des_dot[2] = rtb_DataTypeConversion8_idx_2;
     URControl_DW.DAQ.omegaDot[2] = URControl_DW.omegaDot.derValue[2];
+  } else if (URControlParams.rate_mode == 2.0) {
+    /* 'URControl_alloc:30' elseif URpar.rate_mode == 2 */
+    /* 'URControl_alloc:32' M_uvr = zeros(3,1); */
+    rtb_pos[0] = 0.0;
+    rtb_pos[1] = 0.0;
+    rtb_pos[2] = 0.0;
+
+    /* 'URControl_alloc:33' if URpar.rate_momentMode == 1 */
+    if (URControlParams.rate_momentMode == 1.0) {
+      /* 'URControl_alloc:34' [M_uvr, daq] = PIDMomentGen(state, daq, uvr_des, URpar, par); */
+      URControl_PIDMomentGen(URControl_DW.State.omegaUV,
+        URControl_DW.State.omegafUV, &URControl_DW.DAQ, rtb_att,
+        URControlParams.Iz, URControlParams.Iu, URControlParams.Iv,
+        URControlParams.rate_MPID_rateDotKp, URControlParams.rate_MPID_rateDotKi,
+        URControlParams.rate_MPID_rateDotKd,
+        URControlParams.rate_MPID_derFilterT,
+        URControlParams.rate_MPID_uvrdesderFilterT,
+        URControlParams.rate_MPID_maxInt, URControlParams.rate_MPID_precGain,
+        500.0, rtb_pos);
+    } else {
+      if (URControlParams.rate_momentMode == 2.0) {
+        /* 'URControl_alloc:35' elseif URpar.rate_momentMode == 2 */
+        /* 'URControl_alloc:36' [M_uvr, daq] = INDIMomentGen(state, daq, uvr_des, M_uvr_set, URpar, par); */
+        URControl_INDIMomentGen(URControl_DW.State.wRotor,
+          URControl_DW.State.omegaUV, URControl_DW.State.omegafUV,
+          &URControl_DW.DAQ, rtb_att, URControlParams.k0, URControlParams.t0,
+          URControlParams.s, URControlParams.est_omegaFilterT,
+          URControlParams.rate_MINDI_rateDotKp,
+          URControlParams.rate_MINDI_derFilterT, URControlParams.rate_MINDI_MKp,
+          500.0, rtb_pos);
+      }
+    }
+
+    /* 'URControl_alloc:39' M_uvr = max(min(M_uvr, URpar.rate_maxMoments'), -URpar.rate_maxMoments'); */
+    if ((rtb_pos[0] < URControlParams.rate_maxMoments[0]) || rtIsNaN
+        (URControlParams.rate_maxMoments[0])) {
+      rtb_DataTypeConversion8_idx_0 = rtb_pos[0];
+    } else {
+      rtb_DataTypeConversion8_idx_0 = URControlParams.rate_maxMoments[0];
+    }
+
+    if ((rtb_pos[1] < URControlParams.rate_maxMoments[1]) || rtIsNaN
+        (URControlParams.rate_maxMoments[1])) {
+      rtb_DataTypeConversion8_idx_1 = rtb_pos[1];
+    } else {
+      rtb_DataTypeConversion8_idx_1 = URControlParams.rate_maxMoments[1];
+    }
+
+    if ((rtb_pos[2] < URControlParams.rate_maxMoments[2]) || rtIsNaN
+        (URControlParams.rate_maxMoments[2])) {
+      errorVel_idx_0 = rtb_pos[2];
+    } else {
+      errorVel_idx_0 = URControlParams.rate_maxMoments[2];
+    }
+
+    if ((!(rtb_DataTypeConversion8_idx_0 > -URControlParams.rate_maxMoments[0]))
+        && (!rtIsNaN(-URControlParams.rate_maxMoments[0]))) {
+      rtb_DataTypeConversion8_idx_0 = -URControlParams.rate_maxMoments[0];
+    }
+
+    if ((!(rtb_DataTypeConversion8_idx_1 > -URControlParams.rate_maxMoments[1]))
+        && (!rtIsNaN(-URControlParams.rate_maxMoments[1]))) {
+      rtb_DataTypeConversion8_idx_1 = -URControlParams.rate_maxMoments[1];
+    }
+
+    if ((!(errorVel_idx_0 > -URControlParams.rate_maxMoments[2])) && (!rtIsNaN
+         (-URControlParams.rate_maxMoments[2]))) {
+      errorVel_idx_0 = -URControlParams.rate_maxMoments[2];
+    }
+
+    /* 'URControl_alloc:42' refStruct.MuRef = M_uvr(1); */
+    /* 'URControl_alloc:42' refStruct.MvRef = M_uvr(2); */
+    /* 'URControl_alloc:42' refStruct.MzRef = M_uvr(3); */
+    /* 'URControl_alloc:42' refStruct.FtotRef = Ftot_ref; */
+    /* 'URControl_alloc:43' gains = struct(); */
+    /* 'URControl_alloc:43' gains.MuGain = URpar.rate_MuGain; */
+    /* 'URControl_alloc:43' gains.MvGain = URpar.rate_MvGain; */
+    /* 'URControl_alloc:44' gains.FtotGain = URpar.rate_FtotGain; */
+    /* 'URControl_alloc:44' gains.FGain = URpar.rate_FGain; */
+    /* 'URControl_alloc:44' gains.MzGain = MzGain; */
+    /* 'URControl_alloc:47' y_state_initial = y_state_prev; */
+    /* 'URControl_alloc:49' [x,y_state,iter,optimal] = controlAllocQPQuick(refStruct, state.FMax, state.FMin, gains, y_state_initial, par, URpar); */
+    URControl_controlAllocQPQuick(rtb_DataTypeConversion8_idx_0,
+      rtb_DataTypeConversion8_idx_1, errorVel_idx_0,
+      rtb_TmpSignalConversionAtSFun_4, URControl_DW.State.FMax,
+      URControl_DW.State.FMin, URControlParams.rate_MuGain,
+      URControlParams.rate_MvGain, URControlParams.rate_FtotGain,
+      URControlParams.rate_FGain, rtb_enableMeas, URControl_DW.y_state_prev,
+      1.9035E-6, 1.9202951E-8, 0.14450346016618426, URControlParams.rate_maxIter,
+      rtb_TmpSignalConversionAtSFun_0, &URControl_DW.DAQ.iter,
+      &rtb_TmpSignalConversionAtSFun_2);
+
+    /* 'URControl_alloc:50' y_state_prev = y_state; */
+    /* 'URControl_alloc:51' if optimal */
+    if (rtb_TmpSignalConversionAtSFun_2 != 0.0) {
+      /* 'URControl_alloc:52' Fset = x; */
+      URControl_DW.Fset_prev[0] = rtb_TmpSignalConversionAtSFun_0[0];
+      URControl_DW.Fset_prev[1] = rtb_TmpSignalConversionAtSFun_0[1];
+      URControl_DW.Fset_prev[2] = rtb_TmpSignalConversionAtSFun_0[2];
+      URControl_DW.Fset_prev[3] = rtb_TmpSignalConversionAtSFun_0[3];
+
+      /* 'URControl_alloc:53' Fset_prev = Fset; */
+    } else {
+      /* 'URControl_alloc:54' else */
+      /* 'URControl_alloc:55' Fset = Fset_prev*0.99; */
+      URControl_DW.Fset_prev[0] *= 0.99;
+      URControl_DW.Fset_prev[1] *= 0.99;
+      URControl_DW.Fset_prev[2] *= 0.99;
+      URControl_DW.Fset_prev[3] *= 0.99;
+
+      /* 'URControl_alloc:56' Fset_prev = Fset; */
+    }
+
+    /* 'URControl_alloc:59' wRotorSet = sqrt(max(Fset,0)/URpar.k0); */
+    if (URControl_DW.Fset_prev[0] > 0.0) {
+      tmp_3 = URControl_DW.Fset_prev[0];
+    } else {
+      tmp_3 = 0.0;
+    }
+
+    qconj[0] = tmp_3 / URControlParams.k0;
+    if (URControl_DW.Fset_prev[1] > 0.0) {
+      tmp_3 = URControl_DW.Fset_prev[1];
+    } else {
+      tmp_3 = 0.0;
+    }
+
+    qconj[1] = tmp_3 / URControlParams.k0;
+    if (URControl_DW.Fset_prev[2] > 0.0) {
+      tmp_3 = URControl_DW.Fset_prev[2];
+    } else {
+      tmp_3 = 0.0;
+    }
+
+    qconj[2] = tmp_3 / URControlParams.k0;
+    if (URControl_DW.Fset_prev[3] > 0.0) {
+      tmp_3 = URControl_DW.Fset_prev[3];
+    } else {
+      tmp_3 = 0.0;
+    }
+
+    qconj[3] = tmp_3 / URControlParams.k0;
+    URControl_sqrt(qconj);
+
+    /* 'URControl_alloc:62' M_uvr_set(1) = (x(4) - x(2))*URpar.s; */
+    URControl_DW.M_uvr_set[0] = (rtb_TmpSignalConversionAtSFun_0[3] -
+      rtb_TmpSignalConversionAtSFun_0[1]) * URControlParams.s;
+
+    /* 'URControl_alloc:63' M_uvr_set(2) = (x(1) - x(3))*URpar.s; */
+    URControl_DW.M_uvr_set[1] = (rtb_TmpSignalConversionAtSFun_0[0] -
+      rtb_TmpSignalConversionAtSFun_0[2]) * URControlParams.s;
+
+    /* 'URControl_alloc:64' M_uvr_set(3) = (x(1) - x(2) + x(3) - x(4))*URpar.t0/URpar.k0; */
+    URControl_DW.M_uvr_set[2] = (((rtb_TmpSignalConversionAtSFun_0[0] -
+      rtb_TmpSignalConversionAtSFun_0[1]) + rtb_TmpSignalConversionAtSFun_0[2])
+      - rtb_TmpSignalConversionAtSFun_0[3]) * URControlParams.t0 /
+      URControlParams.k0;
+
+    /* 'URControl_alloc:65' Ftot_set = sum(x); */
+    /* 'URControl_alloc:68' daq.iter = iter; */
+    /* 'URControl_alloc:69' daq.optimal = optimal; */
+    URControl_DW.DAQ.optimal = rtb_TmpSignalConversionAtSFun_2;
+
+    /* 'URControl_alloc:70' daq.M_uvr_des = M_uvr; */
+    /* 'URControl_alloc:71' daq.M_uvr_set = M_uvr_set; */
+    URControl_DW.DAQ.M_uvr_des[0] = rtb_DataTypeConversion8_idx_0;
+    URControl_DW.DAQ.M_uvr_set[0] = URControl_DW.M_uvr_set[0];
+    URControl_DW.DAQ.M_uvr_des[1] = rtb_DataTypeConversion8_idx_1;
+    URControl_DW.DAQ.M_uvr_set[1] = URControl_DW.M_uvr_set[1];
+    URControl_DW.DAQ.M_uvr_des[2] = errorVel_idx_0;
+    URControl_DW.DAQ.M_uvr_set[2] = URControl_DW.M_uvr_set[2];
+
+    /* 'URControl_alloc:72' daq.Ftot_set = Ftot_set; */
+    URControl_DW.DAQ.Ftot_set = URControl_sum(rtb_TmpSignalConversionAtSFun_0);
   } else {
-    if (URControlParams.rate_mode == 2.0) {
-      /* 'URControl_alloc:28' elseif URpar.rate_mode == 2 */
-      /* 'URControl_alloc:30' M_uvr = zeros(3,1); */
-      rtb_DataTypeConversion8_idx_2 = 0.0;
-      rtb_att_idx_1 = 0.0;
-      rtb_att_idx_2 = 0.0;
+    if (URControlParams.rate_mode == 3.0) {
+      /* 'URControl_alloc:74' elseif URpar.rate_mode == 3 */
+      /* 'URControl_alloc:78' errorf = uvr_des' - state.omegafUV; */
+      /* 'URControl_alloc:79' uvrDot_des = errorf.*URpar.rate_INDI_rateDotKp; */
+      /* 'URControl_alloc:83' acc_z_des = -Ftot_ref/URpar.mass; */
+      /* 'URControl_alloc:85' omegaDot.updateFilterT(URpar.rate_INDI_omegaDotFilterT) */
+      /* 'SimpleDerivative:23' obj.filterHandle.updateFilterT(filterT); */
+      /* 'LPFilter:26' obj.filterT = filterT; */
+      URControl_DW.omegaDot.filterHandle.filterT =
+        URControlParams.rate_INDI_omegaDotFilterT;
 
-      /* 'URControl_alloc:31' if URpar.rate_momentMode == 1 */
-      if (URControlParams.rate_momentMode == 1.0) {
-        /* 'URControl_alloc:32' [M_uvr, daq] = PIDMomentGen(state, daq, uvr_des, URpar, par); */
-        /* 'PIDMomentGen:3' if isempty(errorInt) */
-        /* 'PIDMomentGen:4' if isempty(error_prev) */
-        /* 'PIDMomentGen:6' if isempty(errorD) */
-        if (!URControl_DW.errorD_not_empty) {
-          /* 'PIDMomentGen:6' errorD = SimpleDerivative(URpar.rate_MPID_derFilterT,[0,0,0], 200, -200); */
-          /* 'SimpleDerivative:12' obj.filterHandle = LPFilter(filterT, initValue, maxLim, minLim); */
-          /* 'LPFilter:14' obj.filterT = filterT; */
-          URControl_DW.errorD.filterHandle.filterT =
-            URControlParams.rate_MPID_derFilterT;
+      /* 'URControl_alloc:86' omegaDot.update(state.omegaUV, 1/par.freq); */
+      URContr_SimpleDerivative_update(&URControl_DW.omegaDot,
+        URControl_DW.State.omegaUV, 0.002);
 
-          /* 'LPFilter:15' obj.value = initValue; */
-          /* 'LPFilter:16' obj.maxLim = maxLim; */
-          URControl_DW.errorD.filterHandle.maxLim = 200.0;
+      /* 'URControl_alloc:87' accZFilt.updateFilterT(URpar.rate_INDI_accZFilterT); */
+      /* 'LPFilter:26' obj.filterT = filterT; */
+      URControl_DW.accZFilt.filterT = URControlParams.rate_INDI_accZFilterT;
 
-          /* 'LPFilter:17' obj.minLim = minLim; */
-          URControl_DW.errorD.filterHandle.minLim = -200.0;
+      /* 'URControl_alloc:88' accZFilt.update(state.acc(3)); */
+      /* 'LPFilter:21' obj.value = obj.value*obj.filterT + newValue*(1 - obj.filterT); */
+      URControl_DW.accZFilt.value = (1.0 - URControl_DW.accZFilt.filterT) *
+        URControl_DW.State.acc[2] + URControl_DW.accZFilt.value *
+        URControl_DW.accZFilt.filterT;
 
-          /* 'SimpleDerivative:13' obj.prevValue = initValue; */
-          URControl_DW.errorD.filterHandle.value[0] = 0.0;
-          URControl_DW.errorD.prevValue[0] = 0.0;
-          URControl_DW.errorD.filterHandle.value[1] = 0.0;
-          URControl_DW.errorD.prevValue[1] = 0.0;
-          URControl_DW.errorD.filterHandle.value[2] = 0.0;
-          URControl_DW.errorD.prevValue[2] = 0.0;
-          URControl_DW.errorD_not_empty = true;
-        }
+      /* 'LPFilter:22' obj.value = max(min(obj.value,obj.maxLim),obj.minLim); */
+      rtb_TmpSignalConversionAtSFun_2 = URControl_DW.accZFilt.value;
+      rtb_DataTypeConversion8_idx_0 = URControl_DW.accZFilt.maxLim;
+      rtb_yawTarget = URControl_DW.accZFilt.minLim;
+      if ((rtb_TmpSignalConversionAtSFun_2 < rtb_DataTypeConversion8_idx_0) ||
+          rtIsNaN(rtb_DataTypeConversion8_idx_0)) {
+        rtb_DataTypeConversion8_idx_0 = rtb_TmpSignalConversionAtSFun_2;
+      }
 
-        /* 'PIDMomentGen:7' if isempty(uvrDer) */
-        if (!URControl_DW.uvrDer_not_empty) {
-          /* 'PIDMomentGen:7' uvrDer = SimpleDerivative(URpar.rate_MPID_uvrdesderFilterT,[0,0,0], 200, -200); */
-          /* 'SimpleDerivative:12' obj.filterHandle = LPFilter(filterT, initValue, maxLim, minLim); */
-          /* 'LPFilter:14' obj.filterT = filterT; */
-          URControl_DW.uvrDer.filterHandle.filterT =
-            URControlParams.rate_MPID_uvrdesderFilterT;
-
-          /* 'LPFilter:15' obj.value = initValue; */
-          /* 'LPFilter:16' obj.maxLim = maxLim; */
-          URControl_DW.uvrDer.filterHandle.maxLim = 200.0;
-
-          /* 'LPFilter:17' obj.minLim = minLim; */
-          URControl_DW.uvrDer.filterHandle.minLim = -200.0;
-
-          /* 'SimpleDerivative:13' obj.prevValue = initValue; */
-          URControl_DW.uvrDer.filterHandle.value[0] = 0.0;
-          URControl_DW.uvrDer.prevValue[0] = 0.0;
-          URControl_DW.uvrDer.filterHandle.value[1] = 0.0;
-          URControl_DW.uvrDer.prevValue[1] = 0.0;
-          URControl_DW.uvrDer.filterHandle.value[2] = 0.0;
-          URControl_DW.uvrDer.prevValue[2] = 0.0;
-          URControl_DW.uvrDer_not_empty = true;
-        }
-
-        /* 'PIDMomentGen:10' errorf = uvr_des' - state.omegafUV; */
-        /* 'PIDMomentGen:11' error = uvr_des' - state.omegaUV; */
-        /* 'PIDMomentGen:12' errorInt = errorInt + errorf/par.freq; */
-        /* 'PIDMomentGen:13' intLim = URpar.rate_MPID_maxInt * 1e-3; */
-        errorSum = URControlParams.rate_MPID_maxInt * 0.001;
-
-        /* 'PIDMomentGen:14' errorInt = max(min(errorInt,intLim),-intLim); */
-        rtb_att_idx_2 = b_z1[0] - URControl_DW.State.omegafUV[0];
-        URControl_DW.errorInt[0] += rtb_att_idx_2 / 500.0;
-        rEQ0 = rtIsNaN(errorSum);
-        if ((URControl_DW.errorInt[0] < errorSum) || rEQ0) {
-          rtb_DataTypeConversion8_idx_0 = URControl_DW.errorInt[0];
-        } else {
-          rtb_DataTypeConversion8_idx_0 = errorSum;
-        }
-
-        dummy_idx_0 = rtb_att_idx_2;
-        rtb_att_idx_2 = b_z1[1] - URControl_DW.State.omegafUV[1];
-        URControl_DW.errorInt[1] += rtb_att_idx_2 / 500.0;
-        if ((URControl_DW.errorInt[1] < errorSum) || rEQ0) {
-          rtb_DataTypeConversion8_idx_1 = URControl_DW.errorInt[1];
-        } else {
-          rtb_DataTypeConversion8_idx_1 = errorSum;
-        }
-
-        rtb_Product2 = rtb_omega[2] - URControl_DW.State.omegafUV[2];
-        URControl_DW.errorInt[2] += rtb_Product2 / 500.0;
-        if ((URControl_DW.errorInt[2] < errorSum) || rEQ0) {
-          rtb_DataTypeConversion8_idx_2 = URControl_DW.errorInt[2];
-        } else {
-          rtb_DataTypeConversion8_idx_2 = errorSum;
-        }
-
-        /* 'PIDMomentGen:16' errorD.filterHandle.filterT = URpar.rate_MPID_derFilterT; */
-        URControl_DW.errorD.filterHandle.filterT =
-          URControlParams.rate_MPID_derFilterT;
-
-        /* 'PIDMomentGen:17' errorD.update(error,1/par.freq) */
-        rEQ0 = rtIsNaN(-errorSum);
-        if ((rtb_DataTypeConversion8_idx_0 > -errorSum) || rEQ0) {
-          URControl_DW.errorInt[0] = rtb_DataTypeConversion8_idx_0;
-        } else {
-          URControl_DW.errorInt[0] = -errorSum;
-        }
-
-        errorVel[0] = b_z1[0] - URControl_DW.State.omegaUV[0];
-        if ((rtb_DataTypeConversion8_idx_1 > -errorSum) || rEQ0) {
-          URControl_DW.errorInt[1] = rtb_DataTypeConversion8_idx_1;
-        } else {
-          URControl_DW.errorInt[1] = -errorSum;
-        }
-
-        errorVel[1] = b_z1[1] - URControl_DW.State.omegaUV[1];
-        if ((rtb_DataTypeConversion8_idx_2 > -errorSum) || rEQ0) {
-          URControl_DW.errorInt[2] = rtb_DataTypeConversion8_idx_2;
-        } else {
-          URControl_DW.errorInt[2] = -errorSum;
-        }
-
-        errorVel[2] = rtb_omega[2] - URControl_DW.State.omegaUV[2];
-        URContr_SimpleDerivative_update(&URControl_DW.errorD, errorVel, 0.002);
-
-        /* 'PIDMomentGen:19' uvrDer.filterHandle.filterT = URpar.rate_MPID_uvrdesderFilterT; */
-        URControl_DW.uvrDer.filterHandle.filterT =
-          URControlParams.rate_MPID_uvrdesderFilterT;
-
-        /* 'PIDMomentGen:20' uvrDer.update(uvr_des', 1/par.freq); */
-        URContr_SimpleDerivative_update(&URControl_DW.uvrDer, rtb_omega, 0.002);
-
-        /* 'PIDMomentGen:21' uvr_des_dot = uvrDer.derValue; */
-        /* 'PIDMomentGen:23' uvrDot_des = errorf.*URpar.rate_MPID_rateDotKp + errorInt.*URpar.rate_MPID_rateDotKi + errorD.derValue.*URpar.rate_MPID_rateDotKd + uvr_des_dot; */
-        /* 'PIDMomentGen:26' M_uvr = uvrDot_des'.*[URpar.Iu; URpar.Iv; URpar.Iz]; */
-        /* 'PIDMomentGen:28' daq.uvrDot_des = uvrDot_des; */
-        dummy_idx_0 = ((dummy_idx_0 * URControlParams.rate_MPID_rateDotKp[0] +
-                        URControl_DW.errorInt[0] *
-                        URControlParams.rate_MPID_rateDotKi[0]) +
-                       URControl_DW.errorD.derValue[0] *
-                       URControlParams.rate_MPID_rateDotKd[0]) +
-          URControl_DW.uvrDer.derValue[0];
-        URControl_DW.DAQ.uvrDot_des[0] = dummy_idx_0;
-        rtb_DataTypeConversion8_idx_2 = dummy_idx_0 * URControlParams.Iu;
-        dummy_idx_0 = ((rtb_att_idx_2 * URControlParams.rate_MPID_rateDotKp[1] +
-                        URControl_DW.errorInt[1] *
-                        URControlParams.rate_MPID_rateDotKi[1]) +
-                       URControl_DW.errorD.derValue[1] *
-                       URControlParams.rate_MPID_rateDotKd[1]) +
-          URControl_DW.uvrDer.derValue[1];
-        URControl_DW.DAQ.uvrDot_des[1] = dummy_idx_0;
-        rtb_att_idx_1 = dummy_idx_0 * URControlParams.Iv;
-        dummy_idx_0 = ((rtb_Product2 * URControlParams.rate_MPID_rateDotKp[2] +
-                        URControl_DW.errorInt[2] *
-                        URControlParams.rate_MPID_rateDotKi[2]) +
-                       URControl_DW.errorD.derValue[2] *
-                       URControlParams.rate_MPID_rateDotKd[2]) +
-          URControl_DW.uvrDer.derValue[2];
-        URControl_DW.DAQ.uvrDot_des[2] = dummy_idx_0;
-        rtb_att_idx_2 = dummy_idx_0 * URControlParams.Iz;
+      if ((rtb_DataTypeConversion8_idx_0 > rtb_yawTarget) || rtIsNaN
+          (rtb_yawTarget)) {
+        URControl_DW.accZFilt.value = rtb_DataTypeConversion8_idx_0;
       } else {
-        if (URControlParams.rate_momentMode == 2.0) {
-          /* 'URControl_alloc:33' elseif URpar.rate_momentMode == 2 */
-          /* 'URControl_alloc:34' [M_uvr, daq] = INDIMomentGen(state, daq, uvr_des, M_uvr_set, URpar, par); */
-          /* 'INDIMomentGen:3' if isempty(omegaDot) */
-          if (!URControl_DW.omegaDot_not_empty_l) {
-            /* 'INDIMomentGen:3' omegaDot = SimpleDerivative(URpar.rate_MINDI_derFilterT, [0,0,0], 300, -300); */
-            /* 'SimpleDerivative:12' obj.filterHandle = LPFilter(filterT, initValue, maxLim, minLim); */
-            /* 'LPFilter:14' obj.filterT = filterT; */
-            URControl_DW.omegaDot_p.filterHandle.filterT =
-              URControlParams.rate_MINDI_derFilterT;
+        URControl_DW.accZFilt.value = rtb_yawTarget;
+      }
 
-            /* 'LPFilter:15' obj.value = initValue; */
-            /* 'LPFilter:16' obj.maxLim = maxLim; */
-            URControl_DW.omegaDot_p.filterHandle.maxLim = 300.0;
+      /* 'URControl_alloc:90' inp = -[omegaDot.derValue'; accZFilt.value] + [uvrDot_des';  acc_z_des]; */
+      errorVel_idx_1 = -URControl_DW.omegaDot.derValue[0];
+      errorVel_idx_0 = -URControl_DW.omegaDot.derValue[1];
+      vDot2_min = -URControl_DW.omegaDot.derValue[2];
+      tmp_3 = -URControl_DW.accZFilt.value;
 
-            /* 'LPFilter:17' obj.minLim = minLim; */
-            URControl_DW.omegaDot_p.filterHandle.minLim = -300.0;
+      /* 'URControl_alloc:91' inp = max(min(inp, par.URC.rate_QPINDI_maxInp), -par.URC.rate_QPINDI_maxInp); */
+      rtb_DataTypeConversion8_idx_0 = (errorVel_idx_2 -
+        URControl_DW.State.omegafUV[0]) * URControlParams.rate_INDI_rateDotKp[0]
+        + errorVel_idx_1;
+      if (!(rtb_DataTypeConversion8_idx_0 < 100.0)) {
+        rtb_DataTypeConversion8_idx_0 = 100.0;
+      }
 
-            /* 'SimpleDerivative:13' obj.prevValue = initValue; */
-            URControl_DW.omegaDot_p.filterHandle.value[0] = 0.0;
-            URControl_DW.omegaDot_p.prevValue[0] = 0.0;
-            URControl_DW.omegaDot_p.filterHandle.value[1] = 0.0;
-            URControl_DW.omegaDot_p.prevValue[1] = 0.0;
-            URControl_DW.omegaDot_p.filterHandle.value[2] = 0.0;
-            URControl_DW.omegaDot_p.prevValue[2] = 0.0;
-            URControl_DW.omegaDot_not_empty_l = true;
-          }
+      if (rtb_DataTypeConversion8_idx_0 > -100.0) {
+        rtb_TmpSignalConversionAtSFun_2 = rtb_DataTypeConversion8_idx_0;
+      } else {
+        rtb_TmpSignalConversionAtSFun_2 = -100.0;
+      }
 
-          /* 'INDIMomentGen:4' if isempty(wRotorFilter) */
-          if (!URControl_DW.wRotorFilter_not_empty) {
-            /* 'INDIMomentGen:4' wRotorFilter = LPFilter(URpar.est_omegaFilterT, [0,0,0,0], 1200, 0); */
-            /* 'LPFilter:14' obj.filterT = filterT; */
-            URControl_DW.wRotorFilter.filterT = URControlParams.est_omegaFilterT;
+      rtb_DataTypeConversion8_idx_0 = (rtb_DataTypeConversion8_idx_1 -
+        URControl_DW.State.omegafUV[1]) * URControlParams.rate_INDI_rateDotKp[1]
+        + errorVel_idx_0;
+      if (!(rtb_DataTypeConversion8_idx_0 < 100.0)) {
+        rtb_DataTypeConversion8_idx_0 = 100.0;
+      }
 
-            /* 'LPFilter:15' obj.value = initValue; */
-            URControl_DW.wRotorFilter.value[0] = 0.0;
-            URControl_DW.wRotorFilter.value[1] = 0.0;
-            URControl_DW.wRotorFilter.value[2] = 0.0;
-            URControl_DW.wRotorFilter.value[3] = 0.0;
+      if (rtb_DataTypeConversion8_idx_0 > -100.0) {
+        errorVel_idx_0 = rtb_DataTypeConversion8_idx_0;
+      } else {
+        errorVel_idx_0 = -100.0;
+      }
 
-            /* 'LPFilter:16' obj.maxLim = maxLim; */
-            URControl_DW.wRotorFilter.maxLim = 1200.0;
+      rtb_DataTypeConversion8_idx_0 = (rtb_att[2] - URControl_DW.State.omegafUV
+        [2]) * URControlParams.rate_INDI_rateDotKp[2] + vDot2_min;
+      if (!(rtb_DataTypeConversion8_idx_0 < 20.0)) {
+        rtb_DataTypeConversion8_idx_0 = 20.0;
+      }
 
-            /* 'LPFilter:17' obj.minLim = minLim; */
-            URControl_DW.wRotorFilter.minLim = 0.0;
-            URControl_DW.wRotorFilter_not_empty = true;
-          }
+      if (rtb_DataTypeConversion8_idx_0 > -20.0) {
+        errorVel_idx_1 = rtb_DataTypeConversion8_idx_0;
+      } else {
+        errorVel_idx_1 = -20.0;
+      }
 
-          /* 'INDIMomentGen:6' wRotorFilter.updateFilterT(URpar.rate_MINDI_derFilterT); */
-          /* 'LPFilter:26' obj.filterT = filterT; */
-          URControl_DW.wRotorFilter.filterT =
-            URControlParams.rate_MINDI_derFilterT;
+      rtb_DataTypeConversion8_idx_0 = -rtb_TmpSignalConversionAtSFun_4 /
+        URControlParams.mass + tmp_3;
+      if (!(rtb_DataTypeConversion8_idx_0 < 20.0)) {
+        rtb_DataTypeConversion8_idx_0 = 20.0;
+      }
 
-          /* 'INDIMomentGen:7' wRotorFilter.update(state.wRotor); */
-          /* 'LPFilter:21' obj.value = obj.value*obj.filterT + newValue*(1 - obj.filterT); */
-          /* 'LPFilter:22' obj.value = max(min(obj.value,obj.maxLim),obj.minLim); */
-          /* 'INDIMomentGen:9' Fset = wRotorFilter.value.^2*URpar.k0; */
-          URControl_DW.wRotorFilter.value[0] = (1.0 -
-            URControl_DW.wRotorFilter.filterT) * URControl_DW.State.wRotor[0] +
-            URControl_DW.wRotorFilter.value[0] *
-            URControl_DW.wRotorFilter.filterT;
-          if ((URControl_DW.wRotorFilter.value[0] <
-               URControl_DW.wRotorFilter.maxLim) || rtIsNaN
-              (URControl_DW.wRotorFilter.maxLim)) {
-            errorSum = URControl_DW.wRotorFilter.value[0];
-          } else {
-            errorSum = URControl_DW.wRotorFilter.maxLim;
-          }
+      if (!(rtb_DataTypeConversion8_idx_0 > -20.0)) {
+        rtb_DataTypeConversion8_idx_0 = -20.0;
+      }
 
-          if ((errorSum > URControl_DW.wRotorFilter.minLim) || rtIsNaN
-              (URControl_DW.wRotorFilter.minLim)) {
-            URControl_DW.wRotorFilter.value[0] = errorSum;
-          } else {
-            URControl_DW.wRotorFilter.value[0] =
-              URControl_DW.wRotorFilter.minLim;
-          }
+      /* 'URControl_alloc:93' inp_gain = max(min(abs(inp)./URpar.rate_QPINDI_cutoff, 1),URpar.rate_QPINDI_minGain); */
+      /* 'URControl_alloc:94' inp = inp_gain.*inp; */
+      tmp_3 = std::abs(rtb_TmpSignalConversionAtSFun_2) /
+        URControlParams.rate_QPINDI_cutoff[0];
+      if (!(tmp_3 < 1.0)) {
+        tmp_3 = 1.0;
+      }
 
-          rtb_DataTypeConversion8_idx_1 = URControl_DW.wRotorFilter.value[0] *
-            URControl_DW.wRotorFilter.value[0] * URControlParams.k0;
-          URControl_DW.wRotorFilter.value[1] = (1.0 -
-            URControl_DW.wRotorFilter.filterT) * URControl_DW.State.wRotor[1] +
-            URControl_DW.wRotorFilter.value[1] *
-            URControl_DW.wRotorFilter.filterT;
-          if ((URControl_DW.wRotorFilter.value[1] <
-               URControl_DW.wRotorFilter.maxLim) || rtIsNaN
-              (URControl_DW.wRotorFilter.maxLim)) {
-            errorSum = URControl_DW.wRotorFilter.value[1];
-          } else {
-            errorSum = URControl_DW.wRotorFilter.maxLim;
-          }
+      tmp_4 = rtIsNaN(URControlParams.rate_QPINDI_minGain);
+      if ((!(tmp_3 > URControlParams.rate_QPINDI_minGain)) && (!tmp_4)) {
+        tmp_3 = URControlParams.rate_QPINDI_minGain;
+      }
 
-          if ((errorSum > URControl_DW.wRotorFilter.minLim) || rtIsNaN
-              (URControl_DW.wRotorFilter.minLim)) {
-            URControl_DW.wRotorFilter.value[1] = errorSum;
-          } else {
-            URControl_DW.wRotorFilter.value[1] =
-              URControl_DW.wRotorFilter.minLim;
-          }
+      dummy[0] = tmp_3 * rtb_TmpSignalConversionAtSFun_2;
+      tmp_3 = std::abs(errorVel_idx_0) / URControlParams.rate_QPINDI_cutoff[1];
+      if (!(tmp_3 < 1.0)) {
+        tmp_3 = 1.0;
+      }
 
-          rtb_yawTarget = URControl_DW.wRotorFilter.value[1] *
-            URControl_DW.wRotorFilter.value[1] * URControlParams.k0;
-          URControl_DW.wRotorFilter.value[2] = (1.0 -
-            URControl_DW.wRotorFilter.filterT) * URControl_DW.State.wRotor[2] +
-            URControl_DW.wRotorFilter.value[2] *
-            URControl_DW.wRotorFilter.filterT;
-          if ((URControl_DW.wRotorFilter.value[2] <
-               URControl_DW.wRotorFilter.maxLim) || rtIsNaN
-              (URControl_DW.wRotorFilter.maxLim)) {
-            errorSum = URControl_DW.wRotorFilter.value[2];
-          } else {
-            errorSum = URControl_DW.wRotorFilter.maxLim;
-          }
+      if ((!(tmp_3 > URControlParams.rate_QPINDI_minGain)) && (!tmp_4)) {
+        tmp_3 = URControlParams.rate_QPINDI_minGain;
+      }
 
-          if ((errorSum > URControl_DW.wRotorFilter.minLim) || rtIsNaN
-              (URControl_DW.wRotorFilter.minLim)) {
-            URControl_DW.wRotorFilter.value[2] = errorSum;
-          } else {
-            URControl_DW.wRotorFilter.value[2] =
-              URControl_DW.wRotorFilter.minLim;
-          }
+      dummy[1] = tmp_3 * errorVel_idx_0;
+      tmp_3 = std::abs(errorVel_idx_1) / URControlParams.rate_QPINDI_cutoff[2];
+      if (!(tmp_3 < 1.0)) {
+        tmp_3 = 1.0;
+      }
 
-          Fset_idx_2 = URControl_DW.wRotorFilter.value[2] *
-            URControl_DW.wRotorFilter.value[2] * URControlParams.k0;
-          URControl_DW.wRotorFilter.value[3] = (1.0 -
-            URControl_DW.wRotorFilter.filterT) * URControl_DW.State.wRotor[3] +
-            URControl_DW.wRotorFilter.value[3] *
-            URControl_DW.wRotorFilter.filterT;
-          if ((URControl_DW.wRotorFilter.value[3] <
-               URControl_DW.wRotorFilter.maxLim) || rtIsNaN
-              (URControl_DW.wRotorFilter.maxLim)) {
-            errorSum = URControl_DW.wRotorFilter.value[3];
-          } else {
-            errorSum = URControl_DW.wRotorFilter.maxLim;
-          }
+      if ((!(tmp_3 > URControlParams.rate_QPINDI_minGain)) && (!tmp_4)) {
+        tmp_3 = URControlParams.rate_QPINDI_minGain;
+      }
 
-          if ((errorSum > URControl_DW.wRotorFilter.minLim) || rtIsNaN
-              (URControl_DW.wRotorFilter.minLim)) {
-            URControl_DW.wRotorFilter.value[3] = errorSum;
-          } else {
-            URControl_DW.wRotorFilter.value[3] =
-              URControl_DW.wRotorFilter.minLim;
-          }
+      dummy[2] = tmp_3 * errorVel_idx_1;
+      tmp_3 = std::abs(rtb_DataTypeConversion8_idx_0) /
+        URControlParams.rate_QPINDI_cutoff[3];
+      if (!(tmp_3 < 1.0)) {
+        tmp_3 = 1.0;
+      }
 
-          errorSum = URControl_DW.wRotorFilter.value[3] *
-            URControl_DW.wRotorFilter.value[3] * URControlParams.k0;
+      if ((!(tmp_3 > URControlParams.rate_QPINDI_minGain)) && (!tmp_4)) {
+        tmp_3 = URControlParams.rate_QPINDI_minGain;
+      }
 
-          /* 'INDIMomentGen:11' M_uvr_prev = zeros(3,1); */
-          /* 'INDIMomentGen:12' M_uvr_prev(1) = (Fset(4) - Fset(2))*URpar.s; */
-          /* 'INDIMomentGen:13' M_uvr_prev(2) = (Fset(1) - Fset(3))*URpar.s; */
-          /* 'INDIMomentGen:14' M_uvr_prev(3) = (Fset(1) - Fset(2) + Fset(3) - Fset(4))*URpar.t0/URpar.k0; */
-          /* 'INDIMomentGen:17' error1 = uvr_des' - state.omegafUV; */
-          /* 'INDIMomentGen:19' uvrDot_des = error1.*URpar.rate_MINDI_rateDotKp; */
-          rtb_omega[0] = (rtb_DataTypeConversion8_idx_0 -
-                          URControl_DW.State.omegafUV[0]) *
-            URControlParams.rate_MINDI_rateDotKp[0];
-          rtb_omega[1] = (rtb_Product2 - URControl_DW.State.omegafUV[1]) *
-            URControlParams.rate_MINDI_rateDotKp[1];
-          dummy_idx_0 = (rtb_omega[2] - URControl_DW.State.omegafUV[2]) *
-            URControlParams.rate_MINDI_rateDotKp[2];
+      rtb_TmpSignalConversionAtSFun_4 = tmp_3 * rtb_DataTypeConversion8_idx_0;
+      dummy[3] = rtb_TmpSignalConversionAtSFun_4;
 
-          /* 'INDIMomentGen:22' omegaDot.updateFilterT(URpar.rate_MINDI_derFilterT); */
-          /* 'SimpleDerivative:23' obj.filterHandle.updateFilterT(filterT); */
-          /* 'LPFilter:26' obj.filterT = filterT; */
-          URControl_DW.omegaDot_p.filterHandle.filterT =
-            URControlParams.rate_MINDI_derFilterT;
+      /* 'URControl_alloc:97' wMax = min(w_max, par.w_max); */
+      /* 'URControl_alloc:98' wMin = max(w_min, par.w_min); */
+      /* 'URControl_alloc:100' wMax = min(wMax, state.wRotor' + URpar.rate_QPINDI_dwMax); */
+      /* 'URControl_alloc:101' wMin = max(wMin, state.wRotor' - URpar.rate_QPINDI_dwMax); */
+      tmp_3 = URControl_DW.State.wRotor[0] + URControlParams.rate_QPINDI_dwMax;
+      if ((FMin[0] < tmp_3) || rtIsNaN(tmp_3)) {
+        qconj[0] = FMin[0];
+      } else {
+        qconj[0] = tmp_3;
+      }
 
-          /* 'INDIMomentGen:23' omegaDot.update(state.omegaUV, 1/par.freq); */
-          URContr_SimpleDerivative_update(&URControl_DW.omegaDot_p,
-            URControl_DW.State.omegaUV, 0.002);
+      rtb_TmpSignalConversionAtSFun_0[0] = URControl_DW.State.wRotor[0] -
+        URControlParams.rate_QPINDI_dwMax;
+      if (rtb_TmpSignalConversionAtSFun_3 > 300.0) {
+        errorVel_idx_0 = rtb_TmpSignalConversionAtSFun_3;
+      } else {
+        errorVel_idx_0 = 300.0;
+      }
 
-          /* 'INDIMomentGen:25' error2 = uvrDot_des - omegaDot.derValue; */
-          /* 'INDIMomentGen:27' dM = error2.*URpar.rate_MINDI_MKp*1e-4; */
-          /* 'INDIMomentGen:29' M_uvr = M_uvr_prev + dM'; */
-          /* 'INDIMomentGen:31' daq.uvrDot_des = uvrDot_des; */
-          /* 'INDIMomentGen:32' daq.omegaDot = omegaDot.derValue; */
-          /* 'INDIMomentGen:33' daq.dM = dM; */
-          rtb_att_idx_2 = (rtb_omega[0] - URControl_DW.omegaDot_p.derValue[0]) *
-            URControlParams.rate_MINDI_MKp[0] * 0.0001;
-          URControl_DW.DAQ.uvrDot_des[0] = rtb_omega[0];
-          URControl_DW.DAQ.omegaDot[0] = URControl_DW.omegaDot_p.derValue[0];
-          URControl_DW.DAQ.dM[0] = rtb_att_idx_2;
-          rtb_DataTypeConversion8_idx_2 = (errorSum - rtb_yawTarget) *
-            URControlParams.s + rtb_att_idx_2;
-          rtb_att_idx_2 = (rtb_omega[1] - URControl_DW.omegaDot_p.derValue[1]) *
-            URControlParams.rate_MINDI_MKp[1] * 0.0001;
-          URControl_DW.DAQ.uvrDot_des[1] = rtb_omega[1];
-          URControl_DW.DAQ.omegaDot[1] = URControl_DW.omegaDot_p.derValue[1];
-          URControl_DW.DAQ.dM[1] = rtb_att_idx_2;
-          rtb_att_idx_1 = (rtb_DataTypeConversion8_idx_1 - Fset_idx_2) *
-            URControlParams.s + rtb_att_idx_2;
-          rtb_att_idx_2 = (dummy_idx_0 - URControl_DW.omegaDot_p.derValue[2]) *
-            URControlParams.rate_MINDI_MKp[2] * 0.0001;
-          URControl_DW.DAQ.uvrDot_des[2] = dummy_idx_0;
-          URControl_DW.DAQ.omegaDot[2] = URControl_DW.omegaDot_p.derValue[2];
-          URControl_DW.DAQ.dM[2] = rtb_att_idx_2;
-          rtb_att_idx_2 += (((rtb_DataTypeConversion8_idx_1 - rtb_yawTarget) +
-                             Fset_idx_2) - errorSum) * URControlParams.t0 /
-            URControlParams.k0;
+      tmp_3 = URControl_DW.State.wRotor[1] + URControlParams.rate_QPINDI_dwMax;
+      if ((1200.0 < tmp_3) || rtIsNaN(tmp_3)) {
+        qconj[1] = 1200.0;
+      } else {
+        qconj[1] = tmp_3;
+      }
+
+      rtb_TmpSignalConversionAtSFun_0[1] = URControl_DW.State.wRotor[1] -
+        URControlParams.rate_QPINDI_dwMax;
+      tmp_3 = URControl_DW.State.wRotor[2] + URControlParams.rate_QPINDI_dwMax;
+      if ((FMin[2] < tmp_3) || rtIsNaN(tmp_3)) {
+        qconj[2] = FMin[2];
+      } else {
+        qconj[2] = tmp_3;
+      }
+
+      rtb_TmpSignalConversionAtSFun_0[2] = URControl_DW.State.wRotor[2] -
+        URControlParams.rate_QPINDI_dwMax;
+      if (rtb_TmpSignalConversionAtSFun_1 > 300.0) {
+        rtb_DataTypeConversion8_idx_0 = rtb_TmpSignalConversionAtSFun_1;
+      } else {
+        rtb_DataTypeConversion8_idx_0 = 300.0;
+      }
+
+      tmp_3 = URControl_DW.State.wRotor[3] + URControlParams.rate_QPINDI_dwMax;
+      if ((1200.0 < tmp_3) || rtIsNaN(tmp_3)) {
+        qconj[3] = 1200.0;
+      } else {
+        qconj[3] = tmp_3;
+      }
+
+      rtb_TmpSignalConversionAtSFun_0[3] = URControl_DW.State.wRotor[3] -
+        URControlParams.rate_QPINDI_dwMax;
+      if ((300.0 > rtb_TmpSignalConversionAtSFun_0[0]) || rtIsNaN
+          (rtb_TmpSignalConversionAtSFun_0[0])) {
+        tmp_3 = 300.0;
+      } else {
+        tmp_3 = rtb_TmpSignalConversionAtSFun_0[0];
+      }
+
+      if ((errorVel_idx_0 > rtb_TmpSignalConversionAtSFun_0[1]) || rtIsNaN
+          (rtb_TmpSignalConversionAtSFun_0[1])) {
+        errorVel_idx_2 = errorVel_idx_0;
+      } else {
+        errorVel_idx_2 = rtb_TmpSignalConversionAtSFun_0[1];
+      }
+
+      if ((300.0 > rtb_TmpSignalConversionAtSFun_0[2]) || rtIsNaN
+          (rtb_TmpSignalConversionAtSFun_0[2])) {
+        rtb_DataTypeConversion8_idx_1 = 300.0;
+      } else {
+        rtb_DataTypeConversion8_idx_1 = rtb_TmpSignalConversionAtSFun_0[2];
+      }
+
+      /* 'URControl_alloc:103' if state.fail_id~=0 */
+      if (URControl_DW.State.fail_id != 0.0) {
+        /* 'URControl_alloc:104' wMax(state.fail_id) = par.w_min; */
+        qconj[(int32_T)URControl_DW.State.fail_id - 1] = 300.0;
+      }
+
+      /* 'URControl_alloc:107' dw_lin_max = (wMax/100).^2 - (state.wRotor/100)'.^2; */
+      /* 'URControl_alloc:108' dw_lin_min = (wMin/100).^2 - (state.wRotor/100)'.^2; */
+      vDot2_min = qconj[0] / 100.0;
+      rtb_TmpSignalConversionAtSFun_2 = vDot2_min * vDot2_min;
+      uDot2_min = URControl_DW.State.wRotor[0] / 100.0;
+      rtb_TmpSignalConversionAtSFun_0[0] = uDot2_min * uDot2_min;
+      rtb_yawTarget = uDot2_min;
+      tmp_3 /= 100.0;
+      vDot2_min = qconj[1] / 100.0;
+      errorVel_idx_0 = vDot2_min * vDot2_min;
+      uDot2_min = URControl_DW.State.wRotor[1] / 100.0;
+      rtb_TmpSignalConversionAtSFun_0[1] = uDot2_min * uDot2_min;
+      u0 = uDot2_min;
+      errorVel_idx_2 /= 100.0;
+      vDot2_min = qconj[2] / 100.0;
+      errorVel_idx_1 = vDot2_min * vDot2_min;
+      uDot2_min = URControl_DW.State.wRotor[2] / 100.0;
+      rtb_TmpSignalConversionAtSFun_0[2] = uDot2_min * uDot2_min;
+      Mv_max = uDot2_min;
+      rtb_DataTypeConversion8_idx_1 /= 100.0;
+      vDot2_min = qconj[3] / 100.0;
+      uDot2_min = URControl_DW.State.wRotor[3] / 100.0;
+      if ((!(rtb_DataTypeConversion8_idx_0 > rtb_TmpSignalConversionAtSFun_0[3]))
+          && (!rtIsNaN(rtb_TmpSignalConversionAtSFun_0[3]))) {
+        rtb_DataTypeConversion8_idx_0 = rtb_TmpSignalConversionAtSFun_0[3];
+      }
+
+      rtb_DataTypeConversion8_idx_0 /= 100.0;
+
+      /* 'URControl_alloc:110' y_state_initial = y_state_prev; */
+      /* 'URControl_alloc:111' G = par.URC.rate_G1_unit.*[par.URC.rate_roll_eff*ones(1,4); par.URC.rate_pitch_eff*ones(1,4); par.URC.rate_yaw_eff*ones(1,4); par.URC.rate_az_eff*ones(1,4)].*1e-2; */
+      /* 'URControl_alloc:112' K = URpar.rate_QPINDI_K; */
+      memcpy(&K[0], &URControlParams.rate_QPINDI_K[0], sizeof(real_T) << 4U);
+
+      /* 'URControl_alloc:113' K(3,3) = MzGain/100; */
+      K[10] = rtb_enableMeas / 100.0;
+
+      /* 'URControl_alloc:114' [dw_lin,y_state,iter,optimal] = QPINDI(inp, G, K, URpar.rate_QPINDI_K2, dw_lin_min, dw_lin_max, y_state_initial, par, URpar); */
+      tmp_1[0] = 150;
+      tmp_1[1] = 150;
+      tmp_1[2] = -50;
+      tmp_1[3] = 5;
+      tmp_1[4] = 150;
+      tmp_1[5] = 150;
+      tmp_1[6] = -50;
+      tmp_1[7] = 5;
+      tmp_1[8] = 150;
+      tmp_1[9] = 150;
+      tmp_1[10] = -50;
+      tmp_1[11] = 5;
+      tmp_1[12] = 150;
+      tmp_1[13] = 150;
+      tmp_1[14] = -50;
+      tmp_1[15] = 5;
+      for (r2 = 0; r2 < 16; r2++) {
+        tmp[r2] = URControl_ConstP.pooled1.URC.rate_G1_unit[r2] * (real_T)
+          tmp_1[r2] * 0.01;
+      }
+
+      qconj_0[0] = tmp_3 * tmp_3 - rtb_yawTarget * rtb_yawTarget;
+      b_z1_0[0] = rtb_TmpSignalConversionAtSFun_2 -
+        rtb_TmpSignalConversionAtSFun_0[0];
+      qconj_0[1] = errorVel_idx_2 * errorVel_idx_2 - u0 * u0;
+      b_z1_0[1] = errorVel_idx_0 - rtb_TmpSignalConversionAtSFun_0[1];
+      qconj_0[2] = rtb_DataTypeConversion8_idx_1 * rtb_DataTypeConversion8_idx_1
+        - Mv_max * Mv_max;
+      b_z1_0[2] = errorVel_idx_1 - rtb_TmpSignalConversionAtSFun_0[2];
+      rtb_TmpSignalConversionAtSFun_2 = uDot2_min * uDot2_min;
+      qconj_0[3] = rtb_DataTypeConversion8_idx_0 * rtb_DataTypeConversion8_idx_0
+        - rtb_TmpSignalConversionAtSFun_2;
+      b_z1_0[3] = vDot2_min * vDot2_min - rtb_TmpSignalConversionAtSFun_2;
+      URControl_QPINDI(dummy, tmp, K, URControlParams.rate_QPINDI_K2, qconj_0,
+                       b_z1_0, URControl_DW.y_state_prev,
+                       rtb_TmpSignalConversionAtSFun_0, &URControl_DW.DAQ.iter,
+                       &rtb_enableMeas);
+
+      /* 'URControl_alloc:115' y_state_prev = y_state; */
+      /* 'URControl_alloc:117' if optimal */
+      if (rtb_enableMeas != 0.0) {
+        /* 'URControl_alloc:118' wRotorSet = 100*sqrt(max((state.wRotor/100)'.^2 + dw_lin,0)); */
+        rtb_DataTypeConversion8_idx_0 = rtb_yawTarget * rtb_yawTarget +
+          rtb_TmpSignalConversionAtSFun_0[0];
+        if (!(rtb_DataTypeConversion8_idx_0 > 0.0)) {
+          rtb_DataTypeConversion8_idx_0 = 0.0;
         }
-      }
 
-      /* 'URControl_alloc:37' M_uvr = max(min(M_uvr, URpar.rate_maxMoments'), -URpar.rate_maxMoments'); */
-      if ((!(rtb_DataTypeConversion8_idx_2 < URControlParams.rate_maxMoments[0]))
-          && (!rtIsNaN(URControlParams.rate_maxMoments[0]))) {
-        rtb_DataTypeConversion8_idx_2 = URControlParams.rate_maxMoments[0];
-      }
+        qconj[0] = 100.0 * std::sqrt(rtb_DataTypeConversion8_idx_0);
+        rtb_DataTypeConversion8_idx_0 = u0 * u0 +
+          rtb_TmpSignalConversionAtSFun_0[1];
+        if (!(rtb_DataTypeConversion8_idx_0 > 0.0)) {
+          rtb_DataTypeConversion8_idx_0 = 0.0;
+        }
 
-      if ((rtb_DataTypeConversion8_idx_2 > -URControlParams.rate_maxMoments[0]) ||
-          rtIsNaN(-URControlParams.rate_maxMoments[0])) {
-        dummy_idx_0 = rtb_DataTypeConversion8_idx_2;
+        qconj[1] = 100.0 * std::sqrt(rtb_DataTypeConversion8_idx_0);
+        rtb_DataTypeConversion8_idx_0 = Mv_max * Mv_max +
+          rtb_TmpSignalConversionAtSFun_0[2];
+        if (!(rtb_DataTypeConversion8_idx_0 > 0.0)) {
+          rtb_DataTypeConversion8_idx_0 = 0.0;
+        }
+
+        qconj[2] = 100.0 * std::sqrt(rtb_DataTypeConversion8_idx_0);
+        rtb_DataTypeConversion8_idx_0 = rtb_TmpSignalConversionAtSFun_2 +
+          rtb_TmpSignalConversionAtSFun_0[3];
+        if (!(rtb_DataTypeConversion8_idx_0 > 0.0)) {
+          rtb_DataTypeConversion8_idx_0 = 0.0;
+        }
+
+        qconj[3] = 100.0 * std::sqrt(rtb_DataTypeConversion8_idx_0);
       } else {
-        dummy_idx_0 = -URControlParams.rate_maxMoments[0];
+        /* 'URControl_alloc:119' else */
+        /* 'URControl_alloc:120' wRotorSet = state.wRotor'*0.99; */
+        qconj[0] = URControl_DW.State.wRotor[0] * 0.99;
+        qconj[1] = URControl_DW.State.wRotor[1] * 0.99;
+        qconj[2] = URControl_DW.State.wRotor[2] * 0.99;
+        qconj[3] = URControl_DW.State.wRotor[3] * 0.99;
       }
 
-      if ((rtb_att_idx_1 < URControlParams.rate_maxMoments[1]) || rtIsNaN
-          (URControlParams.rate_maxMoments[1])) {
-        rtb_DataTypeConversion8_idx_2 = rtb_att_idx_1;
-      } else {
-        rtb_DataTypeConversion8_idx_2 = URControlParams.rate_maxMoments[1];
-      }
+      /* 'URControl_alloc:125' daq.iter = iter; */
+      /* 'URControl_alloc:126' daq.optimal = optimal; */
+      URControl_DW.DAQ.optimal = rtb_enableMeas;
 
-      if ((rtb_DataTypeConversion8_idx_2 > -URControlParams.rate_maxMoments[1]) ||
-          rtIsNaN(-URControlParams.rate_maxMoments[1])) {
-        rtb_Product2 = rtb_DataTypeConversion8_idx_2;
-      } else {
-        rtb_Product2 = -URControlParams.rate_maxMoments[1];
-      }
-
-      if ((rtb_att_idx_2 < URControlParams.rate_maxMoments[2]) || rtIsNaN
-          (URControlParams.rate_maxMoments[2])) {
-        rtb_DataTypeConversion8_idx_2 = rtb_att_idx_2;
-      } else {
-        rtb_DataTypeConversion8_idx_2 = URControlParams.rate_maxMoments[2];
-      }
-
-      if ((!(rtb_DataTypeConversion8_idx_2 > -URControlParams.rate_maxMoments[2]))
-          && (!rtIsNaN(-URControlParams.rate_maxMoments[2]))) {
-        rtb_DataTypeConversion8_idx_2 = -URControlParams.rate_maxMoments[2];
-      }
-
-      /* 'URControl_alloc:40' refStruct.MuRef = M_uvr(1); */
-      /* 'URControl_alloc:40' refStruct.MvRef = M_uvr(2); */
-      /* 'URControl_alloc:40' refStruct.MzRef = M_uvr(3); */
-      /* 'URControl_alloc:40' refStruct.FtotRef = Ftot_ref; */
-      /* 'URControl_alloc:41' gains = struct(); */
-      /* 'URControl_alloc:41' gains.MuGain = URpar.rate_MuGain; */
-      /* 'URControl_alloc:41' gains.MvGain = URpar.rate_MvGain; */
-      /* 'URControl_alloc:42' gains.FtotGain = URpar.rate_FtotGain; */
-      /* 'URControl_alloc:42' gains.FGain = URpar.rate_FGain; */
-      /* 'URControl_alloc:42' gains.MzGain = MzGain; */
-      /* 'URControl_alloc:45' y_state_initial = y_state_prev; */
-      /* 'URControl_alloc:47' [x,y_state,iter,optimal] = controlAllocQPQuick(refStruct, state.FMax, state.FMin, gains, y_state_initial, par, URpar); */
-      URControl_controlAllocQPQuick(dummy_idx_0, rtb_Product2,
-        rtb_DataTypeConversion8_idx_2, rtb_Product1, URControl_DW.State.FMax,
-        URControl_DW.State.FMin, URControlParams.rate_MuGain,
-        URControlParams.rate_MvGain, URControlParams.rate_FtotGain,
-        URControlParams.rate_FGain, rtb_enableMeas, URControl_DW.y_state_prev,
-        &URControl_ConstP.pooled1, URControlParams.rate_maxIter, z1,
-        &URControl_DW.DAQ.iter, &errorSum);
-
-      /* 'URControl_alloc:48' y_state_prev = y_state; */
-      /* 'URControl_alloc:49' if optimal */
-      if (errorSum != 0.0) {
-        /* 'URControl_alloc:50' Fset = x; */
-        /* 'URControl_alloc:51' Fset_prev = Fset; */
-        rtb_DataTypeConversion8_idx_1 = z1[0];
-        URControl_DW.Fset_prev[0] = z1[0];
-        rtb_yawTarget = z1[1];
-        URControl_DW.Fset_prev[1] = z1[1];
-        Fset_idx_2 = z1[2];
-        URControl_DW.Fset_prev[2] = z1[2];
-        rtb_enableMeas = z1[3];
-        URControl_DW.Fset_prev[3] = z1[3];
-      } else {
-        /* 'URControl_alloc:52' else */
-        /* 'URControl_alloc:53' Fset = Fset_prev*0.99; */
-        rtb_DataTypeConversion8_idx_1 = URControl_DW.Fset_prev[0] * 0.99;
-        rtb_yawTarget = URControl_DW.Fset_prev[1] * 0.99;
-        Fset_idx_2 = URControl_DW.Fset_prev[2] * 0.99;
-        rtb_enableMeas = URControl_DW.Fset_prev[3] * 0.99;
-      }
-
-      /* 'URControl_alloc:56' wRotorSet = sqrt(max(Fset,0)/URpar.k0); */
-      if (!(rtb_DataTypeConversion8_idx_1 > 0.0)) {
-        rtb_DataTypeConversion8_idx_1 = 0.0;
-      }
-
-      rtb_TmpSignalConversionAtSFun_h[0] = std::sqrt
-        (rtb_DataTypeConversion8_idx_1 / URControlParams.k0);
-      if (!(rtb_yawTarget > 0.0)) {
-        rtb_yawTarget = 0.0;
-      }
-
-      rtb_TmpSignalConversionAtSFun_h[1] = std::sqrt(rtb_yawTarget /
-        URControlParams.k0);
-      if (!(Fset_idx_2 > 0.0)) {
-        Fset_idx_2 = 0.0;
-      }
-
-      rtb_TmpSignalConversionAtSFun_h[2] = std::sqrt(Fset_idx_2 /
-        URControlParams.k0);
-      if (!(rtb_enableMeas > 0.0)) {
-        rtb_enableMeas = 0.0;
-      }
-
-      rtb_TmpSignalConversionAtSFun_h[3] = std::sqrt(rtb_enableMeas /
-        URControlParams.k0);
-
-      /* 'URControl_alloc:59' M_uvr_set(1) = (x(4) - x(2))*URpar.s; */
-      URControl_DW.M_uvr_set[0] = (z1[3] - z1[1]) * URControlParams.s;
-
-      /* 'URControl_alloc:60' M_uvr_set(2) = (x(1) - x(3))*URpar.s; */
-      URControl_DW.M_uvr_set[1] = (z1[0] - z1[2]) * URControlParams.s;
-
-      /* 'URControl_alloc:61' M_uvr_set(3) = (x(1) - x(2) + x(3) - x(4))*URpar.t0/URpar.k0; */
-      URControl_DW.M_uvr_set[2] = (((z1[0] - z1[1]) + z1[2]) - z1[3]) *
-        URControlParams.t0 / URControlParams.k0;
-
-      /* 'URControl_alloc:62' Ftot_set = sum(x); */
-      /* 'URControl_alloc:65' daq.iter = iter; */
-      /* 'URControl_alloc:66' daq.optimal = optimal; */
-      URControl_DW.DAQ.optimal = errorSum;
-
-      /* 'URControl_alloc:67' daq.M_uvr_des = M_uvr; */
-      /* 'URControl_alloc:68' daq.M_uvr_set = M_uvr_set; */
-      URControl_DW.DAQ.M_uvr_des[0] = dummy_idx_0;
-      URControl_DW.DAQ.M_uvr_set[0] = URControl_DW.M_uvr_set[0];
-      URControl_DW.DAQ.M_uvr_des[1] = rtb_Product2;
-      URControl_DW.DAQ.M_uvr_set[1] = URControl_DW.M_uvr_set[1];
-      URControl_DW.DAQ.M_uvr_des[2] = rtb_DataTypeConversion8_idx_2;
-      URControl_DW.DAQ.M_uvr_set[2] = URControl_DW.M_uvr_set[2];
-
-      /* 'URControl_alloc:69' daq.Ftot_set = Ftot_set; */
-      URControl_DW.DAQ.Ftot_set = ((z1[0] + z1[1]) + z1[2]) + z1[3];
+      /* 'URControl_alloc:127' daq.inp = inp; */
+      /* 'URControl_alloc:128' daq.dw_lin = dw_lin; */
+      URControl_DW.DAQ.inp[0] = dummy[0];
+      URControl_DW.DAQ.dw_lin[0] = rtb_TmpSignalConversionAtSFun_0[0];
+      URControl_DW.DAQ.inp[1] = dummy[1];
+      URControl_DW.DAQ.dw_lin[1] = rtb_TmpSignalConversionAtSFun_0[1];
+      URControl_DW.DAQ.inp[2] = dummy[2];
+      URControl_DW.DAQ.dw_lin[2] = rtb_TmpSignalConversionAtSFun_0[2];
+      URControl_DW.DAQ.inp[3] = rtb_TmpSignalConversionAtSFun_4;
+      URControl_DW.DAQ.dw_lin[3] = rtb_TmpSignalConversionAtSFun_0[3];
     }
   }
 
-  /* 'URControl_alloc:73' wRotorSet = max(min(wRotorSet, w_max), w_min); */
-  rEQ0 = rtIsNaN(FMin[0]);
-  if ((rtb_TmpSignalConversionAtSFun_h[0] < FMin[0]) || rEQ0) {
-    rtb_DataTypeConversion8_idx_0 = rtb_TmpSignalConversionAtSFun_h[0];
+  /* 'URControl_alloc:136' wRotorSet = max(min(wRotorSet, w_max), w_min); */
+  if ((qconj[0] < FMin[0]) || rtIsNaN(FMin[0])) {
+    tmp_3 = qconj[0];
   } else {
-    rtb_DataTypeConversion8_idx_0 = FMin[0];
+    tmp_3 = FMin[0];
   }
 
-  if ((rtb_TmpSignalConversionAtSFun_h[0] < FMin[0]) || rEQ0) {
-    z1[0] = rtb_TmpSignalConversionAtSFun_h[0];
+  if (qconj[1] < 1200.0) {
+    errorVel_idx_2 = qconj[1];
   } else {
-    z1[0] = FMin[0];
+    errorVel_idx_2 = 1200.0;
   }
 
-  if (rtb_TmpSignalConversionAtSFun_h[1] < 1200.0) {
-    rtb_Product2 = rtb_TmpSignalConversionAtSFun_h[1];
+  if ((qconj[2] < FMin[2]) || rtIsNaN(FMin[2])) {
+    rtb_DataTypeConversion8_idx_1 = qconj[2];
   } else {
-    rtb_Product2 = 1200.0;
+    rtb_DataTypeConversion8_idx_1 = FMin[2];
   }
 
-  if (rtb_TmpSignalConversionAtSFun_h[1] < 1200.0) {
-    z1[1] = rtb_TmpSignalConversionAtSFun_h[1];
+  if (qconj[3] < 1200.0) {
+    rtb_enableMeas = qconj[3];
   } else {
-    z1[1] = 1200.0;
+    rtb_enableMeas = 1200.0;
   }
 
-  rEQ0 = rtIsNaN(FMin[2]);
-  if ((rtb_TmpSignalConversionAtSFun_h[2] < FMin[2]) || rEQ0) {
-    rtb_yawTarget = rtb_TmpSignalConversionAtSFun_h[2];
+  if (tmp_3 > 0.0) {
+    qconj[0] = tmp_3;
   } else {
-    rtb_yawTarget = FMin[2];
+    qconj[0] = 0.0;
   }
 
-  if ((rtb_TmpSignalConversionAtSFun_h[2] < FMin[2]) || rEQ0) {
-    z1[2] = rtb_TmpSignalConversionAtSFun_h[2];
+  tmp_4 = rtIsNaN(rtb_TmpSignalConversionAtSFun_3);
+  if ((errorVel_idx_2 > rtb_TmpSignalConversionAtSFun_3) || tmp_4) {
+    qconj[1] = errorVel_idx_2;
   } else {
-    z1[2] = FMin[2];
+    qconj[1] = rtb_TmpSignalConversionAtSFun_3;
   }
 
-  if (rtb_TmpSignalConversionAtSFun_h[3] < 1200.0) {
-    rtb_Product1 = rtb_TmpSignalConversionAtSFun_h[3];
+  if (rtb_DataTypeConversion8_idx_1 > 0.0) {
+    qconj[2] = rtb_DataTypeConversion8_idx_1;
   } else {
-    rtb_Product1 = 1200.0;
+    qconj[2] = 0.0;
   }
 
-  if (rtb_TmpSignalConversionAtSFun_h[3] < 1200.0) {
-    z1[3] = rtb_TmpSignalConversionAtSFun_h[3];
+  tmp_5 = rtIsNaN(rtb_TmpSignalConversionAtSFun_1);
+  if ((rtb_enableMeas > rtb_TmpSignalConversionAtSFun_1) || tmp_5) {
+    qconj[3] = rtb_enableMeas;
   } else {
-    z1[3] = 1200.0;
+    qconj[3] = rtb_TmpSignalConversionAtSFun_1;
   }
 
-  if (rtb_DataTypeConversion8_idx_0 > 0.0) {
-    rtb_TmpSignalConversionAtSFun_h[0] = rtb_DataTypeConversion8_idx_0;
-  } else {
-    rtb_TmpSignalConversionAtSFun_h[0] = 0.0;
-  }
-
-  rEQ0 = rtIsNaN(w_min_idx_1);
-  if ((rtb_Product2 > w_min_idx_1) || rEQ0) {
-    rtb_TmpSignalConversionAtSFun_h[1] = rtb_Product2;
-  } else {
-    rtb_TmpSignalConversionAtSFun_h[1] = w_min_idx_1;
-  }
-
-  if (rtb_yawTarget > 0.0) {
-    rtb_TmpSignalConversionAtSFun_h[2] = rtb_yawTarget;
-  } else {
-    rtb_TmpSignalConversionAtSFun_h[2] = 0.0;
-  }
-
-  tmp_1 = rtIsNaN(Iu);
-  if ((rtb_Product1 > Iu) || tmp_1) {
-    rtb_TmpSignalConversionAtSFun_h[3] = rtb_Product1;
-  } else {
-    rtb_TmpSignalConversionAtSFun_h[3] = Iu;
-  }
-
-  /* 'URControl_alloc:75' daq.wRotorSet = wRotorSet; */
-  if (z1[0] > 0.0) {
-    URControl_DW.DAQ.wRotorSet[0] = z1[0];
+  /* 'URControl_alloc:138' daq.wRotorSet = wRotorSet; */
+  if (tmp_3 > 0.0) {
+    URControl_DW.DAQ.wRotorSet[0] = tmp_3;
   } else {
     URControl_DW.DAQ.wRotorSet[0] = 0.0;
   }
 
-  if ((z1[1] > w_min_idx_1) || rEQ0) {
-    URControl_DW.DAQ.wRotorSet[1] = z1[1];
+  if ((errorVel_idx_2 > rtb_TmpSignalConversionAtSFun_3) || tmp_4) {
+    URControl_DW.DAQ.wRotorSet[1] = errorVel_idx_2;
   } else {
-    URControl_DW.DAQ.wRotorSet[1] = w_min_idx_1;
+    URControl_DW.DAQ.wRotorSet[1] = rtb_TmpSignalConversionAtSFun_3;
   }
 
-  if (z1[2] > 0.0) {
-    URControl_DW.DAQ.wRotorSet[2] = z1[2];
+  if (rtb_DataTypeConversion8_idx_1 > 0.0) {
+    URControl_DW.DAQ.wRotorSet[2] = rtb_DataTypeConversion8_idx_1;
   } else {
     URControl_DW.DAQ.wRotorSet[2] = 0.0;
   }
 
-  if ((z1[3] > Iu) || tmp_1) {
-    URControl_DW.DAQ.wRotorSet[3] = z1[3];
+  if ((rtb_enableMeas > rtb_TmpSignalConversionAtSFun_1) || tmp_5) {
+    URControl_DW.DAQ.wRotorSet[3] = rtb_enableMeas;
   } else {
-    URControl_DW.DAQ.wRotorSet[3] = Iu;
+    URControl_DW.DAQ.wRotorSet[3] = rtb_TmpSignalConversionAtSFun_1;
   }
 
-  /* 'URControl_alloc:78' if fail_id_quick~=0 */
+  /* 'URControl_alloc:141' if fail_id_quick~=0 */
   if (URControl_U.fail_flag != 0) {
-    /* 'URControl_alloc:79' wRotorSet(fail_id_quick) = URpar.fail_wRot; */
-    rtb_TmpSignalConversionAtSFun_h[URControl_U.fail_flag - 1] =
-      URControlParams.fail_wRot;
+    /* 'URControl_alloc:142' wRotorSet(fail_id_quick) = URpar.fail_wRot; */
+    qconj[URControl_U.fail_flag - 1] = URControlParams.fail_wRot;
   }
-
-  /* End of MATLAB Function: '<S6>/control allocator' */
 
   /* MATLAB Function: '<S1>/MATLAB Function' incorporates:
    *  MATLAB Function: '<S5>/basic estimators'
+   *  MATLAB Function: '<S6>/control allocator'
    */
   /* :  [wRotorSetFinal, DAQ] = UROverrides(state, DAQ, wRotorSet, par, URControlParams); */
   /* 'UROverrides:3' if isempty(fallCount) */
@@ -6199,17 +7798,17 @@ void URControlModelClass::step()
     /* 'UROverrides:24' if thrown == 0 */
     if (URControl_DW.thrown == 0.0) {
       /* 'UROverrides:25' wRotorSetFinal = ones(4,1).*par.w_min; */
-      rtb_DataTypeConversion8_idx_1 = 300.0;
-      rtb_yawTarget = 300.0;
-      Fset_idx_2 = 300.0;
-      rtb_enableMeas = 300.0;
+      FMin[0] = 300.0;
+      FMin[1] = 300.0;
+      FMin[2] = 300.0;
+      FMin[3] = 300.0;
     } else {
       /* 'UROverrides:26' else */
       /* 'UROverrides:27' wRotorSetFinal = wRotorSet; */
-      rtb_DataTypeConversion8_idx_1 = rtb_TmpSignalConversionAtSFun_h[0];
-      rtb_yawTarget = rtb_TmpSignalConversionAtSFun_h[1];
-      Fset_idx_2 = rtb_TmpSignalConversionAtSFun_h[2];
-      rtb_enableMeas = rtb_TmpSignalConversionAtSFun_h[3];
+      FMin[0] = qconj[0];
+      FMin[1] = qconj[1];
+      FMin[2] = qconj[2];
+      FMin[3] = qconj[3];
     }
   } else {
     /* 'UROverrides:30' else */
@@ -6220,10 +7819,10 @@ void URControlModelClass::step()
     URControl_DW.thrown = 0.0;
 
     /* 'UROverrides:33' wRotorSetFinal = wRotorSet; */
-    rtb_DataTypeConversion8_idx_1 = rtb_TmpSignalConversionAtSFun_h[0];
-    rtb_yawTarget = rtb_TmpSignalConversionAtSFun_h[1];
-    Fset_idx_2 = rtb_TmpSignalConversionAtSFun_h[2];
-    rtb_enableMeas = rtb_TmpSignalConversionAtSFun_h[3];
+    FMin[0] = qconj[0];
+    FMin[1] = qconj[1];
+    FMin[2] = qconj[2];
+    FMin[3] = qconj[3];
   }
 
   /* 'UROverrides:37' if ~(URpar.throw_mode == 1 && thrown == 0) */
@@ -6235,34 +7834,45 @@ void URControlModelClass::step()
       URControl_DW.flipTime = 0.0;
 
       /* 'UROverrides:40' wRotorSetFinal = wRotorSet; */
-      rtb_DataTypeConversion8_idx_1 = rtb_TmpSignalConversionAtSFun_h[0];
-      rtb_yawTarget = rtb_TmpSignalConversionAtSFun_h[1];
-      Fset_idx_2 = rtb_TmpSignalConversionAtSFun_h[2];
-      rtb_enableMeas = rtb_TmpSignalConversionAtSFun_h[3];
+      FMin[0] = qconj[0];
+      FMin[1] = qconj[1];
+      FMin[2] = qconj[2];
+      FMin[3] = qconj[3];
     } else {
       if (URControlParams.flip_mode == 1.0) {
         /* 'UROverrides:42' elseif URpar.flip_mode == 1 */
         /* 'UROverrides:44' flipTime = flipTime + 1/par.freq; */
         URControl_DW.flipTime += 0.002;
 
-        /* 'UROverrides:45' if flipTime > URpar.flip_time */
-        if (URControl_DW.flipTime > URControlParams.flip_time) {
+        /* 'UROverrides:45' if flipTime > URpar.flip_time + URpar.flip_upTime */
+        if (URControl_DW.flipTime > URControlParams.flip_time +
+            URControlParams.flip_upTime) {
           /* 'UROverrides:46' wRotorSetFinal = wRotorSet; */
-          rtb_DataTypeConversion8_idx_1 = rtb_TmpSignalConversionAtSFun_h[0];
-          rtb_yawTarget = rtb_TmpSignalConversionAtSFun_h[1];
-          Fset_idx_2 = rtb_TmpSignalConversionAtSFun_h[2];
-          rtb_enableMeas = rtb_TmpSignalConversionAtSFun_h[3];
+          FMin[0] = qconj[0];
+          FMin[1] = qconj[1];
+          FMin[2] = qconj[2];
+          FMin[3] = qconj[3];
         } else {
           /* 'UROverrides:47' else */
-          /* 'UROverrides:48' wRotorSetFinal = ones(4,1).*600 + [1;-1;-1;1]*URpar.flip_intensityX + [1;1;-1;-1]*URpar.flip_intensityY; */
-          rtb_DataTypeConversion8_idx_1 = (600.0 +
-            URControlParams.flip_intensityX) + URControlParams.flip_intensityY;
-          rtb_yawTarget = (600.0 + -URControlParams.flip_intensityX) +
-            URControlParams.flip_intensityY;
-          Fset_idx_2 = (600.0 + -URControlParams.flip_intensityX) +
-            -URControlParams.flip_intensityY;
-          rtb_enableMeas = (600.0 + URControlParams.flip_intensityX) +
-            -URControlParams.flip_intensityY;
+          /* 'UROverrides:48' if flipTime < URpar.flip_upTime */
+          if (URControl_DW.flipTime < URControlParams.flip_upTime) {
+            /* 'UROverrides:49' wRotorSetFinal = ones(4,1).*1000; */
+            FMin[0] = 1000.0;
+            FMin[1] = 1000.0;
+            FMin[2] = 1000.0;
+            FMin[3] = 1000.0;
+          } else {
+            /* 'UROverrides:50' else */
+            /* 'UROverrides:51' wRotorSetFinal = ones(4,1).*700 + [1;-1;-1;1]*URpar.flip_intensityX + [1;1;-1;-1]*URpar.flip_intensityY; */
+            FMin[0] = (700.0 + URControlParams.flip_intensityX) +
+              URControlParams.flip_intensityY;
+            FMin[1] = (700.0 + -URControlParams.flip_intensityX) +
+              URControlParams.flip_intensityY;
+            FMin[2] = (700.0 + -URControlParams.flip_intensityX) +
+              -URControlParams.flip_intensityY;
+            FMin[3] = (700.0 + URControlParams.flip_intensityX) +
+              -URControlParams.flip_intensityY;
+          }
         }
       }
     }
@@ -6277,55 +7887,54 @@ void URControlModelClass::step()
   /* 'w_sp_to_px4_actuator_controls:10' w_min_sq = par.px4.w_min^2; */
   /* 'w_sp_to_px4_actuator_controls:11' w_max_sq = par.px4.w_max^2; */
   /* 'w_sp_to_px4_actuator_controls:13' actuator_controls = -1 + 2*(w_sp.^2 - w_min_sq)./(w_max_sq - w_min_sq); */
-  URControl_Y.w_rotors[0] = (real32_T)rtb_DataTypeConversion8_idx_1;
+  URControl_Y.w_rotors[0] = (real32_T)FMin[0];
 
   /* Outport: '<Root>/actuators_control' incorporates:
    *  DataTypeConversion: '<Root>/Data Type Conversion'
    *  DataTypeConversion: '<Root>/Data Type Conversion11'
    *  MATLAB Function: '<Root>/conversion to px4'
    */
-  URControl_Y.actuators_control[0] = (real32_T)((rtb_DataTypeConversion8_idx_1 *
-    rtb_DataTypeConversion8_idx_1 - 98696.044010893587) * 2.0 /
-    1.5335171993870398E+6 + -1.0);
-
-  /* Outport: '<Root>/w_rotors' incorporates:
-   *  DataTypeConversion: '<Root>/Data Type Conversion'
-   */
-  URControl_Y.w_rotors[1] = (real32_T)rtb_yawTarget;
-
-  /* Outport: '<Root>/actuators_control' incorporates:
-   *  DataTypeConversion: '<Root>/Data Type Conversion'
-   *  DataTypeConversion: '<Root>/Data Type Conversion11'
-   *  MATLAB Function: '<Root>/conversion to px4'
-   */
-  URControl_Y.actuators_control[1] = (real32_T)((rtb_yawTarget * rtb_yawTarget -
+  URControl_Y.actuators_control[0] = (real32_T)((FMin[0] * FMin[0] -
     98696.044010893587) * 2.0 / 1.5335171993870398E+6 + -1.0);
 
   /* Outport: '<Root>/w_rotors' incorporates:
    *  DataTypeConversion: '<Root>/Data Type Conversion'
    */
-  URControl_Y.w_rotors[2] = (real32_T)Fset_idx_2;
+  URControl_Y.w_rotors[1] = (real32_T)FMin[1];
 
   /* Outport: '<Root>/actuators_control' incorporates:
    *  DataTypeConversion: '<Root>/Data Type Conversion'
    *  DataTypeConversion: '<Root>/Data Type Conversion11'
    *  MATLAB Function: '<Root>/conversion to px4'
    */
-  URControl_Y.actuators_control[2] = (real32_T)((Fset_idx_2 * Fset_idx_2 -
+  URControl_Y.actuators_control[1] = (real32_T)((FMin[1] * FMin[1] -
     98696.044010893587) * 2.0 / 1.5335171993870398E+6 + -1.0);
 
   /* Outport: '<Root>/w_rotors' incorporates:
    *  DataTypeConversion: '<Root>/Data Type Conversion'
    */
-  URControl_Y.w_rotors[3] = (real32_T)rtb_enableMeas;
+  URControl_Y.w_rotors[2] = (real32_T)FMin[2];
 
   /* Outport: '<Root>/actuators_control' incorporates:
    *  DataTypeConversion: '<Root>/Data Type Conversion'
    *  DataTypeConversion: '<Root>/Data Type Conversion11'
    *  MATLAB Function: '<Root>/conversion to px4'
    */
-  URControl_Y.actuators_control[3] = (real32_T)((rtb_enableMeas * rtb_enableMeas
-    - 98696.044010893587) * 2.0 / 1.5335171993870398E+6 + -1.0);
+  URControl_Y.actuators_control[2] = (real32_T)((FMin[2] * FMin[2] -
+    98696.044010893587) * 2.0 / 1.5335171993870398E+6 + -1.0);
+
+  /* Outport: '<Root>/w_rotors' incorporates:
+   *  DataTypeConversion: '<Root>/Data Type Conversion'
+   */
+  URControl_Y.w_rotors[3] = (real32_T)FMin[3];
+
+  /* Outport: '<Root>/actuators_control' incorporates:
+   *  DataTypeConversion: '<Root>/Data Type Conversion'
+   *  DataTypeConversion: '<Root>/Data Type Conversion11'
+   *  MATLAB Function: '<Root>/conversion to px4'
+   */
+  URControl_Y.actuators_control[3] = (real32_T)((FMin[3] * FMin[3] -
+    98696.044010893587) * 2.0 / 1.5335171993870398E+6 + -1.0);
 
   /* DiscreteStateSpace: '<S15>/Discrete State-Space' */
   {
@@ -6334,11 +7943,11 @@ void URControlModelClass::step()
     rtb_accs_filter[2] = (1.0)*URControl_DW.DiscreteStateSpace_DSTATE_i[2];
   }
 
-  /* Outputs for Atomic SubSystem: '<S17>/Predict' */
-  /* SignalConversion: '<S26>/TmpSignal ConversionAt SFunction Inport4' incorporates:
+  /* Outputs for Atomic SubSystem: '<S18>/Predict' */
+  /* SignalConversion: '<S27>/TmpSignal ConversionAt SFunction Inport4' incorporates:
    *  DataTypeConversion: '<Root>/Data Type Conversion5'
    *  Inport: '<Root>/rates'
-   *  MATLAB Function: '<S24>/Predict'
+   *  MATLAB Function: '<S25>/Predict'
    */
   rtb_TmpSignalConversionAtSFunct[0] = rtb_accs_filter[0];
   rtb_TmpSignalConversionAtSFunct[3] = URControl_U.rates[0];
@@ -6347,12 +7956,12 @@ void URControlModelClass::step()
   rtb_TmpSignalConversionAtSFunct[2] = rtb_accs_filter[2];
   rtb_TmpSignalConversionAtSFunct[5] = URControl_U.rates[2];
 
-  /* MATLAB Function: '<S24>/Predict' incorporates:
-   *  DataStoreRead: '<S24>/Data Store ReadP'
-   *  DataStoreRead: '<S24>/Data Store ReadX'
+  /* MATLAB Function: '<S25>/Predict' incorporates:
+   *  DataStoreRead: '<S25>/Data Store ReadP'
+   *  DataStoreRead: '<S25>/Data Store ReadX'
    *  DataTypeConversion: '<Root>/Data Type Conversion5'
    *  Inport: '<Root>/rates'
-   *  SignalConversion: '<S26>/TmpSignal ConversionAt SFunction Inport4'
+   *  SignalConversion: '<S27>/TmpSignal ConversionAt SFunction Inport4'
    */
   /* :  if pS.IsSimulinkFcn */
   /* :  else */
@@ -6403,16 +8012,16 @@ void URControlModelClass::step()
   /* 'quatRot:22' scalar = v1(:,1).*v2(:,1) - v1(:,2).*v2(:,2) - ... */
   /* 'quatRot:23'              v1(:,3).*v2(:,3) - v1(:,4).*v2(:,4); */
   /* 'quatRot:25' qout = [scalar  vec]; */
-  rtb_enableMeas = ((URControl_DW.x[6] * 0.0 - URControl_DW.x[7] *
-                     rtb_accs_filter[0]) - URControl_DW.x[8] * rtb_accs_filter[1])
-    - URControl_DW.x[9] * rtb_accs_filter[2];
-  w_min_idx_1 = (URControl_DW.x[6] * rtb_accs_filter[0] + 0.0 * URControl_DW.x[7])
-    + (URControl_DW.x[8] * rtb_accs_filter[2] - URControl_DW.x[9] *
-       rtb_accs_filter[1]);
-  errorSum = (URControl_DW.x[6] * rtb_accs_filter[1] + 0.0 * URControl_DW.x[8])
-    + (URControl_DW.x[9] * rtb_accs_filter[0] - URControl_DW.x[7] *
-       rtb_accs_filter[2]);
-  Iu = (URControl_DW.x[6] * rtb_accs_filter[2] + 0.0 * URControl_DW.x[9]) +
+  FMin[0] = ((URControl_DW.x[6] * 0.0 - URControl_DW.x[7] * rtb_accs_filter[0])
+             - URControl_DW.x[8] * rtb_accs_filter[1]) - URControl_DW.x[9] *
+    rtb_accs_filter[2];
+  FMin[1] = (URControl_DW.x[6] * rtb_accs_filter[0] + 0.0 * URControl_DW.x[7]) +
+    (URControl_DW.x[8] * rtb_accs_filter[2] - URControl_DW.x[9] *
+     rtb_accs_filter[1]);
+  FMin[2] = (URControl_DW.x[6] * rtb_accs_filter[1] + 0.0 * URControl_DW.x[8]) +
+    (URControl_DW.x[9] * rtb_accs_filter[0] - URControl_DW.x[7] *
+     rtb_accs_filter[2]);
+  FMin[3] = (URControl_DW.x[6] * rtb_accs_filter[2] + 0.0 * URControl_DW.x[9]) +
     (URControl_DW.x[7] * rtb_accs_filter[1] - URControl_DW.x[8] *
      rtb_accs_filter[0]);
 
@@ -6433,61 +8042,63 @@ void URControlModelClass::step()
   rtb_xNew[0] = URControl_DW.x[3] * 0.002 + URControl_DW.x[0];
 
   /* 'ekf_state_func:46' x(i+3) = vel(i) + acc(i)*dt; */
-  rtb_xNew[3] = ((rtb_enableMeas * -URControl_DW.x[7] + URControl_DW.x[6] *
-                  w_min_idx_1) + (errorSum * -URControl_DW.x[9] - Iu *
-    -URControl_DW.x[8])) * 0.002 + URControl_DW.x[3];
+  rtb_xNew[3] = ((FMin[0] * -URControl_DW.x[7] + URControl_DW.x[6] * FMin[1]) +
+                 (FMin[2] * -URControl_DW.x[9] - FMin[3] * -URControl_DW.x[8])) *
+    0.002 + URControl_DW.x[3];
 
   /* 'ekf_state_func:43' x(i) = pos(i) + vel(i)*dt; */
   rtb_xNew[1] = URControl_DW.x[4] * 0.002 + URControl_DW.x[1];
 
   /* 'ekf_state_func:46' x(i+3) = vel(i) + acc(i)*dt; */
-  rtb_xNew[4] = ((rtb_enableMeas * -URControl_DW.x[8] + URControl_DW.x[6] *
-                  errorSum) + (Iu * -URControl_DW.x[7] - w_min_idx_1 *
-    -URControl_DW.x[9])) * 0.002 + URControl_DW.x[4];
+  rtb_xNew[4] = ((FMin[0] * -URControl_DW.x[8] + URControl_DW.x[6] * FMin[2]) +
+                 (FMin[3] * -URControl_DW.x[7] - FMin[1] * -URControl_DW.x[9])) *
+    0.002 + URControl_DW.x[4];
 
   /* 'ekf_state_func:43' x(i) = pos(i) + vel(i)*dt; */
   rtb_xNew[2] = URControl_DW.x[5] * 0.002 + URControl_DW.x[2];
 
   /* 'ekf_state_func:46' x(i+3) = vel(i) + acc(i)*dt; */
-  rtb_xNew[5] = (((rtb_enableMeas * -URControl_DW.x[9] + URControl_DW.x[6] * Iu)
-                  + (w_min_idx_1 * -URControl_DW.x[8] - errorSum *
-                     -URControl_DW.x[7])) + 9.81) * 0.002 + URControl_DW.x[5];
+  rtb_xNew[5] = (((FMin[0] * -URControl_DW.x[9] + URControl_DW.x[6] * FMin[3]) +
+                  (FMin[1] * -URControl_DW.x[8] - FMin[2] * -URControl_DW.x[7]))
+                 + 9.81) * 0.002 + URControl_DW.x[5];
 
   /* 'ekf_state_func:50' q_dot24 = 0.5*(crossProduct(q(2:4),omega) + omega*q(1)); */
   /* 'crossProduct:3' c = [a(2)*b(3) - a(3)*b(2); a(3)*b(1) - a(1)*b(3); a(1)*b(2) - a(2)*b(1)]; */
   /* 'ekf_state_func:51' q_dot = [q_dot1; q_dot24]; */
   /* 'ekf_state_func:53' q = q + q_dot*dt; */
-  rtb_DataTypeConversion8_idx_1 = ((URControl_DW.x[7] * URControl_U.rates[0] +
+  rtb_TmpSignalConversionAtSFun_4 = ((URControl_DW.x[7] * URControl_U.rates[0] +
     URControl_DW.x[8] * URControl_U.rates[1]) + URControl_DW.x[9] *
     URControl_U.rates[2]) * -0.5 * 0.002 + URControl_DW.x[6];
-  rtb_yawTarget = ((URControl_DW.x[8] * URControl_U.rates[2] - URControl_DW.x[9]
-                    * URControl_U.rates[1]) + URControl_U.rates[0] *
-                   URControl_DW.x[6]) * 0.5 * 0.002 + URControl_DW.x[7];
-  Fset_idx_2 = ((URControl_DW.x[9] * URControl_U.rates[0] - URControl_DW.x[7] *
-                 URControl_U.rates[2]) + URControl_U.rates[1] * URControl_DW.x[6])
-    * 0.5 * 0.002 + URControl_DW.x[8];
-  errorSum = ((URControl_DW.x[7] * URControl_U.rates[1] - URControl_DW.x[8] *
-               URControl_U.rates[0]) + URControl_U.rates[2] * URControl_DW.x[6])
-    * 0.5 * 0.002 + URControl_DW.x[9];
+  rtb_TmpSignalConversionAtSFun_3 = ((URControl_DW.x[8] * URControl_U.rates[2] -
+    URControl_DW.x[9] * URControl_U.rates[1]) + URControl_U.rates[0] *
+    URControl_DW.x[6]) * 0.5 * 0.002 + URControl_DW.x[7];
+  rtb_TmpSignalConversionAtSFun_2 = ((URControl_DW.x[9] * URControl_U.rates[0] -
+    URControl_DW.x[7] * URControl_U.rates[2]) + URControl_U.rates[1] *
+    URControl_DW.x[6]) * 0.5 * 0.002 + URControl_DW.x[8];
+  rtb_TmpSignalConversionAtSFun_1 = ((URControl_DW.x[7] * URControl_U.rates[1] -
+    URControl_DW.x[8] * URControl_U.rates[0]) + URControl_U.rates[2] *
+    URControl_DW.x[6]) * 0.5 * 0.002 + URControl_DW.x[9];
 
   /* 'ekf_state_func:54' qnorm = sqrt(q(1)^2 + q(2)^2 + q(3)^2 + q(4)^2); */
-  rtb_enableMeas = std::sqrt(((rtb_DataTypeConversion8_idx_1 *
-    rtb_DataTypeConversion8_idx_1 + rtb_yawTarget * rtb_yawTarget) + Fset_idx_2 *
-    Fset_idx_2) + errorSum * errorSum);
+  rtb_enableMeas = std::sqrt(((rtb_TmpSignalConversionAtSFun_4 *
+    rtb_TmpSignalConversionAtSFun_4 + rtb_TmpSignalConversionAtSFun_3 *
+    rtb_TmpSignalConversionAtSFun_3) + rtb_TmpSignalConversionAtSFun_2 *
+    rtb_TmpSignalConversionAtSFun_2) + rtb_TmpSignalConversionAtSFun_1 *
+    rtb_TmpSignalConversionAtSFun_1);
 
   /* 'ekf_state_func:55' q = q/qnorm; */
   /* 'ekf_state_func:57' for i = 1:4 */
   /* 'ekf_state_func:58' x(i+6) = q(i); */
-  rtb_xNew[6] = rtb_DataTypeConversion8_idx_1 / rtb_enableMeas;
+  rtb_xNew[6] = rtb_TmpSignalConversionAtSFun_4 / rtb_enableMeas;
 
   /* 'ekf_state_func:58' x(i+6) = q(i); */
-  rtb_xNew[7] = rtb_yawTarget / rtb_enableMeas;
+  rtb_xNew[7] = rtb_TmpSignalConversionAtSFun_3 / rtb_enableMeas;
 
   /* 'ekf_state_func:58' x(i+6) = q(i); */
-  rtb_xNew[8] = Fset_idx_2 / rtb_enableMeas;
+  rtb_xNew[8] = rtb_TmpSignalConversionAtSFun_2 / rtb_enableMeas;
 
   /* 'ekf_state_func:58' x(i+6) = q(i); */
-  rtb_xNew[9] = errorSum / rtb_enableMeas;
+  rtb_xNew[9] = rtb_TmpSignalConversionAtSFun_1 / rtb_enableMeas;
   for (r2 = 0; r2 < 10; r2++) {
     for (r3 = 0; r3 < 10; r3++) {
       rtemp = r3 + 10 * r2;
@@ -6500,28 +8111,27 @@ void URControlModelClass::step()
   }
 
   for (i = 0; i < 10; i++) {
-    /* DataStoreWrite: '<S24>/Data Store WriteP' incorporates:
-     *  Constant: '<S17>/Q'
-     *  MATLAB Function: '<S24>/Predict'
+    /* DataStoreWrite: '<S25>/Data Store WriteP' incorporates:
+     *  Constant: '<S18>/Q'
+     *  MATLAB Function: '<S25>/Predict'
      */
     for (r2 = 0; r2 < 10; r2++) {
-      rtb_DataTypeConversion8_idx_0 = 0.0;
+      tmp_3 = 0.0;
       for (r3 = 0; r3 < 10; r3++) {
-        rtb_DataTypeConversion8_idx_0 += Jacobian_0[10 * r3 + i] * Jacobian[10 *
-          r3 + r2];
+        tmp_3 += Jacobian_0[10 * r3 + i] * Jacobian[10 * r3 + r2];
       }
 
       URControl_DW.P[i + 10 * r2] = URControl_ConstP.Q_Value[10 * r2 + i] +
-        rtb_DataTypeConversion8_idx_0;
+        tmp_3;
     }
 
-    /* End of DataStoreWrite: '<S24>/Data Store WriteP' */
+    /* End of DataStoreWrite: '<S25>/Data Store WriteP' */
 
-    /* DataStoreWrite: '<S24>/Data Store WriteX' */
+    /* DataStoreWrite: '<S25>/Data Store WriteX' */
     URControl_DW.x[i] = rtb_xNew[i];
   }
 
-  /* End of Outputs for SubSystem: '<S17>/Predict' */
+  /* End of Outputs for SubSystem: '<S18>/Predict' */
 
   /* Outport: '<Root>/daq' incorporates:
    *  DataStoreRead: '<Root>/Data Store Read'
@@ -6599,11 +8209,11 @@ void URControlModelClass::initialize()
   (void) memset((void *)&URControl_Y, 0,
                 sizeof(ExtY_URControl_T));
 
-  /* Start for DataStoreMemory: '<S17>/DataStoreMemory - P' */
+  /* Start for DataStoreMemory: '<S18>/DataStoreMemory - P' */
   memcpy(&URControl_DW.P[0], &URControl_ConstP.DataStoreMemoryP_InitialValue[0],
          100U * sizeof(real_T));
 
-  /* Start for DataStoreMemory: '<S17>/DataStoreMemory - x' */
+  /* Start for DataStoreMemory: '<S18>/DataStoreMemory - x' */
   memcpy(&URControl_DW.x[0], &URControl_ConstP.DataStoreMemoryx_InitialValue[0],
          10U * sizeof(real_T));
 

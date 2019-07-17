@@ -5,11 +5,11 @@
  * course requirements at degree granting institutions only.  Not for
  * government, commercial, or other organizational use.
  *
- * Code generation for model "URControl".
+ * Code generation for model "PosDirectControl".
  *
- * Model version              : 1.874
+ * Model version              : 1.1528
  * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C++ source code generated on : Wed Jul 17 14:39:49 2019
+ * C++ source code generated on : Wed Jul 17 10:06:06 2019
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
