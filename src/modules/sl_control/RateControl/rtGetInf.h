@@ -5,17 +5,11 @@
  * course requirements at degree granting institutions only.  Not for
  * government, commercial, or other organizational use.
  *
- * Code generation for model "RateControl".
+ * Code generation for model "LoeDetector".
  *
- * Model version              : 1.656
+ * Model version              : 1.31
  * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C++ source code generated on : Tue Jan 15 14:35:28 2019
- *
- * Target selection: grt.tlc
- * Note: GRT includes extra infrastructure and instrumentation for prototyping
- * Embedded hardware selection: Generic->Custom
- * Code generation objectives: Unspecified
- * Validation result: Not run
+ * C++ source code generated on : Wed Jul 17 14:10:47 2019
  */
 
 #ifndef RTW_HEADER_rtGetInf_h_

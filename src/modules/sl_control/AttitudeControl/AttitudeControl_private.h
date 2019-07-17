@@ -7,9 +7,9 @@
  *
  * Code generation for model "AttitudeControl".
  *
- * Model version              : 1.107
+ * Model version              : 1.234
  * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C++ source code generated on : Tue Jan 15 16:04:44 2019
+ * C++ source code generated on : Fri Feb 22 16:16:41 2019
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping

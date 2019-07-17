@@ -60,10 +60,12 @@
 
 #include <uORB/topics/sensor_combined.h>
 #include <uORB/topics/debug_key_value.h>
+// #include <uORB/topics/debug_array.h>
 #include <uORB/topics/rate_control_input.h>
 #include <uORB/topics/attitude_control_input.h>
 #include <uORB/topics/esc_status.h>
 #include <uORB/topics/vehicle_odometry.h>
+#include <uORB/topics/position_setpoint_triplet.h>
 
 
 /**
@@ -123,6 +125,7 @@ private:
 	void		sensor_combined_poll();
 	void		esc_status_poll();
 	bool		vision_poll();
+	bool		pos_sp_triplet_poll();
 
 	// void		has_upset_condition();
 
@@ -178,6 +181,8 @@ private:
 	int		_sensor_combined_sub{-1};
 	int		_esc_status_sub{-1};
 	int		_vision_sub{-1};
+	int		_pos_sp_triplet_sub{-1};
+
 
 	unsigned _gyro_count{1};
 	int _selected_gyro{0};
@@ -209,6 +214,7 @@ private:
 	struct sensor_combined_s		_sensor_combined {};
 	struct esc_status_s				_esc_status {};
 	struct vehicle_odometry_s		_vision {};
+	struct position_setpoint_triplet_s _pos_sp_triplet {};
 
 	MultirotorMixer::saturation_status _saturation_status{};
 
@@ -298,16 +304,27 @@ private:
 		(ParamFloat<px4::params::SL_ATT_RATE_MAX>) _att_rate_sample_rate_max,
 
 		// Actuator failures
-		(ParamFloat<px4::params::SL_ACT_LIMIT>) _act_limit,
-		(ParamInt<px4::params::SL_FAIL_ID>) _sl_fail_id,
-		(ParamInt<px4::params::SL_FAIL_FLAG>) _sl_fail_flag,
+		(ParamInt<px4::params::SL_ACT_FAIL_ID>) _sl_act_fail_id,
+		(ParamInt<px4::params::SL_ACT_LIM_RPM>) _sl_act_lim_rpm,
+		(ParamInt<px4::params::SL_ACT_SAW_AMP>) _sl_act_saw_amp,
+		(ParamInt<px4::params::SL_ACT_SAW_FREQ>) _sl_act_saw_freq,
 
+		// Fault detection
+		(ParamFloat<px4::params::SL_FDD_K_THRES>) _sl_fdd_k_thres,
+		(ParamFloat<px4::params::SL_FDD_P_THRES>) _sl_fdd_fail_p_thres,
+		(ParamInt<px4::params::SL_FDD_ON>) _sl_fdd_on,
+
+		// Setpoint
 		(ParamFloat<px4::params::SL_YAW_RATE_SP>) _sl_yaw_rate_sp,
 
 		// Attitude/primary axis control
 		(ParamFloat<px4::params::SL_PRIM_AXIS_X>) _prim_axis_x,
 		(ParamFloat<px4::params::SL_PRIM_AXIS_Y>) _prim_axis_y,
 		(ParamFloat<px4::params::SL_ATT_XY_GAIN>) _att_xy_gain,
+		(ParamFloat<px4::params::SL_POS_XY_P_GAIN>)_pos_xy_p_gain,
+		(ParamFloat<px4::params::SL_POS_Z_P_GAIN>)_pos_z_p_gain,
+		(ParamFloat<px4::params::SL_VEL_XY_P_GAIN>)_vel_xy_p_gain,
+		(ParamFloat<px4::params::SL_VEL_Z_P_GAIN>)_vel_z_p_gain,
 
 		// Rate control
 		(ParamFloat<px4::params::SL_ATT_ROLL_GAIN>) _att_roll_gain,
@@ -339,9 +356,13 @@ private:
 	float _sample_rate_max;
 
 	float _yaw_rate_sp;
+	float _accel_z_sp;
 
     struct debug_key_value_s dbg {};
 	orb_advert_t pub_dbg {nullptr};
+
+	// struct debug_array_s dbg_array {};
+	// orb_advert_t pub_dbg_array {nullptr};
 
 	struct rate_control_input_s _rate_control_input {};
 	orb_advert_t pub_rate_control_input {nullptr};

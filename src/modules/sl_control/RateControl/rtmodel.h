@@ -7,13 +7,13 @@
  *
  * Code generation for model "RateControl".
  *
- * Model version              : 1.656
+ * Model version              : 1.1008
  * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C++ source code generated on : Tue Jan 15 14:35:28 2019
+ * C++ source code generated on : Wed Jul 17 14:14:42 2019
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
- * Embedded hardware selection: Generic->Custom
+ * Embedded hardware selection: Custom
  * Code generation objectives: Unspecified
  * Validation result: Not run
  */

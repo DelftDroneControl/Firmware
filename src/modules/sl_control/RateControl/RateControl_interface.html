@@ -312,7 +312,7 @@ real32_T
 </tr>
 <tr class="even">
 <td width="42%" align="left" valign="top">
-&lt;Root&gt;/accel_z
+&lt;Root&gt;/accel
 </td>
 <td width="26%" align="left" valign="top">
 <i>
@@ -324,13 +324,13 @@ Defined externally
 real32_T
 </td>
 <td width="10%" align="right" valign="top">
-1
+[3]
 </td>
 
 </tr>
 <tr class="odd">
 <td width="42%" align="left" valign="top">
-&lt;Root&gt;/thrust_sp
+&lt;Root&gt;/accel_z_sp
 </td>
 <td width="26%" align="left" valign="top">
 <i>
@@ -366,7 +366,7 @@ int32_T
 </tr>
 <tr class="odd">
 <td width="42%" align="left" valign="top">
-&lt;Root&gt;/fail_flag 
+&lt;Root&gt;/act_limit_rpm
 </td>
 <td width="26%" align="left" valign="top">
 <i>
@@ -384,7 +384,7 @@ int32_T
 </tr>
 <tr class="even">
 <td width="42%" align="left" valign="top">
-&lt;Root&gt;/act_limit
+&lt;Root&gt;/act_fail_id
 </td>
 <td width="26%" align="left" valign="top">
 <i>
@@ -393,7 +393,43 @@ Defined externally
 
 </td>
 <td width="21%" align="left" valign="top">
-real32_T
+int32_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="odd">
+<td width="42%" align="left" valign="top">
+&lt;Root&gt;/act_saw_amp
+</td>
+<td width="26%" align="left" valign="top">
+<i>
+Defined externally
+</i>
+
+</td>
+<td width="21%" align="left" valign="top">
+int32_T
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="even">
+<td width="42%" align="left" valign="top">
+&lt;Root&gt;/act_saw_freq
+</td>
+<td width="26%" align="left" valign="top">
+<i>
+Defined externally
+</i>
+
+</td>
+<td width="21%" align="left" valign="top">
+int32_T
 </td>
 <td width="10%" align="right" valign="top">
 1
@@ -438,7 +474,7 @@ Dimension
 </tr>
 <tr class="even">
 <td width="42%" align="left" valign="top">
-&lt;Root&gt;/w_cmd
+&lt;Root&gt;/w_sp
 </td>
 <td width="26%" align="left" valign="top">
 <i>
@@ -447,7 +483,7 @@ Defined externally
 
 </td>
 <td width="21%" align="left" valign="top">
-real_T
+real32_T
 </td>
 <td width="10%" align="right" valign="top">
 [4]
@@ -474,7 +510,7 @@ real32_T
 </tr>
 <tr class="even">
 <td width="42%" align="left" valign="top">
-&lt;Root&gt;/G
+&lt;Root&gt;/kalman_state
 </td>
 <td width="26%" align="left" valign="top">
 <i>
@@ -486,7 +522,43 @@ Defined externally
 real32_T
 </td>
 <td width="10%" align="right" valign="top">
-[4  8]
+[9]
+</td>
+
+</tr>
+<tr class="odd">
+<td width="42%" align="left" valign="top">
+&lt;Root&gt;/fail_P
+</td>
+<td width="26%" align="left" valign="top">
+<i>
+Defined externally
+</i>
+
+</td>
+<td width="21%" align="left" valign="top">
+real_T
+</td>
+<td width="10%" align="right" valign="top">
+[4]
+</td>
+
+</tr>
+<tr class="even">
+<td width="42%" align="left" valign="top">
+&lt;Root&gt;/fail_id
+</td>
+<td width="26%" align="left" valign="top">
+<i>
+Defined externally
+</i>
+
+</td>
+<td width="21%" align="left" valign="top">
+int32_T
+</td>
+<td width="10%" align="right" valign="top">
+1
 </td>
 
 </tr>
@@ -535,6 +607,21 @@ RateControlParams
 </td>
 <td width="21%" align="left" valign="top">
 RateControlParamsType
+</td>
+<td width="10%" align="right" valign="top">
+1
+</td>
+
+</tr>
+<tr class="odd">
+<td width="42%" align="left" valign="top">
+LoeDetectorParams
+</td>
+<td width="26%" align="left" valign="top">
+LoeDetectorParams
+</td>
+<td width="21%" align="left" valign="top">
+LoeDetectorParamsType
 </td>
 <td width="10%" align="right" valign="top">
 1
