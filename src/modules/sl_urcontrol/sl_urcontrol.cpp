@@ -257,6 +257,10 @@ SlURControl::parameters_updated()
 	URControlParams.p2 	= _sl_qp_env_gain.get();
 	URControlParams.pr 	= _sl_qp_yaw_gain.get();
 	URControlParams.omega_max = _sl_qp_env_omega.get();
+
+	// Alt Protect
+	URControlParams.fail_altProt = _sl_fail_prot.get();
+	URControlParams.fail_altThresh = _sl_fail_alt_thresh.get();
 }
 
 void
