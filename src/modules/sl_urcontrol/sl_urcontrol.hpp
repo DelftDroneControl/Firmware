@@ -303,13 +303,16 @@ private:
 
 		//QPpredControl
 		(ParamFloat<px4::params::SL_QP_KP>) _sl_qp_kp,
+		(ParamFloat<px4::params::SL_QP_KI>) _sl_qp_ki,
 		(ParamFloat<px4::params::SL_QP_KD>) _sl_qp_kd,
+		(ParamFloat<px4::params::SL_QP_KDD>) _sl_qp_kdd,
 		(ParamFloat<px4::params::SL_QP_KDR>) _sl_qp_kdr,
 		(ParamFloat<px4::params::SL_QP_TH>) _sl_qp_th,
 		(ParamFloat<px4::params::SL_QP_THR_GAIN>) _sl_qp_thr_gain,
 		(ParamFloat<px4::params::SL_QP_YAW_GAIN>) _sl_qp_yaw_gain,
 		(ParamFloat<px4::params::SL_QP_ENV_GAIN>) _sl_qp_env_gain,
 		(ParamFloat<px4::params::SL_QP_ENV_OMEGA>) _sl_qp_env_omega,
+		(ParamFloat<px4::params::SL_QP_PA_THRESH>) _sl_qp_pa_thresh,
 
 		// ALtitude protection
 		(ParamInt<px4::params::SL_FAIL_PROT>) _sl_fail_prot,

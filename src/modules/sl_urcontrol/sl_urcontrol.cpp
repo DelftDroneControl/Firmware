@@ -188,7 +188,7 @@ SlURControl::parameters_updated()
 	URControlParams.attitude_enableTraj = _sl_attitude_enabletraj.get();
 	URControlParams.attitude_rotSpeedComp = _sl_attitude_rotspeedcomp.get();
 	URControlParams.attitude_yrcComp = _sl_attitude_yrcComp.get();
-
+	URControlParams.trigger_PA_thresh = _sl_qp_pa_thresh.get();
 
 	// Envelope
 	URControlParams.envp_enable = _sl_envp_enable.get();
@@ -250,7 +250,9 @@ SlURControl::parameters_updated()
 
 	//QPpredControl
 	URControlParams.Kp 	= _sl_qp_kp.get();
+	URControlParams.Ki 	= _sl_qp_ki.get();	
 	URControlParams.Kd 	= _sl_qp_kd.get();
+	URControlParams.Kdd = _sl_qp_kdd.get();
 	URControlParams.kdr = _sl_qp_kdr.get();
 	URControlParams.th 	= _sl_qp_th.get();
 	URControlParams.p1 	= _sl_qp_thr_gain.get();
@@ -258,7 +260,7 @@ SlURControl::parameters_updated()
 	URControlParams.pr 	= _sl_qp_yaw_gain.get();
 	URControlParams.omega_max = _sl_qp_env_omega.get();
 
-	// Alt Protect
+	// Alt Protectepe
 	URControlParams.fail_altProt = _sl_fail_prot.get();
 	URControlParams.fail_altThresh = _sl_fail_alt_thresh.get();
 }
@@ -607,6 +609,7 @@ SlURControl::control_ur(float dt)
 
 	_urcontrol_input.yaw_sp = 0;
 
+	_urcontrol_input.fail_flag = _sl_fail_flag.get();
 	//_urcontrol_input.dt_step = hrt_absolute_time() - t_step_start;
 
 	// See mixer file `pass.main.mix` for exact control allocation.
