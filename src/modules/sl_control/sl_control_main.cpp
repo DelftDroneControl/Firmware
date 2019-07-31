@@ -254,7 +254,6 @@ SimulinkControl::parameters_updated()
 	RateControl.RateControl_U.act_saw_amp = _sl_act_saw_amp.get();
 	RateControl.RateControl_U.act_saw_freq = _sl_act_saw_freq.get();
 
-
 	// PX4_INFO("Parameters updated");
 	// PX4_INFO("Actuator limit: %f", static_cast<double>(RateControl.RateControl_U.act_limit_rpm));
 

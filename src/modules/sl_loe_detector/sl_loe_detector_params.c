@@ -39,3 +39,29 @@
  *
  */
 
+/**
+ *
+ * @unit -
+ * @min 0
+ * @max 1
+ * @group Loss of effectiveness detector
+ */
+PARAM_DEFINE_FLOAT(FDD_K_THRES, 0.25f);
+
+/**
+ *
+ * @unit -
+ * @min 0
+ * @max 1
+ * @group Loss of effectiveness detector
+ */
+PARAM_DEFINE_FLOAT(FDD_FAIL_P_THRES, 0.9f);
+
+/**
+ *
+ * @unit -
+ * @min 0
+ * @max 1
+ * @group Loss of effectiveness detector
+ */
+PARAM_DEFINE_INT32(FDD_ON, 1);

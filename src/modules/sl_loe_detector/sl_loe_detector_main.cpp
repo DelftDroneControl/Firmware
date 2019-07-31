@@ -38,6 +38,9 @@
  * @author Bram Strack van Schijndel
  */
 
+#include <perf/perf_counter.h>
+
+#include <algorithm>
 #include <cfloat>
 
 #include <drivers/drv_hrt.h>
@@ -52,11 +55,18 @@
 
 #include <uORB/Publication.hpp>
 
+// Subscriptions
 #include <uORB/topics/parameter_update.h>
 #include <uORB/topics/sensor_combined.h>
+#include <uORB/topics/esc_status.h>
+
+// Publications
 #include <uORB/topics/loe_detector_status.h>
+#include <uORB/topics/loe_detector_input.h>
 
 #include "LoeDetector/LoeDetector.h"
+
+#define SAMPLE_RATE_MAX 500
 
 extern "C" __EXPORT int sl_loe_detector_main(int argc, char *argv[]);
 
@@ -86,34 +96,51 @@ public:
 	int print_status() override;
 
 private:
+	perf_counter_t _loop_perf; /**< loop performance counter */
+
+	float _freq;
+
 	int _params_sub{-1};
 	int _sensors_sub{-1};
+	int _esc_status_sub{-1};
 
-	orb_advert_t _att_pub{nullptr};
+	orb_advert_t _loe_detector_status_pub{nullptr};
+	orb_advert_t _loe_detector_input_pub{nullptr};
 
 	// uORB::Publication<loe_detector_status_s> _loe_detector_status;
 
 	LoeDetectorModelClass _loe_detector;
 
-	// DEFINE_PARAMETERS(
-		// (ParamExtInt<px4::params::EKF2_MIN_OBS_DT>) _obs_dt_min_ms ///< Maximum time delay of any sensor used to increase buffer length to handle large timing jitter (mSec)
-	// )
+	void parameters_updated();
+
+	DEFINE_PARAMETERS(
+		(ParamFloat<px4::params::FDD_K_THRES>)_fdd_k_thres,
+		(ParamFloat<px4::params::FDD_FAIL_P_THRES>)_fdd_fail_p_thres,
+		(ParamInt<px4::params::FDD_ON>)_fdd_on)
 };
 
 SlLoeDetector::SlLoeDetector() : ModuleParams(nullptr)
+// _loop_perf(perf_alloc(PC_ELAPSED, "loe_detector"))
 {
 	_params_sub = orb_subscribe(ORB_ID(parameter_update));
 	_sensors_sub = orb_subscribe(ORB_ID(sensor_combined));
-	updateParams();
+	_esc_status_sub = orb_subscribe(ORB_ID(esc_status));
 }
 
 SlLoeDetector::~SlLoeDetector()
 {
-
 }
 
 int SlLoeDetector::print_status()
 {
+	PX4_INFO("fail id: %i", _loe_detector.LoeDetector_Y.fail_id);
+
+	PX4_INFO("fdd_k_thres: %f", LoeDetectorParams.fdd_k_thres);
+	PX4_INFO("fdd_fail_p_thres %f", LoeDetectorParams.fdd_fail_p_thres);
+	PX4_INFO("fdd_on: %f", LoeDetectorParams.fdd_on);
+
+	PX4_INFO("freq: %f", _freq);
+
 	// PX4_INFO("local position: %s", (_ekf.local_position_is_valid()) ? "valid" : "invalid");
 	// PX4_INFO("global position: %s", (_ekf.global_position_is_valid()) ? "valid" : "invalid");
 
@@ -125,32 +152,25 @@ int SlLoeDetector::print_status()
 	return 0;
 }
 
+void SlLoeDetector::parameters_updated()
+{
+	PX4_INFO("Parameters updated.");
+	LoeDetectorParams.fdd_k_thres = _fdd_k_thres.get();
+	LoeDetectorParams.fdd_fail_p_thres = _fdd_fail_p_thres.get();
+	LoeDetectorParams.fdd_on = _fdd_on.get();
+}
+
 void SlLoeDetector::run()
 {
 
 	sensor_combined_s sensors = {};
+	esc_status_s esc_status = {};
+	loe_detector_input_s loe_detector_input = {};
+
+	hrt_abstime last_run = hrt_absolute_time();
 
 	while (!should_exit())
 	{
-		// int ret = px4_poll(fds, sizeof(fds) / sizeof(fds[0]), 1000);
-
-		// if (!(fds[0].revents & POLLIN))
-		// {
-		// 	// no new data
-		// 	continue;
-		// }
-
-		// if (ret < 0)
-		// {
-		// 	// Poll error, sleep and try again
-		// 	px4_usleep(10000);
-		// 	continue;
-		// }
-		// else if (ret == 0)
-		// {
-		// 	// Poll timeout or no new data, do nothing
-		// 	continue;
-		// }
 
 		bool params_updated = false;
 		orb_check(_params_sub, &params_updated);
@@ -160,10 +180,75 @@ void SlLoeDetector::run()
 			// read from param to clear updated flag
 			parameter_update_s update;
 			orb_copy(ORB_ID(parameter_update), _params_sub, &update);
+			parameters_updated();
 		}
 
-		orb_copy(ORB_ID(sensor_combined), _sensors_sub, &sensors);
+		const hrt_abstime now = hrt_absolute_time();
+		float dt = (now - last_run) / 1e6f;
+		float dt_min = 1.0f / SAMPLE_RATE_MAX;
 
+		if (dt < dt_min)
+		{
+			continue;
+		}
+		_freq = 1e6f/(now - last_run);
+		last_run = now;
+
+		// Poll sensors
+		bool sensors_updated = false;
+		orb_check(_sensors_sub, &sensors_updated);
+
+		if (sensors_updated)
+		{
+			orb_copy(ORB_ID(sensor_combined), _sensors_sub, &sensors);
+
+			std::copy(std::begin(sensors.gyro_rad), std::end(sensors.gyro_rad), std::begin(_loe_detector.LoeDetector_U.rates));
+
+			// _loe_detector.LoeDetector_U.rates[0] = sensors.gyro_rad[0];
+			// _loe_detector.LoeDetector_U.rates[1] = sensors.gyro_rad[1];
+			// _loe_detector.LoeDetector_U.rates[2] = sensors.gyro_rad[2];
+
+			// TODO: bias correction?
+			_loe_detector.LoeDetector_U.acc_z = sensors.accelerometer_m_s2[2];
+		}
+
+		// Poll esc_status
+		bool esc_status_updated = false;
+		orb_check(_esc_status_sub, &esc_status_updated);
+
+		if (esc_status_updated)
+		{
+			orb_copy(ORB_ID(esc_status), _esc_status_sub, &esc_status);
+
+			// See pass.main.mix for esc mapping.
+			_loe_detector.LoeDetector_U.esc_rpm[0] = esc_status.esc[2].esc_rpm;
+			_loe_detector.LoeDetector_U.esc_rpm[1] = esc_status.esc[0].esc_rpm;
+			_loe_detector.LoeDetector_U.esc_rpm[2] = esc_status.esc[3].esc_rpm;
+			_loe_detector.LoeDetector_U.esc_rpm[3] = esc_status.esc[1].esc_rpm;
+		}
+
+		// Step loe_detector
+		const hrt_abstime t_step_start = hrt_absolute_time();
+		_loe_detector.step();
+
+		float dt_step = hrt_absolute_time() - t_step_start;
+
+		// Publish loe_detector_status
+		loe_detector_status_s loe_detector_status{};
+		loe_detector_status.timestamp = hrt_absolute_time();
+		loe_detector_status.fail_id = _loe_detector.LoeDetector_Y.fail_id;
+
+		int status_orb_instance;
+		orb_publish_auto(ORB_ID(loe_detector_status), &_loe_detector_status_pub, &loe_detector_status, &status_orb_instance, ORB_PRIO_HIGH);
+
+		// Publish loe_detector_input
+		std::copy(std::begin(_loe_detector.LoeDetector_U.rates), std::end(_loe_detector.LoeDetector_U.rates), std::begin(loe_detector_input.rates));
+		loe_detector_input.acc_z = _loe_detector.LoeDetector_U.acc_z;
+		std::copy(std::begin(_loe_detector.LoeDetector_U.esc_rpm), std::end(_loe_detector.LoeDetector_U.esc_rpm), std::begin(loe_detector_input.esc_rpm));
+		loe_detector_input.dt_step = dt_step;
+
+		int output_orb_instance;
+		orb_publish_auto(ORB_ID(loe_detector_input), &_loe_detector_input_pub, &loe_detector_input, &output_orb_instance, ORB_PRIO_HIGH);
 	}
 }
 
@@ -183,7 +268,6 @@ void SlLoeDetector::run()
 
 // 	return true;
 // }
-
 
 SlLoeDetector *SlLoeDetector::instantiate(int argc, char *argv[])
 {
@@ -206,16 +290,11 @@ int SlLoeDetector::print_usage(const char *reason)
 	PRINT_MODULE_DESCRIPTION(
 		R"DESCR_STR(
 ### Description
-Attitude and position estimator using an Extended Kalman Filter. It is used for Multirotors and Fixed-Wing.
-
-The documentation can be found on the [tuning_the_ecl_ekf](https://dev.px4.io/en/tutorials/tuning_the_ecl_ekf.html) page.
-
-ekf2 can be started in replay mode (`-r`): in this mode it does not access the system time, but only uses the
-timestamps from the sensor topics.
+Loss of effectiveness detector
 
 )DESCR_STR");
 
-	PRINT_MODULE_USAGE_NAME("ekf2", "estimator");
+	PRINT_MODULE_USAGE_NAME("sl_loe_detector", "estimator");
 	PRINT_MODULE_USAGE_COMMAND("start");
 	PRINT_MODULE_USAGE_DEFAULT_COMMANDS();
 
@@ -236,7 +315,6 @@ int SlLoeDetector::task_spawn(int argc, char *argv[])
 		_task_id = -1;
 		return -errno;
 	}
-
 	return 0;
 }
 
