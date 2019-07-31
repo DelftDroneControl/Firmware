@@ -117,6 +117,7 @@ typedef struct _ssSolverInfo_tag {
     int_T       ignoredZcDiagnostic;
     int_T       maskedZcDiagnostic;
     boolean_T   isOutputMethodComputed;
+    int_T       solverOrder;
 } ssSolverInfo;
 
 /* Support old name RTWSolverInfo */
@@ -175,6 +176,9 @@ typedef ssSolverInfo RTWSolverInfo;
 
 #define rtsiSetSolverMaxOrder(S,smo) ((S)->solverMaxOrder = (smo))
 #define rtsiGetSolverMaxOrder(S)     (S)->solverMaxOrder
+
+#define rtsiSetSolverOrder(S,so) (ssGetSolverInfo(S)->solverOrder = (so))
+#define rtsiGetSolverOrder(S)    ssGetSolverInfo(S)->solverOrder
 
 #define rtsiSetSolverJacobianMethodControl(S,smcm)   (ssGetSolverInfo(S)->solverJacobianMethodControl = (smcm))
 #define rtsiGetSolverJacobianMethodControl(S)        ssGetSolverInfo(S)->solverJacobianMethodControl

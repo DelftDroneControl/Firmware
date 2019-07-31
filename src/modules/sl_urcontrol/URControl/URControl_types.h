@@ -7,13 +7,13 @@
  *
  * Code generation for model "URControl".
  *
- * Model version              : 1.874
- * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C++ source code generated on : Wed Jul 17 14:39:49 2019
+ * Model version              : 1.873
+ * Simulink Coder version : 9.1 (R2019a) 23-Nov-2018
+ * C++ source code generated on : Wed Jul 31 16:55:41 2019
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
- * Embedded hardware selection: Intel->x86-64 (Windows64)
+ * Embedded hardware selection: Custom
  * Code generation objectives: Unspecified
  * Validation result: Not run
  */
@@ -135,7 +135,6 @@ typedef struct {
   real_T Ix;
   real_T Iy;
   real_T Iz;
-  real_T Ip;
   real_T Iu;
   real_T Iv;
   real_T s;
@@ -144,8 +143,6 @@ typedef struct {
   real_T fail_delay;
   real_T fail_wRot;
   real_T signr;
-  real_T w_max;
-  real_T w_min;
   real_T R_xy_uv[4];
   real_T est_optiDx;
   real_T est_optiDy;
@@ -189,7 +186,6 @@ typedef struct {
   real_T YRCFail_yawRateTarget;
   real_T YRCFail_nLim1;
   real_T YRCFail_nLim2;
-  real_T attitude_mode;
   real_T attitude_primary_axis[3];
   real_T attitude_yrcComp;
   real_T attitude_rotKp;
@@ -202,7 +198,6 @@ typedef struct {
   real_T attitude_enableTraj;
   real_T attitude_rotSpeedComp;
   real_T attitude_trajThreshold;
-  real_T attitude_mode3Lim;
   real_T envp_enable;
   real_T envp_mode;
   real_T envp_wMax;
@@ -213,7 +208,6 @@ typedef struct {
   real_T envp_minDeviation;
   real_T rate_mode;
   real_T rate_momentMode;
-  real_T rate_quadratic_programming;
   real_T rate_INDI_G[32];
   real_T rate_INDI_rateDotKp[3];
   real_T rate_INDI_omegaDotFilterT;
@@ -247,23 +241,6 @@ typedef struct {
   real_T rate_FtotGain;
   real_T rate_FGain;
   real_T rate_maxIter;
-  real_T Kp;
-  real_T Kd;
-  real_T kdr;
-  real_T Kp_flip;
-  real_T Kd_flip;
-  real_T th;
-  real_T p1;
-  real_T p2;
-  real_T p3;
-  real_T pr;
-  real_T omega_max;
-  real_T k_omega_max;
-  real_T R_uv_xy[4];
-  boolean_T det_flip_direction;
-  boolean_T flip_or_not_logic;
-  real_T h3_flip_threshold;
-  boolean_T flip;
   real_T flip_mode;
   real_T flip_time;
   real_T flip_upTime;
@@ -272,8 +249,6 @@ typedef struct {
   real_T throw_mode;
   real_T throw_falltime;
   real_T throw_threshold;
-  real_T fail_altProt;
-  real_T fail_altThresh;
 } URControlParamsType;
 
 #endif
@@ -351,8 +326,8 @@ typedef struct {
 
 #endif
 
-#ifndef DEFINED_TYPEDEF_FOR_struct_HII8N3zGC7mDOCUhLU7JpB_
-#define DEFINED_TYPEDEF_FOR_struct_HII8N3zGC7mDOCUhLU7JpB_
+#ifndef DEFINED_TYPEDEF_FOR_struct_dgMNxGftVPGZGI2uTXhtAF_
+#define DEFINED_TYPEDEF_FOR_struct_dgMNxGftVPGZGI2uTXhtAF_
 
 typedef struct {
   real_T freq;
@@ -363,16 +338,15 @@ typedef struct {
   real_T w_min;
   real_T mass;
   real_T fail_id;
-  real_T failure_id;
   real_T fail_time;
   struct_AHd68odqz51NWDIFKWnLKG sihao;
-  struct_KZWRH8wmRo8gScyf5zlwCH px4;
   URControlParamsType URC;
-} struct_HII8N3zGC7mDOCUhLU7JpB;
+  struct_KZWRH8wmRo8gScyf5zlwCH px4;
+} struct_dgMNxGftVPGZGI2uTXhtAF;
 
 #endif
 
-/* Custom Type definition for MATLAB Function: '<S6>/control allocator' */
+/* Custom Type definition for MATLAB Function: '<S8>/control allocator' */
 #ifndef typedef_LPFilter_1_URControl_T
 #define typedef_LPFilter_1_URControl_T
 
@@ -385,7 +359,7 @@ typedef struct {
 
 #endif                                 /*typedef_LPFilter_1_URControl_T*/
 
-/* Custom Type definition for MATLAB Function: '<S23>/Correct' */
+/* Custom Type definition for MATLAB Function: '<S32>/Correct' */
 #ifndef struct_tag_sZozwYUqIoF3KwkqeARQ8OE
 #define struct_tag_sZozwYUqIoF3KwkqeARQ8OE
 
@@ -406,9 +380,9 @@ struct tag_sZozwYUqIoF3KwkqeARQ8OE
 
 typedef struct tag_sZozwYUqIoF3KwkqeARQ8OE sZozwYUqIoF3KwkqeARQ8OE_URCon_T;
 
-#endif                                 /*typedef_sZozwYUqIoF3KwkqeARQ8OE_URCon_T*/
+#endif                               /*typedef_sZozwYUqIoF3KwkqeARQ8OE_URCon_T*/
 
-/* Custom Type definition for MATLAB Function: '<S25>/Predict' */
+/* Custom Type definition for MATLAB Function: '<S34>/Predict' */
 #ifndef struct_tag_sBhY6iGnb96DZXSV480ISLB
 #define struct_tag_sBhY6iGnb96DZXSV480ISLB
 
@@ -429,9 +403,9 @@ struct tag_sBhY6iGnb96DZXSV480ISLB
 
 typedef struct tag_sBhY6iGnb96DZXSV480ISLB sBhY6iGnb96DZXSV480ISLB_URCon_T;
 
-#endif                                 /*typedef_sBhY6iGnb96DZXSV480ISLB_URCon_T*/
+#endif                               /*typedef_sBhY6iGnb96DZXSV480ISLB_URCon_T*/
 
-/* Custom Type definition for MATLAB Function: '<S6>/control allocator' */
+/* Custom Type definition for MATLAB Function: '<S8>/control allocator' */
 #ifndef typedef_LPFilter_URControl_T
 #define typedef_LPFilter_URControl_T
 

@@ -7,9 +7,9 @@
  *
  * Code generation for model "LoeDetector".
  *
- * Model version              : 1.31
- * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C++ source code generated on : Wed Jul 17 14:10:47 2019
+ * Model version              : 1.32
+ * Simulink Coder version : 9.1 (R2019a) 23-Nov-2018
+ * C++ source code generated on : Tue Jul 30 15:42:57 2019
  */
 
 #ifndef RTW_HEADER_rtGetNaN_h_

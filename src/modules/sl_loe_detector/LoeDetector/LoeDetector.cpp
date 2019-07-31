@@ -8,8 +8,8 @@
  * Code generation for model "LoeDetector".
  *
  * Model version              : 1.32
- * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C++ source code generated on : Wed Jul 17 14:15:00 2019
+ * Simulink Coder version : 9.1 (R2019a) 23-Nov-2018
+ * C++ source code generated on : Wed Jul 31 16:56:19 2019
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -60,18 +60,15 @@ void LoeDetectorModelClass::LoeDetecto_KalmanEstimator_step
   real_T obs_matrix_0[12];
   real_T z_0[3];
   boolean_T d_0;
-  int32_T P_k1k_tmp_tmp;
   int32_T K_tmp;
   int32_T K_tmp_0;
-  real_T K_tmp_1;
+  int32_T K_tmp_1;
   int32_T K_tmp_2;
-  int32_T K_tmp_3;
-  real_T K_tmp_4;
-  int32_T K_tmp_5;
-  int32_T K_tmp_6;
+  real_T K_tmp_3;
+  int32_T K_tmp_4;
+  real_T K_tmp_5;
+  real_T K_tmp_6;
   real_T K_tmp_7;
-  real_T K_tmp_8;
-  int32_T K_tmp_9;
 
   /* 'KalmanEstimator:53' n_states = length(obj.Q); */
   /* 'KalmanEstimator:54' P_k1k = eye(n_states)*obj.P*eye(n_states) + obj.Q; */
@@ -81,27 +78,26 @@ void LoeDetectorModelClass::LoeDetecto_KalmanEstimator_step
 
   for (r1 = 0; r1 < 4; r1++) {
     for (r2 = 0; r2 < 4; r2++) {
-      rtemp = r2 << 2;
-      r3 = r1 + rtemp;
-      P_k1k_tmp_0[r3] = 0.0;
-      P_k1k_tmp_tmp = rtemp + r1;
-      P_k1k_tmp_0[r3] = P_k1k_tmp_0[P_k1k_tmp_tmp] + obj->P[rtemp] * (real_T)
-        P_k1k_tmp[r1];
-      P_k1k_tmp_0[r3] = obj->P[rtemp + 1] * (real_T)P_k1k_tmp[r1 + 4] +
-        P_k1k_tmp_0[P_k1k_tmp_tmp];
-      P_k1k_tmp_0[r3] = obj->P[rtemp + 2] * (real_T)P_k1k_tmp[r1 + 8] +
-        P_k1k_tmp_0[P_k1k_tmp_tmp];
-      P_k1k_tmp_0[r3] = obj->P[rtemp + 3] * (real_T)P_k1k_tmp[r1 + 12] +
-        P_k1k_tmp_0[P_k1k_tmp_tmp];
+      r3 = r2 << 2;
+      rtemp = r1 + r3;
+      P_k1k_tmp_0[rtemp] = 0.0;
+      P_k1k_tmp_0[rtemp] += obj->P[r3] * static_cast<real_T>(P_k1k_tmp[r1]);
+      P_k1k_tmp_0[rtemp] += obj->P[r3 + 1] * static_cast<real_T>(P_k1k_tmp[r1 +
+        4]);
+      P_k1k_tmp_0[rtemp] += obj->P[r3 + 2] * static_cast<real_T>(P_k1k_tmp[r1 +
+        8]);
+      P_k1k_tmp_0[rtemp] += obj->P[r3 + 3] * static_cast<real_T>(P_k1k_tmp[r1 +
+        12]);
     }
 
     for (r2 = 0; r2 < 4; r2++) {
       rtemp = r2 << 2;
-      P_k1k[r1 + rtemp] = ((((real_T)P_k1k_tmp[rtemp + 1] * P_k1k_tmp_0[r1 + 4]
-        + (real_T)P_k1k_tmp[rtemp] * P_k1k_tmp_0[r1]) + (real_T)P_k1k_tmp[rtemp
-                            + 2] * P_k1k_tmp_0[r1 + 8]) + (real_T)
-                           P_k1k_tmp[rtemp + 3] * P_k1k_tmp_0[r1 + 12]) + obj->
-        Q[rtemp + r1];
+      r3 = rtemp + r1;
+      P_k1k[r3] = (((static_cast<real_T>(P_k1k_tmp[rtemp + 1]) * P_k1k_tmp_0[r1
+                     + 4] + static_cast<real_T>(P_k1k_tmp[rtemp]) *
+                     P_k1k_tmp_0[r1]) + static_cast<real_T>(P_k1k_tmp[rtemp + 2])
+                    * P_k1k_tmp_0[r1 + 8]) + static_cast<real_T>(P_k1k_tmp[rtemp
+        + 3]) * P_k1k_tmp_0[r1 + 12]) + obj->Q[r3];
     }
   }
 
@@ -111,17 +107,12 @@ void LoeDetectorModelClass::LoeDetecto_KalmanEstimator_step
     for (r2 = 0; r2 < 4; r2++) {
       rtemp = 3 * r2 + r1;
       K[r2 + (r1 << 2)] = obs_matrix[rtemp];
-      r3 = r1 + 3 * r2;
-      obs_matrix_0[r3] = 0.0;
-      P_k1k_tmp_tmp = r2 << 2;
-      obs_matrix_0[r3] = obs_matrix_0[rtemp] + P_k1k[P_k1k_tmp_tmp] *
-        obs_matrix[r1];
-      obs_matrix_0[r3] = P_k1k[P_k1k_tmp_tmp + 1] * obs_matrix[r1 + 3] +
-        obs_matrix_0[rtemp];
-      obs_matrix_0[r3] = P_k1k[P_k1k_tmp_tmp + 2] * obs_matrix[r1 + 6] +
-        obs_matrix_0[rtemp];
-      obs_matrix_0[r3] = P_k1k[P_k1k_tmp_tmp + 3] * obs_matrix[r1 + 9] +
-        obs_matrix_0[rtemp];
+      obs_matrix_0[rtemp] = 0.0;
+      r3 = r2 << 2;
+      obs_matrix_0[rtemp] += P_k1k[r3] * obs_matrix[r1];
+      obs_matrix_0[rtemp] += P_k1k[r3 + 1] * obs_matrix[r1 + 3];
+      obs_matrix_0[rtemp] += P_k1k[r3 + 2] * obs_matrix[r1 + 6];
+      obs_matrix_0[rtemp] += P_k1k[r3 + 3] * obs_matrix[r1 + 9];
     }
   }
 
@@ -129,20 +120,19 @@ void LoeDetectorModelClass::LoeDetecto_KalmanEstimator_step
   for (r1 = 0; r1 < 3; r1++) {
     for (r2 = 0; r2 < 3; r2++) {
       rtemp = r1 << 2;
-      S[r2 + 3 * r1] = (((K[rtemp + 1] * obs_matrix_0[r2 + 3] + K[rtemp] *
-                          obs_matrix_0[r2]) + K[rtemp + 2] * obs_matrix_0[r2 + 6])
-                        + K[rtemp + 3] * obs_matrix_0[r2 + 9]) + obj->R[3 * r1 +
-        r2];
+      r3 = 3 * r1 + r2;
+      S[r3] = (((K[rtemp + 1] * obs_matrix_0[r2 + 3] + K[rtemp] *
+                 obs_matrix_0[r2]) + K[rtemp + 2] * obs_matrix_0[r2 + 6]) +
+               K[rtemp + 3] * obs_matrix_0[r2 + 9]) + obj->R[r3];
     }
 
     for (r2 = 0; r2 < 4; r2++) {
       rtemp = r2 + (r1 << 2);
       y[rtemp] = 0.0;
-      r3 = (r1 << 2) + r2;
-      y[rtemp] = y[r3] + K[r1 << 2] * P_k1k[r2];
-      y[rtemp] = K[(r1 << 2) + 1] * P_k1k[r2 + 4] + y[r3];
-      y[rtemp] = K[(r1 << 2) + 2] * P_k1k[r2 + 8] + y[r3];
-      y[rtemp] = K[(r1 << 2) + 3] * P_k1k[r2 + 12] + y[r3];
+      y[rtemp] += K[r1 << 2] * P_k1k[r2];
+      y[rtemp] += K[(r1 << 2) + 1] * P_k1k[r2 + 4];
+      y[rtemp] += K[(r1 << 2) + 2] * P_k1k[r2 + 8];
+      y[rtemp] += K[(r1 << 2) + 3] * P_k1k[r2 + 12];
     }
   }
 
@@ -179,67 +169,58 @@ void LoeDetectorModelClass::LoeDetecto_KalmanEstimator_step
   S[6 + r3] -= S[3 + r3] * S[6 + r2];
   rtemp = r1 << 2;
   K[rtemp] = y[0] / S[r1];
-  P_k1k_tmp_tmp = r2 << 2;
+  K_tmp = r2 << 2;
   maxval = S[3 + r1];
-  K[P_k1k_tmp_tmp] = y[4] - K[rtemp] * maxval;
-  K_tmp = r3 << 2;
+  K[K_tmp] = y[4] - K[rtemp] * maxval;
+  K_tmp_0 = r3 << 2;
   a21 = S[6 + r1];
-  K[K_tmp] = y[8] - K[rtemp] * a21;
-  K_tmp_1 = S[3 + r2];
-  K[P_k1k_tmp_tmp] /= K_tmp_1;
-  K_tmp_4 = S[6 + r2];
-  K[K_tmp] -= K[P_k1k_tmp_tmp] * K_tmp_4;
-  K_tmp_7 = S[6 + r3];
-  K[K_tmp] /= K_tmp_7;
-  K_tmp_8 = S[3 + r3];
-  K[P_k1k_tmp_tmp] -= K[K_tmp] * K_tmp_8;
-  K[rtemp] -= K[K_tmp] * S[r3];
-  K[rtemp] -= K[P_k1k_tmp_tmp] * S[r2];
-  K_tmp_9 = 1 + rtemp;
-  K[K_tmp_9] = y[1] / S[r1];
-  K_tmp_0 = rtemp + 1;
-  K_tmp_2 = 1 + P_k1k_tmp_tmp;
-  K[K_tmp_2] = y[5] - K[K_tmp_0] * maxval;
-  K_tmp_5 = 1 + K_tmp;
-  K[K_tmp_5] = y[9] - K[K_tmp_0] * a21;
-  K_tmp_3 = P_k1k_tmp_tmp + 1;
-  K[K_tmp_2] = K[K_tmp_3] / K_tmp_1;
-  K_tmp_6 = K_tmp + 1;
-  K[K_tmp_5] = K[K_tmp_6] - K[K_tmp_3] * K_tmp_4;
-  K[K_tmp_5] = K[K_tmp_6] / K_tmp_7;
-  K[K_tmp_2] = K[K_tmp_3] - K[K_tmp_6] * K_tmp_8;
-  K[K_tmp_9] = K[K_tmp_0] - K[K_tmp_6] * S[r3];
-  K[K_tmp_9] = K[K_tmp_0] - K[K_tmp_3] * S[r2];
-  K_tmp_9 = 2 + rtemp;
-  K[K_tmp_9] = y[2] / S[r1];
-  K_tmp_0 = rtemp + 2;
-  K_tmp_2 = 2 + P_k1k_tmp_tmp;
-  K[K_tmp_2] = y[6] - K[K_tmp_0] * maxval;
-  K_tmp_5 = 2 + K_tmp;
-  K[K_tmp_5] = y[10] - K[K_tmp_0] * a21;
-  K_tmp_3 = P_k1k_tmp_tmp + 2;
-  K[K_tmp_2] = K[K_tmp_3] / K_tmp_1;
-  K_tmp_6 = K_tmp + 2;
-  K[K_tmp_5] = K[K_tmp_6] - K[K_tmp_3] * K_tmp_4;
-  K[K_tmp_5] = K[K_tmp_6] / K_tmp_7;
-  K[K_tmp_2] = K[K_tmp_3] - K[K_tmp_6] * K_tmp_8;
-  K[K_tmp_9] = K[K_tmp_0] - K[K_tmp_6] * S[r3];
-  K[K_tmp_9] = K[K_tmp_0] - K[K_tmp_3] * S[r2];
-  K_tmp_9 = 3 + rtemp;
-  K[K_tmp_9] = y[3] / S[r1];
+  K[K_tmp_0] = y[8] - K[rtemp] * a21;
+  K_tmp_3 = S[3 + r2];
+  K[K_tmp] /= K_tmp_3;
+  K_tmp_5 = S[6 + r2];
+  K[K_tmp_0] -= K[K_tmp] * K_tmp_5;
+  K_tmp_6 = S[6 + r3];
+  K[K_tmp_0] /= K_tmp_6;
+  K_tmp_7 = S[3 + r3];
+  K[K_tmp] -= K[K_tmp_0] * K_tmp_7;
+  K[rtemp] -= K[K_tmp_0] * S[r3];
+  K[rtemp] -= K[K_tmp] * S[r2];
+  K_tmp_1 = 1 + rtemp;
+  K[K_tmp_1] = y[1] / S[r1];
+  K_tmp_2 = 1 + K_tmp;
+  K[K_tmp_2] = y[5] - K[K_tmp_1] * maxval;
+  K_tmp_4 = 1 + K_tmp_0;
+  K[K_tmp_4] = y[9] - K[K_tmp_1] * a21;
+  K[K_tmp_2] /= K_tmp_3;
+  K[K_tmp_4] -= K[K_tmp_2] * K_tmp_5;
+  K[K_tmp_4] /= K_tmp_6;
+  K[K_tmp_2] -= K[K_tmp_4] * K_tmp_7;
+  K[K_tmp_1] -= K[K_tmp_4] * S[r3];
+  K[K_tmp_1] -= K[K_tmp_2] * S[r2];
+  K_tmp_1 = 2 + rtemp;
+  K[K_tmp_1] = y[2] / S[r1];
+  K_tmp_2 = 2 + K_tmp;
+  K[K_tmp_2] = y[6] - K[K_tmp_1] * maxval;
+  K_tmp_4 = 2 + K_tmp_0;
+  K[K_tmp_4] = y[10] - K[K_tmp_1] * a21;
+  K[K_tmp_2] /= K_tmp_3;
+  K[K_tmp_4] -= K[K_tmp_2] * K_tmp_5;
+  K[K_tmp_4] /= K_tmp_6;
+  K[K_tmp_2] -= K[K_tmp_4] * K_tmp_7;
+  K[K_tmp_1] -= K[K_tmp_4] * S[r3];
+  K[K_tmp_1] -= K[K_tmp_2] * S[r2];
   rtemp += 3;
-  K_tmp_0 = 3 + P_k1k_tmp_tmp;
-  K[K_tmp_0] = y[7] - K[rtemp] * maxval;
-  K_tmp_2 = 3 + K_tmp;
-  K[K_tmp_2] = y[11] - K[rtemp] * a21;
-  P_k1k_tmp_tmp += 3;
-  K[K_tmp_0] = K[P_k1k_tmp_tmp] / K_tmp_1;
+  K[rtemp] = y[3] / S[r1];
   K_tmp += 3;
-  K[K_tmp_2] = K[K_tmp] - K[P_k1k_tmp_tmp] * K_tmp_4;
-  K[K_tmp_2] = K[K_tmp] / K_tmp_7;
-  K[K_tmp_0] = K[P_k1k_tmp_tmp] - K[K_tmp] * K_tmp_8;
-  K[K_tmp_9] = K[rtemp] - K[K_tmp] * S[r3];
-  K[K_tmp_9] = K[rtemp] - K[P_k1k_tmp_tmp] * S[r2];
+  K[K_tmp] = y[7] - K[rtemp] * maxval;
+  K_tmp_0 += 3;
+  K[K_tmp_0] = y[11] - K[rtemp] * a21;
+  K[K_tmp] /= K_tmp_3;
+  K[K_tmp_0] -= K[K_tmp] * K_tmp_5;
+  K[K_tmp_0] /= K_tmp_6;
+  K[K_tmp] -= K[K_tmp_0] * K_tmp_7;
+  K[rtemp] -= K[K_tmp_0] * S[r3];
+  K[rtemp] -= K[K_tmp] * S[r2];
 
   /* 'KalmanEstimator:66' obj.state = obj.state + K * y; */
   for (r1 = 0; r1 < 3; r1++) {
@@ -266,7 +247,7 @@ void LoeDetectorModelClass::LoeDetecto_KalmanEstimator_step
     d[r2] = d_0;
   }
 
-  rtemp = r1;
+  r2 = r1;
   r1 = 0;
   if (d[0]) {
     b_data[0] = 1;
@@ -287,7 +268,7 @@ void LoeDetectorModelClass::LoeDetecto_KalmanEstimator_step
     b_data[r1] = 4;
   }
 
-  for (r1 = 0; r1 < rtemp; r1++) {
+  for (r1 = 0; r1 < r2; r1++) {
     obj->state[b_data[r1] - 1] = obj->state_bounds[0];
   }
 
@@ -316,7 +297,7 @@ void LoeDetectorModelClass::LoeDetecto_KalmanEstimator_step
     r1++;
   }
 
-  rtemp = r1;
+  r2 = r1;
   r1 = 0;
   if (d[0]) {
     c_data[0] = 1;
@@ -337,7 +318,7 @@ void LoeDetectorModelClass::LoeDetecto_KalmanEstimator_step
     c_data[r1] = 4;
   }
 
-  for (r1 = 0; r1 < rtemp; r1++) {
+  for (r1 = 0; r1 < r2; r1++) {
     obj->state[c_data[r1] - 1] = maxval;
   }
 
@@ -354,17 +335,17 @@ void LoeDetectorModelClass::LoeDetecto_KalmanEstimator_step
   /* 'KalmanEstimator:79' state = obj.state; */
   for (r3 = 0; r3 < 4; r3++) {
     for (r1 = 0; r1 < 4; r1++) {
-      rtemp = r1 << 2;
-      P_k1k_tmp_0[r3 + rtemp] = (real_T)P_k1k_tmp[rtemp + r3] - ((obs_matrix[3 *
-        r1 + 1] * K[r3 + 4] + obs_matrix[3 * r1] * K[r3]) + obs_matrix[3 * r1 +
-        2] * K[r3 + 8]);
+      rtemp = (r1 << 2) + r3;
+      P_k1k_tmp_0[rtemp] = static_cast<real_T>(P_k1k_tmp[rtemp]) - ((obs_matrix
+        [3 * r1 + 1] * K[r3 + 4] + obs_matrix[3 * r1] * K[r3]) + obs_matrix[3 *
+        r1 + 2] * K[r3 + 8]);
     }
 
     for (r1 = 0; r1 < 4; r1++) {
       r2 = r1 << 2;
       rtemp = r3 + r2;
       obj->P[rtemp] = 0.0;
-      obj->P[rtemp] = obj->P[r2 + r3] + P_k1k[r2] * P_k1k_tmp_0[r3];
+      obj->P[rtemp] += P_k1k[r2] * P_k1k_tmp_0[r3];
       obj->P[rtemp] = P_k1k[r2 + 1] * P_k1k_tmp_0[r3 + 4] + obj->P[(r1 << 2) +
         r3];
       obj->P[rtemp] = P_k1k[r2 + 2] * P_k1k_tmp_0[r3 + 8] + obj->P[(r1 << 2) +
@@ -411,6 +392,7 @@ void LoeDetectorModelClass::step()
   real_T e_a_idx_0;
   real_T e_a_idx_1;
   int32_T b_idx_0_tmp;
+  int32_T b_idx_1_tmp;
   boolean_T exitg1;
 
   /* MATLAB Function: '<Root>/MATLAB Function1' incorporates:
@@ -418,14 +400,14 @@ void LoeDetectorModelClass::step()
    */
   /* :  RPM_TO_RADS = 2*pi/60; */
   /* :  rads = single(RPM_TO_RADS.*rpm); */
-  rtb_rads[0] = (real32_T)rt_roundd_snf(0.10471975511965977 * (real_T)
-    LoeDetector_U.esc_rpm[0]);
-  rtb_rads[1] = (real32_T)rt_roundd_snf(0.10471975511965977 * (real_T)
-    LoeDetector_U.esc_rpm[1]);
-  rtb_rads[2] = (real32_T)rt_roundd_snf(0.10471975511965977 * (real_T)
-    LoeDetector_U.esc_rpm[2]);
-  rtb_rads[3] = (real32_T)rt_roundd_snf(0.10471975511965977 * (real_T)
-    LoeDetector_U.esc_rpm[3]);
+  rtb_rads[0] = static_cast<real32_T>(rt_roundd_snf(0.10471975511965977 *
+    static_cast<real_T>(LoeDetector_U.esc_rpm[0])));
+  rtb_rads[1] = static_cast<real32_T>(rt_roundd_snf(0.10471975511965977 *
+    static_cast<real_T>(LoeDetector_U.esc_rpm[1])));
+  rtb_rads[2] = static_cast<real32_T>(rt_roundd_snf(0.10471975511965977 *
+    static_cast<real_T>(LoeDetector_U.esc_rpm[2])));
+  rtb_rads[3] = static_cast<real32_T>(rt_roundd_snf(0.10471975511965977 *
+    static_cast<real_T>(LoeDetector_U.esc_rpm[3])));
 
   /* MATLAB Function: '<Root>/LoeDetector' incorporates:
    *  Inport: '<Root>/acc_z'
@@ -558,13 +540,14 @@ void LoeDetectorModelClass::step()
     a[3] = b_obj->sys.A[3];
     b_idx_0_tmp = j << 1;
     b_idx_0 = b_obj->states[b_idx_0_tmp];
-    b_idx_1 = b_obj->states[b_idx_0_tmp + 1];
+    b_idx_1_tmp = b_idx_0_tmp + 1;
+    b_idx_1 = b_obj->states[b_idx_1_tmp];
     b_a_idx_0 = b_obj->sys.B[0];
     b_a_idx_1 = b_obj->sys.B[1];
-    b_obj->states[b_idx_0_tmp] = (real32_T)(a[0] * b_idx_0 + a[2] * b_idx_1) +
-      (real32_T)b_a_idx_0 * LoeDetector_U.rates[(int8_T)j];
-    b_obj->states[1 + b_idx_0_tmp] = (real32_T)(a[1] * b_idx_0 + a[3] * b_idx_1)
-      + (real32_T)b_a_idx_1 * LoeDetector_U.rates[(int8_T)j];
+    b_obj->states[b_idx_0_tmp] = static_cast<real32_T>((a[0] * b_idx_0 + a[2] *
+      b_idx_1)) + static_cast<real32_T>(b_a_idx_0) * LoeDetector_U.rates[j];
+    b_obj->states[b_idx_1_tmp] = static_cast<real32_T>((a[1] * b_idx_0 + a[3] *
+      b_idx_1)) + static_cast<real32_T>(b_a_idx_1) * LoeDetector_U.rates[j];
 
     /* 'SecondOrderFilter:33' y(i) = obj.sys.C*obj.states(:,i) + obj.sys.D*input(i); */
     b_a_idx_0 = b_obj->sys.C[0];
@@ -572,8 +555,8 @@ void LoeDetectorModelClass::step()
     b_idx_0 = b_obj->states[j << 1];
     b_idx_1 = b_obj->states[(j << 1) + 1];
     c_a = b_obj->sys.D;
-    rates_meas_f[j] = (real32_T)(b_a_idx_0 * b_idx_0 + b_a_idx_1 * b_idx_1) +
-      (real32_T)c_a * LoeDetector_U.rates[j];
+    rates_meas_f[j] = static_cast<real32_T>((b_a_idx_0 * b_idx_0 + b_a_idx_1 *
+      b_idx_1)) + static_cast<real32_T>(c_a) * LoeDetector_U.rates[j];
   }
 
   /* 'LoeDetector:2:50' acc_meas_f = obj.FilterAccMeas.step(acc_meas)'; */
@@ -589,10 +572,10 @@ void LoeDetectorModelClass::step()
   b_idx_1 = obj->FilterAccMeas.states[1];
   b_a_idx_0 = obj->FilterAccMeas.sys.B[0];
   b_a_idx_1 = obj->FilterAccMeas.sys.B[1];
-  obj->FilterAccMeas.states[0] = (real32_T)(a[0] * b_idx_0 + a[2] * b_idx_1) +
-    (real32_T)b_a_idx_0 * LoeDetector_U.acc_z;
-  obj->FilterAccMeas.states[1] = (real32_T)(a[1] * b_idx_0 + a[3] * b_idx_1) +
-    (real32_T)b_a_idx_1 * LoeDetector_U.acc_z;
+  obj->FilterAccMeas.states[0] = static_cast<real32_T>((a[0] * b_idx_0 + a[2] *
+    b_idx_1)) + static_cast<real32_T>(b_a_idx_0) * LoeDetector_U.acc_z;
+  obj->FilterAccMeas.states[1] = static_cast<real32_T>((a[1] * b_idx_0 + a[3] *
+    b_idx_1)) + static_cast<real32_T>(b_a_idx_1) * LoeDetector_U.acc_z;
 
   /* 'SecondOrderFilter:33' y(i) = obj.sys.C*obj.states(:,i) + obj.sys.D*input(i); */
   b_a_idx_0 = obj->FilterAccMeas.sys.C[0];
@@ -617,10 +600,11 @@ void LoeDetectorModelClass::step()
     rates_f_dot_idx_1 = c_obj->states[(j << 1) + 1];
     e_a_idx_0 = c_obj->sys.B[0];
     e_a_idx_1 = c_obj->sys.B[1];
-    c_obj->states[j << 1] = (real32_T)(a[0] * rates_f_dot_idx_0 + a[2] *
-      rates_f_dot_idx_1) + (real32_T)e_a_idx_0 * rtb_rads[j];
-    c_obj->states[1 + (j << 1)] = (real32_T)(a[1] * rates_f_dot_idx_0 + a[3] *
-      rates_f_dot_idx_1) + (real32_T)e_a_idx_1 * rtb_rads[j];
+    c_obj->states[j << 1] = static_cast<real32_T>((a[0] * rates_f_dot_idx_0 + a
+      [2] * rates_f_dot_idx_1)) + static_cast<real32_T>(e_a_idx_0) * rtb_rads[j];
+    c_obj->states[1 + (j << 1)] = static_cast<real32_T>((a[1] *
+      rates_f_dot_idx_0 + a[3] * rates_f_dot_idx_1)) + static_cast<real32_T>
+      (e_a_idx_1) * rtb_rads[j];
 
     /* 'SecondOrderFilter:33' y(i) = obj.sys.C*obj.states(:,i) + obj.sys.D*input(i); */
     e_a_idx_0 = c_obj->sys.C[0];
@@ -628,8 +612,8 @@ void LoeDetectorModelClass::step()
     rates_f_dot_idx_0 = c_obj->states[j << 1];
     rates_f_dot_idx_1 = c_obj->states[(j << 1) + 1];
     t2 = c_obj->sys.D;
-    act_meas_f[j] = (real32_T)(e_a_idx_0 * rates_f_dot_idx_0 + e_a_idx_1 *
-      rates_f_dot_idx_1) + (real32_T)t2 * rtb_rads[j];
+    act_meas_f[j] = static_cast<real32_T>((e_a_idx_0 * rates_f_dot_idx_0 +
+      e_a_idx_1 * rates_f_dot_idx_1)) + static_cast<real32_T>(t2) * rtb_rads[j];
   }
 
   /* 'LoeDetector:2:57' rates_f_dot = obj.DerivRates.step(rates_meas_f); */
@@ -688,13 +672,13 @@ void LoeDetectorModelClass::step()
   /* 'regressor_fun:18' t5 = w_4.^2; */
   t5 = act_meas_f[3] * act_meas_f[3];
 
-  /* 'regressor_fun:19' regressor_fun_reduced = reshape([(G_dp.*t2)./1.0e6,(G_dq.*t2)./1.0e6,G_dVz.*t2.*(-1.0e-6),G_dp.*t3.*(-1.0e-6),(G_dq.*t3)./1.0e6,G_dVz.*t3.*(-1.0e-6),G_dp.*t4.*(-1.0e-6),G_dq.*t4.*(-1.0e-6),G_dVz.*t4.*(-1.0e-6),(G_dp.*t5)./1.0e6,G_dq.*t5.*(-1.0e-6),G_dVz.*t5.*(-1.0e-6)],[3,4]); */
+  /* 'regressor_fun:19' regressor_fun_reduced = reshape([(G_dp.*t2)./1.0e+6,(G_dq.*t2)./1.0e+6,G_dVz.*t2.*(-1.0e-6),G_dp.*t3.*(-1.0e-6),(G_dq.*t3)./1.0e+6,G_dVz.*t3.*(-1.0e-6),G_dp.*t4.*(-1.0e-6),G_dq.*t4.*(-1.0e-6),G_dVz.*t4.*(-1.0e-6),(G_dp.*t5)./1.0e+6,G_dq.*t5.*(-1.0e-6),G_dVz.*t5.*(-1.0e-6)],[3,4]); */
   /* 'LoeDetector:2:84' [scaling_factor_mean, P_matrix] = ... */
   /* 'LoeDetector:2:85'                 obj.Kalman.step(z, obs_matrix); */
   rates_f_dot[0] = rates_f_dot_idx_0;
   rates_f_dot[1] = rates_f_dot_idx_1;
-  rates_f_dot[2] = (real32_T)(b_a_idx_0 * b_idx_0 + b_a_idx_1 * b_idx_1) +
-    (real32_T)c_a * LoeDetector_U.acc_z;
+  rates_f_dot[2] = static_cast<real32_T>((b_a_idx_0 * b_idx_0 + b_a_idx_1 *
+    b_idx_1)) + static_cast<real32_T>(c_a) * LoeDetector_U.acc_z;
   in1[0] = e_a_idx_0 * t2 / 1.0E+6;
   in1[1] = e_a_idx_1 * t2 / 1.0E+6;
   in1[2] = in1_idx_2 * t2 * -1.0E-6;
@@ -803,14 +787,14 @@ void LoeDetectorModelClass::step()
   /* 'fail_diagnosis:29' ~ */
   /* 'fail_diagnosis:31' if (fail_id == 0 || fail_P(fail_id) < fail_P(max_fail_indices)) ... */
   /* 'fail_diagnosis:32'         && fail_P(max_fail_indices) > K_prob_threshold */
-  if (((LoeDetector_DW.fail_id == 0.0) || (act_meas_f[(int32_T)
-        LoeDetector_DW.fail_id - 1] < act_meas_f[j])) && (act_meas_f[j] > c_a))
+  if (((LoeDetector_DW.fail_id == 0.0) || (act_meas_f[static_cast<int32_T>
+        (LoeDetector_DW.fail_id) - 1] < act_meas_f[j])) && (act_meas_f[j] > c_a))
   {
     /* 'fail_diagnosis:33' fail_id = max_fail_indices(1); */
     LoeDetector_DW.fail_id = j + 1;
   } else {
-    if ((LoeDetector_DW.fail_id != 0.0) && (ok_P[(int32_T)LoeDetector_DW.fail_id
-         - 1] > 0.9)) {
+    if ((LoeDetector_DW.fail_id != 0.0) && (ok_P[static_cast<int32_T>
+         (LoeDetector_DW.fail_id) - 1] > 0.9)) {
       /* 'fail_diagnosis:34' elseif fail_id ~= 0 && ok_P(fail_id) > 0.90 */
       /* 'fail_diagnosis:35' fail_id = 0; */
       LoeDetector_DW.fail_id = 0.0;
@@ -824,7 +808,7 @@ void LoeDetectorModelClass::step()
   if (b_idx_0 < 2.147483648E+9) {
     if (b_idx_0 >= -2.147483648E+9) {
       /* Outport: '<Root>/fail_id' */
-      LoeDetector_Y.fail_id = (int32_T)b_idx_0;
+      LoeDetector_Y.fail_id = static_cast<int32_T>(b_idx_0);
     } else {
       /* Outport: '<Root>/fail_id' */
       LoeDetector_Y.fail_id = MIN_int32_T;
@@ -846,7 +830,7 @@ void LoeDetectorModelClass::initialize()
   rt_InitInfAndNaN(sizeof(real_T));
 
   /* initialize error status */
-  rtmSetErrorStatus(getRTM(), (NULL));
+  rtmSetErrorStatus((&LoeDetector_M), (NULL));
 
   /* states (dwork) */
   (void) memset((void *)&LoeDetector_DW, 0,

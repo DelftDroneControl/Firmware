@@ -8,8 +8,8 @@
  * Code generation for model "LoeDetector".
  *
  * Model version              : 1.32
- * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C++ source code generated on : Wed Jul 17 14:15:00 2019
+ * Simulink Coder version : 9.1 (R2019a) 23-Nov-2018
+ * C++ source code generated on : Wed Jul 31 16:56:19 2019
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -31,7 +31,7 @@ const ConstP_LoeDetector_T LoeDetector_ConstP = {
 
     { 0.125, 0.0 },
 
-    { 0.038540899779240162, 0.037152995666791561 },
+    { 0.038540899779240169, 0.037152995666791561 },
     0.0
   }
 };

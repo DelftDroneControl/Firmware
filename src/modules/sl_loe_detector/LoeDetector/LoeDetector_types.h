@@ -8,8 +8,8 @@
  * Code generation for model "LoeDetector".
  *
  * Model version              : 1.32
- * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C++ source code generated on : Wed Jul 17 14:15:00 2019
+ * Simulink Coder version : 9.1 (R2019a) 23-Nov-2018
+ * C++ source code generated on : Wed Jul 31 16:56:19 2019
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -55,7 +55,7 @@ typedef struct {
   boolean_T first;
 } BlocksPkg_Derivative_LoeDetec_T;
 
-#endif                                 /*typedef_BlocksPkg_Derivative_LoeDetec_T*/
+#endif                               /*typedef_BlocksPkg_Derivative_LoeDetec_T*/
 
 #ifndef typedef_BlocksPkg_SecondOrderFilter_L_T
 #define typedef_BlocksPkg_SecondOrderFilter_L_T
@@ -65,7 +65,7 @@ typedef struct {
   real_T states[4];
 } BlocksPkg_SecondOrderFilter_L_T;
 
-#endif                                 /*typedef_BlocksPkg_SecondOrderFilter_L_T*/
+#endif                               /*typedef_BlocksPkg_SecondOrderFilter_L_T*/
 
 #ifndef typedef_BlocksPkg_SecondOrderFilter_1_T
 #define typedef_BlocksPkg_SecondOrderFilter_1_T
@@ -75,7 +75,7 @@ typedef struct {
   real_T states[2];
 } BlocksPkg_SecondOrderFilter_1_T;
 
-#endif                                 /*typedef_BlocksPkg_SecondOrderFilter_1_T*/
+#endif                               /*typedef_BlocksPkg_SecondOrderFilter_1_T*/
 
 #ifndef typedef_BlocksPkg_SecondOrderFilter_2_T
 #define typedef_BlocksPkg_SecondOrderFilter_2_T
@@ -85,7 +85,7 @@ typedef struct {
   real_T states[8];
 } BlocksPkg_SecondOrderFilter_2_T;
 
-#endif                                 /*typedef_BlocksPkg_SecondOrderFilter_2_T*/
+#endif                               /*typedef_BlocksPkg_SecondOrderFilter_2_T*/
 
 #ifndef typedef_BlocksPkg_KalmanEstimator_Loe_T
 #define typedef_BlocksPkg_KalmanEstimator_Loe_T
@@ -98,7 +98,7 @@ typedef struct {
   real_T state_bounds[2];
 } BlocksPkg_KalmanEstimator_Loe_T;
 
-#endif                                 /*typedef_BlocksPkg_KalmanEstimator_Loe_T*/
+#endif                               /*typedef_BlocksPkg_KalmanEstimator_Loe_T*/
 
 #ifndef typedef_LoeDetectorPkg_LoeDetector_Lo_T
 #define typedef_LoeDetectorPkg_LoeDetector_Lo_T
@@ -113,7 +113,7 @@ typedef struct {
   LoeDetectorParamsType fail_diagnosis_params;
 } LoeDetectorPkg_LoeDetector_Lo_T;
 
-#endif                                 /*typedef_LoeDetectorPkg_LoeDetector_Lo_T*/
+#endif                               /*typedef_LoeDetectorPkg_LoeDetector_Lo_T*/
 
 /* Forward declaration for rtModel */
 typedef struct tag_RTM_LoeDetector_T RT_MODEL_LoeDetector_T;
