@@ -7,9 +7,9 @@
  *
  * Code generation for model "URControl".
  *
- * Model version              : 1.874
+ * Model version              : 1.879
  * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C++ source code generated on : Wed Jul 17 14:39:49 2019
+ * C++ source code generated on : Wed May  1 11:40:40 2019
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -45,6 +45,8 @@ typedef struct {
   real_T r_cmd;
   real_T uv_prec[2];
   real_T precAngle[2];
+  real_T h_uv[3];
+  real_T n_uv[3];
   real_T pqr_des[3];
   real_T uvr_des[3];
   real_T uv_des_raw[2];
@@ -90,6 +92,7 @@ typedef struct {
   real_T FMax[4];
   real_T FMin[4];
   real_T fail_id;
+  real_T fail_id_quick;
   real_T uvDot_max[2];
   real_T uvDot_min[2];
   real_T uv_max[2];
@@ -351,8 +354,8 @@ typedef struct {
 
 #endif
 
-#ifndef DEFINED_TYPEDEF_FOR_struct_HII8N3zGC7mDOCUhLU7JpB_
-#define DEFINED_TYPEDEF_FOR_struct_HII8N3zGC7mDOCUhLU7JpB_
+#ifndef DEFINED_TYPEDEF_FOR_struct_RFHeXVQBKrBUbfkgPERCEC_
+#define DEFINED_TYPEDEF_FOR_struct_RFHeXVQBKrBUbfkgPERCEC_
 
 typedef struct {
   real_T freq;
@@ -367,12 +370,11 @@ typedef struct {
   real_T fail_time;
   struct_AHd68odqz51NWDIFKWnLKG sihao;
   struct_KZWRH8wmRo8gScyf5zlwCH px4;
-  URControlParamsType URC;
-} struct_HII8N3zGC7mDOCUhLU7JpB;
+} struct_RFHeXVQBKrBUbfkgPERCEC;
 
 #endif
 
-/* Custom Type definition for MATLAB Function: '<S6>/control allocator' */
+/* Custom Type definition for MATLAB Function: '<S8>/control allocator' */
 #ifndef typedef_LPFilter_1_URControl_T
 #define typedef_LPFilter_1_URControl_T
 
@@ -385,7 +387,7 @@ typedef struct {
 
 #endif                                 /*typedef_LPFilter_1_URControl_T*/
 
-/* Custom Type definition for MATLAB Function: '<S23>/Correct' */
+/* Custom Type definition for MATLAB Function: '<S35>/Correct' */
 #ifndef struct_tag_sZozwYUqIoF3KwkqeARQ8OE
 #define struct_tag_sZozwYUqIoF3KwkqeARQ8OE
 
@@ -408,7 +410,7 @@ typedef struct tag_sZozwYUqIoF3KwkqeARQ8OE sZozwYUqIoF3KwkqeARQ8OE_URCon_T;
 
 #endif                                 /*typedef_sZozwYUqIoF3KwkqeARQ8OE_URCon_T*/
 
-/* Custom Type definition for MATLAB Function: '<S25>/Predict' */
+/* Custom Type definition for MATLAB Function: '<S37>/Predict' */
 #ifndef struct_tag_sBhY6iGnb96DZXSV480ISLB
 #define struct_tag_sBhY6iGnb96DZXSV480ISLB
 
@@ -431,7 +433,7 @@ typedef struct tag_sBhY6iGnb96DZXSV480ISLB sBhY6iGnb96DZXSV480ISLB_URCon_T;
 
 #endif                                 /*typedef_sBhY6iGnb96DZXSV480ISLB_URCon_T*/
 
-/* Custom Type definition for MATLAB Function: '<S6>/control allocator' */
+/* Custom Type definition for MATLAB Function: '<S8>/control allocator' */
 #ifndef typedef_LPFilter_URControl_T
 #define typedef_LPFilter_URControl_T
 

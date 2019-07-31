@@ -180,6 +180,7 @@ SlURControl::parameters_updated()
 	URControlParams.YRCFail_Kp_dMzGain = _sl_yrcfail_mzgain.get();
 
 	// Attitude
+	URControlParams.attitude_mode = _sl_attitude_mode.get();
 	URControlParams.attitude_rotKp = _sl_attitude_rotKp.get();
 	URControlParams.attitude_precMode = _sl_attitude_precmode.get();
 	URControlParams.attitude_precAngle = _sl_attitude_precangle.get();
@@ -248,21 +249,9 @@ SlURControl::parameters_updated()
 	URControlParams.throw_falltime = _sl_throw_falltime.get();
 	URControlParams.throw_threshold = _sl_throw_threshold.get();
 
-	//QPpredControl
-	URControlParams.Kp 	= _sl_qp_kp.get();
-	URControlParams.Ki 	= _sl_qp_ki.get();	
-	URControlParams.Kd 	= _sl_qp_kd.get();
-	URControlParams.Kdd = _sl_qp_kdd.get();
-	URControlParams.kdr = _sl_qp_kdr.get();
-	URControlParams.th 	= _sl_qp_th.get();
-	URControlParams.p1 	= _sl_qp_thr_gain.get();
-	URControlParams.p2 	= _sl_qp_env_gain.get();
-	URControlParams.pr 	= _sl_qp_yaw_gain.get();
-	URControlParams.omega_max = _sl_qp_env_omega.get();
-
-	// Alt Protectepe
-	URControlParams.fail_altProt = _sl_fail_prot.get();
-	URControlParams.fail_altThresh = _sl_fail_alt_thresh.get();
+	// Others
+	URControlParams.fail_altProt = _sl_fail_altProt.get();
+	URControlParams.fail_altThresh = _sl_fail_altThresh.get();
 }
 
 void

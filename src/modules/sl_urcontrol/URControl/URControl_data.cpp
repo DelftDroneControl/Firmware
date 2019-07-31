@@ -7,9 +7,9 @@
  *
  * Code generation for model "URControl".
  *
- * Model version              : 1.874
+ * Model version              : 1.879
  * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C++ source code generated on : Wed Jul 17 14:39:49 2019
+ * C++ source code generated on : Wed May  1 11:40:40 2019
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -26,15 +26,15 @@ const ConstP_URControl_T URControl_ConstP = {
   /* Pooled Parameter (Expression: par)
    * Referenced by:
    *   '<Root>/conversion to px4'
-   *   '<S1>/MATLAB Function'
-   *   '<S2>/altitude control'
-   *   '<S2>/position control'
-   *   '<S2>/yaw rate control'
-   *   '<S3>/Precession'
-   *   '<S3>/attitude controller'
-   *   '<S3>/yawRateControl'
-   *   '<S5>/basic estimators'
-   *   '<S6>/control allocator'
+   *   '<S3>/MATLAB Function'
+   *   '<S4>/altitude control'
+   *   '<S4>/position control'
+   *   '<S4>/yaw rate control'
+   *   '<S5>/Precession'
+   *   '<S5>/attitude controller'
+   *   '<S5>/yawRateControl'
+   *   '<S7>/basic estimators'
+   *   '<S8>/control allocator'
    */
   {
     500.0,
@@ -45,7 +45,6 @@ const ConstP_URControl_T URControl_ConstP = {
     300.0,
     0.374,
     0.0,
-    4.0,
     0.5,
 
     {
@@ -185,7 +184,7 @@ const ConstP_URControl_T URControl_ConstP = {
       1.2217304763960306,
       0.2,
       1.0,
-      1.0,
+      2.0,
       1200.0,
       300.0,
 
@@ -194,8 +193,7 @@ const ConstP_URControl_T URControl_ConstP = {
       { 0.171315, 0.171315, 0.171315, 0.171315 },
       0.05,
       5.0,
-      3.0,
-      1.0,
+      2.0,
       1.0,
 
       { 150.0, 150.0, 100.0, -8.0, -150.0, 150.0, -100.0, -8.0, -150.0, -150.0,
@@ -248,18 +246,17 @@ const ConstP_URControl_T URControl_ConstP = {
       4.0,
       0.0001,
       5.0,
-      300.0,
-      20.0,
-      0.1,
-      400.0,
-      50.0,
-      0.1,
-      1.0,
-      10.0,
-      10.0,
-      1.0,
-      5.0,
       0.0,
+      0.13,
+      0.0,
+      300.0,
+      0.0,
+      0.0,
+      0.3,
+      4.0,
+      0.0,
+      -1.0
+    },
 
       { 0.7071, 0.7071, -0.538, 0.538 },
       0,
@@ -280,7 +277,7 @@ const ConstP_URControl_T URControl_ConstP = {
   },
 
   /* Expression: p.R{1}
-   * Referenced by: '<S18>/R1'
+   * Referenced by: '<S30>/R1'
    */
   { 0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
     0.0, 0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.0, 0.0, 0.0, 0.0, 0.0,
@@ -288,7 +285,7 @@ const ConstP_URControl_T URControl_ConstP = {
     0.0, 0.0, 0.0, 0.2 },
 
   /* Expression: p.Q
-   * Referenced by: '<S18>/Q'
+   * Referenced by: '<S30>/Q'
    */
   { 0.01, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.01, 0.0, 0.0, 0.0,
     0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.01, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
@@ -299,7 +296,7 @@ const ConstP_URControl_T URControl_ConstP = {
     0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.001 },
 
   /* Expression: p.InitialCovariance
-   * Referenced by: '<S18>/DataStoreMemory - P'
+   * Referenced by: '<S30>/DataStoreMemory - P'
    */
   { 1000.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1000.0, 0.0, 0.0,
     0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1000.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
@@ -310,7 +307,7 @@ const ConstP_URControl_T URControl_ConstP = {
     1000.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1000.0 },
 
   /* Expression: p.InitialState
-   * Referenced by: '<S18>/DataStoreMemory - x'
+   * Referenced by: '<S30>/DataStoreMemory - x'
    */
   { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0 }
 };
