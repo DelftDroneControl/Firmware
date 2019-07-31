@@ -262,6 +262,7 @@ URControlParamsType URControlParams = {
   0.0014,
   0.0013,
   0.0025,
+  8.0e-6,
   0.00191049731745428,
   0.00191049731745428,
   0.14450346016618426,
@@ -270,6 +271,8 @@ URControlParamsType URControlParams = {
   0.0,
   300.0,
   -1.0,
+  1200.0,
+  0.0,
 
   { 0.70710678118654768, 0.70710678118654768, -0.53801602916367752,
     0.53801602916367752 },
@@ -626,6 +629,86 @@ real_T rt_atan2d_snf(real_T u0, real_T u1)
   }
 
   return y;
+}
+
+/* Function for MATLAB Function: '<S5>/basic estimators' */
+void URControlModelClass::URControl_mod(const real_T x[3], real_T r[3])
+{
+  real_T b_r;
+  boolean_T rEQ0;
+  real_T q;
+  if ((!rtIsInf(x[0])) && (!rtIsNaN(x[0]))) {
+    if (x[0] == 0.0) {
+      b_r = 0.0;
+    } else {
+      b_r = std::fmod(x[0], 6.2831853071795862);
+      rEQ0 = (b_r == 0.0);
+      if (!rEQ0) {
+        q = std::abs(x[0] / 6.2831853071795862);
+        rEQ0 = (std::abs(q - std::floor(q + 0.5)) <= 2.2204460492503131E-16 * q);
+      }
+
+      if (rEQ0) {
+        b_r = 0.0;
+      } else {
+        if (x[0] < 0.0) {
+          b_r += 6.2831853071795862;
+        }
+      }
+    }
+  } else {
+    b_r = (rtNaN);
+  }
+
+  r[0] = b_r;
+  if ((!rtIsInf(x[1])) && (!rtIsNaN(x[1]))) {
+    if (x[1] == 0.0) {
+      b_r = 0.0;
+    } else {
+      b_r = std::fmod(x[1], 6.2831853071795862);
+      rEQ0 = (b_r == 0.0);
+      if (!rEQ0) {
+        q = std::abs(x[1] / 6.2831853071795862);
+        rEQ0 = (std::abs(q - std::floor(q + 0.5)) <= 2.2204460492503131E-16 * q);
+      }
+
+      if (rEQ0) {
+        b_r = 0.0;
+      } else {
+        if (x[1] < 0.0) {
+          b_r += 6.2831853071795862;
+        }
+      }
+    }
+  } else {
+    b_r = (rtNaN);
+  }
+
+  r[1] = b_r;
+  if ((!rtIsInf(x[2])) && (!rtIsNaN(x[2]))) {
+    if (x[2] == 0.0) {
+      b_r = 0.0;
+    } else {
+      b_r = std::fmod(x[2], 6.2831853071795862);
+      rEQ0 = (b_r == 0.0);
+      if (!rEQ0) {
+        q = std::abs(x[2] / 6.2831853071795862);
+        rEQ0 = (std::abs(q - std::floor(q + 0.5)) <= 2.2204460492503131E-16 * q);
+      }
+
+      if (rEQ0) {
+        b_r = 0.0;
+      } else {
+        if (x[2] < 0.0) {
+          b_r += 6.2831853071795862;
+        }
+      }
+    }
+  } else {
+    b_r = (rtNaN);
+  }
+
+  r[2] = b_r;
 }
 
 /*
@@ -3044,6 +3127,927 @@ void URControlModelClass::URControl_PIDMomentGen(const real_T state_omegaUV[3],
 
 /*
  * Function for MATLAB Function: '<S8>/control allocator'
+ * function [x,y_state,iterSteps,optimal] = controlAllocQPQuick(refStruct, FMax, FMin, gainStruct, y_state_init, par, URpar)
+ */
+void URControlModelClass::URControl_controlAllocQPQuick(real_T refStruct_MuRef,
+  real_T refStruct_MvRef, real_T refStruct_MzRef, real_T refStruct_FtotRef,
+  const real_T FMax[4], const real_T FMin[4], real_T gainStruct_MuGain, real_T
+  gainStruct_MvGain, real_T gainStruct_FtotGain, real_T gainStruct_FGain, real_T
+  gainStruct_MzGain, real_T y_state_init[4], real_T b_par_URC_k0, real_T
+  b_par_URC_t0, real_T b_par_URC_s, real_T URpar_rate_maxIter, real_T x[4],
+  real_T *iterSteps, real_T *optimal)
+{
+  real_T H[16];
+  real_T b[8];
+  int32_T solution;
+  boolean_T indices[8];
+  int8_T A_eq_data[32];
+  int8_T AT_eq_data[32];
+  real_T xy_data[12];
+  real_T constraintError[8];
+  real_T count;
+  int32_T iter;
+  int8_T f_data[8];
+  int8_T g_data[8];
+  int32_T trueCount;
+  int8_T result_data[96];
+  boolean_T empty_non_axis_sizes;
+  real_T varargin_1_data[48];
+  int32_T idx;
+  static const int8_T A[32] = { 1, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0,
+    0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 0, 0, -1 };
+
+  real_T varargin_1_data_0[144];
+  real_T c_data[12];
+  int32_T loop_ub;
+  int32_T xy_size;
+  int32_T varargin_1_size[2];
+  real_T c_idx_0;
+  real_T c_idx_1;
+  real_T c_idx_2;
+  real_T c_idx_3;
+  int32_T f_size_idx_1;
+  int32_T result_size_idx_1;
+  real_T z1_idx_1;
+  real_T z1_idx_2;
+  real_T z1_idx_3;
+  int8_T l2_idx_0;
+  int8_T l1_idx_1;
+  real_T c_idx_0_tmp;
+  int32_T AT_eq_data_tmp;
+  boolean_T tmp;
+  boolean_T guard1 = false;
+  boolean_T exitg1;
+  boolean_T exitg2;
+
+  /* 'controlAllocQPQuick:3' x = [0;0;0;0]; */
+  /* 'controlAllocQPQuick:4' y = [0;0;0;0]; */
+  /* 'controlAllocQPQuick:7' MuRef = refStruct(1).MuRef; */
+  /* 'controlAllocQPQuick:8' MvRef = refStruct(1).MvRef; */
+  /* 'controlAllocQPQuick:9' MzRef = refStruct(1).MzRef; */
+  /* 'controlAllocQPQuick:10' FtotRef = refStruct(1).FtotRef; */
+  /* 'controlAllocQPQuick:12' MuGain = gainStruct(1).MuGain; */
+  /* 'controlAllocQPQuick:13' MvGain = gainStruct(1).MvGain; */
+  /* 'controlAllocQPQuick:14' MzGain = gainStruct(1).MzGain; */
+  /* 'controlAllocQPQuick:15' FtotGain = gainStruct(1).FtotGain; */
+  /* 'controlAllocQPQuick:16' FGain = gainStruct(1).FGain; */
+  /* 'controlAllocQPQuick:18' s = par.URC.s; */
+  /* 'controlAllocQPQuick:19' t0 = par.URC.t0; */
+  /* 'controlAllocQPQuick:20' k0 = par.URC.k0; */
+  /* 'controlAllocQPQuick:22' FMax = max(FMax,0.001); */
+  x[0] = 0.0;
+  if (FMax[0] > 0.001) {
+    count = FMax[0];
+  } else {
+    count = 0.001;
+  }
+
+  x[1] = 0.0;
+  if (FMax[1] > 0.001) {
+    z1_idx_1 = FMax[1];
+  } else {
+    z1_idx_1 = 0.001;
+  }
+
+  /* 'QPINDI:34' iterSteps = 0; */
+  *iterSteps = 0.0;
+
+  /* 'QPINDI:36' for iter = 1:10 */
+  H_tmp_tmp = 0;
+  exitg1 = false;
+  while ((!exitg1) && (H_tmp_tmp < 10)) {
+    /* 'QPINDI:37' iterSteps = iterSteps +1; */
+    (*iterSteps)++;
+
+  /* 'controlAllocQPQuick:25' H = zeros(4,4); */
+  /* 'controlAllocQPQuick:26' H(1,1) = 2*(MvGain*s^2 + MzGain*(t0/k0)^2 + FtotGain + FGain/FMax(1)); */
+  c_idx_0 = b_par_URC_t0 / b_par_URC_k0;
+  c_idx_1 = b_par_URC_s * b_par_URC_s;
+  H[0] = (((c_idx_1 * gainStruct_MvGain + c_idx_0 * c_idx_0 * gainStruct_MzGain)
+           + gainStruct_FtotGain) + gainStruct_FGain / count) * 2.0;
+
+    /* 'QPINDI:48' b_eq = b(indices); */
+    /* 'QPINDI:49' A_eq = A(indices,:); */
+    H_tmp_tmp_1 = 0;
+    for (xy_size = 0; xy_size < 8; xy_size++) {
+      if (indices[xy_size]) {
+        H_tmp_tmp_1++;
+      }
+    }
+
+    H_tmp_tmp_2 = H_tmp_tmp_1;
+    H_tmp_tmp_1 = 0;
+    for (xy_size = 0; xy_size < 8; xy_size++) {
+      if (indices[xy_size]) {
+        f_data[H_tmp_tmp_1] = (int8_T)(xy_size + 1);
+        H_tmp_tmp_1++;
+      }
+    }
+
+    for (loop_ub = 0; loop_ub < H_tmp_tmp_2; loop_ub++) {
+      A_eq_data[loop_ub] = A[f_data[loop_ub] - 1];
+    }
+
+    for (loop_ub = 0; loop_ub < H_tmp_tmp_2; loop_ub++) {
+      A_eq_data[loop_ub + H_tmp_tmp_2] = A[f_data[loop_ub] + 7];
+    }
+
+    for (loop_ub = 0; loop_ub < H_tmp_tmp_2; loop_ub++) {
+      A_eq_data[loop_ub + (H_tmp_tmp_2 << 1)] = A[f_data[loop_ub] + 15];
+    }
+
+    for (loop_ub = 0; loop_ub < H_tmp_tmp_2; loop_ub++) {
+      A_eq_data[loop_ub + H_tmp_tmp_2 * 3] = A[f_data[loop_ub] + 23];
+    }
+
+    /* 'QPINDI:50' AT_eq = transpose(A_eq); */
+    for (loop_ub = 0; loop_ub < H_tmp_tmp_2; loop_ub++) {
+      H_tmp_tmp_0 = loop_ub << 2;
+      AT_eq_data[H_tmp_tmp_0] = A_eq_data[loop_ub];
+      AT_eq_data[1 + H_tmp_tmp_0] = A_eq_data[loop_ub + H_tmp_tmp_2];
+      AT_eq_data[2 + H_tmp_tmp_0] = A_eq_data[(H_tmp_tmp_2 << 1) + loop_ub];
+      AT_eq_data[3 + H_tmp_tmp_0] = A_eq_data[H_tmp_tmp_2 * 3 + loop_ub];
+    }
+
+    /* 'QPINDI:52' if isempty(A_eq) */
+    if (H_tmp_tmp_2 == 0) {
+      /* 'QPINDI:53' l1=[0,0]; */
+      /* 'QPINDI:54' l2=[0,0]; */
+      l2_idx_0 = 0;
+      l1_idx_1 = 0;
+    } else {
+      /* 'QPINDI:55' else */
+      /* 'QPINDI:56' l1=size(AT_eq); */
+      l1_idx_1 = (int8_T)H_tmp_tmp_2;
+
+      /* 'QPINDI:57' l2=size(A_eq); */
+      l2_idx_0 = (int8_T)H_tmp_tmp_2;
+    }
+
+    /* 'QPINDI:61' D = [H,AT_eq;A_eq,zeros(l2(1),l1(2))]; */
+    if (H_tmp_tmp_2 != 0) {
+      H_tmp_tmp_1 = H_tmp_tmp_2;
+    } else if ((l2_idx_0 != 0) && (l1_idx_1 != 0)) {
+      H_tmp_tmp_1 = l2_idx_0;
+    } else {
+      H_tmp_tmp_1 = 0;
+      if (l2_idx_0 > 0) {
+        H_tmp_tmp_1 = l2_idx_0;
+      }
+    }
+
+    empty_non_axis_sizes = (H_tmp_tmp_1 == 0);
+    if (empty_non_axis_sizes || (H_tmp_tmp_2 != 0)) {
+      xy_size = 4;
+    } else {
+      xy_size = 0;
+    }
+
+    if (empty_non_axis_sizes || ((l2_idx_0 != 0) && (l1_idx_1 != 0))) {
+      idx = l1_idx_1;
+    } else {
+      idx = 0;
+    }
+
+    H_tmp_tmp_0 = H_tmp_tmp_1;
+    result_size_idx_1 = xy_size + idx;
+    xy_size *= H_tmp_tmp_1;
+    loop_ub = H_tmp_tmp_1 * idx - 1;
+    if (0 <= xy_size - 1) {
+      memcpy(&result_data[0], &A_eq_data[0], xy_size * sizeof(int8_T));
+    }
+
+    if (0 <= loop_ub) {
+      memset(&result_data[xy_size], 0, (((loop_ub + xy_size) - xy_size) + 1) *
+             sizeof(int8_T));
+    }
+
+    idx = 4 + H_tmp_tmp_2;
+    xy_size = (H_tmp_tmp_2 << 2) - 1;
+    memcpy(&varargin_1_data[0], &H[0], sizeof(real_T) << 4U);
+    for (loop_ub = 0; loop_ub <= xy_size; loop_ub++) {
+      varargin_1_data[loop_ub + 16] = AT_eq_data[loop_ub];
+    }
+
+    /* 'QPINDI:62' d = [-c;b_eq]; */
+    H_tmp_tmp_1 = 0;
+    for (xy_size = 0; xy_size < 8; xy_size++) {
+      if (indices[xy_size]) {
+        H_tmp_tmp_1++;
+      }
+    }
+
+    H_tmp_tmp_2 = H_tmp_tmp_1;
+    H_tmp_tmp_1 = 0;
+    for (xy_size = 0; xy_size < 8; xy_size++) {
+      if (indices[xy_size]) {
+        g_data[H_tmp_tmp_1] = (int8_T)(xy_size + 1);
+        H_tmp_tmp_1++;
+      }
+    }
+
+    /* 'QPINDI:63' xy = D\d; */
+    if ((H_tmp_tmp_0 == 0) || (result_size_idx_1 == 0)) {
+      H_tmp_tmp_0 = 0;
+    }
+
+    varargin_1_size[0] = 4 + H_tmp_tmp_0;
+    varargin_1_size[1] = idx;
+    for (loop_ub = 0; loop_ub < idx; loop_ub++) {
+      for (H_tmp_tmp_1 = 0; H_tmp_tmp_1 < 4; H_tmp_tmp_1++) {
+        varargin_1_data_0[H_tmp_tmp_1 + varargin_1_size[0] * loop_ub] =
+          varargin_1_data[(loop_ub << 2) + H_tmp_tmp_1];
+      }
+    }
+
+    for (loop_ub = 0; loop_ub < idx; loop_ub++) {
+      for (H_tmp_tmp_1 = 0; H_tmp_tmp_1 < H_tmp_tmp_0; H_tmp_tmp_1++) {
+        varargin_1_data_0[(H_tmp_tmp_1 + varargin_1_size[0] * loop_ub) + 4] =
+          result_data[H_tmp_tmp_0 * loop_ub + H_tmp_tmp_1];
+      }
+    }
+
+    H_tmp_tmp_0 = 4 + H_tmp_tmp_2;
+    c_data[0] = -c[0];
+    c_data[1] = -c[1];
+    c_data[2] = -c[2];
+    c_data[3] = -c[3];
+    for (loop_ub = 0; loop_ub < H_tmp_tmp_2; loop_ub++) {
+      c_data[loop_ub + 4] = b[g_data[loop_ub] - 1];
+    }
+
+    URControl_mldivide(varargin_1_data_0, varargin_1_size, c_data, &H_tmp_tmp_0,
+                       xy_data, &xy_size);
+
+    /* 'QPINDI:64' x = xy(1:4); */
+    x[0] = xy_data[0];
+    x[1] = xy_data[1];
+    x[2] = xy_data[2];
+    x[3] = xy_data[3];
+
+    /* 'QPINDI:65' y = xy(5:length(xy)); */
+    if (5 > xy_size) {
+      H_tmp_tmp_1 = 0;
+      xy_size = 0;
+    } else {
+      H_tmp_tmp_1 = 4;
+    }
+
+    /* 'QPINDI:68' constraintError = A*x - b; */
+    for (loop_ub = 0; loop_ub < 8; loop_ub++) {
+      constraintError[loop_ub] = ((((real_T)A[loop_ub + 8] * x[1] + (real_T)
+        A[loop_ub] * x[0]) + (real_T)A[loop_ub + 16] * x[2]) + (real_T)A[loop_ub
+        + 24] * x[3]) - b[loop_ub];
+    }
+
+    /* 'QPINDI:70' constraintOK = (max(constraintError) <= 0.001); */
+    tmp_0 = rtIsNaN(constraintError[0]);
+    if (!tmp_0) {
+      idx = 1;
+    } else {
+      idx = 0;
+      H_tmp_tmp_0 = 2;
+      exitg2 = false;
+      while ((!exitg2) && (H_tmp_tmp_0 < 9)) {
+        if (!rtIsNaN(constraintError[H_tmp_tmp_0 - 1])) {
+          idx = H_tmp_tmp_0;
+          exitg2 = true;
+        } else {
+          H_tmp_tmp_0++;
+        }
+      }
+    }
+
+    if (idx == 0) {
+      count = constraintError[0];
+    } else {
+      count = constraintError[idx - 1];
+      while (idx + 1 < 9) {
+        if (count < constraintError[idx]) {
+          count = constraintError[idx];
+        }
+
+        idx++;
+      }
+    }
+
+    /* 'QPINDI:71' yMultipOK = (isempty(y) || min(y) >= 0); */
+    loop_ub = xy_size - H_tmp_tmp_1;
+    if (loop_ub == 0) {
+      empty_non_axis_sizes = true;
+    } else {
+      if (loop_ub <= 2) {
+        if (loop_ub == 1) {
+          b_ex = xy_data[H_tmp_tmp_1];
+        } else {
+          b_ex = xy_data[H_tmp_tmp_1 + 1];
+          if ((xy_data[H_tmp_tmp_1] > b_ex) || (rtIsNaN(xy_data[H_tmp_tmp_1]) &&
+               (!rtIsNaN(b_ex)))) {
+          } else {
+            b_ex = xy_data[H_tmp_tmp_1];
+          }
+        }
+      } else {
+        if (!rtIsNaN(xy_data[H_tmp_tmp_1])) {
+          idx = 0;
+        } else {
+          idx = -1;
+          H_tmp_tmp_0 = 2;
+          exitg2 = false;
+          while ((!exitg2) && (H_tmp_tmp_0 <= loop_ub)) {
+            if (!rtIsNaN(xy_data[(H_tmp_tmp_1 + H_tmp_tmp_0) - 1])) {
+              idx = H_tmp_tmp_0 - 1;
+              exitg2 = true;
+            } else {
+              H_tmp_tmp_0++;
+            }
+          }
+        }
+
+        if (idx + 1 == 0) {
+          b_ex = xy_data[H_tmp_tmp_1];
+        } else {
+          b_ex = xy_data[H_tmp_tmp_1 + idx];
+          while (idx + 2 <= loop_ub) {
+            tmp = xy_data[(H_tmp_tmp_1 + idx) + 1];
+            if (b_ex > tmp) {
+              b_ex = tmp;
+            }
+
+            idx++;
+          }
+        }
+      }
+
+      if (b_ex >= 0.0) {
+        empty_non_axis_sizes = true;
+      } else {
+        empty_non_axis_sizes = false;
+      }
+    }
+
+    /* 'QPINDI:73' if constraintOK && yMultipOK */
+    if ((count <= 0.001) && empty_non_axis_sizes) {
+      /* 'QPINDI:74' solution = 1; */
+      i = 1;
+      exitg1 = true;
+    } else {
+      /* 'QPINDI:76' else */
+      /* 'QPINDI:77' if isempty(y) || min(y) >= 0.0 */
+      guard1 = false;
+      if (loop_ub == 0) {
+        guard1 = true;
+      } else {
+        if (loop_ub <= 2) {
+          if (loop_ub == 1) {
+            count = xy_data[H_tmp_tmp_1];
+          } else if ((xy_data[H_tmp_tmp_1] > xy_data[H_tmp_tmp_1 + 1]) ||
+                     (rtIsNaN(xy_data[H_tmp_tmp_1]) && (!rtIsNaN
+                       (xy_data[H_tmp_tmp_1 + 1])))) {
+            count = xy_data[H_tmp_tmp_1 + 1];
+          } else {
+            count = xy_data[H_tmp_tmp_1];
+          }
+        } else {
+          if (!rtIsNaN(xy_data[H_tmp_tmp_1])) {
+            idx = 0;
+          } else {
+            idx = -1;
+            H_tmp_tmp_0 = 2;
+            exitg2 = false;
+            while ((!exitg2) && (H_tmp_tmp_0 <= loop_ub)) {
+              if (!rtIsNaN(xy_data[(H_tmp_tmp_1 + H_tmp_tmp_0) - 1])) {
+                idx = H_tmp_tmp_0 - 1;
+                exitg2 = true;
+              } else {
+                H_tmp_tmp_0++;
+              }
+            }
+          }
+
+          if (idx + 1 == 0) {
+            count = xy_data[H_tmp_tmp_1];
+          } else {
+            count = xy_data[H_tmp_tmp_1 + idx];
+            while (idx + 2 <= loop_ub) {
+              tmp = xy_data[(H_tmp_tmp_1 + idx) + 1];
+              if (count > tmp) {
+                count = tmp;
+              }
+
+              idx++;
+            }
+          }
+        }
+
+        if (count >= 0.0) {
+          guard1 = true;
+        } else {
+          /* 'QPINDI:85' else */
+          /* 'QPINDI:87' [~,index] = min(y); */
+          if (loop_ub <= 2) {
+            if (loop_ub == 1) {
+              idx = 1;
+            } else if ((xy_data[H_tmp_tmp_1] > xy_data[H_tmp_tmp_1 + 1]) ||
+                       (rtIsNaN(xy_data[H_tmp_tmp_1]) && (!rtIsNaN
+                         (xy_data[H_tmp_tmp_1 + 1])))) {
+              idx = 2;
+            } else {
+              idx = 1;
+            }
+          } else {
+            if (!rtIsNaN(xy_data[H_tmp_tmp_1])) {
+              idx = 1;
+            } else {
+              idx = 0;
+              H_tmp_tmp_0 = 2;
+              exitg2 = false;
+              while ((!exitg2) && (H_tmp_tmp_0 <= loop_ub)) {
+                if (!rtIsNaN(xy_data[(H_tmp_tmp_1 + H_tmp_tmp_0) - 1])) {
+                  idx = H_tmp_tmp_0;
+                  exitg2 = true;
+                } else {
+                  H_tmp_tmp_0++;
+                }
+              }
+            }
+
+            if (idx == 0) {
+              idx = 1;
+            } else {
+              count = xy_data[(H_tmp_tmp_1 + idx) - 1];
+              for (H_tmp_tmp_0 = idx - 1; H_tmp_tmp_0 + 2 <= loop_ub;
+                   H_tmp_tmp_0++) {
+                tmp = xy_data[(H_tmp_tmp_1 + H_tmp_tmp_0) + 1];
+                if (count > tmp) {
+                  count = tmp;
+                  idx = H_tmp_tmp_0 + 2;
+                }
+              }
+            }
+          }
+
+          /* 'QPINDI:87' ~ */
+          /* 'QPINDI:88' count = 0; */
+          /* 'QPINDI:89' for i=1:4 */
+          /* 'QPINDI:90' count = count + abs(y_state(i)); */
+          count = std::abs(y_state_init[0]);
+
+          /* 'QPINDI:91' if count == index */
+          if (count == idx) {
+            /* 'QPINDI:92' y_state(i) = 0; */
+            y_state_init[0] = 0.0;
+          }
+
+          /* 'QPINDI:90' count = count + abs(y_state(i)); */
+          count += std::abs(y_state_init[1]);
+
+          /* 'QPINDI:91' if count == index */
+          if (count == idx) {
+            /* 'QPINDI:92' y_state(i) = 0; */
+            y_state_init[1] = 0.0;
+          }
+
+          /* 'QPINDI:90' count = count + abs(y_state(i)); */
+          count += std::abs(y_state_init[2]);
+
+          /* 'QPINDI:91' if count == index */
+          if (count == idx) {
+            /* 'QPINDI:92' y_state(i) = 0; */
+            y_state_init[2] = 0.0;
+          }
+
+          /* 'QPINDI:90' count = count + abs(y_state(i)); */
+          count += std::abs(y_state_init[3]);
+
+          /* 'QPINDI:91' if count == index */
+          if (count == idx) {
+            /* 'QPINDI:92' y_state(i) = 0; */
+            y_state_init[3] = 0.0;
+          }
+        }
+      }
+
+      if (guard1) {
+        /* 'QPINDI:79' [~,index] = max(constraintError); */
+        if (!tmp_0) {
+          H_tmp_tmp_1 = 1;
+        } else {
+          H_tmp_tmp_1 = 0;
+          xy_size = 2;
+          exitg2 = false;
+          while ((!exitg2) && (xy_size < 9)) {
+            if (!rtIsNaN(constraintError[xy_size - 1])) {
+              H_tmp_tmp_1 = xy_size;
+              exitg2 = true;
+            } else {
+              xy_size++;
+            }
+          }
+        }
+
+        if (H_tmp_tmp_1 == 0) {
+          H_tmp_tmp_1 = 1;
+        } else {
+          count = constraintError[H_tmp_tmp_1 - 1];
+          for (xy_size = H_tmp_tmp_1; xy_size + 1 < 9; xy_size++) {
+            if (count < constraintError[xy_size]) {
+              count = constraintError[xy_size];
+              H_tmp_tmp_1 = xy_size + 1;
+            }
+          }
+        }
+
+        /* 'QPINDI:79' ~ */
+        /* 'QPINDI:80' if index < 5 */
+        if (H_tmp_tmp_1 < 5) {
+          /* 'QPINDI:81' y_state(index) = 1; */
+          y_state_init[H_tmp_tmp_1 - 1] = 1.0;
+        } else {
+          /* 'QPINDI:82' else */
+          /* 'QPINDI:83' y_state(index-4) = -1; */
+          y_state_init[H_tmp_tmp_1 - 5] = -1.0;
+        }
+      }
+
+      H_tmp_tmp++;
+    }
+  }
+
+  /* 'QPINDI:101' optimal = solution; */
+  *optimal = i;
+}
+
+/*
+ * Function for MATLAB Function: '<S6>/control allocator'
+ * function [M_uvr, daq] = INDIMomentGen(state, daq, uvr_des, M_uvr_set_prev, URpar, par)
+ */
+void URControlModelClass::URControl_INDIMomentGen(const real_T state_wRotor[4],
+  const real_T state_omegaUV[3], const real_T state_omegafUV[3], daqBus *daq,
+  const real_T uvr_des[3], real_T URpar_k0, real_T URpar_t0, real_T URpar_s,
+  real_T URpar_est_omegaFilterT, const real_T URpar_rate_MINDI_rateDotKp[3],
+  real_T URpar_rate_MINDI_derFilterT, const real_T URpar_rate_MINDI_MKp[3],
+  real_T b_par_freq, real_T M_uvr[3])
+{
+  real_T Fset;
+  real_T Fset_idx_1;
+  real_T Fset_idx_0;
+  real_T Fset_idx_2;
+
+  /* 'INDIMomentGen:3' if isempty(omegaDot) */
+  if (!URControl_DW.omegaDot_not_empty_l) {
+    /* 'INDIMomentGen:3' omegaDot = SimpleDerivative(URpar.rate_MINDI_derFilterT, [0,0,0], 300, -300); */
+    /* 'SimpleDerivative:12' obj.filterHandle = LPFilter(filterT, initValue, maxLim, minLim); */
+    /* 'LPFilter:14' obj.filterT = filterT; */
+    URControl_DW.omegaDot_p.filterHandle.filterT = URpar_rate_MINDI_derFilterT;
+
+    /* 'LPFilter:15' obj.value = initValue; */
+    /* 'LPFilter:16' obj.maxLim = maxLim; */
+    URControl_DW.omegaDot_p.filterHandle.maxLim = 300.0;
+
+    /* 'LPFilter:17' obj.minLim = minLim; */
+    URControl_DW.omegaDot_p.filterHandle.minLim = -300.0;
+
+    /* 'SimpleDerivative:13' obj.prevValue = initValue; */
+    URControl_DW.omegaDot_p.filterHandle.value[0] = 0.0;
+    URControl_DW.omegaDot_p.prevValue[0] = 0.0;
+    URControl_DW.omegaDot_p.filterHandle.value[1] = 0.0;
+    URControl_DW.omegaDot_p.prevValue[1] = 0.0;
+    URControl_DW.omegaDot_p.filterHandle.value[2] = 0.0;
+    URControl_DW.omegaDot_p.prevValue[2] = 0.0;
+    URControl_DW.omegaDot_not_empty_l = true;
+  }
+
+  /* 'INDIMomentGen:4' if isempty(wRotorFilter) */
+  if (!URControl_DW.wRotorFilter_not_empty) {
+    /* 'INDIMomentGen:4' wRotorFilter = LPFilter(URpar.est_omegaFilterT, [0,0,0,0], 1200, 0); */
+    /* 'LPFilter:14' obj.filterT = filterT; */
+    URControl_DW.wRotorFilter.filterT = URpar_est_omegaFilterT;
+
+    /* 'LPFilter:15' obj.value = initValue; */
+    URControl_DW.wRotorFilter.value[0] = 0.0;
+    URControl_DW.wRotorFilter.value[1] = 0.0;
+    URControl_DW.wRotorFilter.value[2] = 0.0;
+    URControl_DW.wRotorFilter.value[3] = 0.0;
+
+    /* 'LPFilter:16' obj.maxLim = maxLim; */
+    URControl_DW.wRotorFilter.maxLim = 1200.0;
+
+    /* 'LPFilter:17' obj.minLim = minLim; */
+    URControl_DW.wRotorFilter.minLim = 0.0;
+    URControl_DW.wRotorFilter_not_empty = true;
+  }
+
+  /* 'INDIMomentGen:6' wRotorFilter.updateFilterT(URpar.rate_MINDI_derFilterT); */
+  /* 'LPFilter:26' obj.filterT = filterT; */
+  URControl_DW.wRotorFilter.filterT = URpar_rate_MINDI_derFilterT;
+
+  /* 'INDIMomentGen:7' wRotorFilter.update(state.wRotor); */
+  /* 'LPFilter:21' obj.value = obj.value*obj.filterT + newValue*(1 - obj.filterT); */
+  /* 'LPFilter:22' obj.value = max(min(obj.value,obj.maxLim),obj.minLim); */
+  URControl_DW.wRotorFilter.value[0] = (1.0 - URControl_DW.wRotorFilter.filterT)
+    * state_wRotor[0] + URControl_DW.wRotorFilter.value[0] *
+    URControl_DW.wRotorFilter.filterT;
+  if ((URControl_DW.wRotorFilter.value[0] < URControl_DW.wRotorFilter.maxLim) ||
+      rtIsNaN(URControl_DW.wRotorFilter.maxLim)) {
+    Fset_idx_0 = URControl_DW.wRotorFilter.value[0];
+  } else {
+    Fset_idx_0 = URControl_DW.wRotorFilter.maxLim;
+  }
+
+  if ((Fset_idx_0 > URControl_DW.wRotorFilter.minLim) || rtIsNaN
+      (URControl_DW.wRotorFilter.minLim)) {
+    URControl_DW.wRotorFilter.value[0] = Fset_idx_0;
+  } else {
+    URControl_DW.wRotorFilter.value[0] = URControl_DW.wRotorFilter.minLim;
+  }
+
+  URControl_DW.wRotorFilter.value[1] = (1.0 - URControl_DW.wRotorFilter.filterT)
+    * state_wRotor[1] + URControl_DW.wRotorFilter.value[1] *
+    URControl_DW.wRotorFilter.filterT;
+  if ((URControl_DW.wRotorFilter.value[1] < URControl_DW.wRotorFilter.maxLim) ||
+      rtIsNaN(URControl_DW.wRotorFilter.maxLim)) {
+    Fset_idx_0 = URControl_DW.wRotorFilter.value[1];
+  } else {
+    Fset_idx_0 = URControl_DW.wRotorFilter.maxLim;
+  }
+
+  if ((Fset_idx_0 > URControl_DW.wRotorFilter.minLim) || rtIsNaN
+      (URControl_DW.wRotorFilter.minLim)) {
+    URControl_DW.wRotorFilter.value[1] = Fset_idx_0;
+  } else {
+    URControl_DW.wRotorFilter.value[1] = URControl_DW.wRotorFilter.minLim;
+  }
+
+  URControl_DW.wRotorFilter.value[2] = (1.0 - URControl_DW.wRotorFilter.filterT)
+    * state_wRotor[2] + URControl_DW.wRotorFilter.value[2] *
+    URControl_DW.wRotorFilter.filterT;
+  if ((URControl_DW.wRotorFilter.value[2] < URControl_DW.wRotorFilter.maxLim) ||
+      rtIsNaN(URControl_DW.wRotorFilter.maxLim)) {
+    Fset_idx_0 = URControl_DW.wRotorFilter.value[2];
+  } else {
+    Fset_idx_0 = URControl_DW.wRotorFilter.maxLim;
+  }
+
+  if ((Fset_idx_0 > URControl_DW.wRotorFilter.minLim) || rtIsNaN
+      (URControl_DW.wRotorFilter.minLim)) {
+    URControl_DW.wRotorFilter.value[2] = Fset_idx_0;
+  } else {
+    URControl_DW.wRotorFilter.value[2] = URControl_DW.wRotorFilter.minLim;
+  }
+
+  URControl_DW.wRotorFilter.value[3] = (1.0 - URControl_DW.wRotorFilter.filterT)
+    * state_wRotor[3] + URControl_DW.wRotorFilter.value[3] *
+    URControl_DW.wRotorFilter.filterT;
+  if ((URControl_DW.wRotorFilter.value[3] < URControl_DW.wRotorFilter.maxLim) ||
+      rtIsNaN(URControl_DW.wRotorFilter.maxLim)) {
+    Fset_idx_0 = URControl_DW.wRotorFilter.value[3];
+  } else {
+    Fset_idx_0 = URControl_DW.wRotorFilter.maxLim;
+  }
+
+  if ((Fset_idx_0 > URControl_DW.wRotorFilter.minLim) || rtIsNaN
+      (URControl_DW.wRotorFilter.minLim)) {
+    URControl_DW.wRotorFilter.value[3] = Fset_idx_0;
+  } else {
+    URControl_DW.wRotorFilter.value[3] = URControl_DW.wRotorFilter.minLim;
+  }
+
+  /* 'INDIMomentGen:9' Fset = wRotorFilter.value.^2*URpar.k0; */
+  Fset_idx_0 = URControl_DW.wRotorFilter.value[0] *
+    URControl_DW.wRotorFilter.value[0] * URpar_k0;
+  Fset_idx_1 = URControl_DW.wRotorFilter.value[1] *
+    URControl_DW.wRotorFilter.value[1] * URpar_k0;
+  Fset_idx_2 = URControl_DW.wRotorFilter.value[2] *
+    URControl_DW.wRotorFilter.value[2] * URpar_k0;
+  Fset = URControl_DW.wRotorFilter.value[3] * URControl_DW.wRotorFilter.value[3]
+    * URpar_k0;
+
+  /* 'INDIMomentGen:11' M_uvr_prev = zeros(3,1); */
+  /* 'INDIMomentGen:12' M_uvr_prev(1) = (Fset(4) - Fset(2))*URpar.s; */
+  M_uvr[0] = (Fset - Fset_idx_1) * URpar_s;
+
+  /* 'INDIMomentGen:13' M_uvr_prev(2) = (Fset(1) - Fset(3))*URpar.s; */
+  M_uvr[1] = (Fset_idx_0 - Fset_idx_2) * URpar_s;
+
+  /* 'INDIMomentGen:14' M_uvr_prev(3) = (Fset(1) - Fset(2) + Fset(3) - Fset(4))*URpar.t0/URpar.k0; */
+  M_uvr[2] = (((Fset_idx_0 - Fset_idx_1) + Fset_idx_2) - Fset) * URpar_t0 /
+    URpar_k0;
+
+  /* 'INDIMomentGen:17' error1 = uvr_des' - state.omegafUV; */
+  /* 'INDIMomentGen:19' uvrDot_des = error1.*URpar.rate_MINDI_rateDotKp; */
+  Fset_idx_0 = (uvr_des[0] - state_omegafUV[0]) * URpar_rate_MINDI_rateDotKp[0];
+  Fset_idx_1 = (uvr_des[1] - state_omegafUV[1]) * URpar_rate_MINDI_rateDotKp[1];
+  Fset_idx_2 = (uvr_des[2] - state_omegafUV[2]) * URpar_rate_MINDI_rateDotKp[2];
+
+  /* 'INDIMomentGen:22' omegaDot.updateFilterT(URpar.rate_MINDI_derFilterT); */
+  /* 'SimpleDerivative:23' obj.filterHandle.updateFilterT(filterT); */
+  /* 'LPFilter:26' obj.filterT = filterT; */
+  URControl_DW.omegaDot_p.filterHandle.filterT = URpar_rate_MINDI_derFilterT;
+
+  /* 'INDIMomentGen:23' omegaDot.update(state.omegaUV, 1/par.freq); */
+  URContr_SimpleDerivative_update(&URControl_DW.omegaDot_p, state_omegaUV, 1.0 /
+    b_par_freq);
+
+  /* 'INDIMomentGen:25' error2 = uvrDot_des - omegaDot.derValue; */
+  /* 'INDIMomentGen:27' dM = error2.*URpar.rate_MINDI_MKp*1e-4; */
+  /* 'INDIMomentGen:29' M_uvr = M_uvr_prev + dM'; */
+  /* 'INDIMomentGen:31' daq.uvrDot_des = uvrDot_des; */
+  /* 'INDIMomentGen:32' daq.omegaDot = omegaDot.derValue; */
+  /* 'INDIMomentGen:33' daq.dM = dM; */
+  Fset = (Fset_idx_0 - URControl_DW.omegaDot_p.derValue[0]) *
+    URpar_rate_MINDI_MKp[0] * 0.0001;
+  daq->uvrDot_des[0] = Fset_idx_0;
+  daq->omegaDot[0] = URControl_DW.omegaDot_p.derValue[0];
+  daq->dM[0] = Fset;
+  M_uvr[0] += Fset;
+  Fset = (Fset_idx_1 - URControl_DW.omegaDot_p.derValue[1]) *
+    URpar_rate_MINDI_MKp[1] * 0.0001;
+  daq->uvrDot_des[1] = Fset_idx_1;
+  daq->omegaDot[1] = URControl_DW.omegaDot_p.derValue[1];
+  daq->dM[1] = Fset;
+  M_uvr[1] += Fset;
+  Fset = (Fset_idx_2 - URControl_DW.omegaDot_p.derValue[2]) *
+    URpar_rate_MINDI_MKp[2] * 0.0001;
+  daq->uvrDot_des[2] = Fset_idx_2;
+  daq->omegaDot[2] = URControl_DW.omegaDot_p.derValue[2];
+  daq->dM[2] = Fset;
+  M_uvr[2] += Fset;
+}
+
+/*
+ * Function for MATLAB Function: '<S6>/control allocator'
+ * function [M_uvr, daq] = PIDMomentGen(state, daq, uvr_des, URpar, par)
+ */
+void URControlModelClass::URControl_PIDMomentGen(const real_T state_omegaUV[3],
+  const real_T state_omegafUV[3], daqBus *daq, const real_T uvr_des[3], real_T
+  URpar_Iz, real_T URpar_Iu, real_T URpar_Iv, const real_T
+  URpar_rate_MPID_rateDotKp[3], const real_T URpar_rate_MPID_rateDotKi[3], const
+  real_T URpar_rate_MPID_rateDotKd[3], real_T URpar_rate_MPID_derFilterT, real_T
+  URpar_rate_MPID_uvrdesderFilter, real_T URpar_rate_MPID_maxInt, real_T
+  URpar_rate_MPID_precGain, real_T b_par_freq, real_T M_uvr[3])
+{
+  real_T intLim;
+  real_T uvr_des_0[3];
+  real_T errorf;
+  real_T uvr_des_dot_idx_0;
+  real_T errorf_idx_0;
+  real_T uvr_des_dot_idx_1;
+  real_T errorf_idx_1;
+  real_T uvr_des_dot_idx_2;
+  boolean_T tmp;
+
+  /* 'PIDMomentGen:3' if isempty(errorInt) */
+  /* 'PIDMomentGen:4' if isempty(error_prev) */
+  /* 'PIDMomentGen:6' if isempty(errorD) */
+  if (!URControl_DW.errorD_not_empty) {
+    /* 'PIDMomentGen:6' errorD = SimpleDerivative(URpar.rate_MPID_derFilterT,[0,0,0], 200, -200); */
+    /* 'SimpleDerivative:12' obj.filterHandle = LPFilter(filterT, initValue, maxLim, minLim); */
+    /* 'LPFilter:14' obj.filterT = filterT; */
+    URControl_DW.errorD.filterHandle.filterT = URpar_rate_MPID_derFilterT;
+
+    /* 'LPFilter:15' obj.value = initValue; */
+    /* 'LPFilter:16' obj.maxLim = maxLim; */
+    URControl_DW.errorD.filterHandle.maxLim = 200.0;
+
+    /* 'LPFilter:17' obj.minLim = minLim; */
+    URControl_DW.errorD.filterHandle.minLim = -200.0;
+
+    /* 'SimpleDerivative:13' obj.prevValue = initValue; */
+    URControl_DW.errorD.filterHandle.value[0] = 0.0;
+    URControl_DW.errorD.prevValue[0] = 0.0;
+    URControl_DW.errorD.filterHandle.value[1] = 0.0;
+    URControl_DW.errorD.prevValue[1] = 0.0;
+    URControl_DW.errorD.filterHandle.value[2] = 0.0;
+    URControl_DW.errorD.prevValue[2] = 0.0;
+    URControl_DW.errorD_not_empty = true;
+  }
+
+  /* 'PIDMomentGen:7' if isempty(uvrDer) */
+  if (!URControl_DW.uvrDer_not_empty) {
+    /* 'PIDMomentGen:7' uvrDer = SimpleDerivative(URpar.rate_MPID_uvrdesderFilterT,[0,0,0], 200, -200); */
+    /* 'SimpleDerivative:12' obj.filterHandle = LPFilter(filterT, initValue, maxLim, minLim); */
+    /* 'LPFilter:14' obj.filterT = filterT; */
+    URControl_DW.uvrDer.filterHandle.filterT = URpar_rate_MPID_uvrdesderFilter;
+
+    /* 'LPFilter:15' obj.value = initValue; */
+    /* 'LPFilter:16' obj.maxLim = maxLim; */
+    URControl_DW.uvrDer.filterHandle.maxLim = 200.0;
+
+    /* 'LPFilter:17' obj.minLim = minLim; */
+    URControl_DW.uvrDer.filterHandle.minLim = -200.0;
+
+    /* 'SimpleDerivative:13' obj.prevValue = initValue; */
+    URControl_DW.uvrDer.filterHandle.value[0] = 0.0;
+    URControl_DW.uvrDer.prevValue[0] = 0.0;
+    URControl_DW.uvrDer.filterHandle.value[1] = 0.0;
+    URControl_DW.uvrDer.prevValue[1] = 0.0;
+    URControl_DW.uvrDer.filterHandle.value[2] = 0.0;
+    URControl_DW.uvrDer.prevValue[2] = 0.0;
+    URControl_DW.uvrDer_not_empty = true;
+  }
+
+  /* 'PIDMomentGen:10' errorf = uvr_des' - state.omegafUV; */
+  /* 'PIDMomentGen:11' error = uvr_des' - state.omegaUV; */
+  /* 'PIDMomentGen:12' errorInt = errorInt + errorf/par.freq; */
+  /* 'PIDMomentGen:13' intLim = URpar.rate_MPID_maxInt * 1e-3; */
+  intLim = URpar_rate_MPID_maxInt * 0.001;
+
+  /* 'PIDMomentGen:14' errorInt = max(min(errorInt,intLim),-intLim); */
+  errorf = uvr_des[0] - state_omegafUV[0];
+  URControl_DW.errorInt[0] += errorf / b_par_freq;
+  tmp = rtIsNaN(intLim);
+  if ((URControl_DW.errorInt[0] < intLim) || tmp) {
+    uvr_des_dot_idx_0 = URControl_DW.errorInt[0];
+  } else {
+    uvr_des_dot_idx_0 = intLim;
+  }
+
+  errorf_idx_0 = errorf;
+  errorf = uvr_des[1] - state_omegafUV[1];
+  URControl_DW.errorInt[1] += errorf / b_par_freq;
+  if ((URControl_DW.errorInt[1] < intLim) || tmp) {
+    uvr_des_dot_idx_1 = URControl_DW.errorInt[1];
+  } else {
+    uvr_des_dot_idx_1 = intLim;
+  }
+
+  errorf_idx_1 = errorf;
+  errorf = uvr_des[2] - state_omegafUV[2];
+  URControl_DW.errorInt[2] += errorf / b_par_freq;
+  if ((URControl_DW.errorInt[2] < intLim) || tmp) {
+    uvr_des_dot_idx_2 = URControl_DW.errorInt[2];
+  } else {
+    uvr_des_dot_idx_2 = intLim;
+  }
+
+  /* 'PIDMomentGen:16' errorD.filterHandle.filterT = URpar.rate_MPID_derFilterT; */
+  URControl_DW.errorD.filterHandle.filterT = URpar_rate_MPID_derFilterT;
+
+  /* 'PIDMomentGen:17' errorD.update(error,1/par.freq) */
+  tmp = rtIsNaN(-intLim);
+  if ((uvr_des_dot_idx_0 > -intLim) || tmp) {
+    URControl_DW.errorInt[0] = uvr_des_dot_idx_0;
+  } else {
+    URControl_DW.errorInt[0] = -intLim;
+  }
+
+  uvr_des_0[0] = uvr_des[0] - state_omegaUV[0];
+  if ((uvr_des_dot_idx_1 > -intLim) || tmp) {
+    URControl_DW.errorInt[1] = uvr_des_dot_idx_1;
+  } else {
+    URControl_DW.errorInt[1] = -intLim;
+  }
+
+  uvr_des_0[1] = uvr_des[1] - state_omegaUV[1];
+  if ((uvr_des_dot_idx_2 > -intLim) || tmp) {
+    URControl_DW.errorInt[2] = uvr_des_dot_idx_2;
+  } else {
+    URControl_DW.errorInt[2] = -intLim;
+  }
+
+  uvr_des_0[2] = uvr_des[2] - state_omegaUV[2];
+  URContr_SimpleDerivative_update(&URControl_DW.errorD, uvr_des_0, 1.0 /
+    b_par_freq);
+
+  /* 'PIDMomentGen:19' uvrDer.filterHandle.filterT = URpar.rate_MPID_uvrdesderFilterT; */
+  URControl_DW.uvrDer.filterHandle.filterT = URpar_rate_MPID_uvrdesderFilter;
+
+  /* 'PIDMomentGen:20' uvrDer.update(uvr_des', 1/par.freq); */
+  URContr_SimpleDerivative_update(&URControl_DW.uvrDer, uvr_des, 1.0 /
+    b_par_freq);
+
+  /* 'PIDMomentGen:21' uvr_des_dot = uvrDer.derValue; */
+  /* 'PIDMomentGen:23' uvrDot_des = errorf.*URpar.rate_MPID_rateDotKp + errorInt.*URpar.rate_MPID_rateDotKi + errorD.derValue.*URpar.rate_MPID_rateDotKd + uvr_des_dot; */
+  /* 'PIDMomentGen:26' M_uvr = uvrDot_des'.*[URpar.Iu; URpar.Iv; URpar.Iz]; */
+  /* 'PIDMomentGen:29' M_prec = [state.omegafUV(2)*state.omegafUV(3)*(URpar.Iv - URpar.Iz); */
+  /* 'PIDMomentGen:30'           state.omegafUV(1)*state.omegafUV(3)*(URpar.Iz - URpar.Iu); */
+  /* 'PIDMomentGen:31'           0]; */
+  /* 'PIDMomentGen:33' M_uvr = M_uvr - URpar.rate_MPID_precGain*M_prec; */
+  /* 'PIDMomentGen:35' daq.uvrDot_des = uvrDot_des; */
+  intLim = ((errorf_idx_0 * URpar_rate_MPID_rateDotKp[0] +
+             URControl_DW.errorInt[0] * URpar_rate_MPID_rateDotKi[0]) +
+            URControl_DW.errorD.derValue[0] * URpar_rate_MPID_rateDotKd[0]) +
+    URControl_DW.uvrDer.derValue[0];
+  M_uvr[0] = intLim * URpar_Iu - state_omegafUV[1] * state_omegafUV[2] *
+    (URpar_Iv - URpar_Iz) * URpar_rate_MPID_precGain;
+  daq->uvrDot_des[0] = intLim;
+  intLim = ((errorf_idx_1 * URpar_rate_MPID_rateDotKp[1] +
+             URControl_DW.errorInt[1] * URpar_rate_MPID_rateDotKi[1]) +
+            URControl_DW.errorD.derValue[1] * URpar_rate_MPID_rateDotKd[1]) +
+    URControl_DW.uvrDer.derValue[1];
+  M_uvr[1] = intLim * URpar_Iv - state_omegafUV[0] * state_omegafUV[2] *
+    (URpar_Iz - URpar_Iu) * URpar_rate_MPID_precGain;
+  daq->uvrDot_des[1] = intLim;
+  intLim = ((errorf * URpar_rate_MPID_rateDotKp[2] + URControl_DW.errorInt[2] *
+             URpar_rate_MPID_rateDotKi[2]) + URControl_DW.errorD.derValue[2] *
+            URpar_rate_MPID_rateDotKd[2]) + URControl_DW.uvrDer.derValue[2];
+  M_uvr[2] = intLim * URpar_Iz - URpar_rate_MPID_precGain * 0.0;
+  daq->uvrDot_des[2] = intLim;
+}
+
+/*
+ * Function for MATLAB Function: '<S6>/control allocator'
  * function [x,y_state,iterSteps,optimal] = controlAllocQPQuick(refStruct, FMax, FMin, gainStruct, y_state_init, par, URpar)
  */
 void URControlModelClass::URControl_controlAllocQPQuick(real_T refStruct_MuRef,
@@ -6962,7 +7966,7 @@ void URControlModelClass::step()
   if ((URControl_DW.errorInt_p[1] < URControlParams.position_intLim) || tmp_4) {
     rtb_Product2 = URControl_DW.errorInt_p[1];
   } else {
-    rtb_Product2 = URControlParams.position_intLim;
+    rtb_yawTarget = URControlParams.position_intLim;
   }
 
   if ((URControl_DW.errorInt_p[2] < URControlParams.position_intLim) || tmp_4) {

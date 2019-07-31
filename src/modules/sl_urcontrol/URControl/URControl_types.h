@@ -138,6 +138,7 @@ typedef struct {
   real_T Ix;
   real_T Iy;
   real_T Iz;
+  real_T Ip;
   real_T Iu;
   real_T Iv;
   real_T s;
@@ -146,6 +147,8 @@ typedef struct {
   real_T fail_delay;
   real_T fail_wRot;
   real_T signr;
+  real_T w_max;
+  real_T w_min;
   real_T R_xy_uv[4];
   real_T est_optiDx;
   real_T est_optiDy;
@@ -213,6 +216,7 @@ typedef struct {
   real_T envp_minDeviation;
   real_T rate_mode;
   real_T rate_momentMode;
+  real_T rate_quadratic_programming;
   real_T rate_INDI_G[32];
   real_T rate_INDI_rateDotKp[3];
   real_T rate_INDI_omegaDotFilterT;
@@ -246,6 +250,23 @@ typedef struct {
   real_T rate_FtotGain;
   real_T rate_FGain;
   real_T rate_maxIter;
+  real_T Kp;
+  real_T Kd;
+  real_T kdr;
+  real_T Kp_flip;
+  real_T Kd_flip;
+  real_T th;
+  real_T p1;
+  real_T p2;
+  real_T p3;
+  real_T pr;
+  real_T omega_max;
+  real_T k_omega_max;
+  real_T R_uv_xy[4];
+  boolean_T det_flip_direction;
+  boolean_T flip_or_not_logic;
+  real_T h3_flip_threshold;
+  boolean_T flip;
   real_T flip_mode;
   real_T flip_time;
   real_T flip_upTime;
@@ -345,9 +366,9 @@ typedef struct {
   real_T w_min;
   real_T mass;
   real_T fail_id;
+  real_T failure_id;
   real_T fail_time;
   struct_AHd68odqz51NWDIFKWnLKG sihao;
-  URControlParamsType URC;
   struct_KZWRH8wmRo8gScyf5zlwCH px4;
 } struct_RFHeXVQBKrBUbfkgPERCEC;
 
