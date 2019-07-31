@@ -189,7 +189,7 @@ SlURControl::parameters_updated()
 	URControlParams.attitude_enableTraj = _sl_attitude_enabletraj.get();
 	URControlParams.attitude_rotSpeedComp = _sl_attitude_rotspeedcomp.get();
 	URControlParams.attitude_yrcComp = _sl_attitude_yrcComp.get();
-
+	URControlParams.trigger_PA_thresh = _sl_qp_pa_thresh.get();
 
 	// Envelope
 	URControlParams.envp_enable = _sl_envp_enable.get();
@@ -598,6 +598,7 @@ SlURControl::control_ur(float dt)
 
 	_urcontrol_input.yaw_sp = 0;
 
+	_urcontrol_input.fail_flag = _sl_fail_flag.get();
 	//_urcontrol_input.dt_step = hrt_absolute_time() - t_step_start;
 
 	// See mixer file `pass.main.mix` for exact control allocation.
