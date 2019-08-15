@@ -5,13 +5,19 @@
  * course requirements at degree granting institutions only.  Not for
  * government, commercial, or other organizational use.
  *
- * Code generation for model "URControl".
+ * Code generation for model "AttitudeControl".
  *
- * Model version              : 1.873
+ * Model version              : 1.235
  * Simulink Coder version : 9.1 (R2019a) 23-Nov-2018
- * C++ source code generated on : Wed Jul 31 16:55:41 2019
+ * C++ source code generated on : Thu Aug  1 12:03:00 2019
  */
 #include "rtwtypes.h"
+
+extern const real32_T rtCP_pooled_55eKuj4Am4Sd[36];
+const real32_T rtCP_pooled_55eKuj4Am4Sd[36] = { 0.0001F, 0.0F, 0.0F, 0.0F, 0.0F,
+  0.0F, 0.0F, 0.0001F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0001F, 0.0F, 0.0F,
+  0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 0.0F,
+  0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F } ;
 
 extern const real32_T rtCP_pooled_5wzVsQQee0kd[16];
 const real32_T rtCP_pooled_5wzVsQQee0kd[16] = { 0.01F, 0.0F, 0.0F, 0.0F, 0.0F,
@@ -22,6 +28,16 @@ const real_T rtCP_pooled_9dldz3nawzPz[49] = { 0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
   0.0, 0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
   0.0, 0.2, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
   0.0, 0.2, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2 } ;
+
+extern const real32_T rtCP_pooled_EEVad9HstYHN[81];
+const real32_T rtCP_pooled_EEVad9HstYHN[81] = { 0.5F, 0.0F, 0.0F, 0.0F, 0.0F,
+  0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.5F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F,
+  0.0F, 0.0F, 0.5F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F,
+  0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 0.0F, 0.0F, 0.0F,
+  0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F,
+  0.0F, 0.0F, 0.0F, 0.0001F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F,
+  0.0F, 0.0001F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0E-5F }
+;
 
 extern const real32_T rtCP_pooled_Hl3cwpqcrwu0[81];
 const real32_T rtCP_pooled_Hl3cwpqcrwu0[81] = { 1.0E-7F, 0.0F, 0.0F, 0.0F, 0.0F,
@@ -77,6 +93,15 @@ const real_T rtCP_pooled_sK0iOVmAxUOL[100] = { 0.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0
   0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0001, 0.0, 0.0, 0.0, 0.0, 0.0,
   0.0, 0.0, 0.0, 0.0, 0.0, 0.0001, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
   0.0, 0.0001 } ;
+
+extern const real32_T rtCP_pooled_suIm2ypjRicW[81];
+const real32_T rtCP_pooled_suIm2ypjRicW[81] = { 0.1F, 0.0F, 0.0F, 0.0F, 0.0F,
+  0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.1F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F,
+  0.0F, 0.0F, 0.1F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.1F,
+  0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.1F, 0.0F, 0.0F, 0.0F,
+  0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.1F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F,
+  0.0F, 0.0F, 0.0F, 0.1F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F,
+  0.1F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.1F } ;
 
 extern const real_T rtCP_pooled_wg1Yq2gJgTjq[49];
 const real_T rtCP_pooled_wg1Yq2gJgTjq[49] = { 0.0001, 0.0, 0.0, 0.0, 0.0, 0.0,

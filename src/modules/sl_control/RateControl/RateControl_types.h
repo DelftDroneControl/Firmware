@@ -7,9 +7,9 @@
  *
  * Code generation for model "RateControl".
  *
- * Model version              : 1.1008
- * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C++ source code generated on : Wed Jul 17 14:14:42 2019
+ * Model version              : 1.1014
+ * Simulink Coder version : 9.1 (R2019a) 23-Nov-2018
+ * C++ source code generated on : Thu Aug 15 10:24:28 2019
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -43,17 +43,6 @@ typedef struct {
 
 #endif
 
-#ifndef DEFINED_TYPEDEF_FOR_LoeDetectorParamsType_
-#define DEFINED_TYPEDEF_FOR_LoeDetectorParamsType_
-
-typedef struct {
-  real_T fdd_k_thres;
-  real_T fdd_fail_p_thres;
-  real_T fdd_on;
-} LoeDetectorParamsType;
-
-#endif
-
 #ifndef DEFINED_TYPEDEF_FOR_struct_KZWRH8wmRo8gScyf5zlwCH_
 #define DEFINED_TYPEDEF_FOR_struct_KZWRH8wmRo8gScyf5zlwCH_
 
@@ -64,85 +53,15 @@ typedef struct {
 
 #endif
 
-#ifndef DEFINED_TYPEDEF_FOR_struct_Kb4703fKot5WPhaNoNlej_
-#define DEFINED_TYPEDEF_FOR_struct_Kb4703fKot5WPhaNoNlej_
-
-typedef struct {
-  real_T enable;
-  real_T maxAngle;
-  real_T Kp_pos[3];
-  real_T maxVel;
-  real_T Kp_vel[3];
-  real_T Ki_vel[3];
-  real_T intLim;
-} struct_Kb4703fKot5WPhaNoNlej;
-
-#endif
-
-#ifndef DEFINED_TYPEDEF_FOR_struct_7LbCBzsZMvrHROoJfHBYLD_
-#define DEFINED_TYPEDEF_FOR_struct_7LbCBzsZMvrHROoJfHBYLD_
-
-typedef struct {
-  real_T enable;
-  real_T Kp_pos;
-  real_T maxVel;
-  real_T Kp_vel;
-  real_T Ki_vel;
-  real_T intLim;
-  real_T peakAngle;
-  real_T LOCAngle;
-  real_T minOmegaSum;
-  real_T maxOmegaSum;
-} struct_7LbCBzsZMvrHROoJfHBYLD;
-
-#endif
-
-#ifndef DEFINED_TYPEDEF_FOR_struct_0fFeTh16K9OlBqn6rz4Bo_
-#define DEFINED_TYPEDEF_FOR_struct_0fFeTh16K9OlBqn6rz4Bo_
-
-typedef struct {
-  real_T enable;
-  real_T Kp_psi;
-  real_T Kp_r;
-} struct_0fFeTh16K9OlBqn6rz4Bo;
-
-#endif
-
-#ifndef DEFINED_TYPEDEF_FOR_struct_AHd68odqz51NWDIFKWnLKG_
-#define DEFINED_TYPEDEF_FOR_struct_AHd68odqz51NWDIFKWnLKG_
-
-typedef struct {
-  real_T primary_axis[3];
-  real_T Iv[9];
-  real_T Ip[9];
-  real_T t_indi;
-  real_T t_rotor_sensor;
-  real_T failure_id;
-  real_T failure_time;
-  real_T signr;
-  struct_Kb4703fKot5WPhaNoNlej position;
-  struct_7LbCBzsZMvrHROoJfHBYLD altitude;
-  struct_0fFeTh16K9OlBqn6rz4Bo YRC;
-} struct_AHd68odqz51NWDIFKWnLKG;
-
-#endif
-
-#ifndef DEFINED_TYPEDEF_FOR_struct_g6G4AwCmdDExRpkzK5b0BC_
-#define DEFINED_TYPEDEF_FOR_struct_g6G4AwCmdDExRpkzK5b0BC_
+#ifndef DEFINED_TYPEDEF_FOR_struct_TEZHtGDjEJ6R0zMQ5DegwD_
+#define DEFINED_TYPEDEF_FOR_struct_TEZHtGDjEJ6R0zMQ5DegwD_
 
 typedef struct {
   real_T freq;
   real_T w_max;
   real_T w_min;
   struct_KZWRH8wmRo8gScyf5zlwCH px4;
-  real_T g;
-  real_T wRotorMax;
-  real_T wRotorMin;
-  real_T mass;
-  real_T fail_id;
-  real_T fail_time;
-  struct_AHd68odqz51NWDIFKWnLKG sihao;
-} struct_g6G4AwCmdDExRpkzK5b0BC;
+} struct_TEZHtGDjEJ6R0zMQ5DegwD;
 
 #endif
 
@@ -158,30 +77,7 @@ typedef struct {
 
 #endif
 
-/* Custom Type definition for MATLAB Function: '<Root>/MATLAB Function3' */
-#ifndef struct_tag_skA4KFEZ4HPkJJBOYCrevdH
-#define struct_tag_skA4KFEZ4HPkJJBOYCrevdH
-
-struct tag_skA4KFEZ4HPkJJBOYCrevdH
-{
-  uint32_T SafeEq;
-  uint32_T Absolute;
-  uint32_T NaNBias;
-  uint32_T NaNWithFinite;
-  uint32_T FiniteWithNaN;
-  uint32_T NaNWithNaN;
-};
-
-#endif                                 /*struct_tag_skA4KFEZ4HPkJJBOYCrevdH*/
-
-#ifndef typedef_skA4KFEZ4HPkJJBOYCrevdH_RateC_T
-#define typedef_skA4KFEZ4HPkJJBOYCrevdH_RateC_T
-
-typedef struct tag_skA4KFEZ4HPkJJBOYCrevdH skA4KFEZ4HPkJJBOYCrevdH_RateC_T;
-
-#endif                                 /*typedef_skA4KFEZ4HPkJJBOYCrevdH_RateC_T*/
-
-/* Custom Type definition for MATLAB Function: '<S26>/RLS' */
+/* Custom Type definition for MATLAB Function: '<S20>/RLS' */
 #ifndef struct_tag_sEPE8EONqJdSolUZVF8Oh0B
 #define struct_tag_sEPE8EONqJdSolUZVF8Oh0B
 
@@ -200,7 +96,7 @@ struct tag_sEPE8EONqJdSolUZVF8Oh0B
 
 typedef struct tag_sEPE8EONqJdSolUZVF8Oh0B sEPE8EONqJdSolUZVF8Oh0B_RateC_T;
 
-#endif                                 /*typedef_sEPE8EONqJdSolUZVF8Oh0B_RateC_T*/
+#endif                               /*typedef_sEPE8EONqJdSolUZVF8Oh0B_RateC_T*/
 
 #ifndef typedef_c_controllib_internal_blocks__T
 #define typedef_c_controllib_internal_blocks__T
@@ -209,7 +105,7 @@ typedef struct {
   int32_T IteratorPosition;
 } c_controllib_internal_blocks__T;
 
-#endif                                 /*typedef_c_controllib_internal_blocks__T*/
+#endif                               /*typedef_c_controllib_internal_blocks__T*/
 
 #ifndef typedef_d_controllib_internal_blocks__T
 #define typedef_d_controllib_internal_blocks__T
@@ -218,9 +114,9 @@ typedef struct {
   c_controllib_internal_blocks__T DataIterator;
 } d_controllib_internal_blocks__T;
 
-#endif                                 /*typedef_d_controllib_internal_blocks__T*/
+#endif                               /*typedef_d_controllib_internal_blocks__T*/
 
-/* Custom Type definition for MATLAB Function: '<S29>/Correct' */
+/* Custom Type definition for MATLAB Function: '<S22>/Correct' */
 #ifndef struct_tag_sc0taXUn6bUe9k3lSTBWgPF
 #define struct_tag_sc0taXUn6bUe9k3lSTBWgPF
 
@@ -241,9 +137,9 @@ struct tag_sc0taXUn6bUe9k3lSTBWgPF
 
 typedef struct tag_sc0taXUn6bUe9k3lSTBWgPF sc0taXUn6bUe9k3lSTBWgPF_RateC_T;
 
-#endif                                 /*typedef_sc0taXUn6bUe9k3lSTBWgPF_RateC_T*/
+#endif                               /*typedef_sc0taXUn6bUe9k3lSTBWgPF_RateC_T*/
 
-/* Custom Type definition for MATLAB Function: '<S31>/Predict' */
+/* Custom Type definition for MATLAB Function: '<S24>/Predict' */
 #ifndef struct_tag_s6xKq7xzjZzTxvq5tyTbKxD
 #define struct_tag_s6xKq7xzjZzTxvq5tyTbKxD
 
@@ -264,28 +160,7 @@ struct tag_s6xKq7xzjZzTxvq5tyTbKxD
 
 typedef struct tag_s6xKq7xzjZzTxvq5tyTbKxD s6xKq7xzjZzTxvq5tyTbKxD_RateC_T;
 
-#endif                                 /*typedef_s6xKq7xzjZzTxvq5tyTbKxD_RateC_T*/
-
-/* Custom Type definition for MATLAB Function: '<Root>/MATLAB Function3' */
-#ifndef struct_tag_sJCxfmxS8gBOONUZjbjUd9E
-#define struct_tag_sJCxfmxS8gBOONUZjbjUd9E
-
-struct tag_sJCxfmxS8gBOONUZjbjUd9E
-{
-  boolean_T CaseSensitivity;
-  boolean_T StructExpand;
-  char_T PartialMatching[6];
-  boolean_T IgnoreNulls;
-};
-
-#endif                                 /*struct_tag_sJCxfmxS8gBOONUZjbjUd9E*/
-
-#ifndef typedef_sJCxfmxS8gBOONUZjbjUd9E_RateC_T
-#define typedef_sJCxfmxS8gBOONUZjbjUd9E_RateC_T
-
-typedef struct tag_sJCxfmxS8gBOONUZjbjUd9E sJCxfmxS8gBOONUZjbjUd9E_RateC_T;
-
-#endif                                 /*typedef_sJCxfmxS8gBOONUZjbjUd9E_RateC_T*/
+#endif                               /*typedef_s6xKq7xzjZzTxvq5tyTbKxD_RateC_T*/
 
 /* Forward declaration for rtModel */
 typedef struct tag_RTM_RateControl_T RT_MODEL_RateControl_T;

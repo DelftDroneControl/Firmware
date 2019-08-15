@@ -7,9 +7,9 @@
  *
  * Code generation for model "LoeDetector".
  *
- * Model version              : 1.32
+ * Model version              : 1.58
  * Simulink Coder version : 9.1 (R2019a) 23-Nov-2018
- * C++ source code generated on : Wed Jul 31 16:56:19 2019
+ * C++ source code generated on : Tue Aug 13 23:46:57 2019
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -49,8 +49,12 @@
 /* Block states (default storage) for system '<Root>' */
 typedef struct {
   LoeDetectorPkg_LoeDetector_Lo_T loeDetector;/* '<Root>/LoeDetector' */
+  LoeDetectorPkg_LandDetector_L_T landDetector;/* '<Root>/LoeDetector' */
   real_T fail_id;                      /* '<Root>/LoeDetector' */
+  BlocksPkg_ChangeDetector_LoeD_T changeDetector;/* '<Root>/LoeDetector' */
+  boolean_T landDetector_not_empty;    /* '<Root>/LoeDetector' */
   boolean_T loeDetector_not_empty;     /* '<Root>/LoeDetector' */
+  boolean_T changeDetector_not_empty;  /* '<Root>/LoeDetector' */
 } DW_LoeDetector_T;
 
 /* Constant parameters (default storage) */
@@ -71,6 +75,11 @@ typedef struct {
 /* External outputs (root outports fed by signals with default storage) */
 typedef struct {
   int32_T fail_id;                     /* '<Root>/fail_id' */
+  boolean_T fail_id_changed;           /* '<Root>/fail_id_changed' */
+  real_T scaling_factor_mean[4];       /* '<Root>/scaling_factor_mean' */
+  real_T scaling_factor_cov[4];        /* '<Root>/scaling_factor_cov' */
+  real_T fail_P[4];                    /* '<Root>/fail_P' */
+  boolean_T landed;                    /* '<Root>/landed' */
 } ExtY_LoeDetector_T;
 
 /* Real-time Model Data Structure */

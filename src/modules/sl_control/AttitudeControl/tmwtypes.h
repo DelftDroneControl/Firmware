@@ -796,8 +796,11 @@ typedef size_t    mwIndex;        /* unsigned pointer-width integer */
 typedef ptrdiff_t mwSignedIndex;  /* a signed pointer-width integer */
 #endif
 
+#ifndef _SLSIZE_
+#define _SLSIZE_
 typedef int SLIndex;
 typedef int SLSize;
+#endif
 
 #if (defined(_LP64) || defined(_WIN64)) && !defined(MX_COMPAT_32)
 /* Currently 2^48 based on hardware limitations */

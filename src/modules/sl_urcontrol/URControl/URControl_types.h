@@ -7,9 +7,9 @@
  *
  * Code generation for model "URControl".
  *
- * Model version              : 1.873
+ * Model version              : 1.897
  * Simulink Coder version : 9.1 (R2019a) 23-Nov-2018
- * C++ source code generated on : Wed Jul 31 16:55:41 2019
+ * C++ source code generated on : Tue Aug 13 23:46:37 2019
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -27,17 +27,25 @@
 
 typedef struct {
   real_T pos[3];
+  real_T posRaw[3];
   real_T vel[3];
+  real_T att[3];
+  real_T attRaw[3];
   real_T acc[3];
+  real_T accRaw[3];
   real_T n[3];
+  real_T omega[3];
+  real_T omegaf[3];
   real_T omegaUV[3];
   real_T omegafUV[3];
+  real_T wRotor[4];
   real_T FMax[4];
   real_T FMin[4];
   real_T uvDot_max[2];
   real_T uvDot_min[2];
   real_T uv_max[2];
   real_T uv_min[2];
+  real_T posTarget[3];
   real_T velTarget[3];
   real_T a_ref[3];
   real_T n_des[3];
@@ -45,6 +53,8 @@ typedef struct {
   real_T r_cmd;
   real_T uv_prec[2];
   real_T precAngle[2];
+  real_T h_uv[3];
+  real_T n_uv[3];
   real_T pqr_des[3];
   real_T uvr_des[3];
   real_T uv_des_raw[2];
@@ -65,6 +75,7 @@ typedef struct {
   real_T dM[3];
   real_T inp[4];
   real_T dw_lin[4];
+  real_T inpActual[4];
 } daqBus;
 
 #endif
@@ -90,6 +101,7 @@ typedef struct {
   real_T FMax[4];
   real_T FMin[4];
   real_T fail_id;
+  real_T fail_id_quick;
   real_T uvDot_max[2];
   real_T uvDot_min[2];
   real_T uv_max[2];
@@ -186,6 +198,7 @@ typedef struct {
   real_T YRCFail_yawRateTarget;
   real_T YRCFail_nLim1;
   real_T YRCFail_nLim2;
+  real_T attitude_mode;
   real_T attitude_primary_axis[3];
   real_T attitude_yrcComp;
   real_T attitude_rotKp;
@@ -198,6 +211,7 @@ typedef struct {
   real_T attitude_enableTraj;
   real_T attitude_rotSpeedComp;
   real_T attitude_trajThreshold;
+  real_T attitude_mode3Lim;
   real_T envp_enable;
   real_T envp_mode;
   real_T envp_wMax;
@@ -249,7 +263,19 @@ typedef struct {
   real_T throw_mode;
   real_T throw_falltime;
   real_T throw_threshold;
+  real_T fail_altProt;
+  real_T fail_altThresh;
 } URControlParamsType;
+
+#endif
+
+#ifndef DEFINED_TYPEDEF_FOR_struct_KZWRH8wmRo8gScyf5zlwCH_
+#define DEFINED_TYPEDEF_FOR_struct_KZWRH8wmRo8gScyf5zlwCH_
+
+typedef struct {
+  real_T w_max;
+  real_T w_min;
+} struct_KZWRH8wmRo8gScyf5zlwCH;
 
 #endif
 
@@ -297,14 +323,14 @@ typedef struct {
 
 #endif
 
-#ifndef DEFINED_TYPEDEF_FOR_struct_AHd68odqz51NWDIFKWnLKG_
-#define DEFINED_TYPEDEF_FOR_struct_AHd68odqz51NWDIFKWnLKG_
+#ifndef DEFINED_TYPEDEF_FOR_struct_lp0K6fsjMS8bWKXP4A0gFC_
+#define DEFINED_TYPEDEF_FOR_struct_lp0K6fsjMS8bWKXP4A0gFC_
 
 typedef struct {
+  real_T t_indi;
   real_T primary_axis[3];
   real_T Iv[9];
   real_T Ip[9];
-  real_T t_indi;
   real_T t_rotor_sensor;
   real_T failure_id;
   real_T failure_time;
@@ -312,37 +338,27 @@ typedef struct {
   struct_Kb4703fKot5WPhaNoNlej position;
   struct_7LbCBzsZMvrHROoJfHBYLD altitude;
   struct_0fFeTh16K9OlBqn6rz4Bo YRC;
-} struct_AHd68odqz51NWDIFKWnLKG;
+} struct_lp0K6fsjMS8bWKXP4A0gFC;
 
 #endif
 
-#ifndef DEFINED_TYPEDEF_FOR_struct_KZWRH8wmRo8gScyf5zlwCH_
-#define DEFINED_TYPEDEF_FOR_struct_KZWRH8wmRo8gScyf5zlwCH_
-
-typedef struct {
-  real_T w_max;
-  real_T w_min;
-} struct_KZWRH8wmRo8gScyf5zlwCH;
-
-#endif
-
-#ifndef DEFINED_TYPEDEF_FOR_struct_dgMNxGftVPGZGI2uTXhtAF_
-#define DEFINED_TYPEDEF_FOR_struct_dgMNxGftVPGZGI2uTXhtAF_
+#ifndef DEFINED_TYPEDEF_FOR_struct_qSGzN42JHiR9ghZIF0bJQG_
+#define DEFINED_TYPEDEF_FOR_struct_qSGzN42JHiR9ghZIF0bJQG_
 
 typedef struct {
   real_T freq;
+  real_T w_max;
+  real_T w_min;
+  struct_KZWRH8wmRo8gScyf5zlwCH px4;
+  struct_lp0K6fsjMS8bWKXP4A0gFC sihao;
   real_T g;
   real_T wRotorMax;
   real_T wRotorMin;
-  real_T w_max;
-  real_T w_min;
   real_T mass;
   real_T fail_id;
   real_T fail_time;
-  struct_AHd68odqz51NWDIFKWnLKG sihao;
   URControlParamsType URC;
-  struct_KZWRH8wmRo8gScyf5zlwCH px4;
-} struct_dgMNxGftVPGZGI2uTXhtAF;
+} struct_qSGzN42JHiR9ghZIF0bJQG;
 
 #endif
 

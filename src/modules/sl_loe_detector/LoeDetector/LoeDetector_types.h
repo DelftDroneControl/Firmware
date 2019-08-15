@@ -7,9 +7,9 @@
  *
  * Code generation for model "LoeDetector".
  *
- * Model version              : 1.32
+ * Model version              : 1.58
  * Simulink Coder version : 9.1 (R2019a) 23-Nov-2018
- * C++ source code generated on : Wed Jul 31 16:56:19 2019
+ * C++ source code generated on : Tue Aug 13 23:46:57 2019
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -46,6 +46,16 @@ typedef struct {
 #endif
 
 /* Custom Type definition for MATLAB Function: '<Root>/LoeDetector' */
+#ifndef typedef_LoeDetectorPkg_LandDetector_L_T
+#define typedef_LoeDetectorPkg_LandDetector_L_T
+
+typedef struct {
+  boolean_T landed;
+  real_T w_threshold;
+} LoeDetectorPkg_LandDetector_L_T;
+
+#endif                               /*typedef_LoeDetectorPkg_LandDetector_L_T*/
+
 #ifndef typedef_BlocksPkg_Derivative_LoeDetec_T
 #define typedef_BlocksPkg_Derivative_LoeDetec_T
 
@@ -56,6 +66,15 @@ typedef struct {
 } BlocksPkg_Derivative_LoeDetec_T;
 
 #endif                               /*typedef_BlocksPkg_Derivative_LoeDetec_T*/
+
+#ifndef typedef_BlocksPkg_ChangeDetector_LoeD_T
+#define typedef_BlocksPkg_ChangeDetector_LoeD_T
+
+typedef struct {
+  int32_T prev_value;
+} BlocksPkg_ChangeDetector_LoeD_T;
+
+#endif                               /*typedef_BlocksPkg_ChangeDetector_LoeD_T*/
 
 #ifndef typedef_BlocksPkg_SecondOrderFilter_L_T
 #define typedef_BlocksPkg_SecondOrderFilter_L_T
@@ -109,6 +128,7 @@ typedef struct {
   BlocksPkg_SecondOrderFilter_2_T FilterActuatorMeas;
   BlocksPkg_Derivative_LoeDetec_T DerivRates;
   BlocksPkg_KalmanEstimator_Loe_T Kalman;
+  LoeDetectorPkg_LandDetector_L_T LandDetector;
   real_T control_eff[3];
   LoeDetectorParamsType fail_diagnosis_params;
 } LoeDetectorPkg_LoeDetector_Lo_T;

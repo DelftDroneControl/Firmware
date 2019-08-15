@@ -7,19 +7,20 @@
  *
  * Code generation for model "AttitudeControl".
  *
- * Model version              : 1.234
- * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C++ source code generated on : Fri Feb 22 16:16:41 2019
+ * Model version              : 1.235
+ * Simulink Coder version : 9.1 (R2019a) 23-Nov-2018
+ * C++ source code generated on : Tue Aug 13 23:44:48 2019
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
- * Embedded hardware selection: Intel->x86-64 (Windows64)
+ * Embedded hardware selection: Custom
  * Code generation objectives: Unspecified
  * Validation result: Not run
  */
 
 #include "AttitudeControl.h"
 #include "AttitudeControl_private.h"
+#include "mrdivide_helper_uljIr725.h"
 
 /* Exported block parameters */
 AttitudeControlParamsType AttitudeControlParams = {
@@ -28,7 +29,7 @@ AttitudeControlParamsType AttitudeControlParams = {
   15.0F,
   1.0F,
   2.0F,
-  1.0F,
+  2.0F,
   5.0F
 } ;                                    /* Variable: AttitudeControlParams
                                         * Referenced by:
@@ -40,126 +41,6 @@ AttitudeControlParamsType AttitudeControlParams = {
                                         *   '<Root>/Vel_z'
                                         */
 
-/* Function for MATLAB Function: '<S18>/Correct' */
-void AttitudeControlModelClass::AttitudeControl_mrdivide_helper(real32_T A[54],
-  const real32_T B[36])
-{
-  real32_T b_A[36];
-  int8_T ipiv[6];
-  int32_T j;
-  int32_T ix;
-  real32_T smax;
-  real32_T s;
-  int32_T iy;
-  int32_T c_ix;
-  int32_T d;
-  int32_T ijA;
-  int32_T jBcol;
-  int32_T kBcol;
-  memcpy(&b_A[0], &B[0], 36U * sizeof(real32_T));
-  for (d = 0; d < 6; d++) {
-    ipiv[d] = (int8_T)(1 + d);
-  }
-
-  for (j = 0; j < 5; j++) {
-    jBcol = j * 7;
-    iy = 0;
-    ix = jBcol;
-    smax = std::abs(b_A[jBcol]);
-    for (kBcol = 2; kBcol <= 6 - j; kBcol++) {
-      ix++;
-      s = std::abs(b_A[ix]);
-      if (s > smax) {
-        iy = kBcol - 1;
-        smax = s;
-      }
-    }
-
-    if (b_A[jBcol + iy] != 0.0F) {
-      if (iy != 0) {
-        iy += j;
-        ipiv[j] = (int8_T)(iy + 1);
-        ix = j;
-        for (kBcol = 0; kBcol < 6; kBcol++) {
-          smax = b_A[ix];
-          b_A[ix] = b_A[iy];
-          b_A[iy] = smax;
-          ix += 6;
-          iy += 6;
-        }
-      }
-
-      iy = (jBcol - j) + 6;
-      for (ix = jBcol + 1; ix < iy; ix++) {
-        b_A[ix] /= b_A[jBcol];
-      }
-    }
-
-    iy = jBcol;
-    ix = jBcol + 6;
-    for (kBcol = 0; kBcol <= 4 - j; kBcol++) {
-      if (b_A[ix] != 0.0F) {
-        smax = -b_A[ix];
-        c_ix = jBcol + 1;
-        d = (iy - j) + 12;
-        for (ijA = 7 + iy; ijA < d; ijA++) {
-          b_A[ijA] += b_A[c_ix] * smax;
-          c_ix++;
-        }
-      }
-
-      ix += 6;
-      iy += 6;
-    }
-  }
-
-  for (j = 0; j < 6; j++) {
-    jBcol = 9 * j;
-    iy = 6 * j;
-    for (ix = 0; ix < j; ix++) {
-      kBcol = 9 * ix;
-      smax = b_A[ix + iy];
-      if (smax != 0.0F) {
-        for (c_ix = 0; c_ix < 9; c_ix++) {
-          d = c_ix + jBcol;
-          A[d] -= smax * A[c_ix + kBcol];
-        }
-      }
-    }
-
-    smax = 1.0F / b_A[j + iy];
-    for (iy = 0; iy < 9; iy++) {
-      d = iy + jBcol;
-      A[d] *= smax;
-    }
-  }
-
-  for (j = 5; j >= 0; j--) {
-    jBcol = 9 * j;
-    iy = 6 * j - 1;
-    for (ix = j + 2; ix < 7; ix++) {
-      kBcol = (ix - 1) * 9;
-      smax = b_A[ix + iy];
-      if (smax != 0.0F) {
-        for (c_ix = 0; c_ix < 9; c_ix++) {
-          A[c_ix + jBcol] -= smax * A[c_ix + kBcol];
-        }
-      }
-    }
-  }
-
-  for (j = 4; j >= 0; j--) {
-    if (j + 1 != ipiv[j]) {
-      jBcol = ipiv[j] - 1;
-      for (iy = 0; iy < 9; iy++) {
-        smax = A[9 * j + iy];
-        A[iy + 9 * j] = A[9 * jBcol + iy];
-        A[iy + 9 * jBcol] = smax;
-      }
-    }
-  }
-}
-
 /* Model step function */
 void AttitudeControlModelClass::step()
 {
@@ -169,8 +50,8 @@ void AttitudeControlModelClass::step()
   real32_T R_BI[9];
   real32_T A[4];
   real32_T B[2];
-  real32_T dHdx[54];
   real_T zEstimated[6];
+  real32_T dHdx[54];
   real32_T dPos[3];
   real32_T gain[54];
   static const int8_T b[9] = { 0, 0, 0, 0, 0, 0, 1, 0, 0 };
@@ -203,8 +84,9 @@ void AttitudeControlModelClass::step()
   real32_T gain_0[81];
   real32_T tmp_0[81];
   real32_T rtb_VectorConcatenate2_0[6];
-  int32_T i_0;
   real32_T rtb_att_out_idx_2;
+  real32_T u0;
+  real32_T R_BI_0;
   real_T tmp_1;
   real32_T dHdx_tmp;
   real32_T dHdx_tmp_0;
@@ -219,21 +101,22 @@ void AttitudeControlModelClass::step()
   real32_T dHdx_tmp_9;
   real32_T dHdx_tmp_a;
   real32_T dHdx_tmp_b;
+  real32_T dHdx_tmp_c;
+  real32_T dHdx_tmp_d;
+  real32_T dHdx_tmp_e;
   int32_T gain_tmp;
-  real32_T R_BI_tmp;
   real32_T Jacobian_tmp;
   real32_T Jacobian_tmp_0;
-  real32_T Jacobian_tmp_1;
-  real32_T Jacobian_tmp_2;
+  int32_T P_tmp;
 
-  /* SignalConversion: '<S4>/ConcatBufferAtVector Concatenate2In1' incorporates:
+  /* SignalConversion: '<S2>/ConcatBufferAtVector Concatenate2In1' incorporates:
    *  Inport: '<Root>/pos'
    */
   rtb_VectorConcatenate2[0] = AttitudeControl_U.pos[0];
   rtb_VectorConcatenate2[1] = AttitudeControl_U.pos[1];
   rtb_VectorConcatenate2[2] = AttitudeControl_U.pos[2];
 
-  /* MATLAB Function: '<S4>/unwrap2pi' incorporates:
+  /* MATLAB Function: '<S2>/unwrap2pi' incorporates:
    *  Inport: '<Root>/att'
    */
   /* :  psi0 = att(3); */
@@ -263,21 +146,21 @@ void AttitudeControlModelClass::step()
 
   /* :  att_out = att; */
   /* :  att_out(3) = psi0 + 2*N*pi; */
-  rtb_att_out_idx_2 = (real32_T)(2.0 * AttitudeControl_DW.N * 3.1415926535897931)
-    + AttitudeControl_U.att[2];
+  rtb_att_out_idx_2 = static_cast<real32_T>((2.0 * AttitudeControl_DW.N *
+    3.1415926535897931)) + AttitudeControl_U.att[2];
 
-  /* MATLAB Function: '<S4>/MATLAB Function' incorporates:
+  /* MATLAB Function: '<S2>/MATLAB Function' incorporates:
    *  Inport: '<Root>/att'
    *  Inport: '<Root>/rates'
-   *  MATLAB Function: '<S4>/unwrap2pi'
-   *  Sum: '<S14>/Diff'
-   *  UnitDelay: '<S14>/UD'
+   *  MATLAB Function: '<S2>/unwrap2pi'
+   *  Sum: '<S6>/Diff'
+   *  UnitDelay: '<S6>/UD'
    */
   /* :  if isempty(psi_last) */
-  if (!AttitudeControl_DW.psi_last_not_empty_g) {
+  if (!AttitudeControl_DW.psi_last_not_empty_n) {
     /* :  psi_last = att(3); */
-    AttitudeControl_DW.psi_last_j = rtb_att_out_idx_2;
-    AttitudeControl_DW.psi_last_not_empty_g = true;
+    AttitudeControl_DW.psi_last_l = rtb_att_out_idx_2;
+    AttitudeControl_DW.psi_last_not_empty_n = true;
   }
 
   /* :  tol_max = 2; */
@@ -287,12 +170,12 @@ void AttitudeControlModelClass::step()
   /* :  if abs(psi_diff) < tol */
   if (std::abs(rtb_att_out_idx_2 - AttitudeControl_DW.UD_DSTATE) < 0.001) {
     /* :  psi = psi_last + r * dt; */
-    psi = AttitudeControl_U.rates[2] * 0.002F + AttitudeControl_DW.psi_last_j;
-  } else if (std::abs(AttitudeControl_DW.psi_last_j - rtb_att_out_idx_2) > 2.0F)
+    psi = AttitudeControl_U.rates[2] * 0.002F + AttitudeControl_DW.psi_last_l;
+  } else if (std::abs(AttitudeControl_DW.psi_last_l - rtb_att_out_idx_2) > 2.0F)
   {
     /* :  elseif abs(psi_last - att(3)) > tol_max */
     /* :  psi = psi_last + r * dt; */
-    psi = AttitudeControl_U.rates[2] * 0.002F + AttitudeControl_DW.psi_last_j;
+    psi = AttitudeControl_U.rates[2] * 0.002F + AttitudeControl_DW.psi_last_l;
   } else {
     /* :  else */
     /* :  psi = att(3); */
@@ -300,7 +183,7 @@ void AttitudeControlModelClass::step()
   }
 
   /* :  psi_last = psi; */
-  AttitudeControl_DW.psi_last_j = psi;
+  AttitudeControl_DW.psi_last_l = psi;
 
   /* :  att_smooth = att; */
   rtb_VectorConcatenate2[3] = AttitudeControl_U.att[0];
@@ -309,15 +192,15 @@ void AttitudeControlModelClass::step()
   /* :  att_smooth(3) = psi; */
   rtb_VectorConcatenate2[5] = psi;
 
-  /* End of MATLAB Function: '<S4>/MATLAB Function' */
+  /* End of MATLAB Function: '<S2>/MATLAB Function' */
 
-  /* Outputs for Enabled SubSystem: '<S15>/Correct1' incorporates:
-   *  EnablePort: '<S18>/Enable'
+  /* Outputs for Enabled SubSystem: '<S7>/Correct1' incorporates:
+   *  EnablePort: '<S10>/Enable'
    */
-  /* MATLAB Function: '<S18>/Correct' incorporates:
-   *  Constant: '<S15>/R1'
-   *  DataStoreRead: '<S18>/Data Store ReadP'
-   *  DataStoreRead: '<S18>/Data Store ReadX'
+  /* MATLAB Function: '<S10>/Correct' incorporates:
+   *  Constant: '<S7>/R1'
+   *  DataStoreRead: '<S10>/Data Store ReadP'
+   *  DataStoreRead: '<S10>/Data Store ReadX'
    */
   /* :  if pM.IsSimulinkFcn */
   /* :  else */
@@ -327,9 +210,10 @@ void AttitudeControlModelClass::step()
   /* :  switch pM.NumberOfExtraArgumentInports */
   /* :  case 1 */
   /* :  extraArgs = {uMeas}; */
-  /* :  xNew = zeros(size(x),'like',x); */
   /* :  if pM.HasAdditiveNoise */
-  /* :  [xNew,P] = matlabshared.tracking.internal.EKFCorrectorAdditive.correct(... */
+  /* :  ekfCorrector = matlabshared.tracking.internal.EKFCorrectorAdditive(); */
+  /* :  xNew = zeros(size(x),'like',x); */
+  /* :  [xNew,P] = ekfCorrector.correct(... */
   /* :          yMeas,R,x,P,MeasurementFcnH,MeasurementJacobianFcnH,extraArgs{:}); */
   /* 'EKF_att_pos_mea_Jacobian:3' phi = x(7); */
   /* 'EKF_att_pos_mea_Jacobian:4' theta = x(8); */
@@ -359,37 +243,38 @@ void AttitudeControlModelClass::step()
   dHdx_tmp_6 = dHdx_tmp * dHdx_tmp_0;
   dHdx_tmp_7 = dHdx_tmp_1 * dHdx_tmp_2;
   dHdx_tmp_8 = dHdx_tmp_2 * dHdx_tmp_0;
-  dHdx_tmp_9 = (dHdx_tmp_4 * dHdx_tmp_3 + dHdx_tmp_8) * 0.0F;
-  dHdx_tmp_a = (dHdx_tmp_6 - dHdx_tmp_7 * dHdx_tmp_3) * 0.0F;
-  dHdx[36] = dHdx_tmp_9 + dHdx_tmp_a;
+  dHdx_tmp_b = (dHdx_tmp_4 * dHdx_tmp_3 + dHdx_tmp_8) * 0.0F;
+  dHdx_tmp_c = (dHdx_tmp_6 - dHdx_tmp_7 * dHdx_tmp_3) * 0.0F;
+  dHdx[36] = dHdx_tmp_b + dHdx_tmp_c;
   dHdx_tmp_5 = std::cos(AttitudeControl_DW.x[7]);
-  psi = dHdx_tmp_1 * dHdx_tmp_5;
-  dHdx_tmp_b = dHdx_tmp_1 * dHdx_tmp_3;
-  dHdx[42] = (dHdx_tmp_4 * dHdx_tmp_5 * 0.0F - dHdx_tmp_b * 0.01F) + psi *
+  dHdx_tmp_d = dHdx_tmp_1 * dHdx_tmp_5;
+  dHdx_tmp_1 *= dHdx_tmp_3;
+  dHdx[42] = (dHdx_tmp_4 * dHdx_tmp_5 * 0.0F - dHdx_tmp_1 * 0.01F) + dHdx_tmp_d *
     dHdx_tmp_2 * 0.0F;
-  dHdx_tmp_6 = dHdx_tmp_7 - dHdx_tmp_6 * dHdx_tmp_3;
-  dHdx_tmp_4 = (dHdx_tmp_8 * dHdx_tmp_3 + dHdx_tmp_4) * 0.0F;
-  dHdx[48] = (dHdx_tmp_6 * 0.0F - dHdx_tmp_4) - dHdx_tmp_5 * dHdx_tmp_0 * 0.01F;
+  dHdx_tmp_9 = dHdx_tmp_7 - dHdx_tmp_6 * dHdx_tmp_3;
+  dHdx_tmp_a = (dHdx_tmp_8 * dHdx_tmp_3 + dHdx_tmp_4) * 0.0F;
+  dHdx_tmp_e = dHdx_tmp_5 * dHdx_tmp_0;
+  dHdx[48] = (dHdx_tmp_9 * 0.0F - dHdx_tmp_a) - dHdx_tmp_e * 0.01F;
   dHdx[1] = 0.0F;
   dHdx[7] = 1.0F;
   dHdx[13] = 0.0F;
   dHdx[19] = 0.0F;
   dHdx[25] = 0.0F;
   dHdx[31] = 0.0F;
-  dHdx[37] = dHdx_tmp_6 * -0.0F - dHdx_tmp_4;
-  dHdx_tmp_4 = dHdx_tmp * dHdx_tmp_5;
-  dHdx_tmp_6 = dHdx_tmp_5 * dHdx_tmp_2;
-  dHdx_tmp_8 = dHdx_tmp_0 * dHdx_tmp_3;
-  dHdx[43] = (dHdx_tmp_4 * dHdx_tmp_0 * 0.0F - dHdx_tmp_8 * 0.01F) + dHdx_tmp_6 *
+  dHdx[37] = dHdx_tmp_9 * -0.0F - dHdx_tmp_a;
+  dHdx_tmp_9 = dHdx_tmp * dHdx_tmp_5;
+  dHdx_tmp_a = dHdx_tmp_5 * dHdx_tmp_2;
+  psi = dHdx_tmp_0 * dHdx_tmp_3;
+  dHdx[43] = (dHdx_tmp_9 * dHdx_tmp_0 * 0.0F - psi * 0.01F) + dHdx_tmp_a *
     dHdx_tmp_0 * 0.0F;
-  dHdx[49] = (dHdx_tmp_9 - dHdx_tmp_a) + psi * 0.01F;
+  dHdx[49] = (dHdx_tmp_b - dHdx_tmp_c) + dHdx_tmp_d * 0.01F;
   dHdx[2] = 0.0F;
   dHdx[8] = 0.0F;
   dHdx[14] = 1.0F;
   dHdx[20] = 0.0F;
   dHdx[26] = 0.0F;
   dHdx[32] = 0.0F;
-  dHdx[38] = dHdx_tmp_4 * 0.0F - dHdx_tmp_6 * 0.0F;
+  dHdx[38] = dHdx_tmp_9 * 0.0F - dHdx_tmp_a * 0.0F;
   dHdx[44] = (-dHdx_tmp_5 * 0.01F - dHdx_tmp * dHdx_tmp_3 * 0.0F) - dHdx_tmp_2 *
     dHdx_tmp_3 * 0.0F;
   dHdx[50] = 0.0F;
@@ -413,15 +298,15 @@ void AttitudeControlModelClass::step()
   /* 'EKF_att_pos_mea:18'     sin(psi)*cos(theta) ,sin(psi)*sin(theta)*sin(phi)+cos(psi)*cos(phi), sin(psi)*sin(theta)*cos(phi)-cos(psi)*sin(phi); */
   /* 'EKF_att_pos_mea:19'     -sin(theta)          , cos(theta)*sin(phi)                          , cos(theta)*cos(phi)                          ]; */
   /* 'EKF_att_pos_mea:21' dPos = R_IB*[dx;dy;dz]; */
-  tmp[0] = psi;
-  tmp[3] = dHdx_tmp_b * dHdx_tmp_2 - dHdx_tmp_0 * dHdx_tmp;
-  tmp[6] = dHdx_tmp_b * dHdx_tmp + dHdx_tmp_0 * dHdx_tmp_2;
-  tmp[1] = dHdx_tmp_0 * dHdx_tmp_5;
-  tmp[4] = dHdx_tmp_8 * dHdx_tmp_2 + dHdx_tmp_1 * dHdx_tmp;
-  tmp[7] = dHdx_tmp_8 * dHdx_tmp - dHdx_tmp_7;
+  tmp[0] = dHdx_tmp_d;
+  tmp[3] = dHdx_tmp_1 * dHdx_tmp_2 - dHdx_tmp_6;
+  tmp[6] = dHdx_tmp_1 * dHdx_tmp + dHdx_tmp_8;
+  tmp[1] = dHdx_tmp_e;
+  tmp[4] = psi * dHdx_tmp_2 + dHdx_tmp_4;
+  tmp[7] = psi * dHdx_tmp - dHdx_tmp_7;
   tmp[2] = -dHdx_tmp_3;
-  tmp[5] = dHdx_tmp_6;
-  tmp[8] = dHdx_tmp_5 * dHdx_tmp;
+  tmp[5] = dHdx_tmp_a;
+  tmp[8] = dHdx_tmp_9;
   for (idxStart = 0; idxStart < 3; idxStart++) {
     dPos[idxStart] = tmp[idxStart + 6] * 0.0F + (tmp[idxStart + 3] * 0.0F +
       tmp[idxStart] * 0.01F);
@@ -445,114 +330,114 @@ void AttitudeControlModelClass::step()
   /* 'EKF_att_pos_mea:28' y(6) = psi; */
   zEstimated[5] = AttitudeControl_DW.x[8];
   for (idxStart = 0; idxStart < 9; idxStart++) {
-    for (i_0 = 0; i_0 < 6; i_0++) {
-      gain_tmp = idxStart + 9 * i_0;
+    for (P_tmp = 0; P_tmp < 6; P_tmp++) {
+      gain_tmp = idxStart + 9 * P_tmp;
       gain[gain_tmp] = 0.0F;
       for (i = 0; i < 9; i++) {
-        gain[gain_tmp] = AttitudeControl_DW.P[9 * i + idxStart] * dHdx[6 * i +
-          i_0] + gain[9 * i_0 + idxStart];
+        gain[gain_tmp] += AttitudeControl_DW.P[9 * i + idxStart] * dHdx[6 * i +
+          P_tmp];
       }
     }
   }
 
   for (idxStart = 0; idxStart < 6; idxStart++) {
-    for (i_0 = 0; i_0 < 9; i_0++) {
-      gain_tmp = idxStart + 6 * i_0;
+    for (P_tmp = 0; P_tmp < 9; P_tmp++) {
+      gain_tmp = idxStart + 6 * P_tmp;
       dHdx_1[gain_tmp] = 0.0F;
       for (i = 0; i < 9; i++) {
-        dHdx_1[gain_tmp] = dHdx[6 * i + idxStart] * AttitudeControl_DW.P[9 * i_0
-          + i] + dHdx_1[6 * i_0 + idxStart];
+        dHdx_1[gain_tmp] += dHdx[6 * i + idxStart] * AttitudeControl_DW.P[9 *
+          P_tmp + i];
       }
     }
 
-    for (i_0 = 0; i_0 < 6; i_0++) {
+    for (P_tmp = 0; P_tmp < 6; P_tmp++) {
       dHdx_tmp = 0.0F;
       for (i = 0; i < 9; i++) {
-        dHdx_tmp += dHdx_1[6 * i + idxStart] * dHdx[6 * i + i_0];
+        dHdx_tmp += dHdx_1[6 * i + idxStart] * dHdx[6 * i + P_tmp];
       }
 
-      dHdx_0[idxStart + 6 * i_0] = AttitudeControl_ConstP.R1_Value[6 * i_0 +
-        idxStart] + dHdx_tmp;
+      gain_tmp = 6 * P_tmp + idxStart;
+      dHdx_0[gain_tmp] = rtCP_R1_Value[gain_tmp] + dHdx_tmp;
     }
   }
 
-  AttitudeControl_mrdivide_helper(gain, dHdx_0);
+  mrdivide_helper_uljIr725(gain, dHdx_0);
   for (idxStart = 0; idxStart < 9; idxStart++) {
-    for (i_0 = 0; i_0 < 9; i_0++) {
-      gain_tmp = idxStart + 9 * i_0;
+    for (P_tmp = 0; P_tmp < 9; P_tmp++) {
+      gain_tmp = idxStart + 9 * P_tmp;
       gain_0[gain_tmp] = 0.0F;
       for (i = 0; i < 6; i++) {
-        gain_0[gain_tmp] = gain[9 * i + idxStart] * dHdx[6 * i_0 + i] + gain_0[9
-          * i_0 + idxStart];
+        gain_0[gain_tmp] += gain[9 * i + idxStart] * dHdx[6 * P_tmp + i];
       }
     }
 
-    for (i_0 = 0; i_0 < 9; i_0++) {
+    for (P_tmp = 0; P_tmp < 9; P_tmp++) {
       dHdx_tmp = 0.0F;
       for (i = 0; i < 9; i++) {
-        dHdx_tmp += gain_0[9 * i + idxStart] * AttitudeControl_DW.P[9 * i_0 + i];
+        dHdx_tmp += gain_0[9 * i + idxStart] * AttitudeControl_DW.P[9 * P_tmp +
+          i];
       }
 
-      tmp_0[idxStart + 9 * i_0] = AttitudeControl_DW.P[9 * i_0 + idxStart] -
-        dHdx_tmp;
+      i = 9 * P_tmp + idxStart;
+      tmp_0[i] = AttitudeControl_DW.P[i] - dHdx_tmp;
     }
   }
 
-  /* DataStoreWrite: '<S18>/Data Store WriteP' */
+  /* DataStoreWrite: '<S10>/Data Store WriteP' */
   memcpy(&AttitudeControl_DW.P[0], &tmp_0[0], 81U * sizeof(real32_T));
 
-  /* MATLAB Function: '<S18>/Correct' */
+  /* MATLAB Function: '<S10>/Correct' */
   for (idxStart = 0; idxStart < 6; idxStart++) {
     rtb_VectorConcatenate2_0[idxStart] = rtb_VectorConcatenate2[idxStart] -
-      (real32_T)zEstimated[idxStart];
+      static_cast<real32_T>(zEstimated[idxStart]);
   }
 
-  /* DataStoreWrite: '<S18>/Data Store WriteX' incorporates:
-   *  DataStoreRead: '<S18>/Data Store ReadX'
-   *  MATLAB Function: '<S18>/Correct'
+  /* DataStoreWrite: '<S10>/Data Store WriteX' incorporates:
+   *  DataStoreRead: '<S10>/Data Store ReadX'
+   *  MATLAB Function: '<S10>/Correct'
    */
   for (idxStart = 0; idxStart < 9; idxStart++) {
     dHdx_tmp = 0.0F;
-    for (i_0 = 0; i_0 < 6; i_0++) {
-      dHdx_tmp += gain[9 * i_0 + idxStart] * rtb_VectorConcatenate2_0[i_0];
+    for (P_tmp = 0; P_tmp < 6; P_tmp++) {
+      dHdx_tmp += gain[9 * P_tmp + idxStart] * rtb_VectorConcatenate2_0[P_tmp];
     }
 
     AttitudeControl_DW.x[idxStart] += dHdx_tmp;
   }
 
-  /* End of DataStoreWrite: '<S18>/Data Store WriteX' */
-  /* End of Outputs for SubSystem: '<S15>/Correct1' */
+  /* End of DataStoreWrite: '<S10>/Data Store WriteX' */
+  /* End of Outputs for SubSystem: '<S7>/Correct1' */
 
-  /* Outputs for Atomic SubSystem: '<S15>/Output' */
+  /* Outputs for Atomic SubSystem: '<S7>/Output' */
   /* MATLAB Function: '<Root>/MATLAB Function1' incorporates:
-   *  DataStoreRead: '<S19>/Data Store Read'
+   *  DataStoreRead: '<S11>/Data Store Read'
    *  Gain: '<Root>/Pos_x'
    *  Inport: '<Root>/pos_sp'
    *  Sum: '<Root>/Sum1'
    *  Sum: '<Root>/Sum5'
    */
   /* :  accel_sp = single(AttitudeControlParams.vel_xy_p_gain.*vel_error); */
-  dHdx_tmp_b = (AttitudeControlParams.pos_xy_p_gain * (AttitudeControl_U.pos_sp
-    [0] - AttitudeControl_DW.x[0]) - AttitudeControl_DW.x[3]) *
+  u0 = (AttitudeControlParams.pos_xy_p_gain * (AttitudeControl_U.pos_sp[0] -
+         AttitudeControl_DW.x[0]) - AttitudeControl_DW.x[3]) *
     AttitudeControlParams.vel_xy_p_gain;
 
-  /* End of Outputs for SubSystem: '<S15>/Output' */
+  /* End of Outputs for SubSystem: '<S7>/Output' */
 
-  /* Saturate: '<S8>/Saturation' */
-  if (dHdx_tmp_b > 2.0F) {
-    /* Sum: '<S8>/Sum' */
+  /* Saturate: '<S5>/Saturation' */
+  if (u0 > 2.0F) {
+    /* Sum: '<S5>/Sum' */
     rtb_Sum[0] = 2.0F;
-  } else if (dHdx_tmp_b < -2.0F) {
-    /* Sum: '<S8>/Sum' */
+  } else if (u0 < -2.0F) {
+    /* Sum: '<S5>/Sum' */
     rtb_Sum[0] = -2.0F;
   } else {
-    /* Sum: '<S8>/Sum' */
-    rtb_Sum[0] = dHdx_tmp_b;
+    /* Sum: '<S5>/Sum' */
+    rtb_Sum[0] = u0;
   }
 
-  /* Outputs for Atomic SubSystem: '<S15>/Output' */
+  /* Outputs for Atomic SubSystem: '<S7>/Output' */
   /* MATLAB Function: '<Root>/MATLAB Function1' incorporates:
-   *  DataStoreRead: '<S19>/Data Store Read'
+   *  DataStoreRead: '<S11>/Data Store Read'
    *  Gain: '<Root>/Pos_y'
    *  Inport: '<Root>/pos_sp'
    *  Sum: '<Root>/Sum1'
@@ -562,9 +447,9 @@ void AttitudeControlModelClass::step()
     - AttitudeControl_DW.x[1]) - AttitudeControl_DW.x[4]) *
     AttitudeControlParams.vel_xy_p_gain;
 
-  /* End of Outputs for SubSystem: '<S15>/Output' */
+  /* End of Outputs for SubSystem: '<S7>/Output' */
 
-  /* Saturate: '<S8>/Saturation' */
+  /* Saturate: '<S5>/Saturation' */
   if (dHdx_tmp > 2.0F) {
     dHdx_tmp = 2.0F;
   } else {
@@ -573,34 +458,34 @@ void AttitudeControlModelClass::step()
     }
   }
 
-  /* S-Function (sdsp2norm2): '<S8>/Normalization' incorporates:
-   *  Sum: '<S8>/Sum'
+  /* S-Function (sdsp2norm2): '<S5>/Normalization' incorporates:
+   *  Sum: '<S5>/Sum'
    */
   psi = 1.0F / (std::sqrt((rtb_Sum[0] * rtb_Sum[0] + dHdx_tmp * dHdx_tmp) +
     96.2831879F) + 1.0E-10F);
 
-  /* Saturate: '<S8>/Saturation' */
-  if (dHdx_tmp_b > 2.0F) {
-    dHdx_tmp_b = 2.0F;
+  /* Saturate: '<S5>/Saturation' */
+  if (u0 > 2.0F) {
+    u0 = 2.0F;
   } else {
-    if (dHdx_tmp_b < -2.0F) {
-      dHdx_tmp_b = -2.0F;
+    if (u0 < -2.0F) {
+      u0 = -2.0F;
     }
   }
 
-  /* S-Function (sdsp2norm2): '<S8>/Normalization' incorporates:
-   *  Sum: '<S8>/Sum'
+  /* S-Function (sdsp2norm2): '<S5>/Normalization' incorporates:
+   *  Sum: '<S5>/Sum'
    */
-  rtb_Normalization[0] = dHdx_tmp_b * psi;
+  rtb_Normalization[0] = u0 * psi;
   rtb_Normalization[1] = dHdx_tmp * psi;
   rtb_Normalization[2] = -9.8124F * psi;
 
-  /* Outputs for Atomic SubSystem: '<S15>/Predict' */
-  /* Outputs for Atomic SubSystem: '<S15>/Output' */
+  /* Outputs for Atomic SubSystem: '<S7>/Predict' */
+  /* Outputs for Atomic SubSystem: '<S7>/Output' */
   /* MATLAB Function: '<Root>/Attitude Controller' incorporates:
-   *  DataStoreRead: '<S19>/Data Store Read'
+   *  DataStoreRead: '<S11>/Data Store Read'
    *  Inport: '<Root>/rates'
-   *  MATLAB Function: '<S20>/Predict'
+   *  MATLAB Function: '<S12>/Predict'
    */
   /* :  [h, pq_sp] = attitude_control(att, rates, nd_i, ndi_dot, AttitudeControlParams); */
   /* 'attitude_control:3' phi = att(1); */
@@ -611,74 +496,80 @@ void AttitudeControlModelClass::step()
   /* 'attitude_control:10'         sin(phi)*sin(theta)*cos(psi)-cos(phi)*sin(psi) sin(phi)*sin(theta)*sin(psi)+cos(phi)*cos(psi) sin(phi)*cos(theta); */
   /* 'attitude_control:11'         cos(phi)*sin(theta)*cos(psi)+sin(phi)*sin(psi) cos(phi)*sin(theta)*sin(psi)-sin(phi)*cos(psi) cos(phi)*cos(theta)]; */
   dHdx_tmp = std::cos(AttitudeControl_DW.x[7]);
-  dHdx_tmp_0 = std::cos(AttitudeControl_DW.x[8]);
+  dHdx_tmp_e = std::cos(AttitudeControl_DW.x[8]);
 
-  /* End of Outputs for SubSystem: '<S15>/Output' */
-  /* End of Outputs for SubSystem: '<S15>/Predict' */
-  R_BI[0] = dHdx_tmp * dHdx_tmp_0;
+  /* End of Outputs for SubSystem: '<S7>/Output' */
+  dHdx_tmp_0 = dHdx_tmp * dHdx_tmp_e;
 
-  /* Outputs for Atomic SubSystem: '<S15>/Predict' */
-  /* Outputs for Atomic SubSystem: '<S15>/Output' */
+  /* End of Outputs for SubSystem: '<S7>/Predict' */
+  R_BI[0] = dHdx_tmp_0;
+
+  /* Outputs for Atomic SubSystem: '<S7>/Predict' */
+  /* Outputs for Atomic SubSystem: '<S7>/Output' */
   dHdx_tmp_1 = std::sin(AttitudeControl_DW.x[8]);
 
-  /* End of Outputs for SubSystem: '<S15>/Output' */
-  dHdx_tmp_6 = dHdx_tmp * dHdx_tmp_1;
+  /* End of Outputs for SubSystem: '<S7>/Output' */
+  dHdx_tmp_2 = dHdx_tmp * dHdx_tmp_1;
 
-  /* End of Outputs for SubSystem: '<S15>/Predict' */
-  R_BI[3] = dHdx_tmp_6;
+  /* End of Outputs for SubSystem: '<S7>/Predict' */
+  R_BI[3] = dHdx_tmp_2;
 
-  /* Outputs for Atomic SubSystem: '<S15>/Predict' */
-  /* Outputs for Atomic SubSystem: '<S15>/Output' */
-  dHdx_tmp_2 = std::sin(AttitudeControl_DW.x[7]);
+  /* Outputs for Atomic SubSystem: '<S7>/Predict' */
+  /* Outputs for Atomic SubSystem: '<S7>/Output' */
+  dHdx_tmp_3 = std::sin(AttitudeControl_DW.x[7]);
 
-  /* End of Outputs for SubSystem: '<S15>/Output' */
-  /* End of Outputs for SubSystem: '<S15>/Predict' */
-  R_BI[6] = -dHdx_tmp_2;
+  /* End of Outputs for SubSystem: '<S7>/Output' */
+  /* End of Outputs for SubSystem: '<S7>/Predict' */
+  R_BI[6] = -dHdx_tmp_3;
 
-  /* Outputs for Atomic SubSystem: '<S15>/Predict' */
-  /* Outputs for Atomic SubSystem: '<S15>/Output' */
-  dHdx_tmp_3 = std::sin(AttitudeControl_DW.x[6]);
+  /* Outputs for Atomic SubSystem: '<S7>/Predict' */
+  /* Outputs for Atomic SubSystem: '<S7>/Output' */
+  dHdx_tmp_4 = std::sin(AttitudeControl_DW.x[6]);
 
-  /* End of Outputs for SubSystem: '<S15>/Output' */
-  dHdx_tmp_7 = dHdx_tmp_3 * dHdx_tmp_2;
+  /* End of Outputs for SubSystem: '<S7>/Output' */
+  dHdx_tmp_6 = dHdx_tmp_4 * dHdx_tmp_3;
 
-  /* Outputs for Atomic SubSystem: '<S15>/Output' */
-  dHdx_tmp_4 = std::cos(AttitudeControl_DW.x[6]);
+  /* Outputs for Atomic SubSystem: '<S7>/Output' */
+  dHdx_tmp_7 = std::cos(AttitudeControl_DW.x[6]);
 
-  /* End of Outputs for SubSystem: '<S15>/Output' */
-  R_BI_tmp = dHdx_tmp_4 * dHdx_tmp_1;
+  /* End of Outputs for SubSystem: '<S7>/Output' */
+  dHdx_tmp_8 = dHdx_tmp_7 * dHdx_tmp_1;
 
-  /* End of Outputs for SubSystem: '<S15>/Predict' */
-  R_BI[1] = dHdx_tmp_7 * dHdx_tmp_0 - R_BI_tmp;
+  /* End of Outputs for SubSystem: '<S7>/Predict' */
+  R_BI[1] = dHdx_tmp_6 * dHdx_tmp_e - dHdx_tmp_8;
 
-  /* Outputs for Atomic SubSystem: '<S15>/Predict' */
-  dHdx_tmp_a = dHdx_tmp_4 * dHdx_tmp_0;
+  /* Outputs for Atomic SubSystem: '<S7>/Predict' */
+  dHdx_tmp_b = dHdx_tmp_7 * dHdx_tmp_e;
 
-  /* End of Outputs for SubSystem: '<S15>/Predict' */
-  R_BI[4] = dHdx_tmp_7 * dHdx_tmp_1 + dHdx_tmp_a;
-  R_BI[7] = dHdx_tmp_3 * dHdx_tmp;
+  /* End of Outputs for SubSystem: '<S7>/Predict' */
+  R_BI[4] = dHdx_tmp_6 * dHdx_tmp_1 + dHdx_tmp_b;
 
-  /* Outputs for Atomic SubSystem: '<S15>/Predict' */
-  dHdx_tmp_8 = dHdx_tmp_4 * dHdx_tmp_2;
-  dHdx_tmp_5 = dHdx_tmp_3 * dHdx_tmp_1;
+  /* Outputs for Atomic SubSystem: '<S7>/Predict' */
+  dHdx_tmp_c = dHdx_tmp_4 * dHdx_tmp;
 
-  /* End of Outputs for SubSystem: '<S15>/Predict' */
-  R_BI[2] = dHdx_tmp_8 * dHdx_tmp_0 + dHdx_tmp_5;
-  R_BI[5] = dHdx_tmp_8 * dHdx_tmp_1 - dHdx_tmp_3 * dHdx_tmp_0;
+  /* End of Outputs for SubSystem: '<S7>/Predict' */
+  R_BI[7] = dHdx_tmp_c;
 
-  /* Outputs for Atomic SubSystem: '<S15>/Predict' */
-  dHdx_tmp_9 = dHdx_tmp_4 * dHdx_tmp;
+  /* Outputs for Atomic SubSystem: '<S7>/Predict' */
+  dHdx_tmp_5 = dHdx_tmp_7 * dHdx_tmp_3;
+  dHdx_tmp_d = dHdx_tmp_4 * dHdx_tmp_1;
 
-  /* End of Outputs for SubSystem: '<S15>/Predict' */
-  R_BI[8] = dHdx_tmp_9;
+  /* End of Outputs for SubSystem: '<S7>/Predict' */
+  R_BI[2] = dHdx_tmp_5 * dHdx_tmp_e + dHdx_tmp_d;
+
+  /* Outputs for Atomic SubSystem: '<S7>/Predict' */
+  dHdx_tmp_9 = dHdx_tmp_4 * dHdx_tmp_e;
+
+  /* End of Outputs for SubSystem: '<S7>/Predict' */
+  R_BI[5] = dHdx_tmp_5 * dHdx_tmp_1 - dHdx_tmp_9;
+
+  /* Outputs for Atomic SubSystem: '<S7>/Predict' */
+  dHdx_tmp_a = dHdx_tmp_7 * dHdx_tmp;
+
+  /* End of Outputs for SubSystem: '<S7>/Predict' */
+  R_BI[8] = dHdx_tmp_a;
 
   /* 'attitude_control:14' h = R_BI*nd_i; */
-  for (idxStart = 0; idxStart < 3; idxStart++) {
-    rtb_Sum[idxStart] = R_BI[idxStart + 6] * rtb_Normalization[2] +
-      (R_BI[idxStart + 3] * rtb_Normalization[1] + R_BI[idxStart] *
-       rtb_Normalization[0]);
-  }
-
   /* 'attitude_control:17' nxd = AttitudeControlParams.prim_axis_x; */
   /* 'attitude_control:18' nyd = AttitudeControlParams.prim_axis_y; */
   /* 'attitude_control:20' ndi_dot_b = R_BI*(ndi_dot); */
@@ -688,14 +579,20 @@ void AttitudeControlModelClass::step()
   /* 'attitude_control:26' nydot_cmd = -ky*(h(2)-nyd); */
   /* 'attitude_control:28' pq_sp = [0 -h(3);h(3) 0]\([nxdot_cmd nydot_cmd]'-[h(2) -h(1)]'*r + ndi_dot_b(1:2)); */
   A[0] = 0.0F;
+  for (idxStart = 0; idxStart < 3; idxStart++) {
+    psi = R_BI[idxStart + 3];
+    u0 = psi * rtb_Normalization[1] + R_BI[idxStart] * rtb_Normalization[0];
+    R_BI_0 = psi * 0.0F + R_BI[idxStart] * 0.0F;
+    psi = R_BI[idxStart + 6];
+    u0 += psi * rtb_Normalization[2];
+    R_BI_0 += psi * 0.0F;
+    rtb_Sum[idxStart] = u0;
+    dPos[idxStart] = R_BI_0;
+  }
+
   A[2] = -rtb_Sum[2];
   A[1] = rtb_Sum[2];
   A[3] = 0.0F;
-  for (idxStart = 0; idxStart < 3; idxStart++) {
-    dPos[idxStart] = R_BI[idxStart + 6] * 0.0F + (R_BI[idxStart + 3] * 0.0F +
-      R_BI[idxStart] * 0.0F);
-  }
-
   B[0] = ((rtb_Sum[0] - AttitudeControlParams.prim_axis_x) *
           -AttitudeControlParams.xy_gain - rtb_Sum[1] * AttitudeControl_U.rates
           [2]) + dPos[0];
@@ -711,37 +608,37 @@ void AttitudeControlModelClass::step()
   }
 
   psi = A[i] / A[idxStart];
-  dHdx_tmp_b = A[2 + idxStart];
-  psi = (B[i] - B[idxStart] * psi) / (A[2 + i] - dHdx_tmp_b * psi);
+  u0 = A[2 + idxStart];
+  psi = (B[i] - B[idxStart] * psi) / (A[2 + i] - u0 * psi);
 
   /* Outport: '<Root>/rates_sp' incorporates:
    *  Constant: '<Root>/Constant2'
    *  MATLAB Function: '<Root>/Attitude Controller'
    */
-  AttitudeControl_Y.rates_sp[0] = (B[idxStart] - dHdx_tmp_b * psi) / A[idxStart];
+  AttitudeControl_Y.rates_sp[0] = (B[idxStart] - u0 * psi) / A[idxStart];
   AttitudeControl_Y.rates_sp[1] = psi;
   AttitudeControl_Y.rates_sp[2] = 0.0F;
 
-  /* Outputs for Atomic SubSystem: '<S15>/Output' */
+  /* Outputs for Atomic SubSystem: '<S7>/Output' */
   /* Gain: '<Root>/Vel_z' incorporates:
-   *  DataStoreRead: '<S19>/Data Store Read'
+   *  DataStoreRead: '<S11>/Data Store Read'
    *  Gain: '<Root>/Pos_z'
    *  Inport: '<Root>/pos_sp'
    *  Sum: '<Root>/Sum1'
    *  Sum: '<Root>/Sum5'
    */
-  dHdx_tmp_b = ((AttitudeControl_U.pos_sp[2] - AttitudeControl_DW.x[2]) *
-                AttitudeControlParams.pos_z_p_gain - AttitudeControl_DW.x[5]) *
+  u0 = ((AttitudeControl_U.pos_sp[2] - AttitudeControl_DW.x[2]) *
+        AttitudeControlParams.pos_z_p_gain - AttitudeControl_DW.x[5]) *
     AttitudeControlParams.vel_z_p_gain;
 
-  /* End of Outputs for SubSystem: '<S15>/Output' */
+  /* End of Outputs for SubSystem: '<S7>/Output' */
 
   /* Saturate: '<Root>/Saturation' */
-  if (dHdx_tmp_b > 5.0F) {
-    dHdx_tmp_b = 5.0F;
+  if (u0 > 5.0F) {
+    u0 = 5.0F;
   } else {
-    if (dHdx_tmp_b < -5.0F) {
-      dHdx_tmp_b = -5.0F;
+    if (u0 < -5.0F) {
+      u0 = -5.0F;
     }
   }
 
@@ -751,16 +648,16 @@ void AttitudeControlModelClass::step()
    *  Constant: '<Root>/Constant3'
    *  Sum: '<Root>/Minus'
    */
-  AttitudeControl_Y.accel_z_sp = dHdx_tmp_b - 9.8124F;
+  AttitudeControl_Y.accel_z_sp = u0 - 9.8124F;
 
-  /* SignalConversion: '<S4>/ConcatBufferAtVector Concatenate1In1' incorporates:
+  /* SignalConversion: '<S2>/ConcatBufferAtVector Concatenate1In1' incorporates:
    *  Inport: '<Root>/rates'
    */
   rtb_VectorConcatenate1[0] = AttitudeControl_U.rates[0];
   rtb_VectorConcatenate1[1] = AttitudeControl_U.rates[1];
   rtb_VectorConcatenate1[2] = AttitudeControl_U.rates[2];
 
-  /* DiscreteStateSpace: '<S4>/Discrete State-Space' incorporates:
+  /* DiscreteStateSpace: '<S2>/Discrete State-Space' incorporates:
    *  Inport: '<Root>/accel'
    */
   {
@@ -772,10 +669,10 @@ void AttitudeControlModelClass::step()
       AttitudeControl_DW.DiscreteStateSpace_DSTATE[2];
   }
 
-  /* Outputs for Atomic SubSystem: '<S15>/Predict' */
-  /* MATLAB Function: '<S20>/Predict' incorporates:
-   *  DataStoreRead: '<S20>/Data Store ReadP'
-   *  DataStoreRead: '<S20>/Data Store ReadX'
+  /* Outputs for Atomic SubSystem: '<S7>/Predict' */
+  /* MATLAB Function: '<S12>/Predict' incorporates:
+   *  DataStoreRead: '<S12>/Data Store ReadP'
+   *  DataStoreRead: '<S12>/Data Store ReadX'
    */
   /* :  if pS.IsSimulinkFcn */
   /* :  else */
@@ -828,20 +725,18 @@ void AttitudeControlModelClass::step()
   Jacobian[30] = 1.0F;
   Jacobian[39] = 0.0F;
   Jacobian[48] = 0.0F;
-  dHdx_tmp_b = dHdx_tmp_0 * dHdx_tmp_3;
-  Jacobian_tmp = dHdx_tmp_a * dHdx_tmp_2 + dHdx_tmp_5;
-  Jacobian_tmp_0 = R_BI_tmp - dHdx_tmp_b * dHdx_tmp_2;
-  Jacobian[57] = (Jacobian_tmp * rtb_VectorConcatenate1[4] + Jacobian_tmp_0 *
+  u0 = dHdx_tmp_b * dHdx_tmp_3 + dHdx_tmp_d;
+  R_BI_0 = dHdx_tmp_8 - dHdx_tmp_9 * dHdx_tmp_3;
+  Jacobian[57] = (u0 * rtb_VectorConcatenate1[4] + R_BI_0 *
                   (rtb_VectorConcatenate1[5] - -0.1F)) * 0.002F;
-  Jacobian_tmp_1 = dHdx_tmp_0 * dHdx_tmp;
-  Jacobian_tmp_2 = dHdx_tmp_0 * dHdx_tmp_2;
-  Jacobian[66] = ((dHdx_tmp_a * dHdx_tmp * (rtb_VectorConcatenate1[5] - -0.1F) -
-                   Jacobian_tmp_2 * rtb_VectorConcatenate1[3]) + Jacobian_tmp_1 *
-                  dHdx_tmp_3 * rtb_VectorConcatenate1[4]) * 0.002F;
-  R_BI_tmp = dHdx_tmp_b - R_BI_tmp * dHdx_tmp_2;
-  dHdx_tmp_a += dHdx_tmp_5 * dHdx_tmp_2;
-  Jacobian[75] = ((dHdx_tmp_a * rtb_VectorConcatenate1[4] - R_BI_tmp *
-                   (rtb_VectorConcatenate1[5] - -0.1F)) + dHdx_tmp_6 *
+  dHdx_tmp_e *= dHdx_tmp_3;
+  Jacobian[66] = ((dHdx_tmp_b * dHdx_tmp * (rtb_VectorConcatenate1[5] - -0.1F) -
+                   dHdx_tmp_e * rtb_VectorConcatenate1[3]) + dHdx_tmp_0 *
+                  dHdx_tmp_4 * rtb_VectorConcatenate1[4]) * 0.002F;
+  Jacobian_tmp = dHdx_tmp_9 - dHdx_tmp_8 * dHdx_tmp_3;
+  Jacobian_tmp_0 = dHdx_tmp_d * dHdx_tmp_3 + dHdx_tmp_b;
+  Jacobian[75] = ((Jacobian_tmp_0 * rtb_VectorConcatenate1[4] - Jacobian_tmp *
+                   (rtb_VectorConcatenate1[5] - -0.1F)) + dHdx_tmp_2 *
                   rtb_VectorConcatenate1[3]) * -0.002F;
   Jacobian[4] = 0.0F;
   Jacobian[13] = 0.0F;
@@ -849,15 +744,14 @@ void AttitudeControlModelClass::step()
   Jacobian[31] = 0.0F;
   Jacobian[40] = 1.0F;
   Jacobian[49] = 0.0F;
-  Jacobian[58] = (R_BI_tmp * rtb_VectorConcatenate1[4] + dHdx_tmp_a *
+  Jacobian[58] = (Jacobian_tmp * rtb_VectorConcatenate1[4] + Jacobian_tmp_0 *
                   (rtb_VectorConcatenate1[5] - -0.1F)) * -0.002F;
-  R_BI_tmp = dHdx_tmp * dHdx_tmp_3;
-  dHdx_tmp_a = dHdx_tmp_1 * dHdx_tmp_2;
-  Jacobian[67] = ((dHdx_tmp_9 * dHdx_tmp_1 * (rtb_VectorConcatenate1[5] - -0.1F)
-                   - dHdx_tmp_a * rtb_VectorConcatenate1[3]) + R_BI_tmp *
+  Jacobian_tmp = dHdx_tmp_1 * dHdx_tmp_3;
+  Jacobian[67] = ((dHdx_tmp_a * dHdx_tmp_1 * (rtb_VectorConcatenate1[5] - -0.1F)
+                   - Jacobian_tmp * rtb_VectorConcatenate1[3]) + dHdx_tmp_c *
                   dHdx_tmp_1 * rtb_VectorConcatenate1[4]) * 0.002F;
-  Jacobian[76] = ((Jacobian_tmp * (rtb_VectorConcatenate1[5] - -0.1F) -
-                   Jacobian_tmp_0 * rtb_VectorConcatenate1[4]) + Jacobian_tmp_1 *
+  Jacobian[76] = ((u0 * (rtb_VectorConcatenate1[5] - -0.1F) - R_BI_0 *
+                   rtb_VectorConcatenate1[4]) + dHdx_tmp_0 *
                   rtb_VectorConcatenate1[3]) * 0.002F;
   Jacobian[5] = 0.0F;
   Jacobian[14] = 0.0F;
@@ -865,10 +759,10 @@ void AttitudeControlModelClass::step()
   Jacobian[32] = 0.0F;
   Jacobian[41] = 0.0F;
   Jacobian[50] = 1.0F;
-  Jacobian[59] = (dHdx_tmp_9 * rtb_VectorConcatenate1[4] - R_BI_tmp *
+  Jacobian[59] = (dHdx_tmp_a * rtb_VectorConcatenate1[4] - dHdx_tmp_c *
                   (rtb_VectorConcatenate1[5] - -0.1F)) * 0.002F;
-  Jacobian[68] = ((dHdx_tmp_8 * (rtb_VectorConcatenate1[5] - -0.1F) + dHdx_tmp *
-                   rtb_VectorConcatenate1[3]) + dHdx_tmp_7 *
+  Jacobian[68] = ((dHdx_tmp_5 * (rtb_VectorConcatenate1[5] - -0.1F) + dHdx_tmp *
+                   rtb_VectorConcatenate1[3]) + dHdx_tmp_6 *
                   rtb_VectorConcatenate1[4]) * -0.002F;
   Jacobian[77] = 0.0F;
   Jacobian[6] = 0.0F;
@@ -877,11 +771,11 @@ void AttitudeControlModelClass::step()
   Jacobian[33] = 0.0F;
   Jacobian[42] = 0.0F;
   Jacobian[51] = 0.0F;
-  Jacobian[60] = 1.0F - 0.002F * rtb_VectorConcatenate1[2] * dHdx_tmp_3 * psi;
-  Jacobian_tmp = rtb_VectorConcatenate1[2] * dHdx_tmp_4;
-  Jacobian_tmp_0 = rtb_VectorConcatenate1[1] * dHdx_tmp_2;
-  Jacobian[69] = ((psi * psi + 1.0F) * (Jacobian_tmp + Jacobian_tmp_0) +
-                  rtb_VectorConcatenate1[1] * dHdx_tmp * psi) * 0.002F;
+  Jacobian[60] = 1.0F - 0.002F * rtb_VectorConcatenate1[2] * dHdx_tmp_4 * psi;
+  u0 = rtb_VectorConcatenate1[2] * dHdx_tmp_7;
+  R_BI_0 = u0 + rtb_VectorConcatenate1[1] * dHdx_tmp_3;
+  Jacobian[69] = ((psi * psi + 1.0F) * R_BI_0 + rtb_VectorConcatenate1[1] *
+                  dHdx_tmp * psi) * 0.002F;
   Jacobian[78] = 0.0F;
   Jacobian[7] = 0.0F;
   Jacobian[16] = 0.0F;
@@ -889,9 +783,8 @@ void AttitudeControlModelClass::step()
   Jacobian[34] = 0.0F;
   Jacobian[43] = 0.0F;
   Jacobian[52] = 0.0F;
-  dHdx_tmp_6 = rtb_VectorConcatenate1[1] * dHdx_tmp_3;
-  dHdx_tmp_7 = Jacobian_tmp + dHdx_tmp_6;
-  Jacobian[61] = dHdx_tmp_7 * -0.002F;
+  u0 += rtb_VectorConcatenate1[1] * dHdx_tmp_4;
+  Jacobian[61] = u0 * -0.002F;
   Jacobian[70] = 1.0F;
   Jacobian[79] = 0.0F;
   Jacobian[8] = 0.0F;
@@ -900,10 +793,10 @@ void AttitudeControlModelClass::step()
   Jacobian[35] = 0.0F;
   Jacobian[44] = 0.0F;
   Jacobian[53] = 0.0F;
-  dHdx_tmp_8 = (rtb_VectorConcatenate1[1] * dHdx_tmp_4 - rtb_VectorConcatenate1
-                [2] * dHdx_tmp_3) * 0.002F;
-  Jacobian[62] = dHdx_tmp_8 / dHdx_tmp;
-  Jacobian[71] = dHdx_tmp_7 * (0.002F * dHdx_tmp_2) / (dHdx_tmp * dHdx_tmp);
+  Jacobian_tmp_0 = (rtb_VectorConcatenate1[1] * dHdx_tmp_7 -
+                    rtb_VectorConcatenate1[2] * dHdx_tmp_4) * 0.002F;
+  Jacobian[62] = Jacobian_tmp_0 / dHdx_tmp;
+  Jacobian[71] = u0 * (0.002F * dHdx_tmp_3) / (dHdx_tmp * dHdx_tmp);
   Jacobian[80] = 1.0F;
 
   /* 'EKF_att_pos_state:3' dt = 0.002; */
@@ -927,15 +820,15 @@ void AttitudeControlModelClass::step()
   /* 'EKF_att_pos_state:28'         -sin(theta)          , cos(theta)*sin(phi)                          , cos(theta)*cos(phi)                          ]; */
   /* 'EKF_att_pos_state:30' dPos = [vx;vy;vz]; */
   /* 'EKF_att_pos_state:31' dVel = R_IB*[ax-dax;ay-day;az-daz] + [0;0;9.8124]; */
-  tmp[0] = Jacobian_tmp_1;
-  tmp[3] = Jacobian_tmp_2 * dHdx_tmp_3 - dHdx_tmp_1 * dHdx_tmp_4;
-  tmp[6] = Jacobian_tmp_2 * dHdx_tmp_4 + dHdx_tmp_1 * dHdx_tmp_3;
-  tmp[1] = dHdx_tmp_1 * dHdx_tmp;
-  tmp[4] = dHdx_tmp_a * dHdx_tmp_3 + dHdx_tmp_0 * dHdx_tmp_4;
-  tmp[7] = dHdx_tmp_a * dHdx_tmp_4 - dHdx_tmp_b;
+  tmp[0] = dHdx_tmp_0;
+  tmp[3] = dHdx_tmp_e * dHdx_tmp_4 - dHdx_tmp_8;
+  tmp[6] = dHdx_tmp_e * dHdx_tmp_7 + dHdx_tmp_d;
+  tmp[1] = dHdx_tmp_2;
+  tmp[4] = Jacobian_tmp * dHdx_tmp_4 + dHdx_tmp_b;
+  tmp[7] = Jacobian_tmp * dHdx_tmp_7 - dHdx_tmp_9;
   tmp[2] = -std::sin(AttitudeControl_DW.x[7]);
-  tmp[5] = R_BI_tmp;
-  tmp[8] = dHdx_tmp * dHdx_tmp_4;
+  tmp[5] = dHdx_tmp_c;
+  tmp[8] = dHdx_tmp_a;
   for (idxStart = 0; idxStart < 3; idxStart++) {
     rtb_Normalization[idxStart] = ((tmp[idxStart + 3] * rtb_VectorConcatenate1[4]
       + tmp[idxStart] * rtb_VectorConcatenate1[3]) + tmp[idxStart + 6] *
@@ -964,53 +857,55 @@ void AttitudeControlModelClass::step()
   rtb_xNew[5] = rtb_Normalization[2] * 0.002F + AttitudeControl_DW.x[5];
 
   /* 'EKF_att_pos_state:42' x(7) = x(7) + dphi*dt; */
-  rtb_xNew[6] = ((Jacobian_tmp_0 + Jacobian_tmp) * psi + rtb_VectorConcatenate1
-                 [0]) * 0.002F + AttitudeControl_DW.x[6];
+  rtb_xNew[6] = (R_BI_0 * psi + rtb_VectorConcatenate1[0]) * 0.002F +
+    AttitudeControl_DW.x[6];
 
   /* 'EKF_att_pos_state:43' x(8) = x(8) + dtheta*dt; */
-  rtb_xNew[7] = dHdx_tmp_8 + AttitudeControl_DW.x[7];
+  rtb_xNew[7] = Jacobian_tmp_0 + AttitudeControl_DW.x[7];
 
   /* 'EKF_att_pos_state:44' x(9) = x(9) + dpsi*dt; */
-  rtb_xNew[8] = (dHdx_tmp_6 + Jacobian_tmp) / dHdx_tmp * 0.002F +
-    AttitudeControl_DW.x[8];
+  rtb_xNew[8] = u0 / dHdx_tmp * 0.002F + AttitudeControl_DW.x[8];
   for (idxStart = 0; idxStart < 9; idxStart++) {
-    for (i_0 = 0; i_0 < 9; i_0++) {
-      gain_tmp = i_0 + 9 * idxStart;
+    for (P_tmp = 0; P_tmp < 9; P_tmp++) {
+      gain_tmp = P_tmp + 9 * idxStart;
       gain_0[gain_tmp] = 0.0F;
       for (i = 0; i < 9; i++) {
-        gain_0[gain_tmp] = Jacobian[9 * i + i_0] * AttitudeControl_DW.P[9 *
-          idxStart + i] + gain_0[9 * idxStart + i_0];
+        gain_0[gain_tmp] += Jacobian[9 * i + P_tmp] * AttitudeControl_DW.P[9 *
+          idxStart + i];
       }
     }
   }
 
   for (i = 0; i < 9; i++) {
-    /* DataStoreWrite: '<S20>/Data Store WriteP' incorporates:
-     *  Constant: '<S15>/Q'
-     *  MATLAB Function: '<S20>/Predict'
+    /* DataStoreWrite: '<S12>/Data Store WriteP' incorporates:
+     *  Constant: '<S7>/Q'
+     *  MATLAB Function: '<S12>/Predict'
      */
     for (idxStart = 0; idxStart < 9; idxStart++) {
       dHdx_tmp = 0.0F;
-      for (i_0 = 0; i_0 < 9; i_0++) {
-        dHdx_tmp += gain_0[9 * i_0 + i] * Jacobian[9 * i_0 + idxStart];
+      for (P_tmp = 0; P_tmp < 9; P_tmp++) {
+        dHdx_tmp += gain_0[9 * P_tmp + i] * Jacobian[9 * P_tmp + idxStart];
       }
 
-      AttitudeControl_DW.P[i + 9 * idxStart] = AttitudeControl_ConstP.Q_Value[9 *
-        idxStart + i] + dHdx_tmp;
+      /* MATLAB Function: '<S12>/Predict' incorporates:
+       *  Constant: '<S7>/Q'
+       */
+      P_tmp = 9 * idxStart + i;
+      AttitudeControl_DW.P[P_tmp] = rtCP_Q_Value[P_tmp] + dHdx_tmp;
     }
 
-    /* End of DataStoreWrite: '<S20>/Data Store WriteP' */
+    /* End of DataStoreWrite: '<S12>/Data Store WriteP' */
 
-    /* DataStoreWrite: '<S20>/Data Store WriteX' */
+    /* DataStoreWrite: '<S12>/Data Store WriteX' */
     AttitudeControl_DW.x[i] = rtb_xNew[i];
   }
 
-  /* End of Outputs for SubSystem: '<S15>/Predict' */
+  /* End of Outputs for SubSystem: '<S7>/Predict' */
 
-  /* Update for UnitDelay: '<S14>/UD' */
+  /* Update for UnitDelay: '<S6>/UD' */
   AttitudeControl_DW.UD_DSTATE = rtb_att_out_idx_2;
 
-  /* Update for DiscreteStateSpace: '<S4>/Discrete State-Space' incorporates:
+  /* Update for DiscreteStateSpace: '<S2>/Discrete State-Space' incorporates:
    *  Inport: '<Root>/accel'
    */
   {
@@ -1032,7 +927,7 @@ void AttitudeControlModelClass::initialize()
   /* Registration code */
 
   /* initialize error status */
-  rtmSetErrorStatus(getRTM(), (NULL));
+  rtmSetErrorStatus((&AttitudeControl_M), (NULL));
 
   /* states (dwork) */
   (void) memset((void *)&AttitudeControl_DW, 0,
@@ -1048,37 +943,36 @@ void AttitudeControlModelClass::initialize()
   {
     int32_T i;
 
-    /* Start for DataStoreMemory: '<S15>/DataStoreMemory - P' */
-    memcpy(&AttitudeControl_DW.P[0],
-           &AttitudeControl_ConstP.DataStoreMemoryP_InitialValue[0], 81U *
+    /* Start for DataStoreMemory: '<S7>/DataStoreMemory - P' */
+    memcpy(&AttitudeControl_DW.P[0], &rtCP_DataStoreMemoryP_InitialVa[0], 81U *
            sizeof(real32_T));
 
-    /* Start for DataStoreMemory: '<S15>/DataStoreMemory - x' */
+    /* Start for DataStoreMemory: '<S7>/DataStoreMemory - x' */
     for (i = 0; i < 9; i++) {
       AttitudeControl_DW.x[i] = 0.0F;
     }
 
-    /* End of Start for DataStoreMemory: '<S15>/DataStoreMemory - x' */
+    /* End of Start for DataStoreMemory: '<S7>/DataStoreMemory - x' */
   }
 
-  /* InitializeConditions for UnitDelay: '<S14>/UD' */
+  /* InitializeConditions for UnitDelay: '<S6>/UD' */
   AttitudeControl_DW.UD_DSTATE = 0.0F;
 
-  /* InitializeConditions for DiscreteStateSpace: '<S4>/Discrete State-Space' incorporates:
+  /* InitializeConditions for DiscreteStateSpace: '<S2>/Discrete State-Space' incorporates:
    *  Inport: '<Root>/accel'
    */
   AttitudeControl_DW.DiscreteStateSpace_DSTATE[0] = (0.0F);
   AttitudeControl_DW.DiscreteStateSpace_DSTATE[1] = (0.0F);
   AttitudeControl_DW.DiscreteStateSpace_DSTATE[2] = (0.0F);
 
-  /* SystemInitialize for MATLAB Function: '<S4>/unwrap2pi' */
+  /* SystemInitialize for MATLAB Function: '<S2>/unwrap2pi' */
   AttitudeControl_DW.psi_last_not_empty = false;
 
   /* :  N = 0; */
   AttitudeControl_DW.N = 0.0;
 
-  /* SystemInitialize for MATLAB Function: '<S4>/MATLAB Function' */
-  AttitudeControl_DW.psi_last_not_empty_g = false;
+  /* SystemInitialize for MATLAB Function: '<S2>/MATLAB Function' */
+  AttitudeControl_DW.psi_last_not_empty_n = false;
 }
 
 /* Model terminate function */

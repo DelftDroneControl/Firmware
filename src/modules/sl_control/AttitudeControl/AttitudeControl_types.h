@@ -7,13 +7,13 @@
  *
  * Code generation for model "AttitudeControl".
  *
- * Model version              : 1.234
- * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C++ source code generated on : Fri Feb 22 16:16:41 2019
+ * Model version              : 1.235
+ * Simulink Coder version : 9.1 (R2019a) 23-Nov-2018
+ * C++ source code generated on : Tue Aug 13 23:44:48 2019
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
- * Embedded hardware selection: Intel->x86-64 (Windows64)
+ * Embedded hardware selection: Custom
  * Code generation objectives: Unspecified
  * Validation result: Not run
  */
@@ -37,7 +37,7 @@ typedef struct {
 
 #endif
 
-/* Custom Type definition for MATLAB Function: '<S18>/Correct' */
+/* Custom Type definition for MATLAB Function: '<S10>/Correct' */
 #ifndef struct_tag_s3jUk3tcna9gJPVvGWgKhoB
 #define struct_tag_s3jUk3tcna9gJPVvGWgKhoB
 
@@ -58,9 +58,9 @@ struct tag_s3jUk3tcna9gJPVvGWgKhoB
 
 typedef struct tag_s3jUk3tcna9gJPVvGWgKhoB s3jUk3tcna9gJPVvGWgKhoB_Attit_T;
 
-#endif                                 /*typedef_s3jUk3tcna9gJPVvGWgKhoB_Attit_T*/
+#endif                               /*typedef_s3jUk3tcna9gJPVvGWgKhoB_Attit_T*/
 
-/* Custom Type definition for MATLAB Function: '<S20>/Predict' */
+/* Custom Type definition for MATLAB Function: '<S12>/Predict' */
 #ifndef struct_tag_sNpKm6MWgiM1uTq2HgBSpwD
 #define struct_tag_sNpKm6MWgiM1uTq2HgBSpwD
 
@@ -81,7 +81,7 @@ struct tag_sNpKm6MWgiM1uTq2HgBSpwD
 
 typedef struct tag_sNpKm6MWgiM1uTq2HgBSpwD sNpKm6MWgiM1uTq2HgBSpwD_Attit_T;
 
-#endif                                 /*typedef_sNpKm6MWgiM1uTq2HgBSpwD_Attit_T*/
+#endif                               /*typedef_sNpKm6MWgiM1uTq2HgBSpwD_Attit_T*/
 
 /* Forward declaration for rtModel */
 typedef struct tag_RTM_AttitudeControl_T RT_MODEL_AttitudeControl_T;

@@ -7,9 +7,9 @@
  *
  * Code generation for model "URControl".
  *
- * Model version              : 1.873
+ * Model version              : 1.897
  * Simulink Coder version : 9.1 (R2019a) 23-Nov-2018
- * C++ source code generated on : Wed Jul 31 16:55:41 2019
+ * C++ source code generated on : Tue Aug 13 23:46:37 2019
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -81,6 +81,7 @@ typedef struct {
   real_T M_uvr_set[3];                 /* '<S8>/control allocator' */
   real_T du_last[4];                   /* '<S8>/control allocator' */
   real_T errorInt[3];                  /* '<S8>/control allocator' */
+  real_T failProt;                     /* '<S7>/basic estimators' */
   real_T attPrev[3];                   /* '<S25>/enableMeas' */
   real_T errorInt_o[3];                /* '<S4>/position control' */
   real_T errorInt_g;                   /* '<S4>/altitude control' */
@@ -108,17 +109,17 @@ typedef struct {
   /* Expression: par
    * Referenced by: '<S5>/attitude controller'
    */
-  struct_dgMNxGftVPGZGI2uTXhtAF attitudecontroller_par;
+  struct_qSGzN42JHiR9ghZIF0bJQG attitudecontroller_par;
 
   /* Expression: par
    * Referenced by: '<S7>/basic estimators'
    */
-  struct_dgMNxGftVPGZGI2uTXhtAF basicestimators_par;
+  struct_qSGzN42JHiR9ghZIF0bJQG basicestimators_par;
 
   /* Expression: par
    * Referenced by: '<S8>/control allocator'
    */
-  struct_dgMNxGftVPGZGI2uTXhtAF controlallocator_par;
+  struct_qSGzN42JHiR9ghZIF0bJQG controlallocator_par;
 } ConstP_URControl_T;
 
 /* External inputs (root inport signals with default storage) */
@@ -215,14 +216,16 @@ class URControlModelClass {
   RT_MODEL_URControl_T URControl_M;
 
   /* private member function(s) for subsystem '<Root>'*/
-  LPFilter_URControl_T *URControl_LPFilter_LPFilter(LPFilter_URControl_T *obj,
-    real_T filterT, const real_T initValue[3], real_T maxLim, real_T minLim);
   void URControl_LPFilter_update(LPFilter_URControl_T *obj, const real_T
     newValue[3]);
+  void URControl_URAngleControl(daqBus *daq, const real_T nd_i[3], const real_T
+    primAxis[3], const stateBus *state, const struct_qSGzN42JHiR9ghZIF0bJQG
+    *b_par, const URControlParamsType *URpar, real_T uv_attCtrl[2], real_T
+    rotVec[2]);
   SimpleDerivative_URControl_T *SimpleDerivative_SimpleDerivati
     (SimpleDerivative_URControl_T *obj, real_T filterT, const real_T initValue[3],
      real_T maxLim, real_T minLim);
-  LPFilter_1_URControl_T *URControl_LPFilter_LPFilter_j(LPFilter_1_URControl_T
+  LPFilter_1_URControl_T *URControl_LPFilter_LPFilter(LPFilter_1_URControl_T
     *obj, real_T filterT);
   void URContr_SimpleDerivative_update(SimpleDerivative_URControl_T *obj, const
     real_T newValue[3], real_T dt);
@@ -246,25 +249,25 @@ class URControlModelClass {
     uvr_des[3], real_T URpar_k0, real_T URpar_t0, real_T URpar_s, real_T
     URpar_est_omegaFilterT, const real_T URpar_rate_MINDI_rateDotKp[3], real_T
     URpar_rate_MINDI_derFilterT, const real_T URpar_rate_MINDI_MKp[3], const
-    struct_dgMNxGftVPGZGI2uTXhtAF *b_par, real_T M_uvr[3]);
+    struct_qSGzN42JHiR9ghZIF0bJQG *b_par, real_T M_uvr[3]);
   void URControl_PIDMomentGen(const real_T state_omegaUV[3], const real_T
     state_omegafUV[3], daqBus *daq, const real_T uvr_des[3], real_T URpar_Iz,
     real_T URpar_Iu, real_T URpar_Iv, const real_T URpar_rate_MPID_rateDotKp[3],
     const real_T URpar_rate_MPID_rateDotKi[3], const real_T
     URpar_rate_MPID_rateDotKd[3], real_T URpar_rate_MPID_derFilterT, real_T
     URpar_rate_MPID_uvrdesderFilter, real_T URpar_rate_MPID_maxInt, real_T
-    URpar_rate_MPID_precGain, const struct_dgMNxGftVPGZGI2uTXhtAF *b_par, real_T
+    URpar_rate_MPID_precGain, const struct_qSGzN42JHiR9ghZIF0bJQG *b_par, real_T
     M_uvr[3]);
   void URControl_controlAllocQPQuick(real_T refStruct_MuRef, real_T
     refStruct_MvRef, real_T refStruct_MzRef, real_T refStruct_FtotRef, const
     real_T FMax[4], const real_T FMin[4], real_T gainStruct_MuGain, real_T
-    gainStruct_MvGain, real_T gainStruct_FtotGain, real_T gainStruct_FGain,
-    real_T gainStruct_MzGain, real_T y_state_init[4], const
-    struct_dgMNxGftVPGZGI2uTXhtAF *b_par, real_T URpar_rate_maxIter, real_T x[4],
+    gainStruct_MvGain, real_T gainStruct_MzGain, real_T gainStruct_FGain, real_T
+    gainStruct_FtotGain, real_T y_state_init[4], const
+    struct_qSGzN42JHiR9ghZIF0bJQG *b_par, real_T URpar_rate_maxIter, real_T x[4],
     real_T *iterSteps, real_T *optimal);
   void URControl_URINDI_allocator(real_T act_fail_id, const real_T Omega_f_dot[3],
     real_T accel_z_f, const real_T v[4], real_T G[32], const real_T w_f[4],
-    const struct_dgMNxGftVPGZGI2uTXhtAF *b_par, real_T w_cmd[4]);
+    const struct_qSGzN42JHiR9ghZIF0bJQG *b_par, real_T w_cmd[4]);
 };
 
 /*-
