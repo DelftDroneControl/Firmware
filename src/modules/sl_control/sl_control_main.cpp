@@ -142,6 +142,10 @@ SimulinkControl::SimulinkControl() :
 	// /* advertise debug value */
 	strncpy(dbg.key, "att_dt", 10);
 	pub_dbg = orb_advertise(ORB_ID(debug_key_value), &dbg);
+
+	// strncpy(dbg_array.name, "state", 10);
+	// dbg_array.id = 10;
+	// pub_dbg_array = orb_advertise(ORB_ID(debug_array), &dbg_array);
 	
 	pub_rate_control_input = orb_advertise(ORB_ID(rate_control_input), &_rate_control_input);
 	pub_attitude_control_input = orb_advertise(ORB_ID(attitude_control_input), &_attitude_control_input);
@@ -221,6 +225,12 @@ SimulinkControl::parameters_updated()
 	AttitudeControlParams.prim_axis_y = _prim_axis_y.get();
 	AttitudeControlParams.xy_gain = _att_xy_gain.get();
 
+	// AttControl (position)
+	AttitudeControlParams.pos_xy_p_gain = _pos_xy_p_gain.get();
+	AttitudeControlParams.pos_z_p_gain = _pos_z_p_gain.get();
+	AttitudeControlParams.vel_xy_p_gain = _vel_xy_p_gain.get();
+	AttitudeControlParams.vel_z_p_gain = _vel_z_p_gain.get();
+
 	// RateControl
 	RateControlParams.roll_gain = _att_roll_gain.get();
 	RateControlParams.pitch_gain = _att_pitch_gain.get();
@@ -234,13 +244,18 @@ SimulinkControl::parameters_updated()
 
 	RateControlParams.t_act = _att_t_act.get();
 
-	// Actuator failure
-	RateControl.RateControl_U.fail_flag = _sl_fail_flag.get();
-	RateControl.RateControl_U.act_limit = _act_limit.get();
-	RateControlParams.fail_id = _sl_fail_id.get();
+	RateControlParams.fdd_k_thres = _sl_fdd_k_thres.get();
+	RateControlParams.fdd_fail_p_thres = _sl_fdd_fail_p_thres.get();
+	RateControlParams.fdd_on = _sl_fdd_on.get();
 
-	PX4_INFO("Parameters updated");
-	PX4_INFO("Actuator limit: %f", static_cast<double>(RateControl.RateControl_U.act_limit));
+	// Actuator failure
+	RateControl.RateControl_U.act_fail_id = _sl_act_fail_id.get();
+	RateControl.RateControl_U.act_limit_rpm = _sl_act_lim_rpm.get();
+	RateControl.RateControl_U.act_saw_amp = _sl_act_saw_amp.get();
+	RateControl.RateControl_U.act_saw_freq = _sl_act_saw_freq.get();
+
+	// PX4_INFO("Parameters updated");
+	// PX4_INFO("Actuator limit: %f", static_cast<double>(RateControl.RateControl_U.act_limit_rpm));
 
 }
 
@@ -482,6 +497,20 @@ SimulinkControl::vision_poll()
 	return false;
 }
 
+bool
+SimulinkControl::pos_sp_triplet_poll()
+{
+	/* check if there is a new message */
+	bool updated;
+	orb_check(_pos_sp_triplet_sub, &updated);
+
+	if (updated) {
+		orb_copy(ORB_ID(position_setpoint_triplet), _pos_sp_triplet_sub, &_pos_sp_triplet);
+		return true;
+	}
+	return false;
+}
+
 
 // void
 // SimulinkControl::has_upset_condition(float[3] att, float )
@@ -652,8 +681,8 @@ SimulinkControl::control_attitude()
 	attitude_gain(2) = roll_pitch_gain;
 
 	// /* get estimated and desired vehicle attitude */
-	Quatf q_v_att(_v_att.q);
-	Quatf q(_vision.q);
+	Quatf q_vis(_vision.q);
+	Quatf q(_v_att.q);
 
 	Quatf qd(_v_att_sp.q_d);
 
@@ -707,37 +736,59 @@ SimulinkControl::control_attitude()
 
 	ExtU_AttitudeControl_T attitudeControl_input;
 
-	Eulerf eul_v_att(q_v_att); // from ekf2
-	Eulerf att(q); // from external vision
+	Eulerf att_vis(q_vis); // from external vision
+	Eulerf att(q); // from ekf2
 
 	// Use ekf2 yaw output
-	att(2) = eul_v_att(2);
+	// att(2) = eul_v_att(2);
 
-	attitudeControl_input.att[0] = att(0);
-	attitudeControl_input.att[1] = att(1);
-	attitudeControl_input.att[2] = att(2);
+	attitudeControl_input.att[0] = att_vis(0);
+	attitudeControl_input.att[1] = att_vis(1);
+	attitudeControl_input.att[2] = att_vis(2);
 
 	attitudeControl_input.rates[0] = _rates_prev(0);
 	attitudeControl_input.rates[1] = _rates_prev(1);
 	attitudeControl_input.rates[2] = _rates_prev(2);
 
-	attitudeControl_input.thrust_vec_sp[0] = e_z_d(0);
-	attitudeControl_input.thrust_vec_sp[1] = e_z_d(1);
-	attitudeControl_input.thrust_vec_sp[2] = e_z_d(2);
-
 	attitudeControl_input.yaw_angle_sp = 0;
+
+	attitudeControl_input.pos_sp[0] = _pos_sp_triplet.current.x;
+	attitudeControl_input.pos_sp[1] = _pos_sp_triplet.current.y;
+	attitudeControl_input.pos_sp[2] = _pos_sp_triplet.current.z;
+
+	attitudeControl_input.accel[0] = _sensor_combined.accelerometer_m_s2[0];
+	attitudeControl_input.accel[1] = _sensor_combined.accelerometer_m_s2[1];
+	attitudeControl_input.accel[2] = _sensor_combined.accelerometer_m_s2[2];
+
+	attitudeControl_input.pos[0] = _vision.x;
+	attitudeControl_input.pos[1] = _vision.y;
+	attitudeControl_input.pos[2] = _vision.z;
+
 
 	AttitudeControl.AttitudeControl_U = attitudeControl_input;
 
+	// PX4_INFO("AttitudeControl Step Start");
+
+
 	AttitudeControl.step();
+
+	// PX4_INFO("AttitudeControl Step End");
+
 
 	_rates_sp(0) = AttitudeControl.AttitudeControl_Y.rates_sp[0];
 	_rates_sp(1) = AttitudeControl.AttitudeControl_Y.rates_sp[1];
-	// _rates_sp(2) = AttitudeControl.AttitudeControl_Y.rates_sp[2]; // use AttitudeControl yaw_rate_sp
-	// _rates_sp(2) = _v_att_sp.yaw_sp_move_rate; // use PX4 yaw_rate_sp
+	// // _rates_sp(2) = AttitudeControl.AttitudeControl_Y.rates_sp[2]; // use AttitudeControl yaw_rate_sp
 
-	// TODO: make configurable
+	_accel_z_sp = AttitudeControl.AttitudeControl_Y.accel_z_sp;
+
+	// if (_yaw_rate_sp > 0.001f || _yaw_rate_sp < -0.001f ) {
 	_rates_sp(2) = _yaw_rate_sp; // use yaw_rate_sp from param
+	// } 
+	// else {
+	// 	_rates_sp(2) += q.inversed().dcm_z() * _v_att_sp.yaw_sp_move_rate;
+	// 	_rates_sp(2) = _v_att_sp.yaw_sp_move_rate; // use PX4 yaw_rate_sp
+	// }
+	// TODO: make configurable
 
 	_attitude_control_input.timestamp = hrt_absolute_time();
 
@@ -749,11 +800,20 @@ SimulinkControl::control_attitude()
 	_attitude_control_input.rates[1] = attitudeControl_input.rates[1];
 	_attitude_control_input.rates[2] = attitudeControl_input.rates[2];
 
-	_attitude_control_input.thrust_vec_sp[0] = attitudeControl_input.thrust_vec_sp[0];
-	_attitude_control_input.thrust_vec_sp[1] = attitudeControl_input.thrust_vec_sp[1];
-	_attitude_control_input.thrust_vec_sp[2] = attitudeControl_input.thrust_vec_sp[2];
-
 	_attitude_control_input.yaw_angle_sp = attitudeControl_input.yaw_angle_sp;
+
+	_attitude_control_input.pos_sp[0] = attitudeControl_input.pos_sp[0];
+	_attitude_control_input.pos_sp[1] = attitudeControl_input.pos_sp[1];
+	_attitude_control_input.pos_sp[2] = attitudeControl_input.pos_sp[2];
+
+	_attitude_control_input.accel[0] = attitudeControl_input.accel[0];
+	_attitude_control_input.accel[1] = attitudeControl_input.accel[1];
+	_attitude_control_input.accel[2] = attitudeControl_input.accel[2];
+
+	_attitude_control_input.pos[0] = attitudeControl_input.pos[0] = _vision.x;
+	_attitude_control_input.pos[1] = attitudeControl_input.pos[1] = _vision.y;
+	_attitude_control_input.pos[2] = attitudeControl_input.pos[2] = _vision.z;
+
 
 	orb_publish(ORB_ID(attitude_control_input), pub_attitude_control_input, &_attitude_control_input);
 
@@ -848,9 +908,11 @@ SimulinkControl::control_attitude_rates(float dt)
 	rateControl_input.rates_sp[1] = _rates_sp(1);
 	rateControl_input.rates_sp[2] = _rates_sp(2);
 
-	rateControl_input.accel_z =_sensor_combined.accelerometer_m_s2[2];
+	rateControl_input.accel[0] = _sensor_combined.accelerometer_m_s2[0];
+	rateControl_input.accel[1] = _sensor_combined.accelerometer_m_s2[1];
+	rateControl_input.accel[2] = _sensor_combined.accelerometer_m_s2[2];
 
-	rateControl_input.thrust_sp =_thrust_sp;
+	rateControl_input.accel_z_sp = _accel_z_sp;
 
 	// See pass.main.mix for esc mapping.
 	rateControl_input.esc_rpm[0] = _esc_status.esc[2].esc_rpm;
@@ -861,11 +923,19 @@ SimulinkControl::control_attitude_rates(float dt)
 	RateControl.RateControl_U = rateControl_input;
 
 	float t_step_start = hrt_absolute_time();
-	
-	RateControl.step();
 
+	// PX4_INFO("RateControl Step Start");
+
+	RateControl.step();
+	// PX4_INFO("RateControl Step End");
+	
 	// `rate_control_input` logger
 	_rate_control_input.timestamp = hrt_absolute_time();
+
+	_rate_control_input.act_fail_id = RateControl.RateControl_U.act_fail_id;
+	_rate_control_input.act_limit_rpm = RateControl.RateControl_U.act_limit_rpm;
+	_rate_control_input.act_saw_amp = RateControl.RateControl_U.act_saw_amp;
+	_rate_control_input.act_saw_freq = RateControl.RateControl_U.act_saw_freq;
 
 	_rate_control_input.rates[0] = rateControl_input.rates[0];
 	_rate_control_input.rates[1] = rateControl_input.rates[1];
@@ -875,9 +945,11 @@ SimulinkControl::control_attitude_rates(float dt)
 	_rate_control_input.rates_sp[1] = rateControl_input.rates_sp[1];
 	_rate_control_input.rates_sp[2] = rateControl_input.rates_sp[2];
 
-	_rate_control_input.accel_z = rateControl_input.accel_z;
+	_rate_control_input.accel[0] = rateControl_input.accel[0];
+	_rate_control_input.accel[1] = rateControl_input.accel[1];
+	_rate_control_input.accel[2] = rateControl_input.accel[2];
 
-	_rate_control_input.thrust_sp = rateControl_input.thrust_sp;
+	_rate_control_input.accel_z_sp = rateControl_input.accel_z_sp;
 
 	_rate_control_input.esc_rpm[0] = rateControl_input.esc_rpm[0];
 	_rate_control_input.esc_rpm[1] = rateControl_input.esc_rpm[1];
@@ -886,6 +958,9 @@ SimulinkControl::control_attitude_rates(float dt)
 
 	_rate_control_input.dt_step = hrt_absolute_time() - t_step_start;
 
+	_rate_control_input.fail_id = RateControl.RateControl_Y.fail_id;
+
+
 	orb_publish(ORB_ID(rate_control_input), pub_rate_control_input, &_rate_control_input);
 
 	// See mixer file `pass.main.mix` for control allocation.
@@ -893,6 +968,21 @@ SimulinkControl::control_attitude_rates(float dt)
 	_actuators.control[1] = RateControl.RateControl_Y.actuators_control[1];
 	_actuators.control[2] = RateControl.RateControl_Y.actuators_control[2];
 	_actuators.control[3] = RateControl.RateControl_Y.actuators_control[3];
+
+	// dbg_array.timestamp = hrt_absolute_time();
+
+	// dbg_array.data[0] = RateControl.RateControl_Y.kalman_state[0];
+	// dbg_array.data[1] = RateControl.RateControl_Y.kalman_state[1];
+	// dbg_array.data[2] = RateControl.RateControl_Y.kalman_state[2];
+	// dbg_array.data[3] = RateControl.RateControl_Y.kalman_state[3];
+	// dbg_array.data[4] = RateControl.RateControl_Y.kalman_state[4];
+	// dbg_array.data[5] = RateControl.RateControl_Y.kalman_state[5];
+	// dbg_array.data[6] = RateControl.RateControl_Y.kalman_state[6];
+	// dbg_array.data[7] = RateControl.RateControl_Y.kalman_state[7];
+	// dbg_array.data[8] = RateControl.RateControl_Y.kalman_state[8];
+
+	// orb_publish(ORB_ID(debug_array), pub_dbg_array, &dbg_array);
+
 }
 
 void
@@ -936,6 +1026,7 @@ SimulinkControl::publish_actuator_controls()
 void
 SimulinkControl::run()
 {
+	PX4_INFO("Run");
 
 	/*
 	 * do subscriptions
@@ -969,6 +1060,8 @@ SimulinkControl::run()
 	_esc_status_sub = orb_subscribe(ORB_ID(esc_status));
 	_vision_sub = orb_subscribe(ORB_ID(vehicle_visual_odometry));
 
+	_pos_sp_triplet_sub = orb_subscribe(ORB_ID(position_setpoint_triplet));
+
 
 	/* wakeup source: gyro data from sensor selected by the sensor app */
 	px4_pollfd_struct_t poll_fds = {};
@@ -994,8 +1087,11 @@ SimulinkControl::run()
 		/* wait for up to 100ms for data */
 		int pret = px4_poll(&poll_fds, 1, 100);
 
+		// PX4_INFO("Poll");
+
 		/* timed out - periodic check for should_exit() */
 		if (pret == 0) {
+			PX4_INFO("pret == 0");
 			continue;
 		}
 
@@ -1015,12 +1111,8 @@ SimulinkControl::run()
 			float dt = (now - last_run) / 1e6f;
 
 			float dt_min = 1.0f / _sample_rate_max;
+			// PX4_INFO("Step");
 
-			if (dt < dt_min) {
-				continue;
-			}
-
-			last_run = now;
 
 			if (dt_log_accumulator > 0.1f) {
 				dbg.value = 1/dt;
@@ -1028,17 +1120,26 @@ SimulinkControl::run()
 				dt_log_accumulator = 0;
 			}
 
+
 			dt_log_accumulator += dt;
 
 			/* copy gyro data */
 			orb_copy(ORB_ID(sensor_gyro), _sensor_gyro_sub[_selected_gyro], &_sensor_gyro);
 
+
+			if (dt < dt_min) {
+				continue;
+			}
+			last_run = now;
+
 			esc_status_poll();
 			const bool vision_updated = vision_poll();
+			pos_sp_triplet_poll();
+
 
 			/* run the rate controller immediately after a gyro update */
 			if (_v_control_mode.flag_control_rates_enabled) {
-				control_attitude_rates(dt);
+				// control_attitude_rates(dt);
 
 				publish_actuator_controls();
 				publish_rate_controller_status();
@@ -1057,6 +1158,10 @@ SimulinkControl::run()
 			const bool attitude_updated = vehicle_attitude_poll();
 
 			sensor_combined_poll();
+
+			// this is a HACK
+			control_attitude();
+			control_attitude_rates(dt);
 
 			attitude_dt += dt;
 
@@ -1082,7 +1187,7 @@ SimulinkControl::run()
 						attitude_setpoint_generated = true;
 					}
 
-					control_attitude();
+					// control_attitude();
 					publish_rates_setpoint();
 				}
 
@@ -1170,6 +1275,7 @@ SimulinkControl::run()
 	orb_unsubscribe(_sensor_combined_sub);
 	orb_unsubscribe(_esc_status_sub);
 	orb_unsubscribe(_vision_sub);
+	orb_unsubscribe(_pos_sp_triplet_sub);
 
 
 	RateControl.terminate();
@@ -1181,7 +1287,7 @@ int SimulinkControl::task_spawn(int argc, char *argv[])
 	_task_id = px4_task_spawn_cmd("sl_control",
 					   SCHED_DEFAULT,
 					   SCHED_PRIORITY_ATTITUDE_CONTROL,
-					   1700,
+					   5000,
 					   (px4_main_t)&run_trampoline,
 					   (char *const *)argv);
 

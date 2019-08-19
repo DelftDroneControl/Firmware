@@ -620,6 +620,8 @@ void Logger::add_default_topics()
 	add_topic("rate_control_input");
 	add_topic("attitude_control_input");
 	add_topic("urcontrol_input");
+	add_topic("loe_detector_input");
+	add_topic("loe_detector_status");
 
 	// From external pose estimation (Optitrack)
 	add_topic("vehicle_visual_odometry");

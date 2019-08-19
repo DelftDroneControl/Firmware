@@ -33,6 +33,17 @@
 
 add_subdirectory(flow)
 
+############################################################################
+# Strip-upload
+############################################################################
+
+add_custom_target(strip_upload
+	COMMAND ${CMAKE_STRIP} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/bin/px4
+	COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/scripts/adb_upload_to_bebop.sh ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/bin/. /data/ftp/internal_000
+	DEPENDS px4
+	COMMENT "stripping, uploading px4"
+	USES_TERMINAL
+	)
 
 ############################################################################
 # Upload

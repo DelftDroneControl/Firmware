@@ -67,9 +67,9 @@ function(px4_add_common_flags)
 
 		-Warray-bounds
 		-Wdisabled-optimization
-		-Wdouble-promotion
+		# -Wdouble-promotion # conflicts with Simulink Coder code
 		-Wfatal-errors
-		-Wfloat-equal
+		# -Wfloat-equal # conflicts with Simulink Coder code
 		-Wformat-security
 		-Winit-self
 		-Wlogical-op

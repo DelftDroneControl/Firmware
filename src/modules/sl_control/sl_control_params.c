@@ -26,33 +26,37 @@ PARAM_DEFINE_FLOAT(SL_ATT_RATE_MAX, 500.0f);
  * @value 2 double rotor failure
  * @group Multicopter Attitude Control
  */
-PARAM_DEFINE_INT32(SL_FAIL_FLAG, 0);
-
-
-/**
- * Failed rotor
- *
- * @value 0 norminal case
- * @value 1 Front left failure
- * @value 2 Front right failure
- * @value 3 Back right failure
- * @value 4 Back left failure
- * @group Multicopter Attitude Control
- */
-PARAM_DEFINE_INT32(SL_FAIL_ID, 0);
+PARAM_DEFINE_INT32(SL_ACT_FAIL_ID, 0);
 
 /**
  * Actuator output limiter.
- * TODO: should be int32
  *
  * @unit rpm
  * @min 3000
  * @max 12200
- * @decimal 0
- * @increment 1
  * @group Multicopter Attitude Control
  */
-PARAM_DEFINE_FLOAT(SL_ACT_LIMIT, 12200f);
+PARAM_DEFINE_INT32(SL_ACT_LIM_RPM, 12200);
+
+/**
+ * Actuator sawtooth shaker amplitude.
+ *
+ * @unit rpm
+ * @min 0
+ * @max 9200
+ * @group Multicopter Attitude Control
+ */
+PARAM_DEFINE_INT32(SL_ACT_SAW_AMP, 1000);
+
+/**
+ * Actuator sawtooth shaker frequency.
+ *
+ * @unit Hz
+ * @min 0
+ * @max 500
+ * @group Multicopter Attitude Control
+ */
+PARAM_DEFINE_INT32(SL_ACT_SAW_FREQ, 100);
 
 /**
  * Yaw rate set point
@@ -210,3 +214,14 @@ PARAM_DEFINE_FLOAT(SL_ATT_AZ_EFF, 16.0f);
  * @group Multicopter Attitude Control
  */
 PARAM_DEFINE_FLOAT(SL_ATT_T_ACT, 0.025f);
+
+
+PARAM_DEFINE_FLOAT(SL_FDD_K_THRES, 0.5f);
+PARAM_DEFINE_FLOAT(SL_FDD_P_THRES, 0.9f);
+PARAM_DEFINE_INT32(SL_FDD_ON, 0f);
+PARAM_DEFINE_FLOAT(SL_LOW_DRPM_LIM, -25000.f);
+
+PARAM_DEFINE_FLOAT(SL_POS_XY_P_GAIN, 1.5f);
+PARAM_DEFINE_FLOAT(SL_POS_Z_P_GAIN, 2f);
+PARAM_DEFINE_FLOAT(SL_VEL_XY_P_GAIN, 1.5f);
+PARAM_DEFINE_FLOAT(SL_VEL_Z_P_GAIN, 5f);

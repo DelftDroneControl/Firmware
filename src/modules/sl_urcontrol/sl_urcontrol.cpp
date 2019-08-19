@@ -63,10 +63,10 @@ using namespace matrix;
 
 URControlModelClass URControl;
 
-int 
-SlURControl::print_usage(const char *reason)
+int SlURControl::print_usage(const char *reason)
 {
-	if (reason) {
+	if (reason)
+	{
 		PX4_WARN("%s\n", reason);
 	}
 
@@ -85,18 +85,19 @@ SlURControl::print_usage(const char *reason)
 	return 0;
 }
 
-SlURControl::SlURControl() :
-	ModuleParams(nullptr),
-	_loop_perf(perf_alloc(PC_ELAPSED, "sl_urcontrol"))
+SlURControl::SlURControl() : ModuleParams(nullptr),
+							 _loop_perf(perf_alloc(PC_ELAPSED, "sl_urcontrol"))
 {
-	URControl.initialize(); 
+	URControl.initialize();
 
-	for (uint8_t i = 0; i < MAX_GYRO_COUNT; i++) {
+	for (uint8_t i = 0; i < MAX_GYRO_COUNT; i++)
+	{
 		_sensor_gyro_sub[i] = -1;
 	}
 
 	/* initialize thermal corrections as we might not immediately get a topic update (only non-zero values) */
-	for (unsigned i = 0; i < 3; i++) {
+	for (unsigned i = 0; i < 3; i++)
+	{
 		// used scale factors to unity
 		_sensor_correction.gyro_scale_0[i] = 1.0f;
 		_sensor_correction.gyro_scale_1[i] = 1.0f;
@@ -114,8 +115,7 @@ SlURControl::SlURControl() :
 	PX4_INFO("Initialized");
 }
 
-void
-SlURControl::parameters_updated()
+void SlURControl::parameters_updated()
 {
 	/* Store some of the parameters in a more convenient way & precompute often-used values */
 
@@ -126,9 +126,9 @@ SlURControl::parameters_updated()
 
 	/* fine tune the rotation */
 	Dcmf board_rotation_offset(Eulerf(
-			M_DEG_TO_RAD_F * _board_offset_x.get(),
-			M_DEG_TO_RAD_F * _board_offset_y.get(),
-			M_DEG_TO_RAD_F * _board_offset_z.get()));
+		M_DEG_TO_RAD_F * _board_offset_x.get(),
+		M_DEG_TO_RAD_F * _board_offset_y.get(),
+		M_DEG_TO_RAD_F * _board_offset_z.get()));
 	_board_rotation = board_rotation_offset * _board_rotation;
 
 	// _sample_rate_max = _sl_pos_ctrl_rate.get();
@@ -137,12 +137,11 @@ SlURControl::parameters_updated()
 	URControl.URControl_U.pos_sp[0] = _sl_x_pos_sp.get();
 	URControl.URControl_U.pos_sp[1] = _sl_y_pos_sp.get();
 	URControl.URControl_U.pos_sp[2] = _sl_z_pos_sp.get();
-	URControl.URControl_U.yaw_sp    = _sl_yaw_sp.get();
-	URControl.URControl_U.fail_flag = _sl_fail_flag.get();
+	URControl.URControl_U.yaw_sp = _sl_yaw_sp.get();
 
 	// Params
 	URControlParams.fail_delay = _sl_fail_delay.get();
-	URControlParams.fail_wRot =  _sl_fail_wrot.get();
+	URControlParams.fail_wRot = _sl_fail_wrot.get();
 
 	// Estimation
 	URControlParams.est_optiDx = _sl_est_optiDx.get();
@@ -170,7 +169,7 @@ SlURControl::parameters_updated()
 	URControlParams.altitude_Kp_pos = _sl_alt_kp_pos.get();
 	URControlParams.altitude_Kp_vel = _sl_alt_kp_vel.get();
 	URControlParams.altitude_Ki_vel = _sl_alt_ki_vel.get();
-	
+
 	// YRC
 	URControlParams.YRC_enable = _sl_yrc_enable.get();
 	URControlParams.YRC_mode = _sl_yrc_mode.get();
@@ -193,7 +192,7 @@ SlURControl::parameters_updated()
 
 	// Envelope
 	URControlParams.envp_enable = _sl_envp_enable.get();
-	URControlParams.envp_mode =   _sl_envp_mode.get();
+	URControlParams.envp_mode = _sl_envp_mode.get();
 
 	// Rate
 	URControlParams.rate_mode = _sl_rate_mode.get();
@@ -207,12 +206,12 @@ SlURControl::parameters_updated()
 	URControlParams.rate_INDI_accZFilterT = _sl_ratedot_indi_accZFilt.get();
 
 	// Rate - QPINDI
-	URControlParams.rate_roll_eff = 	_sl_ratedot_indi_roll_eff.get();
-	URControlParams.rate_pitch_eff = 	_sl_ratedot_indi_pitch_eff.get();
-	URControlParams.rate_yaw_eff = 		_sl_ratedot_indi_yaw_eff.get();
-	URControlParams.rate_az_eff = 		_sl_ratedot_indi_az_eff.get();
+	URControlParams.rate_roll_eff = _sl_ratedot_indi_roll_eff.get();
+	URControlParams.rate_pitch_eff = _sl_ratedot_indi_pitch_eff.get();
+	URControlParams.rate_yaw_eff = _sl_ratedot_indi_yaw_eff.get();
+	URControlParams.rate_az_eff = _sl_ratedot_indi_az_eff.get();
 
-	URControlParams.rate_QPINDI_dwMax =   _sl_ratedot_qpindi_dwmax.get();
+	URControlParams.rate_QPINDI_dwMax = _sl_ratedot_qpindi_dwmax.get();
 	URControlParams.rate_QPINDI_minGain = _sl_ratedot_qpindi_mingain.get();
 
 	// Rate - MPID
@@ -249,20 +248,34 @@ SlURControl::parameters_updated()
 	URControlParams.throw_falltime = _sl_throw_falltime.get();
 	URControlParams.throw_threshold = _sl_throw_threshold.get();
 
+	// //QPpredControl
+	// URControlParams.Kp 	= _sl_qp_kp.get();
+	// URControlParams.Kd 	= _sl_qp_kd.get();
+	// URControlParams.kdr = _sl_qp_kdr.get();
+	// URControlParams.th 	= _sl_qp_th.get();
+	// URControlParams.p1 	= _sl_qp_thr_gain.get();
+	// URControlParams.p2 	= _sl_qp_env_gain.get();
+	// URControlParams.pr 	= _sl_qp_yaw_gain.get();
+	// URControlParams.omega_max = _sl_qp_env_omega.get();
+
 	// Others
 	URControlParams.fail_altProt = _sl_fail_altProt.get();
 	URControlParams.fail_altThresh = _sl_fail_altThresh.get();
+
+	// Alt Protect
+	URControlParams.fail_altProt = _sl_fail_prot.get();
+	URControlParams.fail_altThresh = _sl_fail_alt_thresh.get();
 }
 
-void
-SlURControl::parameter_update_poll()
+void SlURControl::parameter_update_poll()
 {
 	bool updated;
 
 	/* Check if parameters have changed */
 	orb_check(_params_sub, &updated);
 
-	if (updated) {
+	if (updated)
+	{
 		struct parameter_update_s param_update;
 		orb_copy(ORB_ID(parameter_update), _params_sub, &param_update);
 		updateParams();
@@ -270,147 +283,156 @@ SlURControl::parameter_update_poll()
 	}
 }
 
-void
-SlURControl::vehicle_control_mode_poll()
+void SlURControl::vehicle_control_mode_poll()
 {
 	bool updated;
 
 	/* Check if vehicle control mode has changed */
 	orb_check(_v_control_mode_sub, &updated);
 
-	if (updated) {
+	if (updated)
+	{
 		orb_copy(ORB_ID(vehicle_control_mode), _v_control_mode_sub, &_v_control_mode);
 	}
 }
 
-void
-SlURControl::vehicle_status_poll()
+void SlURControl::vehicle_status_poll()
 {
 	/* check if there is new status information */
 	bool vehicle_status_updated;
 	orb_check(_vehicle_status_sub, &vehicle_status_updated);
 
-	if (vehicle_status_updated) {
+	if (vehicle_status_updated)
+	{
 		orb_copy(ORB_ID(vehicle_status), _vehicle_status_sub, &_vehicle_status);
 	}
 }
 
-void
-SlURControl::vehicle_attitude_poll()
+void SlURControl::vehicle_attitude_poll()
 {
 	/* check if there is a new message */
 	bool updated;
 	orb_check(_v_att_sub, &updated);
 
-	if (updated) {
+	if (updated)
+	{
 		orb_copy(ORB_ID(vehicle_attitude), _v_att_sub, &_v_att);
 	}
 }
 
-void
-SlURControl::sensor_correction_poll()
+void SlURControl::sensor_correction_poll()
 {
 	/* check if there is a new message */
 	bool updated;
 	orb_check(_sensor_correction_sub, &updated);
 
-	if (updated) {
+	if (updated)
+	{
 		orb_copy(ORB_ID(sensor_correction), _sensor_correction_sub, &_sensor_correction);
 	}
 
 	/* update the latest gyro selection */
-	if (_sensor_correction.selected_gyro_instance < _gyro_count) {
+	if (_sensor_correction.selected_gyro_instance < _gyro_count)
+	{
 		_selected_gyro = _sensor_correction.selected_gyro_instance;
 	}
 }
 
-void
-SlURControl::sensor_bias_poll()
+void SlURControl::sensor_bias_poll()
 {
 	/* check if there is a new message */
 	bool updated;
 	orb_check(_sensor_bias_sub, &updated);
 
-	if (updated) {
+	if (updated)
+	{
 		orb_copy(ORB_ID(sensor_bias), _sensor_bias_sub, &_sensor_bias);
 	}
-
 }
 
-
-void
-SlURControl::sensor_combined_poll()
+void SlURControl::sensor_combined_poll()
 {
 	/* check if there is a new message */
 	bool updated;
 	orb_check(_sensor_combined_sub, &updated);
 
-	if (updated) {
+	if (updated)
+	{
 		orb_copy(ORB_ID(sensor_combined), _sensor_combined_sub, &_sensor_combined);
 	}
-
 }
 
-void
-SlURControl::vehicle_local_position_poll()
+void SlURControl::vehicle_local_position_poll()
 {
 	/* check if there is a new message */
 	bool updated;
 	orb_check(_vehicle_local_position_sub, &updated);
 
-	if (updated) {
+	if (updated)
+	{
 		orb_copy(ORB_ID(vehicle_local_position), _vehicle_local_position_sub, &_vehicle_local_position);
 	}
 }
 
-void
-SlURControl::vehicle_local_pos_sp_poll()
+void SlURControl::vehicle_local_pos_sp_poll()
 {
 	/* Check if parameters have changed */
 	bool updated;
 	orb_check(_local_pos_sp_sub, &updated);
 
-	if (updated) {
+	if (updated)
+	{
 		orb_copy(ORB_ID(vehicle_local_position_setpoint), _local_pos_sp_sub, &_local_pos_sp);
 	}
 }
 
-void
-SlURControl::esc_status_poll()
+void SlURControl::loe_detector_status_poll()
+{
+	/* check if there is a new message */
+	bool updated;
+	orb_check(_loe_detector_status_sub, &updated);
+
+	if (updated)
+	{
+		orb_copy(ORB_ID(loe_detector_status), _loe_detector_status_sub, &_loe_detector_status);
+	}
+}
+
+void SlURControl::esc_status_poll()
 {
 	/* check if there is a new message */
 	bool updated;
 	orb_check(_esc_status_sub, &updated);
 
-	if (updated) {
+	if (updated)
+	{
 		orb_copy(ORB_ID(esc_status), _esc_status_sub, &_esc_status);
 	}
-
 }
 
-void
-SlURControl::odometry_status_poll()
+void SlURControl::odometry_status_poll()
 {
 	/* check if there is a new message */
 	bool updated;
 	orb_check(_ev_odom_sub, &updated);
 
-	if (updated) {
+	if (updated)
+	{
 		orb_copy(ORB_ID(vehicle_visual_odometry), _ev_odom_sub, &_ev_odom);
-		//PX4_INFO("Odometry data updated!\n");		
-	}	
+		//PX4_INFO("Odometry data updated!\n");
+	}
 }
 
-void
-SlURControl::position_setpoint_triplet_poll()
+void SlURControl::position_setpoint_triplet_poll()
 {
 	/* check if there is a new message */
 	bool updated;
 	orb_check(_position_sp_triplet_sub, &updated);
 
-	if (updated) {
-		orb_copy(ORB_ID(position_setpoint_triplet), _position_sp_triplet_sub, &_position_sp_triplet);	
-	}	
+	if (updated)
+	{
+		orb_copy(ORB_ID(position_setpoint_triplet), _position_sp_triplet_sub, &_position_sp_triplet);
+	}
 }
 
 /*
@@ -418,30 +440,32 @@ SlURControl::position_setpoint_triplet_poll()
  * Input: 
  * Output: 'actuator_controls'
  */
-void
-SlURControl::control_ur(float dt)
+void SlURControl::control_ur(float dt)
 {
 	// get the raw gyro data and correct for thermal errors
 	Vector3f rates;
 	Vector3f accs;
 
-	if (_selected_gyro == 0) {
+	if (_selected_gyro == 0)
+	{
 		rates(0) = (_sensor_gyro.x - _sensor_correction.gyro_offset_0[0]) * _sensor_correction.gyro_scale_0[0];
 		rates(1) = (_sensor_gyro.y - _sensor_correction.gyro_offset_0[1]) * _sensor_correction.gyro_scale_0[1];
 		rates(2) = (_sensor_gyro.z - _sensor_correction.gyro_offset_0[2]) * _sensor_correction.gyro_scale_0[2];
-
-
-	} else if (_selected_gyro == 1) {
+	}
+	else if (_selected_gyro == 1)
+	{
 		rates(0) = (_sensor_gyro.x - _sensor_correction.gyro_offset_1[0]) * _sensor_correction.gyro_scale_1[0];
 		rates(1) = (_sensor_gyro.y - _sensor_correction.gyro_offset_1[1]) * _sensor_correction.gyro_scale_1[1];
 		rates(2) = (_sensor_gyro.z - _sensor_correction.gyro_offset_1[2]) * _sensor_correction.gyro_scale_1[2];
-
-	} else if (_selected_gyro == 2) {
+	}
+	else if (_selected_gyro == 2)
+	{
 		rates(0) = (_sensor_gyro.x - _sensor_correction.gyro_offset_2[0]) * _sensor_correction.gyro_scale_2[0];
 		rates(1) = (_sensor_gyro.y - _sensor_correction.gyro_offset_2[1]) * _sensor_correction.gyro_scale_2[1];
 		rates(2) = (_sensor_gyro.z - _sensor_correction.gyro_offset_2[2]) * _sensor_correction.gyro_scale_2[2];
-
-	} else {
+	}
+	else
+	{
 		rates(0) = _sensor_gyro.x;
 		rates(1) = _sensor_gyro.y;
 		rates(2) = _sensor_gyro.z;
@@ -455,17 +479,15 @@ SlURControl::control_ur(float dt)
 	rates(1) -= _sensor_bias.gyro_y_bias;
 	rates(2) -= _sensor_bias.gyro_z_bias;
 
-	accs(0)    = _sensor_combined.accelerometer_m_s2[0];
-	accs(1)    = _sensor_combined.accelerometer_m_s2[1];
-	accs(2)    = _sensor_combined.accelerometer_m_s2[2];
-	
+	accs(0) = _sensor_combined.accelerometer_m_s2[0];
+	accs(1) = _sensor_combined.accelerometer_m_s2[1];
+	accs(2) = _sensor_combined.accelerometer_m_s2[2];
+
 	// PX4_INFO("%f\t%f\t%f\n",static_cast<double>(accs(0)),static_cast<double>(accs(1)),static_cast<double>(accs(2)));
 	// PX4_INFO("%f\t%f\t%f",static_cast<double>(_sensor_correction.accel_offset_0[0]),static_cast<double>(_sensor_correction.accel_offset_0[1]),static_cast<double>(_sensor_correction.accel_offset_0[2]));
 	// PX4_INFO("%f\t%f\t%f",static_cast<double>(_sensor_correction.accel_offset_1[0]),static_cast<double>(_sensor_correction.accel_offset_1[1]),static_cast<double>(_sensor_correction.accel_offset_1[2]));
 	// PX4_INFO("%f\t%f\t%f\n",static_cast<double>(_sensor_correction.accel_offset_2[0]),static_cast<double>(_sensor_correction.accel_offset_2[1]),static_cast<double>(_sensor_correction.accel_offset_2[2]));
 
-
-	
 	// // gyro measurements
 	// rates(0) = _sensor_combined.gyro_rad[0];
 	// rates(1) = _sensor_combined.gyro_rad[1];
@@ -475,13 +497,13 @@ SlURControl::control_ur(float dt)
 	// accs(0) = _sensor_combined.accelerometer_m_s2[0];
 	// accs(1) = _sensor_combined.accelerometer_m_s2[1];
 	// accs(2) = _sensor_combined.accelerometer_m_s2[2];
-	
+
 	/* get estimated attitude */
 	Quatf q_v_att(_v_att.q);
 	Quatf q(_ev_odom.q);
-	
+
 	/* ensure input quaternions are exactly normalized because acosf(1.00001) == NaN */
-	q.normalize();	
+	q.normalize();
 	q_v_att.normalize();
 
 	ExtU_URControl_T URControl_input;
@@ -494,17 +516,17 @@ SlURControl::control_ur(float dt)
 	// URControl_input.pos[1] = _vehicle_local_position.y;
 	// URControl_input.pos[2] = _vehicle_local_position.z;
 
-	if(isnan(_ev_odom.x)) 
+	if (isnan(_ev_odom.x))
 		URControl_input.pos[0] = 0;
 	else
 		URControl_input.pos[0] = _ev_odom.x;
-	if(isnan(_ev_odom.y)) 
+	if (isnan(_ev_odom.y))
 		URControl_input.pos[1] = 0;
 	else
 		URControl_input.pos[1] = _ev_odom.y;
-	if(isnan(_ev_odom.z))
+	if (isnan(_ev_odom.z))
 		URControl_input.pos[2] = 0;
-	else 
+	else
 		URControl_input.pos[2] = _ev_odom.z;
 
 	URControl_input.rates[0] = rates(0);
@@ -528,19 +550,19 @@ SlURControl::control_ur(float dt)
 	// euler_angles(1) = euler_angles_v_att(1);
 	// euler_angles(2) = euler_angles_v_att(2);
 
-	if(isnan(euler_angles.phi())) 
-		URControl_input.att[0] = 0; 
-	else 
-		URControl_input.att[0] = euler_angles.phi(); 
-	if(isnan(euler_angles.theta())) 
-		URControl_input.att[1] = 0; 
-	else 
-		URControl_input.att[1] = euler_angles.theta(); // - static_cast<float>(0.03); 
-	if(isnan(euler_angles.psi())) 
-		URControl_input.att[2] = 0; 
-	else 
-		URControl_input.att[2] = euler_angles.psi() + static_cast<float>(0.0); 
-	
+	if (isnan(euler_angles.phi()))
+		URControl_input.att[0] = 0;
+	else
+		URControl_input.att[0] = euler_angles.phi();
+	if (isnan(euler_angles.theta()))
+		URControl_input.att[1] = 0;
+	else
+		URControl_input.att[1] = euler_angles.theta(); // - static_cast<float>(0.03);
+	if (isnan(euler_angles.psi()))
+		URControl_input.att[2] = 0;
+	else
+		URControl_input.att[2] = euler_angles.psi() + static_cast<float>(0.0);
+
 	// Set in params for now..
 	//URControl_input.pos_sp[0] = _position_sp_triplet.current.y;
 	//URControl_input.pos_sp[1] = _position_sp_triplet.current.x;
@@ -548,11 +570,19 @@ SlURControl::control_ur(float dt)
 
 	// URControl_input.yaw_sp = 0.f;
 
+	URControl_input.fail_flag = _loe_detector_status.fail_id;
+
+	if (_sl_fail_flag.get() >= 0)
+	{
+		URControl_input.fail_flag = _sl_fail_flag.get();
+	}
+
 	URControl.URControl_U = URControl_input;
 
-	// float t_step_start = hrt_absolute_time();
+	float t_step_start = hrt_absolute_time();
 
 	URControl.step();
+	_step_count++;
 
 	// `urcontrol_input` logger
 	_urcontrol_input.timestamp = hrt_absolute_time();
@@ -578,7 +608,7 @@ SlURControl::control_ur(float dt)
 	_urcontrol_input.att[0] = URControl_input.att[0];
 	_urcontrol_input.att[1] = URControl_input.att[1];
 	_urcontrol_input.att[2] = URControl_input.att[2];
-	
+
 	_urcontrol_input.esc_rpm[0] = URControl_input.esc_rpm[0];
 	_urcontrol_input.esc_rpm[1] = URControl_input.esc_rpm[1];
 	_urcontrol_input.esc_rpm[2] = URControl_input.esc_rpm[2];
@@ -587,7 +617,7 @@ SlURControl::control_ur(float dt)
 	_urcontrol_input.accs[0] = URControl_input.accs[0];
 	_urcontrol_input.accs[1] = URControl_input.accs[1];
 	_urcontrol_input.accs[2] = URControl_input.accs[2];
-	
+
 	// _urcontrol_input.pos_sp[0] = URControl_input.pos_sp[0];
 	// _urcontrol_input.pos_sp[1] = URControl_input.pos_sp[1];
 	// _urcontrol_input.pos_sp[2] = URControl_input.pos_sp[2];
@@ -598,19 +628,20 @@ SlURControl::control_ur(float dt)
 
 	_urcontrol_input.yaw_sp = 0;
 
-	_urcontrol_input.fail_flag = _sl_fail_flag.get();
-	//_urcontrol_input.dt_step = hrt_absolute_time() - t_step_start;
+
+	_urcontrol_input.fail_flag = URControl.URControl_U.fail_flag;
+
+	_urcontrol_input.dt_step = hrt_absolute_time() - t_step_start;
+	_urcontrol_input.step_count = _step_count;
 
 	// See mixer file `pass.main.mix` for exact control allocation.
 	_actuators.control[0] = URControl.URControl_Y.actuators_control[0];
 	_actuators.control[1] = URControl.URControl_Y.actuators_control[1];
 	_actuators.control[2] = URControl.URControl_Y.actuators_control[2];
 	_actuators.control[3] = URControl.URControl_Y.actuators_control[3];
-
 }
 
-void
-SlURControl::run()
+void SlURControl::run()
 {
 	/*
 	 * do subscriptions
@@ -621,15 +652,19 @@ SlURControl::run()
 	_vehicle_status_sub = orb_subscribe(ORB_ID(vehicle_status));
 	_local_pos_sp_sub = orb_subscribe(ORB_ID(vehicle_local_position_setpoint));
 
+	_loe_detector_status_sub = orb_subscribe(ORB_ID(loe_detector_status));
+
 	_esc_status_sub = orb_subscribe(ORB_ID(esc_status));
-	_ev_odom_sub	= orb_subscribe(ORB_ID(vehicle_visual_odometry));
+	_ev_odom_sub = orb_subscribe(ORB_ID(vehicle_visual_odometry));
 	_gyro_count = math::min(orb_group_count(ORB_ID(sensor_gyro)), MAX_GYRO_COUNT);
 
-	if (_gyro_count == 0) {
+	if (_gyro_count == 0)
+	{
 		_gyro_count = 1;
 	}
 
-	for (unsigned s = 0; s < _gyro_count; s++) {
+	for (unsigned s = 0; s < _gyro_count; s++)
+	{
 		_sensor_gyro_sub[s] = orb_subscribe_multi(ORB_ID(sensor_gyro), s);
 	}
 
@@ -647,7 +682,8 @@ SlURControl::run()
 	hrt_abstime last_run = task_start;
 	float dt_log_accumulator = 0.f;
 
-	while (!should_exit()) {
+	while (!should_exit())
+	{
 
 		poll_fds.fd = _sensor_gyro_sub[_selected_gyro];
 
@@ -655,12 +691,14 @@ SlURControl::run()
 		int pret = px4_poll(&poll_fds, 1, 100);
 
 		/* timed out - periodic check for should_exit() */
-		if (pret == 0) {
+		if (pret == 0)
+		{
 			continue;
 		}
 
 		/* this is undesirable but not much we can do - might want to flag unhappy status */
-		if (pret < 0) {
+		if (pret < 0)
+		{
 			PX4_ERR("poll error %d, %d", pret, errno);
 			/* sleep a bit before next try */
 			px4_usleep(100000);
@@ -674,25 +712,30 @@ SlURControl::run()
 
 		float dt_min = 1.0f / _sample_rate_max;
 
-		if (dt < dt_min) {
+		if (dt < dt_min)
+		{
 			continue;
 		}
 
 		/* run controller on gyro changes */
-		if (poll_fds.revents & POLLIN) {
+		if (poll_fds.revents & POLLIN)
+		{
 
 			last_run = now;
 
 			/* guard against too small (< 0.2ms) and too large (> 20ms) dt's */
-			if (dt < 0.0002f) {
+			if (dt < 0.0002f)
+			{
 				dt = 0.0002f;
-
-			} else if (dt > 0.02f) {
+			}
+			else if (dt > 0.02f)
+			{
 				dt = 0.02f;
 			}
 
-			if (dt_log_accumulator > 0.1f) {
-				dbg.value = 1/dt;
+			if (dt_log_accumulator > 0.1f)
+			{
+				dbg.value = 1 / dt;
 				orb_publish(ORB_ID(debug_key_value), pub_dbg, &dbg);
 				// PX4_INFO("ATT_DT: %f", static_cast<double>(dbg.value));
 				dt_log_accumulator = 0;
@@ -714,6 +757,8 @@ SlURControl::run()
 			vehicle_local_position_poll();
 			vehicle_local_pos_sp_poll();
 
+			loe_detector_status_poll();
+
 			esc_status_poll();
 			odometry_status_poll();
 			position_setpoint_triplet_poll();
@@ -723,13 +768,16 @@ SlURControl::run()
 			_actuators.timestamp = hrt_absolute_time();
 			_actuators.timestamp_sample = _sensor_gyro.timestamp;
 
-			if (!_actuators_0_circuit_breaker_enabled) {
-				if (_actuators_0_pub != nullptr) {
+			if (!_actuators_0_circuit_breaker_enabled)
+			{
+				if (_actuators_0_pub != nullptr)
+				{
 					orb_publish(ORB_ID(actuator_controls_0), _actuators_0_pub, &_actuators);
-				} else {
+				}
+				else
+				{
 					_actuators_0_pub = orb_advertise(ORB_ID(actuator_controls_0), &_actuators);
 				}
-
 			}
 			/* publish controller input */
 			orb_publish(ORB_ID(urcontrol_input), pub_urcontrol_input, &_urcontrol_input);
@@ -743,7 +791,8 @@ SlURControl::run()
 	orb_unsubscribe(_params_sub);
 	orb_unsubscribe(_vehicle_status_sub);
 
-	for (unsigned s = 0; s < _gyro_count; s++) {
+	for (unsigned s = 0; s < _gyro_count; s++)
+	{
 		orb_unsubscribe(_sensor_gyro_sub[s]);
 	}
 
@@ -753,24 +802,26 @@ SlURControl::run()
 	orb_unsubscribe(_vehicle_local_position_sub);
 	orb_unsubscribe(_local_pos_sp_sub);
 
+	orb_unsubscribe(_loe_detector_status_sub);
+
 	orb_unsubscribe(_esc_status_sub);
 	orb_unsubscribe(_ev_odom_sub);
 	orb_unsubscribe(_position_sp_triplet_sub);
-	
+
 	URControl.terminate();
 }
 
-int 
-SlURControl::task_spawn(int argc, char *argv[])
+int SlURControl::task_spawn(int argc, char *argv[])
 {
 	_task_id = px4_task_spawn_cmd("sl_urcontrol",
-					   SCHED_DEFAULT,
-					   SCHED_PRIORITY_ATTITUDE_CONTROL,
-					   1700,
-					   (px4_main_t)&run_trampoline,
-					   (char *const *)argv);
+								  SCHED_DEFAULT,
+								  SCHED_PRIORITY_ATTITUDE_CONTROL,
+								  1700,
+								  (px4_main_t)&run_trampoline,
+								  (char *const *)argv);
 
-	if (_task_id < 0) {
+	if (_task_id < 0)
+	{
 		_task_id = -1;
 		return -errno;
 	}
@@ -783,14 +834,12 @@ SlURControl *SlURControl::instantiate(int argc, char *argv[])
 	return new SlURControl();
 }
 
-int 
-SlURControl::custom_command(int argc, char *argv[])
+int SlURControl::custom_command(int argc, char *argv[])
 {
 	return print_usage("unknown command");
 }
 
-int 
-sl_urcontrol_main(int argc, char *argv[])
+int sl_urcontrol_main(int argc, char *argv[])
 {
 	return SlURControl::main(argc, argv);
 }

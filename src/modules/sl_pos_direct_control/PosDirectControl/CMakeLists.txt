@@ -8,7 +8,7 @@
     )
     add_definitions(
         -DMODEL=PosDirectControl
--DNUMST=1
+-DNUMST=2
 -DNCSTATES=0
 -DHAVESTDIO
 -DRT

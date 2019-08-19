@@ -544,11 +544,24 @@ MulticopterPositionControl::set_vehicle_states(const float &vel_sp_z)
 		_states.velocity(1) = _y_deriv.update(_states.position(1));
 		_states.velocity(2) = _z_deriv.update(_states.position(2));
 
-		_states.acceleration(0) = _vel_x_deriv.update(-_states.velocity(0));
-		_states.acceleration(1) = _vel_y_deriv.update(-_states.velocity(1));
-		_states.acceleration(2) = _vel_z_deriv.update(-_states.velocity(2));
-		return;
 	}
+
+	float vel_x_deriv = 0;
+	float vel_y_deriv = 0;
+	float vel_z_deriv = 0;
+
+	if (PX4_ISFINITE(_states.velocity(0)) && PX4_ISFINITE(_states.velocity(1)) && PX4_ISFINITE(_states.velocity(2))) {
+		vel_x_deriv = _vel_x_deriv.update(-_states.velocity(0));
+		vel_y_deriv = _vel_y_deriv.update(-_states.velocity(1));
+		vel_z_deriv = _vel_z_deriv.update(-_states.velocity(2));
+	}
+
+	if (PX4_ISFINITE(vel_x_deriv) && PX4_ISFINITE(vel_y_deriv) && PX4_ISFINITE(vel_z_deriv)) {
+		_states.acceleration(0) = vel_x_deriv;
+		_states.acceleration(1) = vel_y_deriv;
+		_states.acceleration(2) = vel_z_deriv;
+	}
+	return;
 
 	// only set position states if valid and finite
 	if (PX4_ISFINITE(_local_pos.x) && PX4_ISFINITE(_local_pos.y) && _local_pos.xy_valid) {
@@ -645,6 +658,7 @@ MulticopterPositionControl::run()
 
 	// setup file descriptor to poll the local position as loop wakeup source
 	px4_pollfd_struct_t poll_fd = {.fd = _vision_pos_sub};
+	// px4_pollfd_struct_t poll_fd = {.fd = _local_pos_sub};
 	poll_fd.events = POLLIN;
 
 	while (!should_exit()) {

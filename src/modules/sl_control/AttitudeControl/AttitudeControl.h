@@ -7,13 +7,13 @@
  *
  * Code generation for model "AttitudeControl".
  *
- * Model version              : 1.107
- * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C++ source code generated on : Tue Jan 15 16:04:44 2019
+ * Model version              : 1.235
+ * Simulink Coder version : 9.1 (R2019a) 23-Nov-2018
+ * C++ source code generated on : Tue Aug 13 23:44:48 2019
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
- * Embedded hardware selection: Intel->x86-64 (Windows64)
+ * Embedded hardware selection: Custom
  * Code generation objectives: Unspecified
  * Validation result: Not run
  */
@@ -46,23 +46,31 @@
 
 /* Block states (default storage) for system '<Root>' */
 typedef struct {
-  real_T H_att_DSTATE[4];              /* '<Root>/H_att' */
-  real_T H_rates_DSTATE[6];            /* '<Root>/H_rates' */
-  real_T Integrator_DSTATE;            /* '<S59>/Integrator' */
-  real_T Filter_DSTATE;                /* '<S41>/Filter' */
+  real_T N;                            /* '<S2>/unwrap2pi' */
+  real32_T UD_DSTATE;                  /* '<S6>/UD' */
+  real32_T DiscreteStateSpace_DSTATE[3];/* '<S2>/Discrete State-Space' */
+  real32_T P[81];                      /* '<S7>/DataStoreMemory - P' */
+  real32_T x[9];                       /* '<S7>/DataStoreMemory - x' */
+  real32_T psi_last;                   /* '<S2>/unwrap2pi' */
+  real32_T psi_last_l;                 /* '<S2>/MATLAB Function' */
+  boolean_T psi_last_not_empty;        /* '<S2>/unwrap2pi' */
+  boolean_T psi_last_not_empty_n;      /* '<S2>/MATLAB Function' */
 } DW_AttitudeControl_T;
 
 /* External inputs (root inport signals with default storage) */
 typedef struct {
   real32_T att[3];                     /* '<Root>/att' */
   real32_T rates[3];                   /* '<Root>/rates' */
-  real32_T thrust_vec_sp[3];           /* '<Root>/thrust_vec_sp' */
   real32_T yaw_angle_sp;               /* '<Root>/yaw_angle_sp' */
+  real32_T pos_sp[3];                  /* '<Root>/pos_sp' */
+  real32_T accel[3];                   /* '<Root>/accel' */
+  real32_T pos[3];                     /* '<Root>/pos' */
 } ExtU_AttitudeControl_T;
 
 /* External outputs (root outports fed by signals with default storage) */
 typedef struct {
   real32_T rates_sp[3];                /* '<Root>/rates_sp' */
+  real32_T accel_z_sp;                 /* '<Root>/accel_z_sp' */
 } ExtY_AttitudeControl_T;
 
 /* Real-time Model Data Structure */
@@ -79,7 +87,13 @@ struct tag_RTM_AttitudeControl_T {
  *
  */
 extern AttitudeControlParamsType AttitudeControlParams;/* Variable: AttitudeControlParams
-                                                        * Referenced by: '<Root>/Attitude Controller'
+                                                        * Referenced by:
+                                                        *   '<Root>/Attitude Controller'
+                                                        *   '<Root>/MATLAB Function1'
+                                                        *   '<Root>/Pos_x'
+                                                        *   '<Root>/Pos_y'
+                                                        *   '<Root>/Pos_z'
+                                                        *   '<Root>/Vel_z'
                                                         */
 
 /* Class declaration for model AttitudeControl */
@@ -135,104 +149,63 @@ class AttitudeControlModelClass {
  *
  * '<Root>' : 'AttitudeControl'
  * '<S1>'   : 'AttitudeControl/Attitude Controller'
- * '<S2>'   : 'AttitudeControl/Discrete Derivative'
+ * '<S2>'   : 'AttitudeControl/EKF_att_pos'
  * '<S3>'   : 'AttitudeControl/HeadingControl'
- * '<S4>'   : 'AttitudeControl/HeadingControl/Discrete PID Controller1'
- * '<S5>'   : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Anti-windup'
- * '<S6>'   : 'AttitudeControl/HeadingControl/Discrete PID Controller1/D Gain'
- * '<S7>'   : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Filter'
- * '<S8>'   : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Filter ICs'
- * '<S9>'   : 'AttitudeControl/HeadingControl/Discrete PID Controller1/I Gain'
- * '<S10>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Ideal P Gain'
- * '<S11>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Ideal P Gain Fdbk'
- * '<S12>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Integrator'
- * '<S13>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Integrator ICs'
- * '<S14>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/N Copy'
- * '<S15>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/N Gain'
- * '<S16>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/P Copy'
- * '<S17>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Parallel P Gain'
- * '<S18>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Reset Signal'
- * '<S19>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Saturation'
- * '<S20>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Saturation Fdbk'
- * '<S21>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Sum'
- * '<S22>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Sum Fdbk'
- * '<S23>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Tracking Mode'
- * '<S24>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Tracking Mode Sum'
- * '<S25>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/postSat Signal'
- * '<S26>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/preSat Signal'
- * '<S27>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Anti-windup/Back Calculation'
- * '<S28>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Anti-windup/Cont. Clamping Ideal'
- * '<S29>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Anti-windup/Cont. Clamping Parallel'
- * '<S30>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Anti-windup/Disabled'
- * '<S31>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Anti-windup/Disc. Clamping Ideal'
- * '<S32>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Anti-windup/Disc. Clamping Parallel'
- * '<S33>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Anti-windup/Passthrough'
- * '<S34>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/D Gain/Disabled'
- * '<S35>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/D Gain/External Parameters'
- * '<S36>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/D Gain/Internal Parameters'
- * '<S37>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Filter/Cont. Filter'
- * '<S38>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Filter/Differentiator'
- * '<S39>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Filter/Disabled'
- * '<S40>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Filter/Disc. Backward Euler Filter'
- * '<S41>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Filter/Disc. Forward Euler Filter'
- * '<S42>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Filter/Disc. Trapezoidal Filter'
- * '<S43>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Filter ICs/Disabled'
- * '<S44>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Filter ICs/External IC'
- * '<S45>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Filter ICs/Internal IC - Differentiator'
- * '<S46>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Filter ICs/Internal IC - Filter'
- * '<S47>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/I Gain/Disabled'
- * '<S48>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/I Gain/External Parameters'
- * '<S49>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/I Gain/Internal Parameters'
- * '<S50>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Ideal P Gain/External Parameters'
- * '<S51>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Ideal P Gain/Internal Parameters'
- * '<S52>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Ideal P Gain/Passthrough'
- * '<S53>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Ideal P Gain Fdbk/Disabled'
- * '<S54>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Ideal P Gain Fdbk/External Parameters'
- * '<S55>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Ideal P Gain Fdbk/Internal Parameters'
- * '<S56>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Ideal P Gain Fdbk/Passthrough'
- * '<S57>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Integrator/Continuous'
- * '<S58>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Integrator/Disabled'
- * '<S59>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Integrator/Discrete'
- * '<S60>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Integrator ICs/Disabled'
- * '<S61>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Integrator ICs/External IC'
- * '<S62>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Integrator ICs/Internal IC'
- * '<S63>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/N Copy/Disabled'
- * '<S64>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/N Copy/Disabled wSignal Specification'
- * '<S65>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/N Copy/External Parameters'
- * '<S66>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/N Copy/Internal Parameters'
- * '<S67>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/N Gain/Disabled'
- * '<S68>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/N Gain/External Parameters'
- * '<S69>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/N Gain/Internal Parameters'
- * '<S70>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/N Gain/Passthrough'
- * '<S71>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/P Copy/Disabled'
- * '<S72>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/P Copy/External Parameters Ideal'
- * '<S73>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/P Copy/Internal Parameters Ideal'
- * '<S74>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Parallel P Gain/Disabled'
- * '<S75>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Parallel P Gain/External Parameters'
- * '<S76>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Parallel P Gain/Internal Parameters'
- * '<S77>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Parallel P Gain/Passthrough'
- * '<S78>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Reset Signal/Disabled'
- * '<S79>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Reset Signal/External Reset'
- * '<S80>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Saturation/Enabled'
- * '<S81>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Saturation/Passthrough'
- * '<S82>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Saturation Fdbk/Disabled'
- * '<S83>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Saturation Fdbk/Enabled'
- * '<S84>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Saturation Fdbk/Passthrough'
- * '<S85>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Sum/Passthrough_I'
- * '<S86>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Sum/Passthrough_P'
- * '<S87>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Sum/Sum_PD'
- * '<S88>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Sum/Sum_PI'
- * '<S89>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Sum/Sum_PID'
- * '<S90>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Sum Fdbk/Disabled'
- * '<S91>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Sum Fdbk/Enabled'
- * '<S92>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Sum Fdbk/Passthrough'
- * '<S93>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Tracking Mode/Disabled'
- * '<S94>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Tracking Mode/Enabled'
- * '<S95>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Tracking Mode Sum/Passthrough'
- * '<S96>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Tracking Mode Sum/Tracking Mode'
- * '<S97>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/postSat Signal/Feedback_Path'
- * '<S98>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/postSat Signal/Forward_Path'
- * '<S99>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/preSat Signal/Feedback_Path'
- * '<S100>' : 'AttitudeControl/HeadingControl/Discrete PID Controller1/preSat Signal/Forward_Path'
+ * '<S4>'   : 'AttitudeControl/MATLAB Function1'
+ * '<S5>'   : 'AttitudeControl/n_des from accel_sp'
+ * '<S6>'   : 'AttitudeControl/EKF_att_pos/Difference'
+ * '<S7>'   : 'AttitudeControl/EKF_att_pos/Extended Kalman Filter'
+ * '<S8>'   : 'AttitudeControl/EKF_att_pos/MATLAB Function'
+ * '<S9>'   : 'AttitudeControl/EKF_att_pos/unwrap2pi'
+ * '<S10>'  : 'AttitudeControl/EKF_att_pos/Extended Kalman Filter/Correct1'
+ * '<S11>'  : 'AttitudeControl/EKF_att_pos/Extended Kalman Filter/Output'
+ * '<S12>'  : 'AttitudeControl/EKF_att_pos/Extended Kalman Filter/Predict'
+ * '<S13>'  : 'AttitudeControl/EKF_att_pos/Extended Kalman Filter/Correct1/Correct'
+ * '<S14>'  : 'AttitudeControl/EKF_att_pos/Extended Kalman Filter/Predict/Predict'
+ * '<S15>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1'
+ * '<S16>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Anti-windup'
+ * '<S17>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/D Gain'
+ * '<S18>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Filter'
+ * '<S19>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Filter ICs'
+ * '<S20>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/I Gain'
+ * '<S21>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Ideal P Gain'
+ * '<S22>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Ideal P Gain Fdbk'
+ * '<S23>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Integrator'
+ * '<S24>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Integrator ICs'
+ * '<S25>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/N Copy'
+ * '<S26>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/N Gain'
+ * '<S27>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/P Copy'
+ * '<S28>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Parallel P Gain'
+ * '<S29>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Reset Signal'
+ * '<S30>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Saturation'
+ * '<S31>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Saturation Fdbk'
+ * '<S32>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Sum'
+ * '<S33>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Sum Fdbk'
+ * '<S34>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Tracking Mode'
+ * '<S35>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Tracking Mode Sum'
+ * '<S36>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/postSat Signal'
+ * '<S37>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/preSat Signal'
+ * '<S38>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Anti-windup/Passthrough'
+ * '<S39>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/D Gain/Internal Parameters'
+ * '<S40>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Filter/Disc. Forward Euler Filter'
+ * '<S41>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Filter ICs/Internal IC - Filter'
+ * '<S42>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/I Gain/Internal Parameters'
+ * '<S43>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Ideal P Gain/Passthrough'
+ * '<S44>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Ideal P Gain Fdbk/Disabled'
+ * '<S45>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Integrator/Discrete'
+ * '<S46>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Integrator ICs/Internal IC'
+ * '<S47>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/N Copy/Disabled'
+ * '<S48>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/N Gain/Internal Parameters'
+ * '<S49>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/P Copy/Disabled'
+ * '<S50>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Parallel P Gain/Internal Parameters'
+ * '<S51>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Reset Signal/Disabled'
+ * '<S52>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Saturation/Passthrough'
+ * '<S53>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Saturation Fdbk/Disabled'
+ * '<S54>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Sum/Sum_PID'
+ * '<S55>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Sum Fdbk/Disabled'
+ * '<S56>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Tracking Mode/Disabled'
+ * '<S57>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/Tracking Mode Sum/Passthrough'
+ * '<S58>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/postSat Signal/Forward_Path'
+ * '<S59>'  : 'AttitudeControl/HeadingControl/Discrete PID Controller1/preSat Signal/Forward_Path'
  */
 #endif                                 /* RTW_HEADER_AttitudeControl_h_ */

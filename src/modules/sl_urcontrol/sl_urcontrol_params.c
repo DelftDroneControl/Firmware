@@ -4,6 +4,7 @@
  *
  * @author
  * 
+ * These parameters must mirror `URControl_init.m`
  * TODO: set min/max/increments, descriptions, remove setpoints
  */
 
@@ -63,7 +64,7 @@ PARAM_DEFINE_FLOAT(SL_SP_YAW, 0.f);
  * @value 2 double rotor failure
  * @group Multicopter Attitude Control
  */
-PARAM_DEFINE_INT32(SL_FAIL_FLAG_POS, 0);
+PARAM_DEFINE_INT32(SL_FAIL_FLAG_UR, -1);
 
 // Params
 PARAM_DEFINE_FLOAT(SL_FAIL_DELAY, 0.0);
@@ -96,11 +97,13 @@ PARAM_DEFINE_FLOAT(SL_ALT_KP_POS, 1.5);
 PARAM_DEFINE_FLOAT(SL_ALT_KP_VEL, 15);
 PARAM_DEFINE_FLOAT(SL_ALT_KI_VEL, 15);
 
-// YRC
+// YRC, see `URYawControl.m`
 PARAM_DEFINE_INT32(SL_YRC_ENABLE, 1);
-PARAM_DEFINE_INT32(SL_YRC_MODE, 1);
+PARAM_DEFINE_INT32(SL_YRC_MODE, 1); /* [1] control psi setpoint [2] control rate via `SL_YRC_RATECMD` parameter */
 PARAM_DEFINE_FLOAT(SL_YRC_KP_PSI, 5.0);
 PARAM_DEFINE_FLOAT(SL_YRC_RATECMD, 0.0);
+
+// YRC/fail, see `URFailureYawRateControl.m`
 PARAM_DEFINE_INT32(SL_YRCFAIL_MODE, 2);
 PARAM_DEFINE_FLOAT(SL_YRCFAIL_MZG, 50);
 
