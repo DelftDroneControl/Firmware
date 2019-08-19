@@ -54,6 +54,7 @@
 #include <uORB/topics/vehicle_local_position_setpoint.h>
 
 #include <uORB/topics/vehicle_status.h>
+#include <uORB/topics/loe_detector_status.h>
 
 #include <uORB/topics/debug_key_value.h>
 #include <uORB/topics/urcontrol_input.h>
@@ -114,6 +115,8 @@ private:
 	void		vehicle_local_position_poll();
 	void 		vehicle_local_pos_sp_poll();
 
+	void		loe_detector_status_poll();
+
 	void		esc_status_poll();
 	void	    odometry_status_poll();
 	void		position_setpoint_triplet_poll();
@@ -128,11 +131,7 @@ private:
 	 */
 	void		control_ur(float dt);
 
-	// /**
-	//  * Throttle PID attenuation.
-	//  */
-	// matrix::Vector3f pid_attenuations(float tpa_breakpoint, float tpa_rate);
-
+	int 	_step_count = 0; 
 
 	int		_v_att_sub{-1};			/**< vehicle attitude subscription */
 	int		_v_control_mode_sub{-1};	/**< vehicle control mode subscription */
@@ -144,6 +143,8 @@ private:
 	int		_sensor_combined_sub{-1};	/**< vehicle land detected subscription */
 	int		_vehicle_local_position_sub{-1};	/**< vehicle land detected subscription */
 	int     _local_pos_sp_sub{-1};	/**< vehicle position setpoint subscription */
+
+	int		_loe_detector_status_sub{-1};
 
 	int		_esc_status_sub{-1};
 	int 	_ev_odom_sub{-1};
@@ -168,6 +169,8 @@ private:
 	struct sensor_combined_s		_sensor_combined {};
 	struct vehicle_local_position_s		_vehicle_local_position {};
 	struct vehicle_local_position_setpoint_s	_local_pos_sp {};
+
+	struct loe_detector_status_s	_loe_detector_status {};
 
 	struct esc_status_s				_esc_status {};
 	struct vehicle_odometry_s		_ev_odom {};

@@ -32,11 +32,8 @@
  ****************************************************************************/
 
 /**
- * @file ekf2_params.c
- * Parameter definition for ekf2.
- *
- * @author Roman Bast <bapstroman@gmail.com>
- *
+ * @file sl_loe_detector_params.c
+ * Parameter definition for the loss of actuator effectiveness detector.
  */
 
 /**
@@ -56,6 +53,15 @@ PARAM_DEFINE_FLOAT(FDD_K_THRES, 0.25f);
  * @group Loss of effectiveness detector
  */
 PARAM_DEFINE_FLOAT(FDD_FAIL_P_THRES, 0.9f);
+
+/**
+ *
+ * @unit
+ * @min -1
+ * @max 4
+ * @group Loss of effectiveness detector
+ */
+PARAM_DEFINE_INT32(FDD_FAIL_ID_OVER, -1);
 
 /**
  *
