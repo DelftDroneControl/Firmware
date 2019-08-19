@@ -287,6 +287,9 @@ private:
 		(ParamFloat<px4::params::SL_RDOT_MAXINT>)  _sl_ratedot_maxInt,
 		(ParamFloat<px4::params::SL_RDOT_PRECGAIN>)  _sl_ratedot_precGain,
 
+		(ParamFloat<px4::params::SL_RDOT_MUGAIN>) _sl_ratedot_mugain,
+		(ParamFloat<px4::params::SL_RDOT_MVGAIN>) _sl_ratedot_mvgain,
+		(ParamFloat<px4::params::SL_RDOT_MZGAIN>) _sl_ratedot_mzgain,
 		(ParamFloat<px4::params::SL_RDOT_FTOT>) _sl_ratedot_ftot,
 
 		// (ParamFloat<px4::params::SL_MINDI_DFILT>) _sl_ratedot_mindi_derFiltT,

@@ -7,13 +7,13 @@
  *
  * Code generation for model "URControl".
  *
- * Model version              : 1.879
- * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C++ source code generated on : Wed May  1 11:40:40 2019
+ * Model version              : 1.897
+ * Simulink Coder version : 9.1 (R2019a) 23-Nov-2018
+ * C++ source code generated on : Mon Aug 19 14:50:43 2019
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
- * Embedded hardware selection: Intel->x86-64 (Windows64)
+ * Embedded hardware selection: Custom
  * Code generation objectives: Unspecified
  * Validation result: Not run
  */
@@ -27,17 +27,25 @@
 
 typedef struct {
   real_T pos[3];
+  real_T posRaw[3];
   real_T vel[3];
+  real_T att[3];
+  real_T attRaw[3];
   real_T acc[3];
+  real_T accRaw[3];
   real_T n[3];
+  real_T omega[3];
+  real_T omegaf[3];
   real_T omegaUV[3];
   real_T omegafUV[3];
+  real_T wRotor[4];
   real_T FMax[4];
   real_T FMin[4];
   real_T uvDot_max[2];
   real_T uvDot_min[2];
   real_T uv_max[2];
   real_T uv_min[2];
+  real_T posTarget[3];
   real_T velTarget[3];
   real_T a_ref[3];
   real_T n_des[3];
@@ -67,6 +75,7 @@ typedef struct {
   real_T dM[3];
   real_T inp[4];
   real_T dw_lin[4];
+  real_T inpActual[4];
 } daqBus;
 
 #endif
@@ -138,7 +147,6 @@ typedef struct {
   real_T Ix;
   real_T Iy;
   real_T Iz;
-  real_T Ip;
   real_T Iu;
   real_T Iv;
   real_T s;
@@ -147,8 +155,6 @@ typedef struct {
   real_T fail_delay;
   real_T fail_wRot;
   real_T signr;
-  real_T w_max;
-  real_T w_min;
   real_T R_xy_uv[4];
   real_T est_optiDx;
   real_T est_optiDy;
@@ -216,7 +222,6 @@ typedef struct {
   real_T envp_minDeviation;
   real_T rate_mode;
   real_T rate_momentMode;
-  real_T rate_quadratic_programming;
   real_T rate_INDI_G[32];
   real_T rate_INDI_rateDotKp[3];
   real_T rate_INDI_omegaDotFilterT;
@@ -250,23 +255,6 @@ typedef struct {
   real_T rate_FtotGain;
   real_T rate_FGain;
   real_T rate_maxIter;
-  real_T Kp;
-  real_T Kd;
-  real_T kdr;
-  real_T Kp_flip;
-  real_T Kd_flip;
-  real_T th;
-  real_T p1;
-  real_T p2;
-  real_T p3;
-  real_T pr;
-  real_T omega_max;
-  real_T k_omega_max;
-  real_T R_uv_xy[4];
-  boolean_T det_flip_direction;
-  boolean_T flip_or_not_logic;
-  real_T h3_flip_threshold;
-  boolean_T flip;
   real_T flip_mode;
   real_T flip_time;
   real_T flip_upTime;
@@ -366,9 +354,9 @@ typedef struct {
   real_T w_min;
   real_T mass;
   real_T fail_id;
-  real_T failure_id;
   real_T fail_time;
   struct_AHd68odqz51NWDIFKWnLKG sihao;
+  URControlParamsType URC;
   struct_KZWRH8wmRo8gScyf5zlwCH px4;
 } struct_RFHeXVQBKrBUbfkgPERCEC;
 
@@ -387,7 +375,7 @@ typedef struct {
 
 #endif                                 /*typedef_LPFilter_1_URControl_T*/
 
-/* Custom Type definition for MATLAB Function: '<S35>/Correct' */
+/* Custom Type definition for MATLAB Function: '<S32>/Correct' */
 #ifndef struct_tag_sZozwYUqIoF3KwkqeARQ8OE
 #define struct_tag_sZozwYUqIoF3KwkqeARQ8OE
 
@@ -408,9 +396,9 @@ struct tag_sZozwYUqIoF3KwkqeARQ8OE
 
 typedef struct tag_sZozwYUqIoF3KwkqeARQ8OE sZozwYUqIoF3KwkqeARQ8OE_URCon_T;
 
-#endif                                 /*typedef_sZozwYUqIoF3KwkqeARQ8OE_URCon_T*/
+#endif                               /*typedef_sZozwYUqIoF3KwkqeARQ8OE_URCon_T*/
 
-/* Custom Type definition for MATLAB Function: '<S37>/Predict' */
+/* Custom Type definition for MATLAB Function: '<S34>/Predict' */
 #ifndef struct_tag_sBhY6iGnb96DZXSV480ISLB
 #define struct_tag_sBhY6iGnb96DZXSV480ISLB
 
@@ -431,7 +419,7 @@ struct tag_sBhY6iGnb96DZXSV480ISLB
 
 typedef struct tag_sBhY6iGnb96DZXSV480ISLB sBhY6iGnb96DZXSV480ISLB_URCon_T;
 
-#endif                                 /*typedef_sBhY6iGnb96DZXSV480ISLB_URCon_T*/
+#endif                               /*typedef_sBhY6iGnb96DZXSV480ISLB_URCon_T*/
 
 /* Custom Type definition for MATLAB Function: '<S8>/control allocator' */
 #ifndef typedef_LPFilter_URControl_T

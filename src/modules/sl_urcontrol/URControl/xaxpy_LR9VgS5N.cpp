@@ -5,18 +5,18 @@
  * course requirements at degree granting institutions only.  Not for
  * government, commercial, or other organizational use.
  *
- * Code generation for model "PosDirectControl".
+ * Code generation for model "URControl".
  *
- * Model version              : 1.1528
+ * Model version              : 1.897
  * Simulink Coder version : 9.1 (R2019a) 23-Nov-2018
- * C++ source code generated on : Tue Jul 30 15:44:32 2019
- * Created for block: PosDirectControl
+ * C++ source code generated on : Mon Aug 19 14:50:43 2019
+ * Created for block: URControl
  */
 
 #include "rtwtypes.h"
 #include "xaxpy_LR9VgS5N.h"
 
-/* Function for MATLAB Function: '<S6>/indi' */
+/* Function for MATLAB Function: '<S8>/control allocator' */
 void xaxpy_LR9VgS5N(int32_T n, real_T a, const real_T x[4], int32_T ix0, real_T
                     y[16], int32_T iy0)
 {

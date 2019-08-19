@@ -188,7 +188,7 @@ void SlURControl::parameters_updated()
 	URControlParams.attitude_enableTraj = _sl_attitude_enabletraj.get();
 	URControlParams.attitude_rotSpeedComp = _sl_attitude_rotspeedcomp.get();
 	URControlParams.attitude_yrcComp = _sl_attitude_yrcComp.get();
-	URControlParams.trigger_PA_thresh = _sl_qp_pa_thresh.get();
+	// URControlParams.trigger_PA_thresh = _sl_qp_pa_thresh.get();
 
 	// Envelope
 	URControlParams.envp_enable = _sl_envp_enable.get();
@@ -229,6 +229,9 @@ void SlURControl::parameters_updated()
 	URControlParams.rate_MPID_maxInt = _sl_ratedot_maxInt.get();
 	URControlParams.rate_MPID_precGain = _sl_ratedot_precGain.get();
 
+	URControlParams.rate_MuGain = _sl_ratedot_mugain.get();
+	URControlParams.rate_MvGain = _sl_ratedot_mvgain.get();
+	URControlParams.rate_MzGain = _sl_ratedot_mzgain.get();
 	URControlParams.rate_FtotGain = _sl_ratedot_ftot.get();
 
 	// Rate - MINDI
@@ -258,13 +261,13 @@ void SlURControl::parameters_updated()
 	// URControlParams.pr 	= _sl_qp_yaw_gain.get();
 	// URControlParams.omega_max = _sl_qp_env_omega.get();
 
-	// Others
-	URControlParams.fail_altProt = _sl_fail_altProt.get();
-	URControlParams.fail_altThresh = _sl_fail_altThresh.get();
+	// // Others
+	// URControlParams.fail_altProt = _sl_fail_altProt.get();
+	// URControlParams.fail_altThresh = _sl_fail_altThresh.get();
 
-	// Alt Protect
-	URControlParams.fail_altProt = _sl_fail_prot.get();
-	URControlParams.fail_altThresh = _sl_fail_alt_thresh.get();
+	// // Alt Protect
+	// URControlParams.fail_altProt = _sl_fail_prot.get();
+	// URControlParams.fail_altThresh = _sl_fail_alt_thresh.get();
 }
 
 void SlURControl::parameter_update_poll()

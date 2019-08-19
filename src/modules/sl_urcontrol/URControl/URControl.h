@@ -7,13 +7,13 @@
  *
  * Code generation for model "URControl".
  *
- * Model version              : 1.879
- * Simulink Coder version : 9.0 (R2018b) 24-May-2018
- * C++ source code generated on : Wed May  1 11:40:40 2019
+ * Model version              : 1.897
+ * Simulink Coder version : 9.1 (R2019a) 23-Nov-2018
+ * C++ source code generated on : Mon Aug 19 14:50:43 2019
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
- * Embedded hardware selection: Intel->x86-64 (Windows64)
+ * Embedded hardware selection: Custom
  * Code generation objectives: Unspecified
  * Validation result: Not run
  */
@@ -22,7 +22,6 @@
 #define RTW_HEADER_URControl_h_
 #include <string.h>
 #include <cmath>
-#include <math.h>
 #include <stddef.h>
 #ifndef URControl_COMMON_INCLUDES_
 # define URControl_COMMON_INCLUDES_
@@ -35,10 +34,9 @@
 
 /* Shared type includes */
 #include "multiword_types.h"
-#include "rtGetNaN.h"
-#include "rt_nonfinite.h"
 #include "rtGetInf.h"
-#include "rt_defines.h"
+#include "rt_nonfinite.h"
+#include "rtGetNaN.h"
 
 /* Macros for accessing real-time model data structure */
 #ifndef rtmGetErrorStatus
@@ -51,9 +49,9 @@
 
 /* Block signals (default storage) */
 typedef struct {
-  real_T att_ekfquat[3];               /* '<S27>/Flip1' */
+  real_T att_ekfquat[3];               /* '<S25>/Flip1' */
   real_T Probe[2];                     /* '<S9>/Probe' */
-  real_T Probe_d[2];                   /* '<S14>/Probe' */
+  real_T Probe_d[2];                   /* '<S13>/Probe' */
 } B_URControl_T;
 
 /* Block states (default storage) for system '<Root>' */
@@ -63,7 +61,7 @@ typedef struct {
   SimpleDerivative_URControl_T omegaDot;/* '<S8>/control allocator' */
   SimpleDerivative_URControl_T errorD; /* '<S8>/control allocator' */
   SimpleDerivative_URControl_T uvrDer; /* '<S8>/control allocator' */
-  SimpleDerivative_URControl_T omegaDot_p;/* '<S8>/control allocator' */
+  SimpleDerivative_URControl_T omegaDot_h;/* '<S8>/control allocator' */
   LPFilter_2_URControl_T wRotorFilter; /* '<S8>/control allocator' */
   LPFilter_URControl_T omegaFilter;    /* '<S7>/basic estimators' */
   LPFilter_URControl_T posFilter;      /* '<S7>/basic estimators' */
@@ -71,34 +69,34 @@ typedef struct {
   LPFilter_URControl_T accFilter;      /* '<S7>/basic estimators' */
   LPFilter_1_URControl_T accZFilt;     /* '<S8>/control allocator' */
   real_T Delay_DSTATE[1000];           /* '<Root>/Delay' */
-  real_T Integrator_DSTATE[3];         /* '<S13>/Integrator' */
-  real_T Integrator_DSTATE_i;          /* '<S18>/Integrator' */
+  real_T Integrator_DSTATE[3];         /* '<S12>/Integrator' */
+  real_T Integrator_DSTATE_i;          /* '<S16>/Integrator' */
   real_T DiscreteStateSpace_DSTATE[3]; /* '<S5>/Discrete State-Space' */
-  real_T DiscreteStateSpace_DSTATE_i[3];/* '<S27>/Discrete State-Space' */
-  real_T Memory_PreviousInput[4];      /* '<S27>/Memory' */
-  real_T P[100];                       /* '<S30>/DataStoreMemory - P' */
-  real_T x[10];                        /* '<S30>/DataStoreMemory - x' */
+  real_T DiscreteStateSpace_DSTATE_i[3];/* '<S25>/Discrete State-Space' */
+  real_T Memory_PreviousInput[4];      /* '<S25>/Memory' */
+  real_T P[100];                       /* '<S27>/DataStoreMemory - P' */
+  real_T x[10];                        /* '<S27>/DataStoreMemory - x' */
   real_T y_state_prev[4];              /* '<S8>/control allocator' */
   real_T Fset_prev[4];                 /* '<S8>/control allocator' */
   real_T M_uvr_set[3];                 /* '<S8>/control allocator' */
   real_T du_last[4];                   /* '<S8>/control allocator' */
   real_T errorInt[3];                  /* '<S8>/control allocator' */
   real_T failProt;                     /* '<S7>/basic estimators' */
-  real_T attPrev[3];                   /* '<S27>/enableMeas' */
-  real_T errorInt_p[3];                /* '<S4>/position control' */
-  real_T errorInt_b;                   /* '<S4>/altitude control' */
+  real_T attPrev[3];                   /* '<S25>/enableMeas' */
+  real_T errorInt_o[3];                /* '<S4>/position control' */
+  real_T errorInt_g;                   /* '<S4>/altitude control' */
   real_T fallCount;                    /* '<S3>/MATLAB Function' */
   real_T thrown;                       /* '<S3>/MATLAB Function' */
   real_T flipTime;                     /* '<S3>/MATLAB Function' */
-  int8_T Integrator_PrevResetState;    /* '<S13>/Integrator' */
-  int8_T Integrator_PrevResetState_i;  /* '<S18>/Integrator' */
-  uint8_T Integrator_IC_LOADING;       /* '<S13>/Integrator' */
-  uint8_T Integrator_IC_LOADING_a;     /* '<S18>/Integrator' */
+  int8_T Integrator_PrevResetState;    /* '<S12>/Integrator' */
+  int8_T Integrator_PrevResetState_i;  /* '<S16>/Integrator' */
+  uint8_T Integrator_IC_LOADING;       /* '<S12>/Integrator' */
+  uint8_T Integrator_IC_LOADING_a;     /* '<S16>/Integrator' */
   boolean_T omegaDot_not_empty;        /* '<S8>/control allocator' */
   boolean_T accZFilt_not_empty;        /* '<S8>/control allocator' */
   boolean_T errorD_not_empty;          /* '<S8>/control allocator' */
   boolean_T uvrDer_not_empty;          /* '<S8>/control allocator' */
-  boolean_T omegaDot_not_empty_l;      /* '<S8>/control allocator' */
+  boolean_T omegaDot_not_empty_e;      /* '<S8>/control allocator' */
   boolean_T wRotorFilter_not_empty;    /* '<S8>/control allocator' */
   boolean_T omegaFilter_not_empty;     /* '<S7>/basic estimators' */
   boolean_T posFilter_not_empty;       /* '<S7>/basic estimators' */
@@ -108,40 +106,20 @@ typedef struct {
 
 /* Constant parameters (default storage) */
 typedef struct {
-  /* Pooled Parameter (Expression: par)
-   * Referenced by:
-   *   '<Root>/conversion to px4'
-   *   '<S3>/MATLAB Function'
-   *   '<S4>/altitude control'
-   *   '<S4>/position control'
-   *   '<S4>/yaw rate control'
-   *   '<S5>/Precession'
-   *   '<S5>/attitude controller'
-   *   '<S5>/yawRateControl'
-   *   '<S7>/basic estimators'
-   *   '<S8>/control allocator'
+  /* Expression: par
+   * Referenced by: '<S5>/attitude controller'
    */
-  struct_RFHeXVQBKrBUbfkgPERCEC pooled3;
+  struct_RFHeXVQBKrBUbfkgPERCEC attitudecontroller_par;
 
-  /* Expression: p.R{1}
-   * Referenced by: '<S30>/R1'
+  /* Expression: par
+   * Referenced by: '<S7>/basic estimators'
    */
-  real_T R1_Value[49];
+  struct_RFHeXVQBKrBUbfkgPERCEC basicestimators_par;
 
-  /* Expression: p.Q
-   * Referenced by: '<S30>/Q'
+  /* Expression: par
+   * Referenced by: '<S8>/control allocator'
    */
-  real_T Q_Value[100];
-
-  /* Expression: p.InitialCovariance
-   * Referenced by: '<S30>/DataStoreMemory - P'
-   */
-  real_T DataStoreMemoryP_InitialValue[100];
-
-  /* Expression: p.InitialState
-   * Referenced by: '<S30>/DataStoreMemory - x'
-   */
-  real_T DataStoreMemoryx_InitialValue[10];
+  struct_RFHeXVQBKrBUbfkgPERCEC controlallocator_par;
 } ConstP_URControl_T;
 
 /* External inputs (root inport signals with default storage) */
@@ -238,15 +216,8 @@ class URControlModelClass {
   RT_MODEL_URControl_T URControl_M;
 
   /* private member function(s) for subsystem '<Root>'*/
-  real_T URControl_norm_d(const real_T x[4]);
-  void URControl_mrdivide_helper(real_T A[70], const real_T B[49]);
-  LPFilter_URControl_T *URControl_LPFilter_LPFilter(LPFilter_URControl_T *obj,
-    real_T filterT, const real_T initValue[3], real_T maxLim, real_T minLim);
-  void URControl_mod(const real_T x[3], real_T r[3]);
   void URControl_LPFilter_update(LPFilter_URControl_T *obj, const real_T
     newValue[3]);
-  real_T URControl_norm(const real_T x[3]);
-  real_T URControl_URTrajCalc(real_T theta0, real_T w0, real_T accMax);
   void URControl_URAngleControl(daqBus *daq, const real_T nd_i[3], const real_T
     primAxis[3], const stateBus *state, const struct_RFHeXVQBKrBUbfkgPERCEC
     *b_par, const URControlParamsType *URpar, real_T uv_attCtrl[2], real_T
@@ -254,12 +225,12 @@ class URControlModelClass {
   SimpleDerivative_URControl_T *SimpleDerivative_SimpleDerivati
     (SimpleDerivative_URControl_T *obj, real_T filterT, const real_T initValue[3],
      real_T maxLim, real_T minLim);
-  LPFilter_1_URControl_T *URControl_LPFilter_LPFilter_n(LPFilter_1_URControl_T
+  LPFilter_1_URControl_T *URControl_LPFilter_LPFilter(LPFilter_1_URControl_T
     *obj, real_T filterT);
   void URContr_SimpleDerivative_update(SimpleDerivative_URControl_T *obj, const
     real_T newValue[3], real_T dt);
-  void URControl_xswap_l(int32_T n, real_T x_data[], int32_T ix0, int32_T iy0);
-  real_T URControl_xnrm2_fx(int32_T n, const real_T x_data[], int32_T ix0);
+  void URControl_xswap(int32_T n, real_T x_data[], int32_T ix0, int32_T iy0);
+  real_T URControl_xnrm2(int32_T n, const real_T x_data[], int32_T ix0);
   void URControl_xzlarf(int32_T m, int32_T n, int32_T iv0, real_T tau, real_T
                         C_data[], int32_T ic0, int32_T ldc, real_T work_data[]);
   void URControl_xgeqp3(real_T A_data[], int32_T A_size[2], real_T tau_data[],
@@ -277,46 +248,26 @@ class URControlModelClass {
     state_omegaUV[3], const real_T state_omegafUV[3], daqBus *daq, const real_T
     uvr_des[3], real_T URpar_k0, real_T URpar_t0, real_T URpar_s, real_T
     URpar_est_omegaFilterT, const real_T URpar_rate_MINDI_rateDotKp[3], real_T
-    URpar_rate_MINDI_derFilterT, const real_T URpar_rate_MINDI_MKp[3], real_T
-    b_par_freq, real_T M_uvr[3]);
+    URpar_rate_MINDI_derFilterT, const real_T URpar_rate_MINDI_MKp[3], const
+    struct_RFHeXVQBKrBUbfkgPERCEC *b_par, real_T M_uvr[3]);
   void URControl_PIDMomentGen(const real_T state_omegaUV[3], const real_T
     state_omegafUV[3], daqBus *daq, const real_T uvr_des[3], real_T URpar_Iz,
     real_T URpar_Iu, real_T URpar_Iv, const real_T URpar_rate_MPID_rateDotKp[3],
     const real_T URpar_rate_MPID_rateDotKi[3], const real_T
     URpar_rate_MPID_rateDotKd[3], real_T URpar_rate_MPID_derFilterT, real_T
     URpar_rate_MPID_uvrdesderFilter, real_T URpar_rate_MPID_maxInt, real_T
-    URpar_rate_MPID_precGain, real_T b_par_freq, real_T M_uvr[3]);
+    URpar_rate_MPID_precGain, const struct_RFHeXVQBKrBUbfkgPERCEC *b_par, real_T
+    M_uvr[3]);
   void URControl_controlAllocQPQuick(real_T refStruct_MuRef, real_T
     refStruct_MvRef, real_T refStruct_MzRef, real_T refStruct_FtotRef, const
     real_T FMax[4], const real_T FMin[4], real_T gainStruct_MuGain, real_T
-    gainStruct_MvGain, real_T gainStruct_FtotGain, real_T gainStruct_FGain,
-    real_T gainStruct_MzGain, real_T y_state_init[4], real_T b_par_URC_k0,
-    real_T b_par_URC_t0, real_T b_par_URC_s, real_T URpar_rate_maxIter, real_T
-    x[4], real_T *iterSteps, real_T *optimal);
-  void URControl_sqrt(real_T x[4]);
-  real_T URControl_sum(const real_T x[4]);
-  real_T URControl_eps(real_T x);
-  real_T URControl_xnrm2(int32_T n, const real_T x[16], int32_T ix0);
-  real_T URControl_xnrm2_f(int32_T n, const real_T x[4], int32_T ix0);
-  void URControl_xaxpy_hq(int32_T n, real_T a, const real_T x[4], int32_T ix0,
-    real_T y[16], int32_T iy0);
-  void URControl_xaxpy_h(int32_T n, real_T a, const real_T x[16], int32_T ix0,
-    real_T y[4], int32_T iy0);
-  real_T URControl_xdotc(int32_T n, const real_T x[16], int32_T ix0, const
-    real_T y[16], int32_T iy0);
-  void URControl_xaxpy(int32_T n, real_T a, int32_T ix0, real_T y[16], int32_T
-                       iy0);
-  void URControl_xscal(real_T a, real_T x[16], int32_T ix0);
-  void URControl_xswap(real_T x[16], int32_T ix0, int32_T iy0);
-  void URControl_xrotg(real_T *a, real_T *b, real_T *c, real_T *s);
-  void URControl_xrot(real_T x[16], int32_T ix0, int32_T iy0, real_T c, real_T s);
-  void URControl_svd(const real_T A[16], real_T U[16], real_T s[4], real_T V[16]);
-  void URControl_pinv(const real_T A[16], real_T X[16]);
+    gainStruct_MvGain, real_T gainStruct_MzGain, real_T gainStruct_FGain, real_T
+    gainStruct_FtotGain, real_T y_state_init[4], const
+    struct_RFHeXVQBKrBUbfkgPERCEC *b_par, real_T URpar_rate_maxIter, real_T x[4],
+    real_T *iterSteps, real_T *optimal);
   void URControl_URINDI_allocator(real_T act_fail_id, const real_T Omega_f_dot[3],
     real_T accel_z_f, const real_T v[4], real_T G[32], const real_T w_f[4],
-    real_T b_par_w_max, real_T b_par_w_min, real_T w_cmd[4]);
-  void URControl_ekf_state_jacob(const real_T x[10], const real_T u[6], real_T
-    A[100]);
+    const struct_RFHeXVQBKrBUbfkgPERCEC *b_par, real_T w_cmd[4]);
 };
 
 /*-
@@ -345,38 +296,39 @@ class URControlModelClass {
  * '<S9>'   : 'URControl/Low-Pass Filter (Discrete or Continuous)/Enable//disable time constant'
  * '<S10>'  : 'URControl/Low-Pass Filter (Discrete or Continuous)/Integrator (Discrete or Continuous)'
  * '<S11>'  : 'URControl/Low-Pass Filter (Discrete or Continuous)/Enable//disable time constant/Compare To Zero'
- * '<S12>'  : 'URControl/Low-Pass Filter (Discrete or Continuous)/Integrator (Discrete or Continuous)/Continuous'
- * '<S13>'  : 'URControl/Low-Pass Filter (Discrete or Continuous)/Integrator (Discrete or Continuous)/Discrete'
- * '<S14>'  : 'URControl/Low-Pass Filter (Discrete or Continuous)1/Enable//disable time constant'
- * '<S15>'  : 'URControl/Low-Pass Filter (Discrete or Continuous)1/Integrator (Discrete or Continuous)'
- * '<S16>'  : 'URControl/Low-Pass Filter (Discrete or Continuous)1/Enable//disable time constant/Compare To Zero'
- * '<S17>'  : 'URControl/Low-Pass Filter (Discrete or Continuous)1/Integrator (Discrete or Continuous)/Continuous'
- * '<S18>'  : 'URControl/Low-Pass Filter (Discrete or Continuous)1/Integrator (Discrete or Continuous)/Discrete'
- * '<S19>'  : 'URControl/Overrides/MATLAB Function'
- * '<S20>'  : 'URControl/Targets system/altitude control'
- * '<S21>'  : 'URControl/Targets system/position control'
- * '<S22>'  : 'URControl/Targets system/yaw rate control'
- * '<S23>'  : 'URControl/attitude controlller/Discrete Derivative'
- * '<S24>'  : 'URControl/attitude controlller/Precession'
- * '<S25>'  : 'URControl/attitude controlller/attitude controller'
- * '<S26>'  : 'URControl/attitude controlller/yawRateControl'
- * '<S27>'  : 'URControl/estimators/EKFQuat'
- * '<S28>'  : 'URControl/estimators/basic estimators'
- * '<S29>'  : 'URControl/estimators/omegaFilter'
- * '<S30>'  : 'URControl/estimators/EKFQuat/Extended Kalman Filter'
- * '<S31>'  : 'URControl/estimators/EKFQuat/MATLAB Function'
- * '<S32>'  : 'URControl/estimators/EKFQuat/Quaternions to Rotation Angles'
- * '<S33>'  : 'URControl/estimators/EKFQuat/Rotation Angles to Quaternions'
- * '<S34>'  : 'URControl/estimators/EKFQuat/enableMeas'
- * '<S35>'  : 'URControl/estimators/EKFQuat/Extended Kalman Filter/Correct1'
- * '<S36>'  : 'URControl/estimators/EKFQuat/Extended Kalman Filter/Output'
- * '<S37>'  : 'URControl/estimators/EKFQuat/Extended Kalman Filter/Predict'
- * '<S38>'  : 'URControl/estimators/EKFQuat/Extended Kalman Filter/Correct1/Correct'
- * '<S39>'  : 'URControl/estimators/EKFQuat/Extended Kalman Filter/Predict/Predict'
- * '<S40>'  : 'URControl/estimators/EKFQuat/Quaternions to Rotation Angles/Angle Calculation'
- * '<S41>'  : 'URControl/estimators/EKFQuat/Quaternions to Rotation Angles/Quaternion Normalize'
- * '<S42>'  : 'URControl/estimators/EKFQuat/Quaternions to Rotation Angles/Quaternion Normalize/Quaternion Modulus'
- * '<S43>'  : 'URControl/estimators/EKFQuat/Quaternions to Rotation Angles/Quaternion Normalize/Quaternion Modulus/Quaternion Norm'
- * '<S44>'  : 'URControl/rate controller/control allocator'
+ * '<S12>'  : 'URControl/Low-Pass Filter (Discrete or Continuous)/Integrator (Discrete or Continuous)/Discrete'
+ * '<S13>'  : 'URControl/Low-Pass Filter (Discrete or Continuous)1/Enable//disable time constant'
+ * '<S14>'  : 'URControl/Low-Pass Filter (Discrete or Continuous)1/Integrator (Discrete or Continuous)'
+ * '<S15>'  : 'URControl/Low-Pass Filter (Discrete or Continuous)1/Enable//disable time constant/Compare To Zero'
+ * '<S16>'  : 'URControl/Low-Pass Filter (Discrete or Continuous)1/Integrator (Discrete or Continuous)/Discrete'
+ * '<S17>'  : 'URControl/Overrides/MATLAB Function'
+ * '<S18>'  : 'URControl/Targets system/altitude control'
+ * '<S19>'  : 'URControl/Targets system/position control'
+ * '<S20>'  : 'URControl/Targets system/yaw rate control'
+ * '<S21>'  : 'URControl/attitude controlller/Discrete Derivative'
+ * '<S22>'  : 'URControl/attitude controlller/Precession'
+ * '<S23>'  : 'URControl/attitude controlller/attitude controller'
+ * '<S24>'  : 'URControl/attitude controlller/yawRateControl'
+ * '<S25>'  : 'URControl/estimators/EKFQuat'
+ * '<S26>'  : 'URControl/estimators/basic estimators'
+ * '<S27>'  : 'URControl/estimators/EKFQuat/Extended Kalman Filter'
+ * '<S28>'  : 'URControl/estimators/EKFQuat/MATLAB Function'
+ * '<S29>'  : 'URControl/estimators/EKFQuat/Quaternions to Rotation Angles'
+ * '<S30>'  : 'URControl/estimators/EKFQuat/Rotation Angles to Quaternions'
+ * '<S31>'  : 'URControl/estimators/EKFQuat/enableMeas'
+ * '<S32>'  : 'URControl/estimators/EKFQuat/Extended Kalman Filter/Correct1'
+ * '<S33>'  : 'URControl/estimators/EKFQuat/Extended Kalman Filter/Output'
+ * '<S34>'  : 'URControl/estimators/EKFQuat/Extended Kalman Filter/Predict'
+ * '<S35>'  : 'URControl/estimators/EKFQuat/Extended Kalman Filter/Correct1/Correct'
+ * '<S36>'  : 'URControl/estimators/EKFQuat/Extended Kalman Filter/Predict/Predict'
+ * '<S37>'  : 'URControl/estimators/EKFQuat/Quaternions to Rotation Angles/Angle Calculation'
+ * '<S38>'  : 'URControl/estimators/EKFQuat/Quaternions to Rotation Angles/Quaternion Normalize'
+ * '<S39>'  : 'URControl/estimators/EKFQuat/Quaternions to Rotation Angles/Angle Calculation/Protect asincos input'
+ * '<S40>'  : 'URControl/estimators/EKFQuat/Quaternions to Rotation Angles/Angle Calculation/Protect asincos input/If Action Subsystem'
+ * '<S41>'  : 'URControl/estimators/EKFQuat/Quaternions to Rotation Angles/Angle Calculation/Protect asincos input/If Action Subsystem1'
+ * '<S42>'  : 'URControl/estimators/EKFQuat/Quaternions to Rotation Angles/Angle Calculation/Protect asincos input/If Action Subsystem2'
+ * '<S43>'  : 'URControl/estimators/EKFQuat/Quaternions to Rotation Angles/Quaternion Normalize/Quaternion Modulus'
+ * '<S44>'  : 'URControl/estimators/EKFQuat/Quaternions to Rotation Angles/Quaternion Normalize/Quaternion Modulus/Quaternion Norm'
+ * '<S45>'  : 'URControl/rate controller/control allocator'
  */
 #endif                                 /* RTW_HEADER_URControl_h_ */
