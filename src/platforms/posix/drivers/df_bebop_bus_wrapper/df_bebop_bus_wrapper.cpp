@@ -91,8 +91,6 @@ public:
 	/// Set the ESC speeds [front left, front right, back right, back left]
 	int set_esc_speeds(const float speed_scaled[4]);
 
-	int set_red_led();
-
 	/// Capture the last throttle value for the battey computation
 	void set_last_throttle(float throttle) {_last_throttle = throttle;};
 
@@ -195,11 +193,6 @@ int DfBebopBusWrapper::clear_errors()
 int DfBebopBusWrapper::set_esc_speeds(const float speed_scaled[4])
 {
 	return BebopBus::_set_esc_speed(speed_scaled);
-}
-
-int DfBebopBusWrapper::set_red_led()
-{
-	return BebopBus::_set_red_led();
 }
 
 int DfBebopBusWrapper::_publish(struct bebop_state_data &data)
@@ -586,30 +579,10 @@ clear_errors()
 	return 0;
 }
 
-int
-red_led()
-{
-	if (g_dev == nullptr) {
-		PX4_ERR("driver not running");
-		return 1;
-	}
-
-	PX4_DEBUG("state @ %p", g_dev);
-
-	int ret = g_dev->set_red_led();
-
-	if (ret != 0) {
-		PX4_ERR("Unable red led");
-		return ret;
-	}
-
-	return 0;
-}
-
 void
 usage()
 {
-	PX4_INFO("Usage: df_bebop_bus_wrapper 'start', 'info', 'clear_errors', 'red_led', 'stop'");
+	PX4_INFO("Usage: df_bebop_bus_wrapper 'start', 'info', 'clear_errors', 'stop'");
 }
 
 } /* df_bebop_bus_wrapper */
@@ -643,10 +616,6 @@ df_bebop_bus_wrapper_main(int argc, char *argv[])
 
 	else if (!strcmp(verb, "clear_errors")) {
 		ret = df_bebop_bus_wrapper::clear_errors();
-	}
-
-	else if (!strcmp(verb, "red_led")) {
-		ret = df_bebop_bus_wrapper::red_led();
 	}
 
 	else {
