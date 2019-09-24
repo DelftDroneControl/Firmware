@@ -172,10 +172,9 @@ void SlURControl::parameters_updated()
 
 	// YRC
 	URControlParams.YRC_enable = _sl_yrc_enable.get();
-	URControlParams.YRC_mode = _sl_yrc_mode.get();
 	URControlParams.YRC_Kp_psi = _sl_yrc_Kp_psi.get();
 	URControlParams.YRC_rateCmd = _sl_yrc_rateCmd.get();
-	URControlParams.YRCFail_mode = _sl_yrcfail_mode.get();
+	URControlParams.YRCFail_enable = _sl_yrcfail_enable.get();
 	URControlParams.YRCFail_Kp_dMzGain = _sl_yrcfail_mzgain.get();
 
 	// Attitude
@@ -185,15 +184,14 @@ void SlURControl::parameters_updated()
 	URControlParams.attitude_precAngle = _sl_attitude_precangle.get();
 	URControlParams.attitude_maxPrecSpeed = _sl_attitude_maxprecspeed.get();
 	URControlParams.attitude_MMargin = _sl_attitude_mmargin.get();
-	URControlParams.attitude_enableTraj = _sl_attitude_enabletraj.get();
 	URControlParams.attitude_rotSpeedComp = _sl_attitude_rotspeedcomp.get();
 	URControlParams.attitude_yrcComp = _sl_attitude_yrcComp.get();
 	// URControlParams.trigger_PA_thresh = _sl_qp_pa_thresh.get();
 
 	// Envelope
 	URControlParams.envp_enable = _sl_envp_enable.get();
-	URControlParams.envp_mode = _sl_envp_mode.get();
-
+	URControlParams.envp_timeHoriz = _sl_envp_timeHoriz.get();
+	URControlParams.envp_maxOmega = _sl_envp_maxOmega.get();	
 	// Rate
 	URControlParams.rate_mode = _sl_rate_mode.get();
 	URControlParams.rate_momentMode = _sl_rate_momentMode.get();
@@ -229,10 +227,11 @@ void SlURControl::parameters_updated()
 	URControlParams.rate_MPID_maxInt = _sl_ratedot_maxInt.get();
 	URControlParams.rate_MPID_precGain = _sl_ratedot_precGain.get();
 
-	URControlParams.rate_MuGain = _sl_ratedot_mugain.get();
-	URControlParams.rate_MvGain = _sl_ratedot_mvgain.get();
-	URControlParams.rate_MzGain = _sl_ratedot_mzgain.get();
-	URControlParams.rate_FtotGain = _sl_ratedot_ftot.get();
+	URControlParams.rate_MuGain = _sl_alloc_mugain.get();
+	URControlParams.rate_MvGain = _sl_alloc_mvgain.get();
+	URControlParams.rate_MzGain = _sl_alloc_mzgain.get();
+	URControlParams.rate_FtotGain = _sl_alloc_ftot.get();
+	URControlParams.rate_envGain = _sl_alloc_envgain.get();
 
 	// Rate - MINDI
 	// URControlParams.rate_MINDI_derFilterT = _sl_ratedot_mindi_derFiltT.get();
