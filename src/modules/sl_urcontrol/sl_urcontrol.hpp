@@ -47,6 +47,7 @@
 #include <uORB/topics/sensor_combined.h>
 #include <uORB/topics/sensor_gyro.h>
 
+#include <uORB/topics/vehicle_magnetometer.h>
 #include <uORB/topics/vehicle_attitude.h>
 #include <uORB/topics/vehicle_control_mode.h>
 
@@ -121,6 +122,7 @@ private:
 	void	    odometry_status_poll();
 	void		position_setpoint_triplet_poll();
 
+	void		vehicle_magnetometer_poll();
 	/**
 	 * Attitude controller.
 	 */
@@ -149,6 +151,7 @@ private:
 	int		_esc_status_sub{-1};
 	int 	_ev_odom_sub{-1};
 	int     _position_sp_triplet_sub{-1};
+	int     _vehicle_magnetometer_sub{-1};
 
 	unsigned _gyro_count{1};
 	int _selected_gyro{0};
@@ -176,6 +179,8 @@ private:
 	struct vehicle_odometry_s		_ev_odom {};
 	struct position_setpoint_triplet_s _position_sp_triplet{};
 
+	struct vehicle_magnetometer_s _vehicle_magnetometer{};
+	
 	perf_counter_t	_loop_perf;			/**< loop performance counter */
 
 	// static constexpr const float initial_update_rate_hz = 250.f; /**< loop update rate used for initialization */

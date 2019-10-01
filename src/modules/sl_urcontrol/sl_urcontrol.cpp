@@ -400,6 +400,18 @@ void SlURControl::loe_detector_status_poll()
 	}
 }
 
+void SlURControl::vehicle_magnetometer_poll()
+{
+	/* check if there is a new message */
+	bool updated;
+	orb_check(_vehicle_magnetometer_sub, &updated);
+
+	if (updated)
+	{
+		orb_copy(ORB_ID(vehicle_magnetometer), _vehicle_magnetometer_sub, &_vehicle_magnetometer);
+	}
+}
+
 void SlURControl::esc_status_poll()
 {
 	/* check if there is a new message */
@@ -509,6 +521,10 @@ void SlURControl::control_ur(float dt)
 	q_v_att.normalize();
 
 	ExtU_URControl_T URControl_input;
+
+	URControl_input.mag[0] = _vehicle_magnetometer.magnetometer_ga[0];
+	URControl_input.mag[1] = _vehicle_magnetometer.magnetometer_ga[1];
+	URControl_input.mag[2] = _vehicle_magnetometer.magnetometer_ga[2];
 
 	URControl_input.vel[0] = _vehicle_local_position.vx;
 	URControl_input.vel[1] = _vehicle_local_position.vy;
@@ -630,7 +646,9 @@ void SlURControl::control_ur(float dt)
 
 	_urcontrol_input.yaw_sp = 0;
 
-
+	_urcontrol_input.mag[0] = URControl_input.mag[0];
+	_urcontrol_input.mag[1] = URControl_input.mag[1];
+	_urcontrol_input.mag[2] = URControl_input.mag[2];
 	_urcontrol_input.fail_flag = URControl.URControl_U.fail_flag;
 
 	_urcontrol_input.dt_step = hrt_absolute_time() - t_step_start;
@@ -659,6 +677,7 @@ void SlURControl::run()
 	_esc_status_sub = orb_subscribe(ORB_ID(esc_status));
 	_ev_odom_sub = orb_subscribe(ORB_ID(vehicle_visual_odometry));
 	_gyro_count = math::min(orb_group_count(ORB_ID(sensor_gyro)), MAX_GYRO_COUNT);
+	_vehicle_magnetometer_sub = orb_subscribe(ORB_ID(vehicle_magnetometer));
 
 	if (_gyro_count == 0)
 	{
@@ -764,6 +783,7 @@ void SlURControl::run()
 			esc_status_poll();
 			odometry_status_poll();
 			position_setpoint_triplet_poll();
+			vehicle_magnetometer_poll();
 
 			control_ur(dt);
 
@@ -809,6 +829,7 @@ void SlURControl::run()
 	orb_unsubscribe(_esc_status_sub);
 	orb_unsubscribe(_ev_odom_sub);
 	orb_unsubscribe(_position_sp_triplet_sub);
+	orb_unsubscribe(_vehicle_magnetometer_sub);
 
 	URControl.terminate();
 }
