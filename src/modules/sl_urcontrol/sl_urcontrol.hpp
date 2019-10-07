@@ -311,7 +311,13 @@ private:
 		(ParamFloat<px4::params::SL_THROW_TIME>) _sl_throw_falltime,
 		(ParamFloat<px4::params::SL_THROW_THRESH>) _sl_throw_threshold,
 		(ParamFloat<px4::params::SL_THROW_THR_ALT>) _sl_throw_alt_threshold,
-		
+
+		(ParamInt<px4::params::SL_EST_USEMAG>) _sl_est_useMag,
+		(ParamInt<px4::params::SL_MAG_ESTTYPE>) _sl_mag_est_type,
+		(ParamFloat<px4::params::SL_MAG_XI>) _sl_magxI,
+		(ParamFloat<px4::params::SL_MAG_ZI>) _sl_magzI,
+		(ParamFloat<px4::params::SL_MAG_SHIFT>) _sl_mag_psi_shift,
+
 		// Others
 		(ParamInt<px4::params::SL_FAIL_ALTPROT>) _sl_fail_altProt,
 		(ParamFloat<px4::params::SL_FAIL_ALTTHRE>) _sl_fail_altThresh

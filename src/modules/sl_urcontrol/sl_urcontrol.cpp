@@ -250,6 +250,13 @@ void SlURControl::parameters_updated()
 	URControlParams.throw_falltime = _sl_throw_falltime.get();
 	URControlParams.throw_threshold = _sl_throw_threshold.get();
 
+	// magnetometer for yaw
+	URControlParams.est_useMag 		= _sl_est_useMag.get();
+	URControlParams.mag_est_type 	= _sl_mag_est_type.get();
+	URControlParams.magxI 			= _sl_magxI.get(); 
+	URControlParams.magzI 			= _sl_magzI.get();
+	URControlParams.mag_psi_shift 	= _sl_mag_psi_shift.get();
+
 	// //QPpredControl
 	// URControlParams.Kp 	= _sl_qp_kp.get();
 	// URControlParams.Kd 	= _sl_qp_kd.get();
