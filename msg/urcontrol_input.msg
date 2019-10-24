@@ -13,5 +13,7 @@ uint32 fail_flag
 
 float32[3] accs
 
+float32[3] mag
+
 uint64 dt_step
 uint32 step_count

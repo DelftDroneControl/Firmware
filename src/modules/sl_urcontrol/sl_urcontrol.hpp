@@ -47,6 +47,7 @@
 #include <uORB/topics/sensor_combined.h>
 #include <uORB/topics/sensor_gyro.h>
 
+#include <uORB/topics/vehicle_magnetometer.h>
 #include <uORB/topics/vehicle_attitude.h>
 #include <uORB/topics/vehicle_control_mode.h>
 
@@ -121,6 +122,7 @@ private:
 	void	    odometry_status_poll();
 	void		position_setpoint_triplet_poll();
 
+	void		vehicle_magnetometer_poll();
 	/**
 	 * Attitude controller.
 	 */
@@ -149,6 +151,7 @@ private:
 	int		_esc_status_sub{-1};
 	int 	_ev_odom_sub{-1};
 	int     _position_sp_triplet_sub{-1};
+	int     _vehicle_magnetometer_sub{-1};
 
 	unsigned _gyro_count{1};
 	int _selected_gyro{0};
@@ -176,6 +179,8 @@ private:
 	struct vehicle_odometry_s		_ev_odom {};
 	struct position_setpoint_triplet_s _position_sp_triplet{};
 
+	struct vehicle_magnetometer_s _vehicle_magnetometer{};
+	
 	perf_counter_t	_loop_perf;			/**< loop performance counter */
 
 	// static constexpr const float initial_update_rate_hz = 250.f; /**< loop update rate used for initialization */
@@ -230,13 +235,14 @@ private:
 		(ParamFloat<px4::params::SL_ALT_KP_POS>) _sl_alt_kp_pos,
 		(ParamFloat<px4::params::SL_ALT_KP_VEL>) _sl_alt_kp_vel,
 		(ParamFloat<px4::params::SL_ALT_KI_VEL>) _sl_alt_ki_vel,
+		(ParamFloat<px4::params::SL_ALT_MAX_VEL>) _sl_alt_max_vel,
+		(ParamFloat<px4::params::SL_ALT_MAX_VELF>) _sl_alt_max_velfail,
 
 		// YRC
 		(ParamInt<px4::params::SL_YRC_ENABLE>) _sl_yrc_enable,
-		(ParamInt<px4::params::SL_YRC_MODE>) _sl_yrc_mode,
 		(ParamFloat<px4::params::SL_YRC_KP_PSI>) _sl_yrc_Kp_psi,
 		(ParamFloat<px4::params::SL_YRC_RATECMD>) _sl_yrc_rateCmd,
-		(ParamInt<px4::params::SL_YRCFAIL_MODE>) _sl_yrcfail_mode,
+		(ParamInt<px4::params::SL_YRC_F_ENABLE>) _sl_yrcfail_enable, 
 		(ParamFloat<px4::params::SL_YRCFAIL_MZG>) _sl_yrcfail_mzgain,
 		
 		
@@ -247,14 +253,14 @@ private:
 		(ParamFloat<px4::params::SL_ATT_PRECANGLE>) _sl_attitude_precangle,
 		(ParamFloat<px4::params::SL_ATT_MAXPREC>) _sl_attitude_maxprecspeed,
 		(ParamFloat<px4::params::SL_ATT_MMARGIN>) _sl_attitude_mmargin,
-		(ParamInt<px4::params::SL_ATT_ENABTRAJ>) _sl_attitude_enabletraj,
 		(ParamFloat<px4::params::SL_ATT_ROTSPCOMP>) _sl_attitude_rotspeedcomp,
 		(ParamFloat<px4::params::SL_ATT_YRCCOMP>) _sl_attitude_yrcComp,
 
 		// Envelope
 		(ParamInt<px4::params::SL_ENVP_ENAB>) _sl_envp_enable,
-		(ParamInt<px4::params::SL_ENVP_MODE>) _sl_envp_mode,
-
+		(ParamFloat<px4::params::SL_ENVP_DT>) _sl_envp_timeHoriz, 
+		(ParamFloat<px4::params::SL_ENVP_MAX_W>) _sl_envp_maxOmega, 
+		
 		// Rate
 		(ParamInt<px4::params::SL_RDOT_MODE>) _sl_rate_mode,
 		(ParamInt<px4::params::SL_RDOT_MMODE>) _sl_rate_momentMode,
@@ -287,15 +293,12 @@ private:
 		(ParamFloat<px4::params::SL_RDOT_MAXINT>)  _sl_ratedot_maxInt,
 		(ParamFloat<px4::params::SL_RDOT_PRECGAIN>)  _sl_ratedot_precGain,
 
-		(ParamFloat<px4::params::SL_RDOT_MUGAIN>) _sl_ratedot_mugain,
-		(ParamFloat<px4::params::SL_RDOT_MVGAIN>) _sl_ratedot_mvgain,
-		(ParamFloat<px4::params::SL_RDOT_MZGAIN>) _sl_ratedot_mzgain,
-		(ParamFloat<px4::params::SL_RDOT_FTOT>) _sl_ratedot_ftot,
+		(ParamFloat<px4::params::SL_ALLOC_MUGAIN>) _sl_alloc_mugain,
+		(ParamFloat<px4::params::SL_ALLOC_MVGAIN>) _sl_alloc_mvgain,
+		(ParamFloat<px4::params::SL_ALLOC_MZGAIN>) _sl_alloc_mzgain,
+		(ParamFloat<px4::params::SL_ALLOC_FTOT>) _sl_alloc_ftot,
+		(ParamFloat<px4::params::SL_ALLOC_ENVGAIN>) _sl_alloc_envgain, 
 
-		// (ParamFloat<px4::params::SL_MINDI_DFILT>) _sl_ratedot_mindi_derFiltT,
-		// (ParamFloat<px4::params::SL_MINDI_MKPU>) _sl_ratedot_mindi_mkpu,
-		// (ParamFloat<px4::params::SL_MINDI_MKPV>) _sl_ratedot_mindi_mkpv,
-		// (ParamFloat<px4::params::SL_MINDI_MKPR>) _sl_ratedot_mindi_mkpr
 
 		// OVERRIDES
 		(ParamInt<px4::params::SL_FLIP_MODE>) _sl_flip_mode,
@@ -307,7 +310,14 @@ private:
 		(ParamInt<px4::params::SL_THROW_MODE>) _sl_throw_mode,
 		(ParamFloat<px4::params::SL_THROW_TIME>) _sl_throw_falltime,
 		(ParamFloat<px4::params::SL_THROW_THRESH>) _sl_throw_threshold,
-		
+		(ParamFloat<px4::params::SL_THROW_THR_ALT>) _sl_throw_alt_threshold,
+
+		(ParamInt<px4::params::SL_EST_USEMAG>) _sl_est_useMag,
+		(ParamInt<px4::params::SL_MAG_ESTTYPE>) _sl_mag_est_type,
+		(ParamFloat<px4::params::SL_MAG_XI>) _sl_magxI,
+		(ParamFloat<px4::params::SL_MAG_ZI>) _sl_magzI,
+		(ParamFloat<px4::params::SL_MAG_SHIFT>) _sl_mag_psi_shift,
+
 		// Others
 		(ParamInt<px4::params::SL_FAIL_ALTPROT>) _sl_fail_altProt,
 		(ParamFloat<px4::params::SL_FAIL_ALTTHRE>) _sl_fail_altThresh
