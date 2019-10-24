@@ -61,6 +61,10 @@
 
 using namespace matrix;
 
+bool manual_control_updated;
+float manual_heading_shift;
+float manual_control[4];
+
 URControlModelClass URControl;
 
 int SlURControl::print_usage(const char *reason)
@@ -257,6 +261,8 @@ void SlURControl::parameters_updated()
 	URControlParams.magzI 			= _sl_magzI.get();
 	URControlParams.mag_psi_shift 	= _sl_mag_psi_shift.get();
 
+	URControlParams.est_useCF 		= _sl_est_useCF.get();
+
 	// //QPpredControl
 	// URControlParams.Kp 	= _sl_qp_kp.get();
 	// URControlParams.Kd 	= _sl_qp_kd.get();
@@ -268,9 +274,12 @@ void SlURControl::parameters_updated()
 	// URControlParams.omega_max = _sl_qp_env_omega.get();
 
 	// // Others
-	// URControlParams.fail_altProt = _sl_fail_altProt.get();
-	// URControlParams.fail_altThresh = _sl_fail_altThresh.get();
-
+	URControlParams.fail_altProt = _sl_fail_altProt.get();
+	URControlParams.fail_altThresh = _sl_fail_altThresh.get();
+	URControlParams.DRF_enable = _sl_fail_drf_enable.get();
+	URControlParams.manual_enable = _sl_manual_enable.get();
+	URControlParams.manual_acc_gain = _sl_manual_gain.get();
+	manual_heading_shift = _sl_manual_heading_shift.get();
 	// // Alt Protect
 	// URControlParams.fail_altProt = _sl_fail_prot.get();
 	// URControlParams.fail_altThresh = _sl_fail_alt_thresh.get();
@@ -456,6 +465,19 @@ void SlURControl::position_setpoint_triplet_poll()
 	}
 }
 
+bool SlURControl::vehicle_manual_poll()
+{
+	bool updated;
+
+	/* get pilots inputs */
+	orb_check(_manual_control_sp_sub, &updated);
+
+	if (updated) {
+		orb_copy(ORB_ID(manual_control_setpoint), _manual_control_sp_sub, &_manual_control_sp);
+		return true;
+	}
+	return false;
+}
 /*
  * Position controller.
  * Input: 
@@ -519,6 +541,14 @@ void SlURControl::control_ur(float dt)
 	// accs(1) = _sensor_combined.accelerometer_m_s2[1];
 	// accs(2) = _sensor_combined.accelerometer_m_s2[2];
 
+	// float _man_tilt_max = 1.0;
+
+	if (manual_control_updated) {
+		manual_control[0] = sin(manual_heading_shift / 57.3) * _manual_control_sp.x + cos(manual_heading_shift  / 57.3)*_manual_control_sp.y;
+		manual_control[1] = -cos(manual_heading_shift  / 57.3) * _manual_control_sp.x + sin(manual_heading_shift / 57.3)*_manual_control_sp.y;
+	}
+	
+	//printf("%f\t%f\t%f\t%f\n",manual_control[0],manual_control[1],manual_control[2],manual_control[3]);
 	/* get estimated attitude */
 	Quatf q_v_att(_v_att.q);
 	Quatf q(_ev_odom.q);
@@ -528,6 +558,11 @@ void SlURControl::control_ur(float dt)
 	q_v_att.normalize();
 
 	ExtU_URControl_T URControl_input;
+
+	URControl_input.manual[0] = manual_control[0];
+	URControl_input.manual[1] = manual_control[1];
+	URControl_input.manual[2] = manual_control[2];
+	URControl_input.manual[3] = manual_control[3];
 
 	URControl_input.mag[0] = _vehicle_magnetometer.magnetometer_ga[0];
 	URControl_input.mag[1] = _vehicle_magnetometer.magnetometer_ga[1];
@@ -661,6 +696,10 @@ void SlURControl::control_ur(float dt)
 	_urcontrol_input.dt_step = hrt_absolute_time() - t_step_start;
 	_urcontrol_input.step_count = _step_count;
 
+	_urcontrol_input.manual[0] = URControl_input.manual[0];
+	_urcontrol_input.manual[1] = URControl_input.manual[1];
+	_urcontrol_input.manual[2] = URControl_input.manual[2];
+	
 	// See mixer file `pass.main.mix` for exact control allocation.
 	_actuators.control[0] = URControl.URControl_Y.actuators_control[0];
 	_actuators.control[1] = URControl.URControl_Y.actuators_control[1];
@@ -678,13 +717,12 @@ void SlURControl::run()
 	_params_sub = orb_subscribe(ORB_ID(parameter_update));
 	_vehicle_status_sub = orb_subscribe(ORB_ID(vehicle_status));
 	_local_pos_sp_sub = orb_subscribe(ORB_ID(vehicle_local_position_setpoint));
-
 	_loe_detector_status_sub = orb_subscribe(ORB_ID(loe_detector_status));
-
 	_esc_status_sub = orb_subscribe(ORB_ID(esc_status));
 	_ev_odom_sub = orb_subscribe(ORB_ID(vehicle_visual_odometry));
 	_gyro_count = math::min(orb_group_count(ORB_ID(sensor_gyro)), MAX_GYRO_COUNT);
 	_vehicle_magnetometer_sub = orb_subscribe(ORB_ID(vehicle_magnetometer));
+	_manual_control_sp_sub = orb_subscribe(ORB_ID(manual_control_setpoint));
 
 	if (_gyro_count == 0)
 	{
@@ -791,6 +829,7 @@ void SlURControl::run()
 			odometry_status_poll();
 			position_setpoint_triplet_poll();
 			vehicle_magnetometer_poll();
+			manual_control_updated = vehicle_manual_poll();
 
 			control_ur(dt);
 
@@ -837,6 +876,7 @@ void SlURControl::run()
 	orb_unsubscribe(_ev_odom_sub);
 	orb_unsubscribe(_position_sp_triplet_sub);
 	orb_unsubscribe(_vehicle_magnetometer_sub);
+	orb_unsubscribe(_manual_control_sp_sub);
 
 	URControl.terminate();
 }

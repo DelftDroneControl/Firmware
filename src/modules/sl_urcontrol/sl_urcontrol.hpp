@@ -63,6 +63,7 @@
 #include <uORB/topics/esc_status.h>
 #include <uORB/topics/vehicle_odometry.h>
 #include <uORB/topics/position_setpoint_triplet.h>
+#include <uORB/topics/manual_control_setpoint.h>
 
 /**
  * Multicopter attitude control app start / stop handling function
@@ -123,6 +124,8 @@ private:
 	void		position_setpoint_triplet_poll();
 
 	void		vehicle_magnetometer_poll();
+
+	bool		vehicle_manual_poll();	
 	/**
 	 * Attitude controller.
 	 */
@@ -132,6 +135,8 @@ private:
 	 * Attitude rates controller.
 	 */
 	void		control_ur(float dt);
+
+
 
 	int 	_step_count = 0; 
 
@@ -145,7 +150,7 @@ private:
 	int		_sensor_combined_sub{-1};	/**< vehicle land detected subscription */
 	int		_vehicle_local_position_sub{-1};	/**< vehicle land detected subscription */
 	int     _local_pos_sp_sub{-1};	/**< vehicle position setpoint subscription */
-
+	int		_manual_control_sp_sub{-1};	/**< manual control setpoint subscription */
 	int		_loe_detector_status_sub{-1};
 
 	int		_esc_status_sub{-1};
@@ -180,7 +185,8 @@ private:
 	struct position_setpoint_triplet_s _position_sp_triplet{};
 
 	struct vehicle_magnetometer_s _vehicle_magnetometer{};
-	
+	struct manual_control_setpoint_s	_manual_control_sp {};	/**< manual control setpoint */
+
 	perf_counter_t	_loop_perf;			/**< loop performance counter */
 
 	// static constexpr const float initial_update_rate_hz = 250.f; /**< loop update rate used for initialization */
@@ -318,9 +324,15 @@ private:
 		(ParamFloat<px4::params::SL_MAG_ZI>) _sl_magzI,
 		(ParamFloat<px4::params::SL_MAG_SHIFT>) _sl_mag_psi_shift,
 
+		(ParamInt<px4::params::SL_EST_USECF>) _sl_est_useCF,
 		// Others
 		(ParamInt<px4::params::SL_FAIL_ALTPROT>) _sl_fail_altProt,
-		(ParamFloat<px4::params::SL_FAIL_ALTTHRE>) _sl_fail_altThresh
+		(ParamFloat<px4::params::SL_FAIL_ALTTHRE>) _sl_fail_altThresh,
+		(ParamInt<px4::params::SL_FAIL_DRF>) _sl_fail_drf_enable,
+		(ParamInt<px4::params::SL_MANUAL_ENABLE>) _sl_manual_enable,
+		(ParamFloat<px4::params::SL_MANUAL_GAIN>) _sl_manual_gain,
+		(ParamFloat<px4::params::SL_MANUAL_HSHIFT>) _sl_manual_heading_shift		
+
 	)
 
     struct debug_key_value_s dbg {};

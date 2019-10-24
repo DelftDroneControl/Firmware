@@ -7,9 +7,9 @@
  *
  * Code generation for model "URControl".
  *
- * Model version              : 1.897
+ * Model version              : 1.947
  * Simulink Coder version : 9.1 (R2019a) 23-Nov-2018
- * C++ source code generated on : Mon Aug 19 14:50:43 2019
+ * C++ source code generated on : Mon Oct  7 20:34:02 2019
  */
 
 #ifndef RTW_HEADER_rt_defines_h_

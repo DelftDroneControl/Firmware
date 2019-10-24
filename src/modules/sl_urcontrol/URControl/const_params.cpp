@@ -7,35 +7,17 @@
  *
  * Code generation for model "URControl".
  *
- * Model version              : 1.897
+ * Model version              : 1.947
  * Simulink Coder version : 9.1 (R2019a) 23-Nov-2018
- * C++ source code generated on : Mon Aug 19 14:50:43 2019
+ * C++ source code generated on : Mon Oct  7 20:34:02 2019
  */
 #include "rtwtypes.h"
-
-extern const real32_T rtCP_pooled_5wzVsQQee0kd[16];
-const real32_T rtCP_pooled_5wzVsQQee0kd[16] = { 0.01F, 0.0F, 0.0F, 0.0F, 0.0F,
-  0.01F, 0.0F, 0.0F, 0.0F, 0.0F, 0.01F, 0.0F, 0.0F, 0.0F, 0.0F, 0.01F } ;
 
 extern const real_T rtCP_pooled_9dldz3nawzPz[49];
 const real_T rtCP_pooled_9dldz3nawzPz[49] = { 0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
   0.0, 0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
   0.0, 0.2, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
   0.0, 0.2, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2 } ;
-
-extern const real32_T rtCP_pooled_Hl3cwpqcrwu0[81];
-const real32_T rtCP_pooled_Hl3cwpqcrwu0[81] = { 1.0E-7F, 0.0F, 0.0F, 0.0F, 0.0F,
-  0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0E-7F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F,
-  0.0F, 0.0F, 0.0F, 1.0E-7F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F,
-  0.0F, 1.0E-7F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0E-9F,
-  0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0E-9F, 0.0F, 0.0F,
-  0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0E-9F, 0.0F, 0.0F, 0.0F, 0.0F,
-  0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 1.0E-9F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F,
-  0.0F, 0.0F, 0.0F, 1.0E-9F } ;
-
-extern const real32_T rtCP_pooled_Hn3nl1zuRSNy[16];
-const real32_T rtCP_pooled_Hn3nl1zuRSNy[16] = { 10.0F, 0.0F, 0.0F, 0.0F, 0.0F,
-  10.0F, 0.0F, 0.0F, 0.0F, 0.0F, 10.0F, 0.0F, 0.0F, 0.0F, 0.0F, 10.0F } ;
 
 extern const real_T rtCP_pooled_YUgjdB5rd6zW[100];
 const real_T rtCP_pooled_YUgjdB5rd6zW[100] = { 1000.0, 0.0, 0.0, 0.0, 0.0, 0.0,
@@ -50,23 +32,6 @@ const real_T rtCP_pooled_YUgjdB5rd6zW[100] = { 1000.0, 0.0, 0.0, 0.0, 0.0, 0.0,
 extern const real_T rtCP_pooled_fxye1Z3RBBeI[10];
 const real_T rtCP_pooled_fxye1Z3RBBeI[10] = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0,
   0.0, 0.0, 0.0 } ;
-
-extern const real32_T rtCP_pooled_ovdJEPFZ57aw[9];
-const real32_T rtCP_pooled_ovdJEPFZ57aw[9] = { 100.0F, 100.0F, 1.0F, 5.0F, 2.0F,
-  1.0F, 1.0F, 1.0F, 1.0F } ;
-
-extern const real32_T rtCP_pooled_qPeMbWPv2Nsk[81];
-const real32_T rtCP_pooled_qPeMbWPv2Nsk[81] = { 0.1F, 0.0F, 0.0F, 0.0F, 0.0F,
-  0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.1F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F,
-  0.0F, 0.0F, 0.1F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.1F,
-  0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.1F, 0.0F, 0.0F, 0.0F,
-  0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.01F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F,
-  0.0F, 0.0F, 0.0F, 0.01F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F,
-  0.01F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.01F } ;
-
-extern const real32_T rtCP_pooled_rCRoQPV3F8My[16];
-const real32_T rtCP_pooled_rCRoQPV3F8My[16] = { 0.1F, 0.0F, 0.0F, 0.0F, 0.0F,
-  0.1F, 0.0F, 0.0F, 0.0F, 0.0F, 0.1F, 0.0F, 0.0F, 0.0F, 0.0F, 0.1F } ;
 
 extern const real_T rtCP_pooled_z3AazAnnYHH8[100];
 const real_T rtCP_pooled_z3AazAnnYHH8[100] = { 0.01, 0.0, 0.0, 0.0, 0.0, 0.0,
