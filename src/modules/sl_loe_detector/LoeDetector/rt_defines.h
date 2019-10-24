@@ -5,11 +5,11 @@
  * course requirements at degree granting institutions only.  Not for
  * government, commercial, or other organizational use.
  *
- * Code generation for model "PosDirectControl".
+ * Code generation for model "URControl".
  *
- * Model version              : 1.1528
+ * Model version              : 1.897
  * Simulink Coder version : 9.1 (R2019a) 23-Nov-2018
- * C++ source code generated on : Tue Jul 30 15:44:32 2019
+ * C++ source code generated on : Mon Aug 19 14:50:43 2019
  */
 
 #ifndef RTW_HEADER_rt_defines_h_

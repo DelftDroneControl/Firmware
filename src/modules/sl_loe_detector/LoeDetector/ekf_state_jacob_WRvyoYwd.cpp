@@ -5,12 +5,12 @@
  * course requirements at degree granting institutions only.  Not for
  * government, commercial, or other organizational use.
  *
- * Code generation for model "PosDirectControl".
+ * Code generation for model "URControl".
  *
- * Model version              : 1.1528
+ * Model version              : 1.897
  * Simulink Coder version : 9.1 (R2019a) 23-Nov-2018
- * C++ source code generated on : Tue Jul 30 15:44:32 2019
- * Created for block: PosDirectControl
+ * C++ source code generated on : Mon Aug 19 14:50:43 2019
+ * Created for block: URControl
  */
 
 #include "rtwtypes.h"
@@ -19,7 +19,7 @@
 #include "ekf_state_jacob_WRvyoYwd.h"
 
 /*
- * Function for MATLAB Function: '<S19>/Predict'
+ * Function for MATLAB Function: '<S34>/Predict'
  * function A = ekf_state_jacob(x,u)
  */
 void ekf_state_jacob_WRvyoYwd(const real_T x[10], const real_T u[6], real_T A

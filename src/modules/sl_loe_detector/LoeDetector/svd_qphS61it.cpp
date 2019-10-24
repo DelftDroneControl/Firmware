@@ -5,12 +5,12 @@
  * course requirements at degree granting institutions only.  Not for
  * government, commercial, or other organizational use.
  *
- * Code generation for model "PosDirectControl".
+ * Code generation for model "URControl".
  *
- * Model version              : 1.1528
+ * Model version              : 1.897
  * Simulink Coder version : 9.1 (R2019a) 23-Nov-2018
- * C++ source code generated on : Tue Jul 30 15:44:32 2019
- * Created for block: PosDirectControl
+ * C++ source code generated on : Mon Aug 19 14:50:43 2019
+ * Created for block: URControl
  */
 
 #include "rtwtypes.h"
@@ -28,7 +28,7 @@
 #include "xswap_E3toPKhI.h"
 #include "svd_qphS61it.h"
 
-/* Function for MATLAB Function: '<S6>/indi' */
+/* Function for MATLAB Function: '<S8>/control allocator' */
 void svd_qphS61it(const real_T A[16], real_T U[16], real_T s[4], real_T V[16])
 {
   real_T b_A[16];

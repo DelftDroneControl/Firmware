@@ -1,5 +1,5 @@
 /*
- * /home/bramsvs/src/monorepo/simulink_model/.codeGenCache/slprj/grt/_sharedutils/sqrt_t6kvbcYg.cpp
+ * /home/bramsvs/src/monorepo/simulink_model/.codeGenCache/slprj/grt/_sharedutils/abs_PbMH4joa.cpp
  *
  * Academic License - for use in teaching, academic research, and meeting
  * course requirements at degree granting institutions only.  Not for
@@ -7,21 +7,21 @@
  *
  * Code generation for model "URControl".
  *
- * Model version              : 1.897
+ * Model version              : 1.902
  * Simulink Coder version : 9.1 (R2019a) 23-Nov-2018
- * C++ source code generated on : Mon Aug 19 14:50:43 2019
+ * C++ source code generated on : Wed Sep 18 17:32:42 2019
  * Created for block: URControl
  */
 
 #include "rtwtypes.h"
 #include <cmath>
-#include "sqrt_t6kvbcYg.h"
+#include "abs_PbMH4joa.h"
 
 /* Function for MATLAB Function: '<S8>/control allocator' */
-void sqrt_t6kvbcYg(real_T x[4])
+void abs_PbMH4joa(const real_T x[4], real_T y[4])
 {
-  x[0] = std::sqrt(x[0]);
-  x[1] = std::sqrt(x[1]);
-  x[2] = std::sqrt(x[2]);
-  x[3] = std::sqrt(x[3]);
+  y[0] = std::abs(x[0]);
+  y[1] = std::abs(x[1]);
+  y[2] = std::abs(x[2]);
+  y[3] = std::abs(x[3]);
 }

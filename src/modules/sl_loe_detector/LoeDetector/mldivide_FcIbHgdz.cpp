@@ -5,12 +5,12 @@
  * course requirements at degree granting institutions only.  Not for
  * government, commercial, or other organizational use.
  *
- * Code generation for model "PosDirectControl".
+ * Code generation for model "URControl".
  *
- * Model version              : 1.1528
+ * Model version              : 1.897
  * Simulink Coder version : 9.1 (R2019a) 23-Nov-2018
- * C++ source code generated on : Tue Jul 30 15:44:32 2019
- * Created for block: PosDirectControl
+ * C++ source code generated on : Mon Aug 19 14:50:43 2019
+ * Created for block: URControl
  */
 
 #include "rtwtypes.h"
@@ -18,7 +18,7 @@
 #include <string.h>
 #include "mldivide_FcIbHgdz.h"
 
-/* Function for MATLAB Function: '<S6>/indi' */
+/* Function for MATLAB Function: '<S7>/basic estimators' */
 void mldivide_FcIbHgdz(const real_T A[9], const real_T B[3], real_T Y[3])
 {
   real_T b_A[9];

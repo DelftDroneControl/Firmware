@@ -7,9 +7,9 @@
  *
  * Code generation for model "RateControl".
  *
- * Model version              : 1.1008
+ * Model version              : 1.1014
  * Simulink Coder version : 9.1 (R2019a) 23-Nov-2018
- * C++ source code generated on : Tue Jul 30 15:43:43 2019
+ * C++ source code generated on : Thu Aug 15 10:38:46 2019
  * Created for block: RateControl
  */
 

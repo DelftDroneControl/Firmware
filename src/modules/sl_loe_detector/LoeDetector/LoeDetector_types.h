@@ -7,9 +7,9 @@
  *
  * Code generation for model "LoeDetector".
  *
- * Model version              : 1.58
+ * Model version              : 1.60
  * Simulink Coder version : 9.1 (R2019a) 23-Nov-2018
- * C++ source code generated on : Tue Aug 13 23:46:57 2019
+ * C++ source code generated on : Fri Oct 18 14:33:55 2019
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
@@ -128,7 +128,6 @@ typedef struct {
   BlocksPkg_SecondOrderFilter_2_T FilterActuatorMeas;
   BlocksPkg_Derivative_LoeDetec_T DerivRates;
   BlocksPkg_KalmanEstimator_Loe_T Kalman;
-  LoeDetectorPkg_LandDetector_L_T LandDetector;
   real_T control_eff[3];
   LoeDetectorParamsType fail_diagnosis_params;
 } LoeDetectorPkg_LoeDetector_Lo_T;
