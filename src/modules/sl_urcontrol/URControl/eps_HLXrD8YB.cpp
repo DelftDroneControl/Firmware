@@ -1,16 +1,16 @@
 /*
- * /home/bramsvs/src/monorepo/simulink_model/.codeGenCache/slprj/grt/_sharedutils/eps_HLXrD8YB.cpp
+ * /home/sihao/src/monorepo/simulink_model/.codeGenCache/slprj/grt/_sharedutils/eps_HLXrD8YB.cpp
  *
  * Academic License - for use in teaching, academic research, and meeting
  * course requirements at degree granting institutions only.  Not for
  * government, commercial, or other organizational use.
  *
- * Code generation for model "URControl".
+ * Code generation for model "URControl_att".
  *
- * Model version              : 1.897
+ * Model version              : 1.29
  * Simulink Coder version : 9.1 (R2019a) 23-Nov-2018
- * C++ source code generated on : Mon Aug 19 14:50:43 2019
- * Created for block: URControl
+ * C++ source code generated on : Wed Oct  9 11:07:12 2019
+ * Created for block: URControl_att
  */
 
 #include "rtwtypes.h"
@@ -20,7 +20,7 @@
 #include <math.h>
 #include "eps_HLXrD8YB.h"
 
-/* Function for MATLAB Function: '<S8>/control allocator' */
+/* Function for MATLAB Function: '<S2>/control allocator' */
 real_T eps_HLXrD8YB(real_T x)
 {
   real_T r;

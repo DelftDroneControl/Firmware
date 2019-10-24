@@ -15,5 +15,8 @@ float32[3] accs
 
 float32[3] mag
 
+float32[3] manual
+
 uint64 dt_step
 uint32 step_count
+
