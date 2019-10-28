@@ -63,7 +63,7 @@ using namespace matrix;
 
 bool manual_control_updated;
 float manual_heading_shift;
-float manual_control[4];
+float manual_control[5];
 
 URControlModelClass URControl;
 
@@ -546,6 +546,9 @@ void SlURControl::control_ur(float dt)
 	if (manual_control_updated) {
 		manual_control[0] = sin(manual_heading_shift / 57.3) * _manual_control_sp.x + cos(manual_heading_shift  / 57.3)*_manual_control_sp.y;
 		manual_control[1] = -cos(manual_heading_shift  / 57.3) * _manual_control_sp.x + sin(manual_heading_shift / 57.3)*_manual_control_sp.y;
+		manual_control[2] = _manual_control_sp.z;
+		manual_control[3] = _manual_control_sp.r;
+		manual_control[4] = _manual_control_sp.flaps;
 	}
 	
 	//printf("%f\t%f\t%f\t%f\n",manual_control[0],manual_control[1],manual_control[2],manual_control[3]);
@@ -563,6 +566,7 @@ void SlURControl::control_ur(float dt)
 	URControl_input.manual[1] = manual_control[1];
 	URControl_input.manual[2] = manual_control[2];
 	URControl_input.manual[3] = manual_control[3];
+	URControl_input.manual[4] = manual_control[4];
 
 	URControl_input.mag[0] = _vehicle_magnetometer.magnetometer_ga[0];
 	URControl_input.mag[1] = _vehicle_magnetometer.magnetometer_ga[1];
@@ -699,7 +703,9 @@ void SlURControl::control_ur(float dt)
 	_urcontrol_input.manual[0] = URControl_input.manual[0];
 	_urcontrol_input.manual[1] = URControl_input.manual[1];
 	_urcontrol_input.manual[2] = URControl_input.manual[2];
-	
+	_urcontrol_input.manual[3] = URControl_input.manual[3];
+	_urcontrol_input.manual[4] = URControl_input.manual[4];
+
 	// See mixer file `pass.main.mix` for exact control allocation.
 	_actuators.control[0] = URControl.URControl_Y.actuators_control[0];
 	_actuators.control[1] = URControl.URControl_Y.actuators_control[1];
