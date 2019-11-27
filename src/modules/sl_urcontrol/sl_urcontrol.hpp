@@ -285,6 +285,10 @@ private:
 		(ParamFloat<px4::params::SL_INDI_DWMAX>) _sl_ratedot_qpindi_dwmax,
 		(ParamFloat<px4::params::SL_INDI_MINGAIN>) _sl_ratedot_qpindi_mingain,
 
+		(ParamFloat<px4::params::SL_INDI_G2>) _sl_ratedot_indi_g2,
+		(ParamFloat<px4::params::SL_INDI_CHI>) _sl_ratedot_indi_chi,
+		(ParamFloat<px4::params::SL_INDI_ATILT>) _sl_ratedot_indi_axis_tilt,
+
 		(ParamFloat<px4::params::SL_RDOT_KPU>) _sl_ratedot_kpu,
 		(ParamFloat<px4::params::SL_RDOT_KPV>) _sl_ratedot_kpv,
 		(ParamFloat<px4::params::SL_RDOT_KPR>) _sl_ratedot_kpr,
@@ -321,6 +325,7 @@ private:
 		(ParamInt<px4::params::SL_EST_USEMAG>) _sl_est_useMag,
 		(ParamInt<px4::params::SL_MAG_ESTTYPE>) _sl_mag_est_type,
 		(ParamFloat<px4::params::SL_MAG_XI>) _sl_magxI,
+		(ParamFloat<px4::params::SL_MAG_YI>) _sl_magyI,		
 		(ParamFloat<px4::params::SL_MAG_ZI>) _sl_magzI,
 		(ParamFloat<px4::params::SL_MAG_SHIFT>) _sl_mag_psi_shift,
 
@@ -330,6 +335,7 @@ private:
 		(ParamFloat<px4::params::SL_FAIL_ALTTHRE>) _sl_fail_altThresh,
 		(ParamInt<px4::params::SL_FAIL_DRF>) _sl_fail_drf_enable,
 		(ParamInt<px4::params::SL_MANUAL_ENABLE>) _sl_manual_enable,
+		(ParamInt<px4::params::SL_MANUAL_ALT>) _sl_manual_alt,	
 		(ParamFloat<px4::params::SL_MANUAL_GAIN>) _sl_manual_gain,
 		(ParamFloat<px4::params::SL_MANUAL_HSHIFT>) _sl_manual_heading_shift		
 

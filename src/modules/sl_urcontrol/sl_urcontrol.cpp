@@ -207,6 +207,9 @@ void SlURControl::parameters_updated()
 	URControlParams.rate_INDI_omegaDotFilterT = _sl_ratedot_indi_omegaDotFilt.get();
 	URControlParams.rate_INDI_accZFilterT = _sl_ratedot_indi_accZFilt.get();
 
+	URControlParams.rate_INDI_g2 = _sl_ratedot_indi_g2.get();
+	URControlParams.chi = _sl_ratedot_indi_chi.get();
+	URControlParams.axis_tilt =_sl_ratedot_indi_axis_tilt.get(); 	
 	// Rate - QPINDI
 	URControlParams.rate_roll_eff = _sl_ratedot_indi_roll_eff.get();
 	URControlParams.rate_pitch_eff = _sl_ratedot_indi_pitch_eff.get();
@@ -258,6 +261,7 @@ void SlURControl::parameters_updated()
 	URControlParams.est_useMag 		= _sl_est_useMag.get();
 	URControlParams.mag_est_type 	= _sl_mag_est_type.get();
 	URControlParams.magxI 			= _sl_magxI.get(); 
+	URControlParams.magyI 			= _sl_magyI.get();	
 	URControlParams.magzI 			= _sl_magzI.get();
 	URControlParams.mag_psi_shift 	= _sl_mag_psi_shift.get();
 
@@ -278,6 +282,7 @@ void SlURControl::parameters_updated()
 	URControlParams.fail_altThresh = _sl_fail_altThresh.get();
 	URControlParams.DRF_enable = _sl_fail_drf_enable.get();
 	URControlParams.manual_enable = _sl_manual_enable.get();
+	URControlParams.manual_alt = _sl_manual_alt.get();
 	URControlParams.manual_acc_gain = _sl_manual_gain.get();
 	manual_heading_shift = _sl_manual_heading_shift.get();
 	// // Alt Protect
@@ -549,9 +554,10 @@ void SlURControl::control_ur(float dt)
 		manual_control[2] = _manual_control_sp.z;
 		manual_control[3] = _manual_control_sp.r;
 		manual_control[4] = _manual_control_sp.flaps;
+		//printf("%d\t%d\n",_manual_control_sp.return_switch,_manual_control_sp.kill_switch);
 	}
 	
-	//printf("%f\t%f\t%f\t%f\n",manual_control[0],manual_control[1],manual_control[2],manual_control[3]);
+	//printf("%f\t%f\t%f\t%f\n",manual_control[4],manual_control[1],manual_control[2],manual_control[3]);
 	/* get estimated attitude */
 	Quatf q_v_att(_v_att.q);
 	Quatf q(_ev_odom.q);
@@ -690,7 +696,7 @@ void SlURControl::control_ur(float dt)
 	_urcontrol_input.pos_sp[1] = URControl.URControl_U.pos_sp[1];
 	_urcontrol_input.pos_sp[2] = URControl.URControl_U.pos_sp[2];
 
-	_urcontrol_input.yaw_sp = 0;
+	_urcontrol_input.yaw_sp = URControl.URControl_U.yaw_sp;
 
 	_urcontrol_input.mag[0] = URControl_input.mag[0];
 	_urcontrol_input.mag[1] = URControl_input.mag[1];
