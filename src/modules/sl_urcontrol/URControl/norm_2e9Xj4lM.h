@@ -1,5 +1,5 @@
 /*
- * /home/sihao/src/monorepo/simulink_model/.codeGenCache/slprj/grt/_sharedutils/rt_powd_snf.h
+ * /home/sihao/src/monorepo/simulink_model/.codeGenCache/slprj/grt/_sharedutils/norm_2e9Xj4lM.h
  *
  * Academic License - for use in teaching, academic research, and meeting
  * course requirements at degree granting institutions only.  Not for
@@ -13,10 +13,10 @@
  * Created for block: URControl
  */
 
-#ifndef SHARE_rt_powd_snf
-#define SHARE_rt_powd_snf
+#ifndef SHARE_norm_2e9Xj4lM
+#define SHARE_norm_2e9Xj4lM
 #include "rtwtypes.h"
 
-extern real_T rt_powd_snf(real_T u0, real_T u1);
+extern real_T norm_2e9Xj4lM(const real_T x[3]);
 
 #endif

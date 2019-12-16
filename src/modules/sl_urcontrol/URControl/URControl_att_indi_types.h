@@ -1,27 +1,71 @@
 /*
- * URControl_types.h
+ * URControl_att_indi_types.h
  *
  * Academic License - for use in teaching, academic research, and meeting
  * course requirements at degree granting institutions only.  Not for
  * government, commercial, or other organizational use.
  *
- * Code generation for model "URControl".
+ * Code generation for model "URControl_att_indi".
  *
- * Model version              : 1.1881
+ * Model version              : 1.501
  * Simulink Coder version : 9.1 (R2019a) 23-Nov-2018
- * C++ source code generated on : Mon Dec 16 11:43:25 2019
+ * C++ source code generated on : Mon Dec 16 11:42:55 2019
  *
  * Target selection: grt.tlc
  * Note: GRT includes extra infrastructure and instrumentation for prototyping
- * Embedded hardware selection: Custom
+ * Embedded hardware selection: Custom Processor->Custom Processor
  * Code generation objectives: Unspecified
  * Validation result: Not run
  */
 
-#ifndef RTW_HEADER_URControl_types_h_
-#define RTW_HEADER_URControl_types_h_
+#ifndef RTW_HEADER_URControl_att_indi_types_h_
+#define RTW_HEADER_URControl_att_indi_types_h_
 #include "rtwtypes.h"
-#include "multiword_types.h"
+#ifndef DEFINED_TYPEDEF_FOR_stateBus_
+#define DEFINED_TYPEDEF_FOR_stateBus_
+
+typedef struct {
+  real_T acc[3];
+  real_T accf[3];
+  real_T vel[3];
+  real_T velf[3];
+  real_T velB[3];
+  real_T pos[3];
+  real_T posf[3];
+  real_T omega[3];
+  real_T omegaf[3];
+  real_T att[3];
+  real_T n[3];
+  real_T wRotor[4];
+  real_T omegaUV[3];
+  real_T omegafUV[3];
+  real_T FMax[4];
+  real_T FMin[4];
+  real_T fail_id;
+  real_T fail_id_quick;
+  real_T uvDot_max[2];
+  real_T uvDot_min[2];
+  real_T uv_max[2];
+  real_T uv_min[2];
+  real_T vel_ref[3];
+  real_T pos_ref[3];
+} stateBus;
+
+#endif
+
+#ifndef DEFINED_TYPEDEF_FOR_inputsBus_
+#define DEFINED_TYPEDEF_FOR_inputsBus_
+
+typedef struct {
+  real_T xTarget;
+  real_T yTarget;
+  real_T zTarget;
+  real_T yawTarget;
+  real_T manual[5];
+} inputsBus;
+
+#endif
+
 #ifndef DEFINED_TYPEDEF_FOR_daqBus_
 #define DEFINED_TYPEDEF_FOR_daqBus_
 
@@ -78,66 +122,6 @@ typedef struct {
   real_T inpActual[4];
   real_T Y_indi[2];
 } daqBus;
-
-#endif
-
-#ifndef DEFINED_TYPEDEF_FOR_stateBus_
-#define DEFINED_TYPEDEF_FOR_stateBus_
-
-typedef struct {
-  real_T acc[3];
-  real_T accf[3];
-  real_T vel[3];
-  real_T velf[3];
-  real_T velB[3];
-  real_T pos[3];
-  real_T posf[3];
-  real_T omega[3];
-  real_T omegaf[3];
-  real_T att[3];
-  real_T n[3];
-  real_T wRotor[4];
-  real_T omegaUV[3];
-  real_T omegafUV[3];
-  real_T FMax[4];
-  real_T FMin[4];
-  real_T fail_id;
-  real_T fail_id_quick;
-  real_T uvDot_max[2];
-  real_T uvDot_min[2];
-  real_T uv_max[2];
-  real_T uv_min[2];
-  real_T vel_ref[3];
-  real_T pos_ref[3];
-} stateBus;
-
-#endif
-
-#ifndef DEFINED_TYPEDEF_FOR_sensorsBus_
-#define DEFINED_TYPEDEF_FOR_sensorsBus_
-
-typedef struct {
-  real_T acc[3];
-  real_T vel[3];
-  real_T pos[3];
-  real_T omega[3];
-  real_T att[3];
-  real_T wRotor[4];
-  real_T mag[3];
-} sensorsBus;
-
-#endif
-
-#ifndef DEFINED_TYPEDEF_FOR_inputsBus_
-#define DEFINED_TYPEDEF_FOR_inputsBus_
-
-typedef struct {
-  real_T xTarget;
-  real_T yTarget;
-  real_T zTarget;
-  real_T yawTarget;
-  real_T manual[5];
-} inputsBus;
 
 #endif
 
@@ -308,159 +292,7 @@ typedef struct {
 
 #endif
 
-#ifndef DEFINED_TYPEDEF_FOR_struct_Kb4703fKot5WPhaNoNlej_
-#define DEFINED_TYPEDEF_FOR_struct_Kb4703fKot5WPhaNoNlej_
-
-typedef struct {
-  real_T enable;
-  real_T maxAngle;
-  real_T Kp_pos[3];
-  real_T maxVel;
-  real_T Kp_vel[3];
-  real_T Ki_vel[3];
-  real_T intLim;
-} struct_Kb4703fKot5WPhaNoNlej;
-
-#endif
-
-#ifndef DEFINED_TYPEDEF_FOR_struct_7LbCBzsZMvrHROoJfHBYLD_
-#define DEFINED_TYPEDEF_FOR_struct_7LbCBzsZMvrHROoJfHBYLD_
-
-typedef struct {
-  real_T enable;
-  real_T Kp_pos;
-  real_T maxVel;
-  real_T Kp_vel;
-  real_T Ki_vel;
-  real_T intLim;
-  real_T peakAngle;
-  real_T LOCAngle;
-  real_T minOmegaSum;
-  real_T maxOmegaSum;
-} struct_7LbCBzsZMvrHROoJfHBYLD;
-
-#endif
-
-#ifndef DEFINED_TYPEDEF_FOR_struct_0fFeTh16K9OlBqn6rz4Bo_
-#define DEFINED_TYPEDEF_FOR_struct_0fFeTh16K9OlBqn6rz4Bo_
-
-typedef struct {
-  real_T enable;
-  real_T Kp_psi;
-  real_T Kp_r;
-} struct_0fFeTh16K9OlBqn6rz4Bo;
-
-#endif
-
-#ifndef DEFINED_TYPEDEF_FOR_struct_AHd68odqz51NWDIFKWnLKG_
-#define DEFINED_TYPEDEF_FOR_struct_AHd68odqz51NWDIFKWnLKG_
-
-typedef struct {
-  real_T primary_axis[3];
-  real_T Iv[9];
-  real_T Ip[9];
-  real_T t_indi;
-  real_T t_rotor_sensor;
-  real_T failure_id;
-  real_T failure_time;
-  real_T signr;
-  struct_Kb4703fKot5WPhaNoNlej position;
-  struct_7LbCBzsZMvrHROoJfHBYLD altitude;
-  struct_0fFeTh16K9OlBqn6rz4Bo YRC;
-} struct_AHd68odqz51NWDIFKWnLKG;
-
-#endif
-
-#ifndef DEFINED_TYPEDEF_FOR_struct_KZWRH8wmRo8gScyf5zlwCH_
-#define DEFINED_TYPEDEF_FOR_struct_KZWRH8wmRo8gScyf5zlwCH_
-
-typedef struct {
-  real_T w_max;
-  real_T w_min;
-} struct_KZWRH8wmRo8gScyf5zlwCH;
-
-#endif
-
-#ifndef DEFINED_TYPEDEF_FOR_struct_YhmxgXLVjzlogleEk1YuME_
-#define DEFINED_TYPEDEF_FOR_struct_YhmxgXLVjzlogleEk1YuME_
-
-typedef struct {
-  real_T freq;
-  real_T g;
-  real_T wRotorMax;
-  real_T wRotorMin;
-  real_T w_max;
-  real_T w_min;
-  real_T mass;
-  real_T fail_id;
-  real_T fail_time;
-  struct_AHd68odqz51NWDIFKWnLKG sihao;
-  URControlParamsType URC;
-  struct_KZWRH8wmRo8gScyf5zlwCH px4;
-} struct_YhmxgXLVjzlogleEk1YuME;
-
-#endif
-
-/* Custom Type definition for MATLAB Function: '<S28>/Correct' */
-#ifndef struct_tag_sZozwYUqIoF3KwkqeARQ8OE
-#define struct_tag_sZozwYUqIoF3KwkqeARQ8OE
-
-struct tag_sZozwYUqIoF3KwkqeARQ8OE
-{
-  char_T FcnName[13];
-  boolean_T IsSimulinkFcn;
-  real_T NumberOfExtraArgumentInports;
-  boolean_T HasJacobian;
-  char_T JacobianFcnName[14];
-  boolean_T HasAdditiveNoise;
-};
-
-#endif                                 /*struct_tag_sZozwYUqIoF3KwkqeARQ8OE*/
-
-#ifndef typedef_sZozwYUqIoF3KwkqeARQ8OE_URCon_T
-#define typedef_sZozwYUqIoF3KwkqeARQ8OE_URCon_T
-
-typedef struct tag_sZozwYUqIoF3KwkqeARQ8OE sZozwYUqIoF3KwkqeARQ8OE_URCon_T;
-
-#endif                               /*typedef_sZozwYUqIoF3KwkqeARQ8OE_URCon_T*/
-
-/* Custom Type definition for MATLAB Function: '<S30>/Predict' */
-#ifndef struct_tag_sBhY6iGnb96DZXSV480ISLB
-#define struct_tag_sBhY6iGnb96DZXSV480ISLB
-
-struct tag_sBhY6iGnb96DZXSV480ISLB
-{
-  char_T FcnName[14];
-  boolean_T IsSimulinkFcn;
-  real_T NumberOfExtraArgumentInports;
-  char_T JacobianFcnName[15];
-  real_T HasJacobian;
-  boolean_T HasAdditiveNoise;
-};
-
-#endif                                 /*struct_tag_sBhY6iGnb96DZXSV480ISLB*/
-
-#ifndef typedef_sBhY6iGnb96DZXSV480ISLB_URCon_T
-#define typedef_sBhY6iGnb96DZXSV480ISLB_URCon_T
-
-typedef struct tag_sBhY6iGnb96DZXSV480ISLB sBhY6iGnb96DZXSV480ISLB_URCon_T;
-
-#endif                               /*typedef_sBhY6iGnb96DZXSV480ISLB_URCon_T*/
-
-/* Custom Type definition for MATLAB Function: '<S7>/basic estimators' */
-#ifndef typedef_LPFilter_URControl_T
-#define typedef_LPFilter_URControl_T
-
-typedef struct {
-  real_T value[3];
-  real_T filterT;
-  real_T maxLim;
-  real_T minLim;
-} LPFilter_URControl_T;
-
-#endif                                 /*typedef_LPFilter_URControl_T*/
-
 /* Forward declaration for rtModel */
-typedef struct tag_RTM_URControl_T RT_MODEL_URControl_T;
+typedef struct tag_RTM_URControl_att_indi_T RT_MODEL_URControl_att_indi_T;
 
-#endif                                 /* RTW_HEADER_URControl_types_h_ */
+#endif                              /* RTW_HEADER_URControl_att_indi_types_h_ */

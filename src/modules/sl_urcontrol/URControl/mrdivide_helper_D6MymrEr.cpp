@@ -7,9 +7,9 @@
  *
  * Code generation for model "URControl".
  *
- * Model version              : 1.947
+ * Model version              : 1.1874
  * Simulink Coder version : 9.1 (R2019a) 23-Nov-2018
- * C++ source code generated on : Mon Oct  7 20:34:02 2019
+ * C++ source code generated on : Wed Dec 11 10:03:51 2019
  * Created for block: URControl
  */
 
@@ -18,7 +18,7 @@
 #include <string.h>
 #include "mrdivide_helper_D6MymrEr.h"
 
-/* Function for MATLAB Function: '<S27>/Correct' */
+/* Function for MATLAB Function: '<S28>/Correct' */
 void mrdivide_helper_D6MymrEr(real_T A[70], const real_T B[49])
 {
   real_T b_A[49];

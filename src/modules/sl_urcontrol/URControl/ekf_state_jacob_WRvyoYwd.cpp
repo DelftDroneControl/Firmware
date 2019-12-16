@@ -7,9 +7,9 @@
  *
  * Code generation for model "URControl".
  *
- * Model version              : 1.947
+ * Model version              : 1.1874
  * Simulink Coder version : 9.1 (R2019a) 23-Nov-2018
- * C++ source code generated on : Mon Oct  7 20:34:02 2019
+ * C++ source code generated on : Wed Dec 11 10:03:51 2019
  * Created for block: URControl
  */
 
@@ -19,7 +19,7 @@
 #include "ekf_state_jacob_WRvyoYwd.h"
 
 /*
- * Function for MATLAB Function: '<S29>/Predict'
+ * Function for MATLAB Function: '<S30>/Predict'
  * function A = ekf_state_jacob(x,u)
  */
 void ekf_state_jacob_WRvyoYwd(const real_T x[10], const real_T u[6], real_T A

@@ -1,24 +1,24 @@
 /*
- * /home/sihao/src/monorepo/simulink_model/.codeGenCache/slprj/grt/_sharedutils/norm_UkJeSx98.cpp
+ * /home/sihao/src/monorepo/simulink_model/.codeGenCache/slprj/grt/_sharedutils/norm_2e9Xj4lM.cpp
  *
  * Academic License - for use in teaching, academic research, and meeting
  * course requirements at degree granting institutions only.  Not for
  * government, commercial, or other organizational use.
  *
- * Code generation for model "URControl_att".
+ * Code generation for model "URControl".
  *
- * Model version              : 1.29
+ * Model version              : 1.1874
  * Simulink Coder version : 9.1 (R2019a) 23-Nov-2018
- * C++ source code generated on : Wed Oct  9 11:07:12 2019
- * Created for block: URControl_att
+ * C++ source code generated on : Wed Dec 11 10:03:51 2019
+ * Created for block: URControl
  */
 
 #include "rtwtypes.h"
 #include <cmath>
-#include "norm_UkJeSx98.h"
+#include "norm_2e9Xj4lM.h"
 
-/* Function for MATLAB Function: '<S1>/attitude controller' */
-real_T norm_UkJeSx98(const real_T x[3])
+/* Function for MATLAB Function: '<S21>/MATLAB Function1' */
+real_T norm_2e9Xj4lM(const real_T x[3])
 {
   real_T y;
   real_T scale;

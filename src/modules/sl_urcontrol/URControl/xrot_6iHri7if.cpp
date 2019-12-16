@@ -5,18 +5,18 @@
  * course requirements at degree granting institutions only.  Not for
  * government, commercial, or other organizational use.
  *
- * Code generation for model "URControl_att_lqr".
+ * Code generation for model "URControl_att_indi".
  *
- * Model version              : 1.103
+ * Model version              : 1.501
  * Simulink Coder version : 9.1 (R2019a) 23-Nov-2018
- * C++ source code generated on : Mon Oct  7 20:33:39 2019
- * Created for block: URControl_att_lqr
+ * C++ source code generated on : Wed Dec 11 10:03:20 2019
+ * Created for block: URControl_att_indi
  */
 
 #include "rtwtypes.h"
 #include "xrot_6iHri7if.h"
 
-/* Function for MATLAB Function: '<Root>/Mixer' */
+/* Function for MATLAB Function: '<S1>/MATLAB Function6' */
 void xrot_6iHri7if(real_T x[16], int32_T ix0, int32_T iy0, real_T c, real_T s)
 {
   int32_T ix;
